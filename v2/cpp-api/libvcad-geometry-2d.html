@@ -1,0 +1,949 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Geometry — 2D &mdash; OpenVCAD 2.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=57236720"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Geometry — 3D" href="libvcad-geometry-3d.html" />
+    <link rel="prev" title="Parser" href="libvcad-parser.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenVCAD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/math-expressions.html">Math Expression Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad_compilers/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad_rendering/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code> package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">C++ API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-core.html">Tree — core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-leaves.html">Tree — leaves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-composition.html">Tree — composition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-material.html">Tree — material</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-parser.html">Parser</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Geometry — 2D</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv413Arrangement_2"><code class="docutils literal notranslate"><span class="pre">Arrangement_2</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv429Ccb_halfedge_const_circulator"><code class="docutils literal notranslate"><span class="pre">Ccb_halfedge_const_circulator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv419Face_const_iterator"><code class="docutils literal notranslate"><span class="pre">Face_const_iterator</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv412Arrangement2"><code class="docutils literal notranslate"><span class="pre">Arrangement2</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12Arrangement212Arrangement2Ev"><code class="docutils literal notranslate"><span class="pre">Arrangement2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12Arrangement215getBoundedFacesEv"><code class="docutils literal notranslate"><span class="pre">getBoundedFaces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12Arrangement217getUnboundedFacesEv"><code class="docutils literal notranslate"><span class="pre">getUnboundedFaces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12Arrangement26insertERK8Polygon2"><code class="docutils literal notranslate"><span class="pre">insert()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12Arrangement26insertERK9Polyline2"><code class="docutils literal notranslate"><span class="pre">insert()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12Arrangement28getFacesE7uint8_t"><code class="docutils literal notranslate"><span class="pre">getFaces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12Arrangement213m_arrangementE"><code class="docutils literal notranslate"><span class="pre">m_arrangement</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#c.INT_POINT_MULTIPLIER"><code class="docutils literal notranslate"><span class="pre">INT_POINT_MULTIPLIER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv48Polygon2"><code class="docutils literal notranslate"><span class="pre">Polygon2</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8Polygon28add_holeERK8Polygon2"><code class="docutils literal notranslate"><span class="pre">add_hole()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK8Polygon212bounding_boxEv"><code class="docutils literal notranslate"><span class="pre">bounding_box()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK8Polygon24diffERK8Polygon2"><code class="docutils literal notranslate"><span class="pre">diff()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK8Polygon24diffERKNSt6vectorI8Polygon2EE"><code class="docutils literal notranslate"><span class="pre">diff()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK8Polygon27do_clipERKNSt6vectorI9Polyline2EE"><code class="docutils literal notranslate"><span class="pre">do_clip()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK8Polygon28do_unionERK8Polygon2"><code class="docutils literal notranslate"><span class="pre">do_union()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK8Polygon28do_unionERKNSt6vectorI8Polygon2EE"><code class="docutils literal notranslate"><span class="pre">do_union()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK8Polygon211double_areaEv"><code class="docutils literal notranslate"><span class="pre">double_area()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8Polygon24drawEv"><code class="docutils literal notranslate"><span class="pre">draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK8Polygon25holesEv"><code class="docutils literal notranslate"><span class="pre">holes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK8Polygon26insideERK7Point_2"><code class="docutils literal notranslate"><span class="pre">inside()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK8Polygon29intersectERK8Polygon2"><code class="docutils literal notranslate"><span class="pre">intersect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK8Polygon29intersectERKNSt6vectorI8Polygon2EE"><code class="docutils literal notranslate"><span class="pre">intersect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK8Polygon26is_ccwEv"><code class="docutils literal notranslate"><span class="pre">is_ccw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK8Polygon26offsetEd"><code class="docutils literal notranslate"><span class="pre">offset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK8Polygon211on_boundaryERK7Point_2"><code class="docutils literal notranslate"><span class="pre">on_boundary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK8Polygon2cvNSt6vectorIN3glm4vec2EEEEv"><code class="docutils literal notranslate"><span class="pre">operator</span> <span class="pre">std::vector&lt;</span> <span class="pre">glm::vec2</span> <span class="pre">&gt;()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8Polygon28Polygon2Ev"><code class="docutils literal notranslate"><span class="pre">Polygon2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8Polygon28Polygon2ERK9Polygon_2"><code class="docutils literal notranslate"><span class="pre">Polygon2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8Polygon28Polygon2ERKNSt6vectorIN3glm5dvec2EEE"><code class="docutils literal notranslate"><span class="pre">Polygon2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8Polygon28Polygon2ERKNSt6vectorIN3glm4vec2EEE"><code class="docutils literal notranslate"><span class="pre">Polygon2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8Polygon28Polygon2ERKNSt6vectorI7Point_2EE"><code class="docutils literal notranslate"><span class="pre">Polygon2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8Polygon27reverseEv"><code class="docutils literal notranslate"><span class="pre">reverse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8Polygon25scaleEN3glm5dvec2E"><code class="docutils literal notranslate"><span class="pre">scale()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8Polygon29set_holesERKNSt6vectorI8Polygon2EE"><code class="docutils literal notranslate"><span class="pre">set_holes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8Polygon28simplifyEd"><code class="docutils literal notranslate"><span class="pre">simplify()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK8Polygon211to_polylineEv"><code class="docutils literal notranslate"><span class="pre">to_polyline()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8Polygon29translateEN3glm5dvec2E"><code class="docutils literal notranslate"><span class="pre">translate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8Polygon24ClipERKNSt6vectorI8Polygon2EERKNSt6vectorI9Polyline2EE"><code class="docutils literal notranslate"><span class="pre">Clip()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8Polygon210DifferenceERKNSt6vectorI8Polygon2EERKNSt6vectorI8Polygon2EE"><code class="docutils literal notranslate"><span class="pre">Difference()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8Polygon212IntersectionERKNSt6vectorI8Polygon2EERKNSt6vectorI8Polygon2EE"><code class="docutils literal notranslate"><span class="pre">Intersection()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8Polygon26OffsetERKNSt6vectorI8Polygon2EEd"><code class="docutils literal notranslate"><span class="pre">Offset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8Polygon25UnionERKNSt6vectorI8Polygon2EERKNSt6vectorI8Polygon2EE"><code class="docutils literal notranslate"><span class="pre">Union()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8Polygon27m_holesE"><code class="docutils literal notranslate"><span class="pre">m_holes</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv49Polyline2"><code class="docutils literal notranslate"><span class="pre">Polyline2</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N9Polyline26appendERK9Polyline2"><code class="docutils literal notranslate"><span class="pre">append()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK9Polyline26lengthEv"><code class="docutils literal notranslate"><span class="pre">length()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK9Polyline26pointsEv"><code class="docutils literal notranslate"><span class="pre">points()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N9Polyline29Polyline2Ev"><code class="docutils literal notranslate"><span class="pre">Polyline2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N9Polyline29Polyline2ERKNSt6vectorIN3glm5dvec2EEE"><code class="docutils literal notranslate"><span class="pre">Polyline2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N9Polyline29Polyline2ERKNSt6vectorIN3glm4vec2EEE"><code class="docutils literal notranslate"><span class="pre">Polyline2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N9Polyline29Polyline2ERKNSt6vectorI7Point_2EE"><code class="docutils literal notranslate"><span class="pre">Polyline2()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N9Polyline27prependERK9Polyline2"><code class="docutils literal notranslate"><span class="pre">prepend()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N9Polyline27reverseEv"><code class="docutils literal notranslate"><span class="pre">reverse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK9Polyline28segmentsEv"><code class="docutils literal notranslate"><span class="pre">segments()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N9Polyline28simplifyEd"><code class="docutils literal notranslate"><span class="pre">simplify()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N9Polyline29translateERK7Point_2"><code class="docutils literal notranslate"><span class="pre">translate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N9Polyline28DistanceERK7Point_2RK7Point_2"><code class="docutils literal notranslate"><span class="pre">Distance()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv415MarchingSquares"><code class="docutils literal notranslate"><span class="pre">MarchingSquares</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15MarchingSquares12CrossSectionE"><code class="docutils literal notranslate"><span class="pre">CrossSection</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15MarchingSquares27ComputeIsoLinesDistributionERNSt8functionIFddddEEERNSt8functionIFNSt13unordered_mapI7uint8_tfEEdddEEE6size_tdRKN3glm5dvec2ERKN3glm5dvec2ERKN3glm5dvec2Edd"><code class="docutils literal notranslate"><span class="pre">ComputeIsoLinesDistribution()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15MarchingSquares23ComputeIsoLinesGeometryERNSt8functionIFddddEEEdRKN3glm5dvec2ERKN3glm5dvec2ERKN3glm5dvec2Edd"><code class="docutils literal notranslate"><span class="pre">ComputeIsoLinesGeometry()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15MarchingSquares35ComputeStitchedIsoLinesDistributionERNSt8functionIFddddEEERNSt8functionIFNSt13unordered_mapI7uint8_tfEEdddEEE6size_tdRKN3glm5dvec2ERKN3glm5dvec2ERKN3glm5dvec2Edd"><code class="docutils literal notranslate"><span class="pre">ComputeStitchedIsoLinesDistribution()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15MarchingSquares31ComputeStitchedIsoLinesGeometryERNSt8functionIFddddEEEdRKN3glm5dvec2ERKN3glm5dvec2ERKN3glm5dvec2Edd"><code class="docutils literal notranslate"><span class="pre">ComputeStitchedIsoLinesGeometry()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15MarchingSquares27StitchIsoLinesIntoPolylinesERKNSt6vectorIN3glm5dvec2EEERKNSt6vectorIN3glm5ivec2EEE"><code class="docutils literal notranslate"><span class="pre">StitchIsoLinesIntoPolylines()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15MarchingSquares11InterpolateERKN3glm5dvec2ERKN3glm5dvec2Edddd"><code class="docutils literal notranslate"><span class="pre">Interpolate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15MarchingSquares12VectorInsertERNSt6vectorIN3glm5dvec2EEERKN3glm5dvec2Ed"><code class="docutils literal notranslate"><span class="pre">VectorInsert()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-3d.html">Geometry — 3D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-surface-parameterizer.html">Geometry — surface parameterization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-utils.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-analysis.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-inkjet.html">Compilers — inkjet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-writers.html">Compilers — writers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-brep.html">Compilers — B-rep</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-vat.html">Compilers — VAT</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../papers.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenVCAD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">C++ API Reference</a></li>
+      <li class="breadcrumb-item active">Geometry — 2D</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/cpp-api/libvcad-geometry-2d.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="geometry-2d">
+<h1>Geometry — 2D<a class="headerlink" href="#geometry-2d" title="Link to this heading"></a></h1>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-typedefs">Typedefs</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv413Arrangement_2">
+<span id="_CPPv313Arrangement_2"></span><span id="_CPPv213Arrangement_2"></span><span id="Arrangement_2"></span><span class="target" id="arrangement2_8h_1a64d16c43d34316aa1551f8d842b9254f"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="n"><span class="pre">CGAL</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Arrangement_2</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-geometry-3d.html#_CPPv48Traits_2" title="Traits_2"><span class="n"><span class="pre">Traits_2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Arrangement_2</span></span></span><a class="headerlink" href="#_CPPv413Arrangement_2" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv429Ccb_halfedge_const_circulator">
+<span id="_CPPv329Ccb_halfedge_const_circulator"></span><span id="_CPPv229Ccb_halfedge_const_circulator"></span><span id="Ccb_halfedge_const_circulator"></span><span class="target" id="arrangement2_8h_1a9c3c040ab0c64463e18329e8cab836c1"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv413Arrangement_2" title="Arrangement_2"><span class="n"><span class="pre">Arrangement_2</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Ccb_halfedge_const_circulator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Ccb_halfedge_const_circulator</span></span></span><a class="headerlink" href="#_CPPv429Ccb_halfedge_const_circulator" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv419Face_const_iterator">
+<span id="_CPPv319Face_const_iterator"></span><span id="_CPPv219Face_const_iterator"></span><span id="Face_const_iterator"></span><span class="target" id="arrangement2_8h_1ab2c7bc4b42d9ab29cfbbd1637fedfc48"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv413Arrangement_2" title="Arrangement_2"><span class="n"><span class="pre">Arrangement_2</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Face_const_iterator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Face_const_iterator</span></span></span><a class="headerlink" href="#_CPPv419Face_const_iterator" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv412Arrangement2">
+<span id="_CPPv312Arrangement2"></span><span id="_CPPv212Arrangement2"></span><span id="Arrangement2"></span><span class="target" id="class_arrangement2"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Arrangement2</span></span></span><a class="headerlink" href="#_CPPv412Arrangement2" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;arrangement2.h&gt;</em></div>
+<p><a class="reference internal" href="#class_arrangement2"><span class="std std-ref">Arrangement2</span></a>. </p>
+<p>Class to handle 2D arrangements </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12Arrangement212Arrangement2Ev">
+<span id="_CPPv3N12Arrangement212Arrangement2Ev"></span><span id="_CPPv2N12Arrangement212Arrangement2Ev"></span><span id="Arrangement2::Arrangement2"></span><span class="target" id="class_arrangement2_1a3be35b77a6ac343b25b5b21322c3be53"></span><span class="sig-name descname"><span class="n"><span class="pre">Arrangement2</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N12Arrangement212Arrangement2Ev" title="Link to this definition"></a><br /></dt>
+<dd><p>Constructor. </p>
+<p>Initializes an empty arrangement </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12Arrangement215getBoundedFacesEv">
+<span id="_CPPv3N12Arrangement215getBoundedFacesEv"></span><span id="_CPPv2N12Arrangement215getBoundedFacesEv"></span><span id="Arrangement2::getBoundedFaces"></span><span class="target" id="class_arrangement2_1a96959f03c5d4058985c40bbdb06de803"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getBoundedFaces</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Arrangement215getBoundedFacesEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Get the bounded faces of the arrangement </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A vector of bounded faces </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12Arrangement217getUnboundedFacesEv">
+<span id="_CPPv3N12Arrangement217getUnboundedFacesEv"></span><span id="_CPPv2N12Arrangement217getUnboundedFacesEv"></span><span id="Arrangement2::getUnboundedFaces"></span><span class="target" id="class_arrangement2_1acaf15cf3bd7834a10a5533183c2c69f8"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getUnboundedFaces</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Arrangement217getUnboundedFacesEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Get the unbounded faces of the arrangement </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A vector of unbounded faces </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12Arrangement26insertERK8Polygon2">
+<span id="_CPPv3N12Arrangement26insertERK8Polygon2"></span><span id="_CPPv2N12Arrangement26insertERK8Polygon2"></span><span id="Arrangement2::insert__Polygon2CR"></span><span class="target" id="class_arrangement2_1a25149e403572121796b0e8ccf067d990"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">insert</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">polygon</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Arrangement26insertERK8Polygon2" title="Link to this definition"></a><br /></dt>
+<dd><p>Inserts a polygon into the arrangement </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>polygon</strong> – The polygon to insert </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12Arrangement26insertERK9Polyline2">
+<span id="_CPPv3N12Arrangement26insertERK9Polyline2"></span><span id="_CPPv2N12Arrangement26insertERK9Polyline2"></span><span id="Arrangement2::insert__Polyline2CR"></span><span class="target" id="class_arrangement2_1a76e40310886073517f0c536bae075519"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">insert</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv49Polyline2" title="Polyline2"><span class="n"><span class="pre">Polyline2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">polyline</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Arrangement26insertERK9Polyline2" title="Link to this definition"></a><br /></dt>
+<dd><p>Inserts a polyline into the arrangement </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>polyline</strong> – The polyline to insert </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-functions">Private Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12Arrangement28getFacesE7uint8_t">
+<span id="_CPPv3N12Arrangement28getFacesE7uint8_t"></span><span id="_CPPv2N12Arrangement28getFacesE7uint8_t"></span><span id="Arrangement2::getFaces__uint8_t"></span><span class="target" id="class_arrangement2_1ac1c29b7c47d80fd4d8f4d5b03740f0ca"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">getFaces</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">type</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Arrangement28getFacesE7uint8_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Get the faces of the arrangement. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>type</strong> – 0 for bounded faces, 1 for unbounded faces, 2 for all faces </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A vector of faces </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12Arrangement213m_arrangementE">
+<span id="_CPPv3N12Arrangement213m_arrangementE"></span><span id="_CPPv2N12Arrangement213m_arrangementE"></span><span id="Arrangement2::m_arrangement__Arrangement_2"></span><span class="target" id="class_arrangement2_1a655822a5dea88b800bc7503a0f8bb34f"></span><a class="reference internal" href="#_CPPv413Arrangement_2" title="Arrangement_2"><span class="n"><span class="pre">Arrangement_2</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_arrangement</span></span></span><a class="headerlink" href="#_CPPv4N12Arrangement213m_arrangementE" title="Link to this definition"></a><br /></dt>
+<dd><p>The arrangement. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-defines">Defines</p>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.INT_POINT_MULTIPLIER">
+<span class="target" id="polygon2_8h_1ad4c0db44b882b7de572a5a701b086091"></span><span class="sig-name descname"><span class="n"><span class="pre">INT_POINT_MULTIPLIER</span></span></span><a class="headerlink" href="#c.INT_POINT_MULTIPLIER" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv48Polygon2">
+<span id="_CPPv38Polygon2"></span><span id="_CPPv28Polygon2"></span><span id="Polygon2"></span><span class="target" id="class_polygon2"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Polygon2</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><a class="reference internal" href="libvcad-geometry-3d.html#_CPPv49Polygon_2" title="Polygon_2"><span class="n"><span class="pre">Polygon_2</span></span></a><a class="headerlink" href="#_CPPv48Polygon2" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;polygon2.h&gt;</em></div>
+<p>A class for storing and manipulating polygons in 2D space. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8Polygon28add_holeERK8Polygon2">
+<span id="_CPPv3N8Polygon28add_holeERK8Polygon2"></span><span id="_CPPv2N8Polygon28add_holeERK8Polygon2"></span><span id="Polygon2::add_hole__Polygon2CR"></span><span class="target" id="class_polygon2_1ae9a12cd5f78a8e2b725eb75b0384e986"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">add_hole</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">hole</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Polygon28add_holeERK8Polygon2" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK8Polygon212bounding_boxEv">
+<span id="_CPPv3NK8Polygon212bounding_boxEv"></span><span id="_CPPv2NK8Polygon212bounding_boxEv"></span><span id="Polygon2::bounding_boxC"></span><span class="target" id="class_polygon2_1a53a31c7bd24c59a12e0ce2504696b135"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-geometry-3d.html#_CPPv47Point_2" title="Point_2"><span class="n"><span class="pre">Point_2</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="libvcad-geometry-3d.html#_CPPv47Point_2" title="Point_2"><span class="n"><span class="pre">Point_2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">bounding_box</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8Polygon212bounding_boxEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Calculates the bounding box of the polygon. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A pair of points representing the minimum and maximum corners of the bounding box. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK8Polygon24diffERK8Polygon2">
+<span id="_CPPv3NK8Polygon24diffERK8Polygon2"></span><span id="_CPPv2NK8Polygon24diffERK8Polygon2"></span><span id="Polygon2::diff__Polygon2CRC"></span><span class="target" id="class_polygon2_1a82e80698185004cd20291ac69cd85bdf"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">diff</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8Polygon24diffERK8Polygon2" title="Link to this definition"></a><br /></dt>
+<dd><p>Calculates the difference of the polygon with another polygon. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> – The other polygon. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A vector of polygons representing the difference. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK8Polygon24diffERKNSt6vectorI8Polygon2EE">
+<span id="_CPPv3NK8Polygon24diffERKNSt6vectorI8Polygon2EE"></span><span id="_CPPv2NK8Polygon24diffERKNSt6vectorI8Polygon2EE"></span><span id="Polygon2::diff__std::vector:Polygon2:CRC"></span><span class="target" id="class_polygon2_1a80fc6ed5107b13f34bd285fd464a08f5"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">diff</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8Polygon24diffERKNSt6vectorI8Polygon2EE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK8Polygon27do_clipERKNSt6vectorI9Polyline2EE">
+<span id="_CPPv3NK8Polygon27do_clipERKNSt6vectorI9Polyline2EE"></span><span id="_CPPv2NK8Polygon27do_clipERKNSt6vectorI9Polyline2EE"></span><span id="Polygon2::do_clip__std::vector:Polyline2:CRC"></span><span class="target" id="class_polygon2_1a59b3521d444d69901053cd31c2d07a7e"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv49Polyline2" title="Polyline2"><span class="n"><span class="pre">Polyline2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">do_clip</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv49Polyline2" title="Polyline2"><span class="n"><span class="pre">Polyline2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">polylines</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8Polygon27do_clipERKNSt6vectorI9Polyline2EE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK8Polygon28do_unionERK8Polygon2">
+<span id="_CPPv3NK8Polygon28do_unionERK8Polygon2"></span><span id="_CPPv2NK8Polygon28do_unionERK8Polygon2"></span><span id="Polygon2::do_union__Polygon2CRC"></span><span class="target" id="class_polygon2_1a45328d568c7412ddf72a67135f5f3e82"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">do_union</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8Polygon28do_unionERK8Polygon2" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK8Polygon28do_unionERKNSt6vectorI8Polygon2EE">
+<span id="_CPPv3NK8Polygon28do_unionERKNSt6vectorI8Polygon2EE"></span><span id="_CPPv2NK8Polygon28do_unionERKNSt6vectorI8Polygon2EE"></span><span id="Polygon2::do_union__std::vector:Polygon2:CRC"></span><span class="target" id="class_polygon2_1a0aa12f98b7c05ac54dcce16e81209ffd"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">do_union</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">others</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8Polygon28do_unionERKNSt6vectorI8Polygon2EE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK8Polygon211double_areaEv">
+<span id="_CPPv3NK8Polygon211double_areaEv"></span><span id="_CPPv2NK8Polygon211double_areaEv"></span><span id="Polygon2::double_areaC"></span><span class="target" id="class_polygon2_1a44b20cbc9e89a961c25fc388a7d6ff1a"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">double_area</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8Polygon211double_areaEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8Polygon24drawEv">
+<span id="_CPPv3N8Polygon24drawEv"></span><span id="_CPPv2N8Polygon24drawEv"></span><span id="Polygon2::draw"></span><span class="target" id="class_polygon2_1a7d7c0b8b793f8134fbbe9f3a7d731617"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">draw</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Polygon24drawEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK8Polygon25holesEv">
+<span id="_CPPv3NK8Polygon25holesEv"></span><span id="_CPPv2NK8Polygon25holesEv"></span><span id="Polygon2::holesC"></span><span class="target" id="class_polygon2_1aebbb78c26b0647c17a30be8f39adb664"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">holes</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8Polygon25holesEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK8Polygon26insideERK7Point_2">
+<span id="_CPPv3NK8Polygon26insideERK7Point_2"></span><span id="_CPPv2NK8Polygon26insideERK7Point_2"></span><span id="Polygon2::inside__Point_2CRC"></span><span class="target" id="class_polygon2_1ab803e2a20cc4edcf4e7ff48c2de81d05"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">inside</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-geometry-3d.html#_CPPv47Point_2" title="Point_2"><span class="n"><span class="pre">Point_2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">point</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8Polygon26insideERK7Point_2" title="Link to this definition"></a><br /></dt>
+<dd><p>Checks if a point is inside the polygon. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>point</strong> – The point to check. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the point is inside the polygon, false otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK8Polygon29intersectERK8Polygon2">
+<span id="_CPPv3NK8Polygon29intersectERK8Polygon2"></span><span id="_CPPv2NK8Polygon29intersectERK8Polygon2"></span><span id="Polygon2::intersect__Polygon2CRC"></span><span class="target" id="class_polygon2_1a4c0159ea96cb811a63423e3c68f7dcb8"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">intersect</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">other</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8Polygon29intersectERK8Polygon2" title="Link to this definition"></a><br /></dt>
+<dd><p>Calculates the intersection of the polygon with another polygon. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> – The other polygon. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A vector of polygons representing the intersection. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK8Polygon29intersectERKNSt6vectorI8Polygon2EE">
+<span id="_CPPv3NK8Polygon29intersectERKNSt6vectorI8Polygon2EE"></span><span id="_CPPv2NK8Polygon29intersectERKNSt6vectorI8Polygon2EE"></span><span id="Polygon2::intersect__std::vector:Polygon2:CRC"></span><span class="target" id="class_polygon2_1a53dd449596f35bc265e4bea44d16aeb4"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">intersect</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">others</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8Polygon29intersectERKNSt6vectorI8Polygon2EE" title="Link to this definition"></a><br /></dt>
+<dd><p>Calculates the intersection of the polygon with a vector of polygons. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>others</strong> – The vector of polygons. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A vector of polygons representing the intersection. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK8Polygon26is_ccwEv">
+<span id="_CPPv3NK8Polygon26is_ccwEv"></span><span id="_CPPv2NK8Polygon26is_ccwEv"></span><span id="Polygon2::is_ccwC"></span><span class="target" id="class_polygon2_1a4bdcb44488e855420a353da8e8d10fab"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">is_ccw</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8Polygon26is_ccwEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Checks if the points in the polygon are in counter-clockwise order. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>True if the points are in counter-clockwise order, false otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK8Polygon26offsetEd">
+<span id="_CPPv3NK8Polygon26offsetEd"></span><span id="_CPPv2NK8Polygon26offsetEd"></span><span id="Polygon2::offset__doubleC"></span><span class="target" id="class_polygon2_1a93aa81e314cb01c61cc6ef649e522738"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">offset</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">distance</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8Polygon26offsetEd" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK8Polygon211on_boundaryERK7Point_2">
+<span id="_CPPv3NK8Polygon211on_boundaryERK7Point_2"></span><span id="_CPPv2NK8Polygon211on_boundaryERK7Point_2"></span><span id="Polygon2::on_boundary__Point_2CRC"></span><span class="target" id="class_polygon2_1ae160563539c99d60097e30db8e718037"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">on_boundary</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-geometry-3d.html#_CPPv47Point_2" title="Point_2"><span class="n"><span class="pre">Point_2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">point</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8Polygon211on_boundaryERK7Point_2" title="Link to this definition"></a><br /></dt>
+<dd><p>Checks if a point is on the boundary of the polygon. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>point</strong> – The point to check. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the point is on the boundary of the polygon, false otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK8Polygon2cvNSt6vectorIN3glm4vec2EEEEv">
+<span id="_CPPv3NK8Polygon2cvNSt6vectorIN3glm4vec2EEEEv"></span><span id="_CPPv2NK8Polygon2cvNSt6vectorIN3glm4vec2EEEEv"></span><span id="Polygon2::castto-std::vector:glm::vec2:-operatorC"></span><span class="target" id="class_polygon2_1a1a0b35c961f742beeb9471c83bee26c6"></span><span class="sig-name descname"><span class="k"><span class="pre">operator</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec2</span></span><span class="p"><span class="pre">&gt;</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8Polygon2cvNSt6vectorIN3glm4vec2EEEEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Converts the polygon to a vector of 2D vectors. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A vector of 2D vectors representing the points of the polygon. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8Polygon28Polygon2Ev">
+<span id="_CPPv3N8Polygon28Polygon2Ev"></span><span id="_CPPv2N8Polygon28Polygon2Ev"></span><span id="Polygon2::Polygon2"></span><span class="target" id="class_polygon2_1a561dbce4d7b3ff01ace7fc759325f12a"></span><span class="sig-name descname"><span class="n"><span class="pre">Polygon2</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N8Polygon28Polygon2Ev" title="Link to this definition"></a><br /></dt>
+<dd><p>Default constructor. </p>
+<p>Creates an empty <a class="reference internal" href="#class_polygon2"><span class="std std-ref">Polygon2</span></a> object. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8Polygon28Polygon2ERK9Polygon_2">
+<span id="_CPPv3N8Polygon28Polygon2ERK9Polygon_2"></span><span id="_CPPv2N8Polygon28Polygon2ERK9Polygon_2"></span><span id="Polygon2::Polygon2__Polygon_2CR"></span><span class="target" id="class_polygon2_1a5a71bbecc1695c6b01606c2dbd73bee7"></span><span class="sig-name descname"><span class="n"><span class="pre">Polygon2</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-geometry-3d.html#_CPPv49Polygon_2" title="Polygon_2"><span class="n"><span class="pre">Polygon_2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">polygon</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Polygon28Polygon2ERK9Polygon_2" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8Polygon28Polygon2ERKNSt6vectorIN3glm5dvec2EEE">
+<span id="_CPPv3N8Polygon28Polygon2ERKNSt6vectorIN3glm5dvec2EEE"></span><span id="_CPPv2N8Polygon28Polygon2ERKNSt6vectorIN3glm5dvec2EEE"></span><span id="Polygon2::Polygon2__std::vector:glm::dvec2:CR"></span><span class="target" id="class_polygon2_1ac5fb8a7a5b0c6f3965d089f9f06396c0"></span><span class="sig-name descname"><span class="n"><span class="pre">Polygon2</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">points</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Polygon28Polygon2ERKNSt6vectorIN3glm5dvec2EEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Constructor. </p>
+<p>Creates a <a class="reference internal" href="#class_polygon2"><span class="std std-ref">Polygon2</span></a> object from a sequence of points with double precision. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>points</strong> – The points defining the polygon as double precision. </p>
+</dd>
+<dt class="field-even">Pre<span class="colon">:</span></dt>
+<dd class="field-even"><p>There must be at least 3 points in the sequence. </p>
+</dd>
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The the first and last point in the sequence must be the same. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8Polygon28Polygon2ERKNSt6vectorIN3glm4vec2EEE">
+<span id="_CPPv3N8Polygon28Polygon2ERKNSt6vectorIN3glm4vec2EEE"></span><span id="_CPPv2N8Polygon28Polygon2ERKNSt6vectorIN3glm4vec2EEE"></span><span id="Polygon2::Polygon2__std::vector:glm::vec2:CR"></span><span class="target" id="class_polygon2_1a5479acd9318ddcec89640ce49a0f1da8"></span><span class="sig-name descname"><span class="n"><span class="pre">Polygon2</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec2</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">points</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Polygon28Polygon2ERKNSt6vectorIN3glm4vec2EEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Constructor. </p>
+<p>Creates a <a class="reference internal" href="#class_polygon2"><span class="std std-ref">Polygon2</span></a> object from a sequence of points. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>points</strong> – The points defining the polygon. </p>
+</dd>
+<dt class="field-even">Pre<span class="colon">:</span></dt>
+<dd class="field-even"><p>There must be at least 3 points in the sequence. </p>
+</dd>
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The the first and last point in the sequence must be the same. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8Polygon28Polygon2ERKNSt6vectorI7Point_2EE">
+<span id="_CPPv3N8Polygon28Polygon2ERKNSt6vectorI7Point_2EE"></span><span id="_CPPv2N8Polygon28Polygon2ERKNSt6vectorI7Point_2EE"></span><span id="Polygon2::Polygon2__std::vector:Point_2:CR"></span><span class="target" id="class_polygon2_1ac4a05289dbafb0ee4cde9bfa1c9c4e27"></span><span class="sig-name descname"><span class="n"><span class="pre">Polygon2</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-geometry-3d.html#_CPPv47Point_2" title="Point_2"><span class="n"><span class="pre">Point_2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">points</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Polygon28Polygon2ERKNSt6vectorI7Point_2EE" title="Link to this definition"></a><br /></dt>
+<dd><p>Constructor. </p>
+<p>Creates a <a class="reference internal" href="#class_polygon2"><span class="std std-ref">Polygon2</span></a> object from a sequence of points with single precision. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>points</strong> – The points defining the polygon as single precision. </p>
+</dd>
+<dt class="field-even">Pre<span class="colon">:</span></dt>
+<dd class="field-even"><p>There must be at least 3 points in the sequence. </p>
+</dd>
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The the first and last point in the sequence must be the same. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8Polygon27reverseEv">
+<span id="_CPPv3N8Polygon27reverseEv"></span><span id="_CPPv2N8Polygon27reverseEv"></span><span id="Polygon2::reverse"></span><span class="target" id="class_polygon2_1a624fcd273ae175094ec15ef7c819d1b4"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">reverse</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Polygon27reverseEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Reverses the order of the points in the polygon. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8Polygon25scaleEN3glm5dvec2E">
+<span id="_CPPv3N8Polygon25scaleEN3glm5dvec2E"></span><span id="_CPPv2N8Polygon25scaleEN3glm5dvec2E"></span><span id="Polygon2::scale__glm::dvec2"></span><span class="target" id="class_polygon2_1a603673406036d2289062149ec0d3fdbf"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">scale</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">scale</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Polygon25scaleEN3glm5dvec2E" title="Link to this definition"></a><br /></dt>
+<dd><p>Scales the polygon by a factor about the origin. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8Polygon29set_holesERKNSt6vectorI8Polygon2EE">
+<span id="_CPPv3N8Polygon29set_holesERKNSt6vectorI8Polygon2EE"></span><span id="_CPPv2N8Polygon29set_holesERKNSt6vectorI8Polygon2EE"></span><span id="Polygon2::set_holes__std::vector:Polygon2:CR"></span><span class="target" id="class_polygon2_1aa45cb2857a6f10fd4f2f15981988c34d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_holes</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">holes</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Polygon29set_holesERKNSt6vectorI8Polygon2EE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8Polygon28simplifyEd">
+<span id="_CPPv3N8Polygon28simplifyEd"></span><span id="_CPPv2N8Polygon28simplifyEd"></span><span id="Polygon2::simplify__double"></span><span class="target" id="class_polygon2_1a67922c797cfd229cf01f293b015c3e42"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">simplify</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">tolerance</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.001</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Polygon28simplifyEd" title="Link to this definition"></a><br /></dt>
+<dd><p>Simplifies the polygon by removing nearly co-linear points. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tolerance</strong> – The maximum distance a point can be from the line segment formed by its neighboring points to be considered nearly co-linear. Defaults to 0.001. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK8Polygon211to_polylineEv">
+<span id="_CPPv3NK8Polygon211to_polylineEv"></span><span id="_CPPv2NK8Polygon211to_polylineEv"></span><span id="Polygon2::to_polylineC"></span><span class="target" id="class_polygon2_1a305e7c4c52238b0771e311454c0f8f2a"></span><a class="reference internal" href="#_CPPv49Polyline2" title="Polyline2"><span class="n"><span class="pre">Polyline2</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">to_polyline</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8Polygon211to_polylineEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8Polygon29translateEN3glm5dvec2E">
+<span id="_CPPv3N8Polygon29translateEN3glm5dvec2E"></span><span id="_CPPv2N8Polygon29translateEN3glm5dvec2E"></span><span id="Polygon2::translate__glm::dvec2"></span><span class="target" id="class_polygon2_1a0a0ab23917035e116de342e7a3fda0e9"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">translate</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">translation</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Polygon29translateEN3glm5dvec2E" title="Link to this definition"></a><br /></dt>
+<dd><p>Translates the polygon by a vector. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8Polygon24ClipERKNSt6vectorI8Polygon2EERKNSt6vectorI9Polyline2EE">
+<span id="_CPPv3N8Polygon24ClipERKNSt6vectorI8Polygon2EERKNSt6vectorI9Polyline2EE"></span><span id="_CPPv2N8Polygon24ClipERKNSt6vectorI8Polygon2EERKNSt6vectorI9Polyline2EE"></span><span id="Polygon2::Clip__std::vector:Polygon2:CR.std::vector:Polyline2:CR"></span><span class="target" id="class_polygon2_1ab38d7207a8d962f4c57a95d3cd226042"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv49Polyline2" title="Polyline2"><span class="n"><span class="pre">Polyline2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Clip</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">polygons</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv49Polyline2" title="Polyline2"><span class="n"><span class="pre">Polyline2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">polylines</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Polygon24ClipERKNSt6vectorI8Polygon2EERKNSt6vectorI9Polyline2EE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8Polygon210DifferenceERKNSt6vectorI8Polygon2EERKNSt6vectorI8Polygon2EE">
+<span id="_CPPv3N8Polygon210DifferenceERKNSt6vectorI8Polygon2EERKNSt6vectorI8Polygon2EE"></span><span id="_CPPv2N8Polygon210DifferenceERKNSt6vectorI8Polygon2EERKNSt6vectorI8Polygon2EE"></span><span id="Polygon2::Difference__std::vector:Polygon2:CR.std::vector:Polygon2:CR"></span><span class="target" id="class_polygon2_1a6b0158488846798c5056b252c91c861e"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Difference</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">polygons</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">others</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Polygon210DifferenceERKNSt6vectorI8Polygon2EERKNSt6vectorI8Polygon2EE" title="Link to this definition"></a><br /></dt>
+<dd><p>Calculates the union of the polygon with another polygon. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> – The other polygon. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A vector of polygons representing the union. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8Polygon212IntersectionERKNSt6vectorI8Polygon2EERKNSt6vectorI8Polygon2EE">
+<span id="_CPPv3N8Polygon212IntersectionERKNSt6vectorI8Polygon2EERKNSt6vectorI8Polygon2EE"></span><span id="_CPPv2N8Polygon212IntersectionERKNSt6vectorI8Polygon2EERKNSt6vectorI8Polygon2EE"></span><span id="Polygon2::Intersection__std::vector:Polygon2:CR.std::vector:Polygon2:CR"></span><span class="target" id="class_polygon2_1ae814f5cad81e3187cd622ccd31ad6d3b"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Intersection</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">polygons</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">others</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Polygon212IntersectionERKNSt6vectorI8Polygon2EERKNSt6vectorI8Polygon2EE" title="Link to this definition"></a><br /></dt>
+<dd><p>Calculates the difference of the polygon with a vector of polygons. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>others</strong> – The vector of polygons. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A vector of polygons representing the difference. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8Polygon26OffsetERKNSt6vectorI8Polygon2EEd">
+<span id="_CPPv3N8Polygon26OffsetERKNSt6vectorI8Polygon2EEd"></span><span id="_CPPv2N8Polygon26OffsetERKNSt6vectorI8Polygon2EEd"></span><span id="Polygon2::Offset__std::vector:Polygon2:CR.double"></span><span class="target" id="class_polygon2_1a0f9f5f9c7872e8cd96590eff499bf8a2"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Offset</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">polygons</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">distance</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Polygon26OffsetERKNSt6vectorI8Polygon2EEd" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8Polygon25UnionERKNSt6vectorI8Polygon2EERKNSt6vectorI8Polygon2EE">
+<span id="_CPPv3N8Polygon25UnionERKNSt6vectorI8Polygon2EERKNSt6vectorI8Polygon2EE"></span><span id="_CPPv2N8Polygon25UnionERKNSt6vectorI8Polygon2EERKNSt6vectorI8Polygon2EE"></span><span id="Polygon2::Union__std::vector:Polygon2:CR.std::vector:Polygon2:CR"></span><span class="target" id="class_polygon2_1a28bc63c16e9d9dffb6c68820639dd369"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Union</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">polygons</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">others</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Polygon25UnionERKNSt6vectorI8Polygon2EERKNSt6vectorI8Polygon2EE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8Polygon27m_holesE">
+<span id="_CPPv3N8Polygon27m_holesE"></span><span id="_CPPv2N8Polygon27m_holesE"></span><span id="Polygon2::m_holes__std::vector:Polygon2:"></span><span class="target" id="class_polygon2_1a3c28897b07780935e25a82c2ce66f356"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_holes</span></span></span><a class="headerlink" href="#_CPPv4N8Polygon27m_holesE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv49Polyline2">
+<span id="_CPPv39Polyline2"></span><span id="_CPPv29Polyline2"></span><span id="Polyline2"></span><span class="target" id="class_polyline2"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Polyline2</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-geometry-3d.html#_CPPv49Segment_2" title="Segment_2"><span class="n"><span class="pre">Segment_2</span></span></a><span class="p"><span class="pre">&gt;</span></span><a class="headerlink" href="#_CPPv49Polyline2" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;polyline2.h&gt;</em></div>
+<p>A class for storing and manipulating polylines. </p>
+<p>A polyline is a sequence of line segments, defined by a sequence of points. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N9Polyline26appendERK9Polyline2">
+<span id="_CPPv3N9Polyline26appendERK9Polyline2"></span><span id="_CPPv2N9Polyline26appendERK9Polyline2"></span><span id="Polyline2::append__Polyline2CR"></span><span class="target" id="class_polyline2_1ab93e3aaff8e3579d8c45394fde2701cd"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">append</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv49Polyline2" title="Polyline2"><span class="n"><span class="pre">Polyline2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">polyline</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N9Polyline26appendERK9Polyline2" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK9Polyline26lengthEv">
+<span id="_CPPv3NK9Polyline26lengthEv"></span><span id="_CPPv2NK9Polyline26lengthEv"></span><span id="Polyline2::lengthC"></span><span class="target" id="class_polyline2_1a760b7283d69c2199210395849691c24a"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">length</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK9Polyline26lengthEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK9Polyline26pointsEv">
+<span id="_CPPv3NK9Polyline26pointsEv"></span><span id="_CPPv2NK9Polyline26pointsEv"></span><span id="Polyline2::pointsC"></span><span class="target" id="class_polyline2_1a1d81b5c9238490ddef653850613d1c91"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-geometry-3d.html#_CPPv47Point_2" title="Point_2"><span class="n"><span class="pre">Point_2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">points</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK9Polyline26pointsEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the points of the polyline. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The points of the polyline. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N9Polyline29Polyline2Ev">
+<span id="_CPPv3N9Polyline29Polyline2Ev"></span><span id="_CPPv2N9Polyline29Polyline2Ev"></span><span id="Polyline2::Polyline2"></span><span class="target" id="class_polyline2_1ab338314cd877a9e31b49b80242698006"></span><span class="sig-name descname"><span class="n"><span class="pre">Polyline2</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N9Polyline29Polyline2Ev" title="Link to this definition"></a><br /></dt>
+<dd><p>Default constructor. </p>
+<p>Creates an empty <a class="reference internal" href="#class_polyline2"><span class="std std-ref">Polyline2</span></a> object. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N9Polyline29Polyline2ERKNSt6vectorIN3glm5dvec2EEE">
+<span id="_CPPv3N9Polyline29Polyline2ERKNSt6vectorIN3glm5dvec2EEE"></span><span id="_CPPv2N9Polyline29Polyline2ERKNSt6vectorIN3glm5dvec2EEE"></span><span id="Polyline2::Polyline2__std::vector:glm::dvec2:CR"></span><span class="target" id="class_polyline2_1af5aa77e42e0f65f242d156e70145b454"></span><span class="sig-name descname"><span class="n"><span class="pre">Polyline2</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">points</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N9Polyline29Polyline2ERKNSt6vectorIN3glm5dvec2EEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Constructor. </p>
+<p>Creates a <a class="reference internal" href="#class_polyline2"><span class="std std-ref">Polyline2</span></a> object from a sequence of points with double precision. <div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#class_polygon2"><span class="std std-ref">Polygon2</span></a> instead. </p>
+</div>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>points</strong> – The points defining the polyline as double precision. </p>
+</dd>
+<dt class="field-even">Pre<span class="colon">:</span></dt>
+<dd class="field-even"><p>There must be at least 2 points in the sequence. </p>
+</dd>
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The the first and last point must NOT be the same. If they are the same, </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N9Polyline29Polyline2ERKNSt6vectorIN3glm4vec2EEE">
+<span id="_CPPv3N9Polyline29Polyline2ERKNSt6vectorIN3glm4vec2EEE"></span><span id="_CPPv2N9Polyline29Polyline2ERKNSt6vectorIN3glm4vec2EEE"></span><span id="Polyline2::Polyline2__std::vector:glm::vec2:CR"></span><span class="target" id="class_polyline2_1aae5f204ff0c75fa12b43583956465b84"></span><span class="sig-name descname"><span class="n"><span class="pre">Polyline2</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec2</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">points</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N9Polyline29Polyline2ERKNSt6vectorIN3glm4vec2EEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Constructor. </p>
+<p>Creates a <a class="reference internal" href="#class_polyline2"><span class="std std-ref">Polyline2</span></a> object from a sequence of points with single precision. <div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#class_polygon2"><span class="std std-ref">Polygon2</span></a> instead. </p>
+</div>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>points</strong> – The points defining the polyline as single precision. </p>
+</dd>
+<dt class="field-even">Pre<span class="colon">:</span></dt>
+<dd class="field-even"><p>There must be at least 2 points in the sequence. </p>
+</dd>
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The the first and last point must NOT be the same. If they are the same, </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N9Polyline29Polyline2ERKNSt6vectorI7Point_2EE">
+<span id="_CPPv3N9Polyline29Polyline2ERKNSt6vectorI7Point_2EE"></span><span id="_CPPv2N9Polyline29Polyline2ERKNSt6vectorI7Point_2EE"></span><span id="Polyline2::Polyline2__std::vector:Point_2:CR"></span><span class="target" id="class_polyline2_1a27f8da82ab1609767d5de8bfb99af3ed"></span><span class="sig-name descname"><span class="n"><span class="pre">Polyline2</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-geometry-3d.html#_CPPv47Point_2" title="Point_2"><span class="n"><span class="pre">Point_2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">points</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N9Polyline29Polyline2ERKNSt6vectorI7Point_2EE" title="Link to this definition"></a><br /></dt>
+<dd><p>Constructor. </p>
+<p>Creates a <a class="reference internal" href="#class_polyline2"><span class="std std-ref">Polyline2</span></a> object from a sequence of points. <div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#class_polygon2"><span class="std std-ref">Polygon2</span></a> instead. </p>
+</div>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>points</strong> – The points defining the polyline. </p>
+</dd>
+<dt class="field-even">Pre<span class="colon">:</span></dt>
+<dd class="field-even"><p>There must be at least 2 points in the sequence. </p>
+</dd>
+<dt class="field-odd">Pre<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The the first and last point must NOT be the same. If they are the same, </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N9Polyline27prependERK9Polyline2">
+<span id="_CPPv3N9Polyline27prependERK9Polyline2"></span><span id="_CPPv2N9Polyline27prependERK9Polyline2"></span><span id="Polyline2::prepend__Polyline2CR"></span><span class="target" id="class_polyline2_1a0b9ecd7c7292d204f9bb636b62a78785"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">prepend</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv49Polyline2" title="Polyline2"><span class="n"><span class="pre">Polyline2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">polyline</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N9Polyline27prependERK9Polyline2" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N9Polyline27reverseEv">
+<span id="_CPPv3N9Polyline27reverseEv"></span><span id="_CPPv2N9Polyline27reverseEv"></span><span id="Polyline2::reverse"></span><span class="target" id="class_polyline2_1abf784b9ee2f159031b994329b24eaa96"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">reverse</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N9Polyline27reverseEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Reverses the order of the points in the polyline. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK9Polyline28segmentsEv">
+<span id="_CPPv3NK9Polyline28segmentsEv"></span><span id="_CPPv2NK9Polyline28segmentsEv"></span><span id="Polyline2::segmentsC"></span><span class="target" id="class_polyline2_1a69939f333f0150d116252d469b1db0b0"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-geometry-3d.html#_CPPv49Segment_2" title="Segment_2"><span class="n"><span class="pre">Segment_2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">segments</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK9Polyline28segmentsEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N9Polyline28simplifyEd">
+<span id="_CPPv3N9Polyline28simplifyEd"></span><span id="_CPPv2N9Polyline28simplifyEd"></span><span id="Polyline2::simplify__double"></span><span class="target" id="class_polyline2_1a7d33be8743b0023d850ee2475c174e01"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">simplify</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">tolerance</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.001</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N9Polyline28simplifyEd" title="Link to this definition"></a><br /></dt>
+<dd><p>Remove co-linear points from the polyline. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tolerance</strong> – The tolerance for co-linearity. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N9Polyline29translateERK7Point_2">
+<span id="_CPPv3N9Polyline29translateERK7Point_2"></span><span id="_CPPv2N9Polyline29translateERK7Point_2"></span><span id="Polyline2::translate__Point_2CR"></span><span class="target" id="class_polyline2_1a57a24789af399219380e57ee59c7393e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">translate</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-geometry-3d.html#_CPPv47Point_2" title="Point_2"><span class="n"><span class="pre">Point_2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">translation</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N9Polyline29translateERK7Point_2" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-static-functions">Private Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N9Polyline28DistanceERK7Point_2RK7Point_2">
+<span id="_CPPv3N9Polyline28DistanceERK7Point_2RK7Point_2"></span><span id="_CPPv2N9Polyline28DistanceERK7Point_2RK7Point_2"></span><span id="Polyline2::Distance__Point_2CR.Point_2CR"></span><span class="target" id="class_polyline2_1ad3ff76cef35fd051898943675d9dc5a4"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Distance</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-geometry-3d.html#_CPPv47Point_2" title="Point_2"><span class="n"><span class="pre">Point_2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">a</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-geometry-3d.html#_CPPv47Point_2" title="Point_2"><span class="n"><span class="pre">Point_2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">b</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N9Polyline28DistanceERK7Point_2RK7Point_2" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv415MarchingSquares">
+<span id="_CPPv315MarchingSquares"></span><span id="_CPPv215MarchingSquares"></span><span id="MarchingSquares"></span><span class="target" id="class_marching_squares"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MarchingSquares</span></span></span><a class="headerlink" href="#_CPPv415MarchingSquares" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;marching_squares.h&gt;</em></div>
+<p>A class to compute iso-lines from a 2D scalar field using the marching squares algorithm. </p>
+<p>This class provides a method to compute iso-lines from a 2D scalar field using the marching squares algorithm. An arbitrary function can be evaluated at each point in the 2D scalar field to determine the iso-value at that point by passing a function pointer. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N15MarchingSquares12CrossSectionE">
+<span id="_CPPv3N15MarchingSquares12CrossSectionE"></span><span id="_CPPv2N15MarchingSquares12CrossSectionE"></span><span id="MarchingSquares::CrossSection"></span><span class="target" id="class_marching_squares_1aad6eb1b12f4adad491849221c8a0837f"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv49Polyline2" title="Polyline2"><span class="n"><span class="pre">Polyline2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CrossSection</span></span></span><a class="headerlink" href="#_CPPv4N15MarchingSquares12CrossSectionE" title="Link to this definition"></a><br /></dt>
+<dd><p>This class returns a <a class="reference internal" href="#class_marching_squares_1aad6eb1b12f4adad491849221c8a0837f"><span class="std std-ref">CrossSection</span></a> which is a pair of vectors of polygons and polylines. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The polygons represent the closed regions of the iso-lines and the polylines represent open iso-lines. </p>
+</div>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N15MarchingSquares27ComputeIsoLinesDistributionERNSt8functionIFddddEEERNSt8functionIFNSt13unordered_mapI7uint8_tfEEdddEEE6size_tdRKN3glm5dvec2ERKN3glm5dvec2ERKN3glm5dvec2Edd">
+<span id="_CPPv3N15MarchingSquares27ComputeIsoLinesDistributionERNSt8functionIFddddEEERNSt8functionIFNSt13unordered_mapI7uint8_tfEEdddEEE6size_tdRKN3glm5dvec2ERKN3glm5dvec2ERKN3glm5dvec2Edd"></span><span id="_CPPv2N15MarchingSquares27ComputeIsoLinesDistributionERNSt8functionIFddddEEERNSt8functionIFNSt13unordered_mapI7uint8_tfEEdddEEE6size_tdRKN3glm5dvec2ERKN3glm5dvec2ERKN3glm5dvec2Edd"></span><span class="target" id="class_marching_squares_1ab7d794285e82ce9616bf573822ce2b16"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ivec2</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ComputeIsoLinesDistribution</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">geometry_evaluator</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">unordered_map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">distribution_evaluator</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">channel</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">z</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">min</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">max</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">cell_size</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iso_value</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.0</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">epsilon</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1e-12</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15MarchingSquares27ComputeIsoLinesDistributionERNSt8functionIFddddEEERNSt8functionIFNSt13unordered_mapI7uint8_tfEEdddEEE6size_tdRKN3glm5dvec2ERKN3glm5dvec2ERKN3glm5dvec2Edd" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N15MarchingSquares23ComputeIsoLinesGeometryERNSt8functionIFddddEEEdRKN3glm5dvec2ERKN3glm5dvec2ERKN3glm5dvec2Edd">
+<span id="_CPPv3N15MarchingSquares23ComputeIsoLinesGeometryERNSt8functionIFddddEEEdRKN3glm5dvec2ERKN3glm5dvec2ERKN3glm5dvec2Edd"></span><span id="_CPPv2N15MarchingSquares23ComputeIsoLinesGeometryERNSt8functionIFddddEEEdRKN3glm5dvec2ERKN3glm5dvec2ERKN3glm5dvec2Edd"></span><span class="target" id="class_marching_squares_1accea472b2d3dfd98cfe9eb70155f937a"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ivec2</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ComputeIsoLinesGeometry</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">evaluator</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">z</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">min</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">max</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">cell_size</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iso_value</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.0</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">epsilon</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1e-12</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15MarchingSquares23ComputeIsoLinesGeometryERNSt8functionIFddddEEEdRKN3glm5dvec2ERKN3glm5dvec2ERKN3glm5dvec2Edd" title="Link to this definition"></a><br /></dt>
+<dd><p>Compute the iso-lines of a 2D scalar field using the marching squares algorithm. </p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>The vertices and edges are not connected, so they need to be stitched into polylines using the StitchIsoLinesIntoPolylines method. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>evaluator</strong> – A function pointer to the function that evaluates the scalar field at a given point. This function must take in three arguments: x, y, and z and return a double. The reason that the z argument is included is to allow for the evaluation of a 3D scalar field slice. This avoids the need extract a slice from a 3D scalar field first. </p></li>
+<li><p><strong>z</strong> – The z-value of the 2D slice to evaluate the scalar field at. </p></li>
+<li><p><strong>min</strong> – The minimum x and y values of the 2D slice. </p></li>
+<li><p><strong>max</strong> – The maximum x and y values of the 2D slice. </p></li>
+<li><p><strong>cell_size</strong> – The size of the cells in the 2D slice. </p></li>
+<li><p><strong>iso_value</strong> – The iso-value to compute the iso-lines at. </p></li>
+<li><p><strong>epsilon</strong> – The epsilon value to use when comparing floating point numbers. If you have problems with the iso-lines not connecting during stitching try increasing this value. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A pair of vectors of vertices and edges that represent the unconnected iso-lines. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N15MarchingSquares35ComputeStitchedIsoLinesDistributionERNSt8functionIFddddEEERNSt8functionIFNSt13unordered_mapI7uint8_tfEEdddEEE6size_tdRKN3glm5dvec2ERKN3glm5dvec2ERKN3glm5dvec2Edd">
+<span id="_CPPv3N15MarchingSquares35ComputeStitchedIsoLinesDistributionERNSt8functionIFddddEEERNSt8functionIFNSt13unordered_mapI7uint8_tfEEdddEEE6size_tdRKN3glm5dvec2ERKN3glm5dvec2ERKN3glm5dvec2Edd"></span><span id="_CPPv2N15MarchingSquares35ComputeStitchedIsoLinesDistributionERNSt8functionIFddddEEERNSt8functionIFNSt13unordered_mapI7uint8_tfEEdddEEE6size_tdRKN3glm5dvec2ERKN3glm5dvec2ERKN3glm5dvec2Edd"></span><span class="target" id="class_marching_squares_1afbff5ebff97beb1dd86fd797fcf564bd"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N15MarchingSquares12CrossSectionE" title="MarchingSquares::CrossSection"><span class="n"><span class="pre">CrossSection</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ComputeStitchedIsoLinesDistribution</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">geometry_evaluator</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">unordered_map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">distribution_evaluator</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">channel</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">z</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">min</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">max</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">cell_size</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iso_value</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.0</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">epsilon</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1e-12</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15MarchingSquares35ComputeStitchedIsoLinesDistributionERNSt8functionIFddddEEERNSt8functionIFNSt13unordered_mapI7uint8_tfEEdddEEE6size_tdRKN3glm5dvec2ERKN3glm5dvec2ERKN3glm5dvec2Edd" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N15MarchingSquares31ComputeStitchedIsoLinesGeometryERNSt8functionIFddddEEEdRKN3glm5dvec2ERKN3glm5dvec2ERKN3glm5dvec2Edd">
+<span id="_CPPv3N15MarchingSquares31ComputeStitchedIsoLinesGeometryERNSt8functionIFddddEEEdRKN3glm5dvec2ERKN3glm5dvec2ERKN3glm5dvec2Edd"></span><span id="_CPPv2N15MarchingSquares31ComputeStitchedIsoLinesGeometryERNSt8functionIFddddEEEdRKN3glm5dvec2ERKN3glm5dvec2ERKN3glm5dvec2Edd"></span><span class="target" id="class_marching_squares_1ac1963cffe365a6674c94b9aaebee08d8"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N15MarchingSquares12CrossSectionE" title="MarchingSquares::CrossSection"><span class="n"><span class="pre">CrossSection</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ComputeStitchedIsoLinesGeometry</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">evaluator</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">z</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">min</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">max</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">cell_size</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iso_value</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.0</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">epsilon</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1e-12</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15MarchingSquares31ComputeStitchedIsoLinesGeometryERNSt8functionIFddddEEEdRKN3glm5dvec2ERKN3glm5dvec2ERKN3glm5dvec2Edd" title="Link to this definition"></a><br /></dt>
+<dd><p>A convenience method to compute the iso-lines of a 2D scalar field using the marching squares algorithm and then stitch them into polylines using a depth-first search. </p>
+<p><div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p>ComputeIsoLines and <a class="reference internal" href="#class_marching_squares_1a46951f2016bd88cc4cc0ed7b60e5b5c1"><span class="std std-ref">StitchIsoLinesIntoPolylines</span></a></p>
+</div>
+</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>evaluator</strong> – A function pointer to the function that evaluates the scalar field at a given point. This function must take in three arguments: x, y, and z and return a double. The reason that the z argument is included is to allow for the evaluation of a 3D scalar field slice. This avoids the need extract a slice from a 3D scalar field first. </p></li>
+<li><p><strong>z</strong> – The z-value of the 2D slice to evaluate the scalar field at. </p></li>
+<li><p><strong>min</strong> – The minimum x and y values of the 2D slice. </p></li>
+<li><p><strong>max</strong> – The maximum x and y values of the 2D slice. </p></li>
+<li><p><strong>cell_size</strong> – The size of the cells in the 2D slice. </p></li>
+<li><p><strong>iso_value</strong> – The iso-value to compute the iso-lines at. </p></li>
+<li><p><strong>epsilon</strong> – The epsilon value to use when comparing floating point numbers. If you have problems with the iso-lines not connecting during stitching try increasing this value. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A pair of vectors of polygons and polylines that represent the <a class="reference internal" href="#class_marching_squares_1aad6eb1b12f4adad491849221c8a0837f"><span class="std std-ref">CrossSection</span></a>. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N15MarchingSquares27StitchIsoLinesIntoPolylinesERKNSt6vectorIN3glm5dvec2EEERKNSt6vectorIN3glm5ivec2EEE">
+<span id="_CPPv3N15MarchingSquares27StitchIsoLinesIntoPolylinesERKNSt6vectorIN3glm5dvec2EEERKNSt6vectorIN3glm5ivec2EEE"></span><span id="_CPPv2N15MarchingSquares27StitchIsoLinesIntoPolylinesERKNSt6vectorIN3glm5dvec2EEERKNSt6vectorIN3glm5ivec2EEE"></span><span id="MarchingSquares::StitchIsoLinesIntoPolylines__std::vector:glm::dvec2:CR.std::vector:glm::ivec2:CR"></span><span class="target" id="class_marching_squares_1a46951f2016bd88cc4cc0ed7b60e5b5c1"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N15MarchingSquares12CrossSectionE" title="MarchingSquares::CrossSection"><span class="n"><span class="pre">CrossSection</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">StitchIsoLinesIntoPolylines</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">vertices</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ivec2</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">edges</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15MarchingSquares27StitchIsoLinesIntoPolylinesERKNSt6vectorIN3glm5dvec2EEERKNSt6vectorIN3glm5ivec2EEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Stitch the iso-lines into polylines/. </p>
+<p>This method takes the vertices and edges from the ComputeIsoLines method and stitches them into polylines. It does this by performing a depth-first search (DFS) over the edges to determine the connected components of the iso-lines. Special care is taken to allow for cycles graph in the case the contours form closed polygons. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vertices</strong> – The vertices of the iso-lines. </p></li>
+<li><p><strong>edges</strong> – The edges of the iso-lines. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A pair of vectors of polygons and polylines that represent the <a class="reference internal" href="#class_marching_squares_1aad6eb1b12f4adad491849221c8a0837f"><span class="std std-ref">CrossSection</span></a>. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-static-functions">Private Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N15MarchingSquares11InterpolateERKN3glm5dvec2ERKN3glm5dvec2Edddd">
+<span id="_CPPv3N15MarchingSquares11InterpolateERKN3glm5dvec2ERKN3glm5dvec2Edddd"></span><span id="_CPPv2N15MarchingSquares11InterpolateERKN3glm5dvec2ERKN3glm5dvec2Edddd"></span><span id="MarchingSquares::Interpolate__glm::dvec2CR.glm::dvec2CR.double.double.double.double"></span><span class="target" id="class_marching_squares_1ae8cdbfccf7e48a8bb6e626f02226ec13"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Interpolate</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">p1</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">p2</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">val1</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">val2</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iso_value</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.0</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">epsilon</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1e-12</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15MarchingSquares11InterpolateERKN3glm5dvec2ERKN3glm5dvec2Edddd" title="Link to this definition"></a><br /></dt>
+<dd><p>Linearly interpolate between two points. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p1</strong> – The first point. </p></li>
+<li><p><strong>p2</strong> – The second point. </p></li>
+<li><p><strong>val1</strong> – The value at the first point. </p></li>
+<li><p><strong>val2</strong> – The value at the second point. </p></li>
+<li><p><strong>iso_value</strong> – The iso-value to interpolate at. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The interpolated point. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N15MarchingSquares12VectorInsertERNSt6vectorIN3glm5dvec2EEERKN3glm5dvec2Ed">
+<span id="_CPPv3N15MarchingSquares12VectorInsertERNSt6vectorIN3glm5dvec2EEERKN3glm5dvec2Ed"></span><span id="_CPPv2N15MarchingSquares12VectorInsertERNSt6vectorIN3glm5dvec2EEERKN3glm5dvec2Ed"></span><span id="MarchingSquares::VectorInsert__std::vector:glm::dvec2:R.glm::dvec2CR.double"></span><span class="target" id="class_marching_squares_1a5a35c73ae9fb2077943fe0ec3f95b662"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">VectorInsert</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">vertices</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">dvec2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">vertex</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">epsilon</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1e-12</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15MarchingSquares12VectorInsertERNSt6vectorIN3glm5dvec2EEERKN3glm5dvec2Ed" title="Link to this definition"></a><br /></dt>
+<dd><p>Insert a vertex into a vector of vertices if it does not already exist. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vertices</strong> – The vector of vertices to insert the vertex into. </p></li>
+<li><p><strong>vertex</strong> – The vertex to insert. </p></li>
+<li><p><strong>epsilon</strong> – The epsilon value to use when comparing floating point numbers. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The index of the vertex in the vector. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="libvcad-parser.html" class="btn btn-neutral float-left" title="Parser" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="libvcad-geometry-3d.html" class="btn btn-neutral float-right" title="Geometry — 3D" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Charles Wade and Robert MacCurdy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

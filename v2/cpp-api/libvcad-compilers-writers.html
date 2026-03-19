@@ -1,0 +1,509 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compilers — writers &mdash; OpenVCAD 2.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=57236720"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Compilers — B-rep" href="libvcad-compilers-brep.html" />
+    <link rel="prev" title="Compilers — inkjet" href="libvcad-compilers-inkjet.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenVCAD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/math-expressions.html">Math Expression Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad_compilers/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad_rendering/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code> package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">C++ API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-core.html">Tree — core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-leaves.html">Tree — leaves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-composition.html">Tree — composition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-material.html">Tree — material</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-parser.html">Parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-2d.html">Geometry — 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-3d.html">Geometry — 3D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-surface-parameterizer.html">Geometry — surface parameterization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-utils.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-analysis.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-inkjet.html">Compilers — inkjet</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Compilers — writers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv418CrossSectionSlicer"><code class="docutils literal notranslate"><span class="pre">CrossSectionSlicer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N18CrossSectionSlicer18CrossSectionSlicerENSt10shared_ptrI4NodeEEN3glm4vec3EN3glm4vec3EN3glm4vec3E"><code class="docutils literal notranslate"><span class="pre">CrossSectionSlicer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N18CrossSectionSlicer14slice_geometryEddd"><code class="docutils literal notranslate"><span class="pre">slice_geometry()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N18CrossSectionSlicer14slice_materialEd7uint8_tKNSt6vectorINSt4pairIddEEEEdd"><code class="docutils literal notranslate"><span class="pre">slice_material()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N18CrossSectionSlicer40takeCrossSectionAndInsertIntoArrangementERNSt8functionIFddddEEERNSt8functionIFNSt13unordered_mapI7uint8_tfEEdddEEE6size_tddR12Arrangement2dd"><code class="docutils literal notranslate"><span class="pre">takeCrossSectionAndInsertIntoArrangement()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N18CrossSectionSlicer5m_maxE"><code class="docutils literal notranslate"><span class="pre">m_max</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N18CrossSectionSlicer5m_minE"><code class="docutils literal notranslate"><span class="pre">m_min</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N18CrossSectionSlicer6m_rootE"><code class="docutils literal notranslate"><span class="pre">m_root</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N18CrossSectionSlicer12m_voxel_sizeE"><code class="docutils literal notranslate"><span class="pre">m_voxel_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N18CrossSectionSlicer13ClassifyFacesERKNSt6vectorI8Polygon2EERKNSt6vectorI8Polygon2EERKNSt8functionIFddddEEEdRNSt6vectorINSt5tupleIddNSt6vectorI8Polygon2EEEEEE"><code class="docutils literal notranslate"><span class="pre">ClassifyFaces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N18CrossSectionSlicer25CorrectPolygonOrientationEKNSt6vectorI8Polygon2EE"><code class="docutils literal notranslate"><span class="pre">CorrectPolygonOrientation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N18CrossSectionSlicer18FindPointInPolygonERK8Polygon2"><code class="docutils literal notranslate"><span class="pre">FindPointInPolygon()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N18CrossSectionSlicer15IsExtraGeometryERK8Polygon2RKNSt6vectorI8Polygon2EE"><code class="docutils literal notranslate"><span class="pre">IsExtraGeometry()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N18CrossSectionSlicer20IsFaceInsideGeometryERK8Polygon2RKNSt6vectorI8Polygon2EE"><code class="docutils literal notranslate"><span class="pre">IsFaceInsideGeometry()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N18CrossSectionSlicer21PointInsideAnyPolygonERK7Point_2RKNSt6vectorI8Polygon2EE"><code class="docutils literal notranslate"><span class="pre">PointInsideAnyPolygon()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv49InpWriter"><code class="docutils literal notranslate"><span class="pre">InpWriter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N9InpWriter9InpWriterEv"><code class="docutils literal notranslate"><span class="pre">InpWriter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N9InpWriter5writeERKNSt6stringEKNSt10shared_ptrI4NodeEE4vec3RKNSt6stringEb"><code class="docutils literal notranslate"><span class="pre">write()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N9InpWriter12IndexedPointE"><code class="docutils literal notranslate"><span class="pre">InpWriter::IndexedPoint</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv411VTPCompiler"><code class="docutils literal notranslate"><span class="pre">VTPCompiler</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK11VTPCompiler22compute_vtp_parametersEN3glm4vec3EN3glm4vec3E"><code class="docutils literal notranslate"><span class="pre">compute_vtp_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK11VTPCompiler22compute_vtp_parametersEN3glm4vec3EN3glm4vec3ERKNSt13unordered_mapI7uint8_tfEE"><code class="docutils literal notranslate"><span class="pre">compute_vtp_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK11VTPCompiler22compute_vtp_parametersEN3glm4vec3EN3glm4vec3Edd"><code class="docutils literal notranslate"><span class="pre">compute_vtp_parameters()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK11VTPCompiler21resolve_v_star_h_starERKNSt13unordered_mapI7uint8_tfEE"><code class="docutils literal notranslate"><span class="pre">resolve_v_star_h_star()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11VTPCompiler11VTPCompilerERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI12MaterialDefsEEddddd"><code class="docutils literal notranslate"><span class="pre">VTPCompiler()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11VTPCompiler7m_alphaE"><code class="docutils literal notranslate"><span class="pre">m_alpha</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11VTPCompiler6m_edotE"><code class="docutils literal notranslate"><span class="pre">m_edot</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11VTPCompiler19m_filament_diameterE"><code class="docutils literal notranslate"><span class="pre">m_filament_diameter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11VTPCompiler14m_layer_heightE"><code class="docutils literal notranslate"><span class="pre">m_layer_height</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11VTPCompiler15m_material_defsE"><code class="docutils literal notranslate"><span class="pre">m_material_defs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11VTPCompiler17m_nozzle_diameterE"><code class="docutils literal notranslate"><span class="pre">m_nozzle_diameter</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N11VTPCompiler6m_rootE"><code class="docutils literal notranslate"><span class="pre">m_root</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-brep.html">Compilers — B-rep</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-vat.html">Compilers — VAT</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../papers.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenVCAD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">C++ API Reference</a></li>
+      <li class="breadcrumb-item active">Compilers — writers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/cpp-api/libvcad-compilers-writers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="compilers-writers">
+<h1>Compilers — writers<a class="headerlink" href="#compilers-writers" title="Link to this heading"></a></h1>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv418CrossSectionSlicer">
+<span id="_CPPv318CrossSectionSlicer"></span><span id="_CPPv218CrossSectionSlicer"></span><span id="CrossSectionSlicer"></span><span class="target" id="class_cross_section_slicer"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CrossSectionSlicer</span></span></span><a class="headerlink" href="#_CPPv418CrossSectionSlicer" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;cross_section_slicer.h&gt;</em></div>
+<p>A class for slicing a VCAD design into cross-sections. </p>
+<p>This class provides methods to slice a VCAD design into cross-sections. This includes slicing the geometry and materials of the design into 2D polygons. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N18CrossSectionSlicer18CrossSectionSlicerENSt10shared_ptrI4NodeEEN3glm4vec3EN3glm4vec3EN3glm4vec3E">
+<span id="_CPPv3N18CrossSectionSlicer18CrossSectionSlicerENSt10shared_ptrI4NodeEEN3glm4vec3EN3glm4vec3EN3glm4vec3E"></span><span id="_CPPv2N18CrossSectionSlicer18CrossSectionSlicerENSt10shared_ptrI4NodeEEN3glm4vec3EN3glm4vec3EN3glm4vec3E"></span><span id="CrossSectionSlicer::CrossSectionSlicer__std::shared_ptr:Node:.glm::vec3.glm::vec3.glm::vec3"></span><span class="target" id="class_cross_section_slicer_1a113fea7e93be016c6f1dd86f41afbc92"></span><span class="sig-name descname"><span class="n"><span class="pre">CrossSectionSlicer</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">root</span></span>, <a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">min</span></span>, <a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">max</span></span>, <a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">voxel_size</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N18CrossSectionSlicer18CrossSectionSlicerENSt10shared_ptrI4NodeEEN3glm4vec3EN3glm4vec3EN3glm4vec3E" title="Link to this definition"></a><br /></dt>
+<dd><p>Constructor. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root</strong> – The root node of the VCAD design tree. </p></li>
+<li><p><strong>min</strong> – The minimum corner of the bounding box of the design. </p></li>
+<li><p><strong>max</strong> – The maximum corner of the bounding box of the design. </p></li>
+<li><p><strong>voxel_size</strong> – The size of the voxels used to discretize the design. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N18CrossSectionSlicer14slice_geometryEddd">
+<span id="_CPPv3N18CrossSectionSlicer14slice_geometryEddd"></span><span id="_CPPv2N18CrossSectionSlicer14slice_geometryEddd"></span><span id="CrossSectionSlicer::slice_geometry__double.double.double"></span><span class="target" id="class_cross_section_slicer_1a855a9b58ff0bfeb1e9e635a8c1bb59f0"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-geometry-2d.html#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">slice_geometry</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">z_height</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">stitching_tolerance</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1e-12</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">colinear_tolerance</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1e-12</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N18CrossSectionSlicer14slice_geometryEddd" title="Link to this definition"></a><br /></dt>
+<dd><p>Slice the geometry of the design at a given z-height. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z_height</strong> – The z-height to slice the geometry at. </p></li>
+<li><p><strong>stitching_tolerance</strong> – The tolerance to use when stitching the iso-lines into polygons. </p></li>
+<li><p><strong>colinear_tolerance</strong> – The tolerance to use when simplifying the polygons by removing co-linear points </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A vector of polygons representing the geometry at the given z-height. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N18CrossSectionSlicer14slice_materialEd7uint8_tKNSt6vectorINSt4pairIddEEEEdd">
+<span id="_CPPv3N18CrossSectionSlicer14slice_materialEd7uint8_tKNSt6vectorINSt4pairIddEEEEdd"></span><span id="_CPPv2N18CrossSectionSlicer14slice_materialEd7uint8_tKNSt6vectorINSt4pairIddEEEEdd"></span><span id="CrossSectionSlicer::slice_material__double.uint8_t.std::vector:std::pair:double.double::C.double.double"></span><span class="target" id="class_cross_section_slicer_1a88d835d0e9cb58abbeccbf1aec10c007"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">tuple</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-geometry-2d.html#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">slice_material</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">z_height</span></span>, <span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">material_chan</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">ranges</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">stitching_tolerance</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1e-12</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">colinear_tolerance</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1e-12</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N18CrossSectionSlicer14slice_materialEd7uint8_tKNSt6vectorINSt4pairIddEEEEdd" title="Link to this definition"></a><br /></dt>
+<dd><p>Slice the material of the design at a given z-height. </p>
+<p>This method slices the material of the design at a given z-height and returns the ranges of the material values. This returns the outlines of regions of the material concentration. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z_height</strong> – The z-height to slice the material at. </p></li>
+<li><p><strong>material_chan</strong> – The material channel to slice. </p></li>
+<li><p><strong>ranges</strong> – The ranges of the material values to slice. </p></li>
+<li><p><strong>stitching_tolerance</strong> – The tolerance to use when stitching the iso-lines into polygons. </p></li>
+<li><p><strong>colinear_tolerance</strong> – The tolerance to use when simplifying the polygons by removing co-linear points </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A vector of tuples containing the ranges of the material values and the polygons representing the material at the given z-height. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-functions">Private Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N18CrossSectionSlicer40takeCrossSectionAndInsertIntoArrangementERNSt8functionIFddddEEERNSt8functionIFNSt13unordered_mapI7uint8_tfEEdddEEE6size_tddR12Arrangement2dd">
+<span id="_CPPv3N18CrossSectionSlicer40takeCrossSectionAndInsertIntoArrangementERNSt8functionIFddddEEERNSt8functionIFNSt13unordered_mapI7uint8_tfEEdddEEE6size_tddR12Arrangement2dd"></span><span id="_CPPv2N18CrossSectionSlicer40takeCrossSectionAndInsertIntoArrangementERNSt8functionIFddddEEERNSt8functionIFNSt13unordered_mapI7uint8_tfEEdddEEE6size_tddR12Arrangement2dd"></span><span class="target" id="class_cross_section_slicer_1a58a636e3d6ebeed6cc850feec15ecc71"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">takeCrossSectionAndInsertIntoArrangement</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">geometry_evaluator</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">unordered_map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">distribution_evaluator</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">channel</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">z_height</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">iso_value</span></span>, <a class="reference internal" href="libvcad-geometry-2d.html#_CPPv412Arrangement2" title="Arrangement2"><span class="n"><span class="pre">Arrangement2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">arrangement</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">stitching_tolerance</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">colinear_tolerance</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N18CrossSectionSlicer40takeCrossSectionAndInsertIntoArrangementERNSt8functionIFddddEEERNSt8functionIFNSt13unordered_mapI7uint8_tfEEdddEEE6size_tddR12Arrangement2dd" title="Link to this definition"></a><br /></dt>
+<dd><p>Take a cross-section of the geometry and insert it into an arrangement. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>gradient_evaluator</strong> – The function to evaluate the gradient at a given point. </p></li>
+<li><p><strong>z_height</strong> – The z-height to take the cross-section at. </p></li>
+<li><p><strong>iso_value</strong> – The iso-value to take the cross-section at. </p></li>
+<li><p><strong>arrangement</strong> – The arrangement to insert the cross-section into. </p></li>
+<li><p><strong>stitching_tolerance</strong> – The tolerance to use when stitching the iso-lines into polygons. </p></li>
+<li><p><strong>colinear_tolerance</strong> – The tolerance to use when simplifying the polygons by removing co-linear points </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18CrossSectionSlicer5m_maxE">
+<span id="_CPPv3N18CrossSectionSlicer5m_maxE"></span><span id="_CPPv2N18CrossSectionSlicer5m_maxE"></span><span id="CrossSectionSlicer::m_max__glm::vec3"></span><span class="target" id="class_cross_section_slicer_1aa44a9939f81c32bec51de9fcf96ecd76"></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_max</span></span></span><a class="headerlink" href="#_CPPv4N18CrossSectionSlicer5m_maxE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18CrossSectionSlicer5m_minE">
+<span id="_CPPv3N18CrossSectionSlicer5m_minE"></span><span id="_CPPv2N18CrossSectionSlicer5m_minE"></span><span id="CrossSectionSlicer::m_min__glm::vec3"></span><span class="target" id="class_cross_section_slicer_1a4e05aa625d4e0f228c9a38bce2704c4d"></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_min</span></span></span><a class="headerlink" href="#_CPPv4N18CrossSectionSlicer5m_minE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18CrossSectionSlicer6m_rootE">
+<span id="_CPPv3N18CrossSectionSlicer6m_rootE"></span><span id="_CPPv2N18CrossSectionSlicer6m_rootE"></span><span id="CrossSectionSlicer::m_root__std::shared_ptr:Node:"></span><span class="target" id="class_cross_section_slicer_1ad1c7d47ce702de9091d627f247633c8d"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_root</span></span></span><a class="headerlink" href="#_CPPv4N18CrossSectionSlicer6m_rootE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18CrossSectionSlicer12m_voxel_sizeE">
+<span id="_CPPv3N18CrossSectionSlicer12m_voxel_sizeE"></span><span id="_CPPv2N18CrossSectionSlicer12m_voxel_sizeE"></span><span id="CrossSectionSlicer::m_voxel_size__glm::vec3"></span><span class="target" id="class_cross_section_slicer_1afe2aee4bcd99aa2060d003947e438016"></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_voxel_size</span></span></span><a class="headerlink" href="#_CPPv4N18CrossSectionSlicer12m_voxel_sizeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-static-functions">Private Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N18CrossSectionSlicer13ClassifyFacesERKNSt6vectorI8Polygon2EERKNSt6vectorI8Polygon2EERKNSt8functionIFddddEEEdRNSt6vectorINSt5tupleIddNSt6vectorI8Polygon2EEEEEE">
+<span id="_CPPv3N18CrossSectionSlicer13ClassifyFacesERKNSt6vectorI8Polygon2EERKNSt6vectorI8Polygon2EERKNSt8functionIFddddEEEdRNSt6vectorINSt5tupleIddNSt6vectorI8Polygon2EEEEEE"></span><span id="_CPPv2N18CrossSectionSlicer13ClassifyFacesERKNSt6vectorI8Polygon2EERKNSt6vectorI8Polygon2EERKNSt8functionIFddddEEEdRNSt6vectorINSt5tupleIddNSt6vectorI8Polygon2EEEEEE"></span><span class="target" id="class_cross_section_slicer_1ac753b907f747ad86a07831351e29dc73"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ClassifyFaces</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-geometry-2d.html#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">faces</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-geometry-2d.html#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">geometry</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">exact_gradient_evaluator</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">z_height</span></span>, <span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">tuple</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-geometry-2d.html#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">ranges</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N18CrossSectionSlicer13ClassifyFacesERKNSt6vectorI8Polygon2EERKNSt6vectorI8Polygon2EERKNSt8functionIFddddEEEdRNSt6vectorINSt5tupleIddNSt6vectorI8Polygon2EEEEEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Classify the faces as inside, outside, and into a range. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>faces</strong> – The faces to classify. </p></li>
+<li><p><strong>geometry</strong> – The geometry to classify the faces against. </p></li>
+<li><p><strong>exact_gradient_evaluator</strong> – The function to evaluate the gradient at a given point. This method should be exact but (likely) slower. </p></li>
+<li><p><strong>z_height</strong> – The z-height to classify the faces at. </p></li>
+<li><p><strong>ranges</strong> – The ranges to classify the faces into. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N18CrossSectionSlicer25CorrectPolygonOrientationEKNSt6vectorI8Polygon2EE">
+<span id="_CPPv3N18CrossSectionSlicer25CorrectPolygonOrientationEKNSt6vectorI8Polygon2EE"></span><span id="_CPPv2N18CrossSectionSlicer25CorrectPolygonOrientationEKNSt6vectorI8Polygon2EE"></span><span id="CrossSectionSlicer::CorrectPolygonOrientation__std::vector:Polygon2:C"></span><span class="target" id="class_cross_section_slicer_1a5e0885de91d757886b4b53c03a77c519"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-geometry-2d.html#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CorrectPolygonOrientation</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-geometry-2d.html#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">polygons</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N18CrossSectionSlicer25CorrectPolygonOrientationEKNSt6vectorI8Polygon2EE" title="Link to this definition"></a><br /></dt>
+<dd><p>Correct the orientation of the polygons to ensure they follow the even-odd rule. </p>
+<p>This method corrects the orientation of the polygons to ensure they follow the even-odd rule. This is necessary for the polygons to be used in the arrangement. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>polygons</strong> – The polygons to correct the orientation of. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The corrected polygons. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N18CrossSectionSlicer18FindPointInPolygonERK8Polygon2">
+<span id="_CPPv3N18CrossSectionSlicer18FindPointInPolygonERK8Polygon2"></span><span id="_CPPv2N18CrossSectionSlicer18FindPointInPolygonERK8Polygon2"></span><span id="CrossSectionSlicer::FindPointInPolygon__Polygon2CR"></span><span class="target" id="class_cross_section_slicer_1a882e6a438a7acd1bd66204963e0788fa"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="libvcad-geometry-3d.html#_CPPv47Point_2" title="Point_2"><span class="n"><span class="pre">Point_2</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">FindPointInPolygon</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-geometry-2d.html#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">polygon</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N18CrossSectionSlicer18FindPointInPolygonERK8Polygon2" title="Link to this definition"></a><br /></dt>
+<dd><p>Find a point inside a polygon. </p>
+<p>This method finds a point inside a polygon by first checking the centroid. If that fails, it checks random points until it finds one inside the polygon. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Throws<span class="colon">:</span></dt>
+<dd class="field-odd"><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">runtime_error</span></span></span> – if a point cannot be found inside the polygon after 10,000 attempts </p>
+</dd>
+<dt class="field-even">Parameters<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>polygon</strong> – The polygon to find a point inside. </p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A point inside the polygon. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N18CrossSectionSlicer15IsExtraGeometryERK8Polygon2RKNSt6vectorI8Polygon2EE">
+<span id="_CPPv3N18CrossSectionSlicer15IsExtraGeometryERK8Polygon2RKNSt6vectorI8Polygon2EE"></span><span id="_CPPv2N18CrossSectionSlicer15IsExtraGeometryERK8Polygon2RKNSt6vectorI8Polygon2EE"></span><span id="CrossSectionSlicer::IsExtraGeometry__Polygon2CR.std::vector:Polygon2:CR"></span><span class="target" id="class_cross_section_slicer_1aaf47cfaffdecec79dbeaa56d701ae71a"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IsExtraGeometry</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-geometry-2d.html#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">face</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-geometry-2d.html#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">org_geometry</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N18CrossSectionSlicer15IsExtraGeometryERK8Polygon2RKNSt6vectorI8Polygon2EE" title="Link to this definition"></a><br /></dt>
+<dd><p>Check if a face is extra geometry. </p>
+<p>This method checks if a face is extra geometry by checking if the face is inside any of the polygons in the geometry. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>face</strong> – The face to check. </p></li>
+<li><p><strong>org_geometry</strong> – The geometry to check if the face is inside. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the face is extra geometry, false otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N18CrossSectionSlicer20IsFaceInsideGeometryERK8Polygon2RKNSt6vectorI8Polygon2EE">
+<span id="_CPPv3N18CrossSectionSlicer20IsFaceInsideGeometryERK8Polygon2RKNSt6vectorI8Polygon2EE"></span><span id="_CPPv2N18CrossSectionSlicer20IsFaceInsideGeometryERK8Polygon2RKNSt6vectorI8Polygon2EE"></span><span id="CrossSectionSlicer::IsFaceInsideGeometry__Polygon2CR.std::vector:Polygon2:CR"></span><span class="target" id="class_cross_section_slicer_1aa048dac4c116cd18590acb132d0852a3"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IsFaceInsideGeometry</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-geometry-2d.html#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">face</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-geometry-2d.html#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">org_geometry</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N18CrossSectionSlicer20IsFaceInsideGeometryERK8Polygon2RKNSt6vectorI8Polygon2EE" title="Link to this definition"></a><br /></dt>
+<dd><p>Check if a face is inside the geometry. </p>
+<p>This method checks if a face is inside the geometry by checking if the face is inside any of the polygons in the geometry. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>face</strong> – The face to check. </p></li>
+<li><p><strong>org_geometry</strong> – The geometry to check if the face is inside. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the face is inside the geometry, false otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N18CrossSectionSlicer21PointInsideAnyPolygonERK7Point_2RKNSt6vectorI8Polygon2EE">
+<span id="_CPPv3N18CrossSectionSlicer21PointInsideAnyPolygonERK7Point_2RKNSt6vectorI8Polygon2EE"></span><span id="_CPPv2N18CrossSectionSlicer21PointInsideAnyPolygonERK7Point_2RKNSt6vectorI8Polygon2EE"></span><span id="CrossSectionSlicer::PointInsideAnyPolygon__Point_2CR.std::vector:Polygon2:CR"></span><span class="target" id="class_cross_section_slicer_1afa6a9d1cdd327156746d690dd9614ec1"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">PointInsideAnyPolygon</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-geometry-3d.html#_CPPv47Point_2" title="Point_2"><span class="n"><span class="pre">Point_2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">point</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-geometry-2d.html#_CPPv48Polygon2" title="Polygon2"><span class="n"><span class="pre">Polygon2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">polygons</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N18CrossSectionSlicer21PointInsideAnyPolygonERK7Point_2RKNSt6vectorI8Polygon2EE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv49InpWriter">
+<span id="_CPPv39InpWriter"></span><span id="_CPPv29InpWriter"></span><span id="InpWriter"></span><span class="target" id="class_inp_writer"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">InpWriter</span></span></span><a class="headerlink" href="#_CPPv49InpWriter" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;inp_writer.h&gt;</em></div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N9InpWriter9InpWriterEv">
+<span id="_CPPv3N9InpWriter9InpWriterEv"></span><span id="_CPPv2N9InpWriter9InpWriterEv"></span><span id="InpWriter::InpWriter"></span><span class="target" id="class_inp_writer_1a629fe522228a8cc1b7e8ac2e61281314"></span><span class="sig-name descname"><span class="n"><span class="pre">InpWriter</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N9InpWriter9InpWriterEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N9InpWriter5writeERKNSt6stringEKNSt10shared_ptrI4NodeEE4vec3RKNSt6stringEb">
+<span id="_CPPv3N9InpWriter5writeERKNSt6stringEKNSt10shared_ptrI4NodeEE4vec3RKNSt6stringEb"></span><span id="_CPPv2N9InpWriter5writeERKNSt6stringEKNSt10shared_ptrI4NodeEE4vec3RKNSt6stringEb"></span><span id="InpWriter::write__ssCR.std::shared_ptr:Node:C.vec3.ssCR.b"></span><span class="target" id="class_inp_writer_1a34ea56999a65043d1ffee5d52a87e8af"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">write</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">path</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">root</span></span>, <span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">voxel_size</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">config_path</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">use_volumetric_dither</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N9InpWriter5writeERKNSt6stringEKNSt10shared_ptrI4NodeEE4vec3RKNSt6stringEb" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N9InpWriter12IndexedPointE">
+<span id="_CPPv3N9InpWriter12IndexedPointE"></span><span id="_CPPv2N9InpWriter12IndexedPointE"></span><span id="InpWriter::IndexedPoint"></span><span class="target" id="struct_inp_writer_1_1_indexed_point"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IndexedPoint</span></span></span><a class="headerlink" href="#_CPPv4N9InpWriter12IndexedPointE" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N9InpWriter12IndexedPoint5indexE">
+<span id="_CPPv3N9InpWriter12IndexedPoint5indexE"></span><span id="_CPPv2N9InpWriter12IndexedPoint5indexE"></span><span id="InpWriter::IndexedPoint::index__l-l"></span><span class="target" id="struct_inp_writer_1_1_indexed_point_1a5f005c21e34181eb473d69021b94a571"></span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="kt"><span class="pre">long</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">index</span></span></span><a class="headerlink" href="#_CPPv4N9InpWriter12IndexedPoint5indexE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N9InpWriter12IndexedPoint1xE">
+<span id="_CPPv3N9InpWriter12IndexedPoint1xE"></span><span id="_CPPv2N9InpWriter12IndexedPoint1xE"></span><span id="InpWriter::IndexedPoint::x__double"></span><span class="target" id="struct_inp_writer_1_1_indexed_point_1ada078cbd65f1816d9a0f5c50ed2c4c98"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">x</span></span></span><a class="headerlink" href="#_CPPv4N9InpWriter12IndexedPoint1xE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N9InpWriter12IndexedPoint1yE">
+<span id="_CPPv3N9InpWriter12IndexedPoint1yE"></span><span id="_CPPv2N9InpWriter12IndexedPoint1yE"></span><span id="InpWriter::IndexedPoint::y__double"></span><span class="target" id="struct_inp_writer_1_1_indexed_point_1aaa874380157026c11efb99cea7d6f323"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">y</span></span></span><a class="headerlink" href="#_CPPv4N9InpWriter12IndexedPoint1yE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N9InpWriter12IndexedPoint1zE">
+<span id="_CPPv3N9InpWriter12IndexedPoint1zE"></span><span id="_CPPv2N9InpWriter12IndexedPoint1zE"></span><span id="InpWriter::IndexedPoint::z__double"></span><span class="target" id="struct_inp_writer_1_1_indexed_point_1ac9721a79379d890fe55d72780d21c231"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">z</span></span></span><a class="headerlink" href="#_CPPv4N9InpWriter12IndexedPoint1zE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv411VTPCompiler">
+<span id="_CPPv311VTPCompiler"></span><span id="_CPPv211VTPCompiler"></span><span id="VTPCompiler"></span><span class="target" id="class_v_t_p_compiler"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">VTPCompiler</span></span></span><a class="headerlink" href="#_CPPv411VTPCompiler" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;vtp_compiler.h&gt;</em></div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK11VTPCompiler22compute_vtp_parametersEN3glm4vec3EN3glm4vec3E">
+<span id="_CPPv3NK11VTPCompiler22compute_vtp_parametersEN3glm4vec3EN3glm4vec3E"></span><span id="_CPPv2NK11VTPCompiler22compute_vtp_parametersEN3glm4vec3EN3glm4vec3E"></span><span id="VTPCompiler::compute_vtp_parameters__glm::vec3.glm::vec3C"></span><span class="target" id="class_v_t_p_compiler_1a56b477cc83a0b4fabc292d0c4e069561"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">tuple</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">compute_vtp_parameters</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">start_pt</span></span>, <a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">end_pt</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK11VTPCompiler22compute_vtp_parametersEN3glm4vec3EN3glm4vec3E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK11VTPCompiler22compute_vtp_parametersEN3glm4vec3EN3glm4vec3ERKNSt13unordered_mapI7uint8_tfEE">
+<span id="_CPPv3NK11VTPCompiler22compute_vtp_parametersEN3glm4vec3EN3glm4vec3ERKNSt13unordered_mapI7uint8_tfEE"></span><span id="_CPPv2NK11VTPCompiler22compute_vtp_parametersEN3glm4vec3EN3glm4vec3ERKNSt13unordered_mapI7uint8_tfEE"></span><span id="VTPCompiler::compute_vtp_parameters__glm::vec3.glm::vec3.std::unordered_map:uint8_t.float:CRC"></span><span class="target" id="class_v_t_p_compiler_1a5b9f95eacf862b37b08b2abe1f5fc09c"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">tuple</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">compute_vtp_parameters</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">start_pt</span></span>, <a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">end_pt</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">unordered_map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">distribution</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK11VTPCompiler22compute_vtp_parametersEN3glm4vec3EN3glm4vec3ERKNSt13unordered_mapI7uint8_tfEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK11VTPCompiler22compute_vtp_parametersEN3glm4vec3EN3glm4vec3Edd">
+<span id="_CPPv3NK11VTPCompiler22compute_vtp_parametersEN3glm4vec3EN3glm4vec3Edd"></span><span id="_CPPv2NK11VTPCompiler22compute_vtp_parametersEN3glm4vec3EN3glm4vec3Edd"></span><span id="VTPCompiler::compute_vtp_parameters__glm::vec3.glm::vec3.double.doubleC"></span><span class="target" id="class_v_t_p_compiler_1acd95a982e368d23dfe377f58b2c3b8c5"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">tuple</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">compute_vtp_parameters</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">start_pt</span></span>, <a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">end_pt</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">v_star</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">h_star</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK11VTPCompiler22compute_vtp_parametersEN3glm4vec3EN3glm4vec3Edd" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK11VTPCompiler21resolve_v_star_h_starERKNSt13unordered_mapI7uint8_tfEE">
+<span id="_CPPv3NK11VTPCompiler21resolve_v_star_h_starERKNSt13unordered_mapI7uint8_tfEE"></span><span id="_CPPv2NK11VTPCompiler21resolve_v_star_h_starERKNSt13unordered_mapI7uint8_tfEE"></span><span id="VTPCompiler::resolve_v_star_h_star__std::unordered_map:uint8_t.float:CRC"></span><span class="target" id="class_v_t_p_compiler_1a79101e1e6d4c006cbe921fa605fcb969"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">resolve_v_star_h_star</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">unordered_map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">distribution</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK11VTPCompiler21resolve_v_star_h_starERKNSt13unordered_mapI7uint8_tfEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N11VTPCompiler11VTPCompilerERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI12MaterialDefsEEddddd">
+<span id="_CPPv3N11VTPCompiler11VTPCompilerERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI12MaterialDefsEEddddd"></span><span id="_CPPv2N11VTPCompiler11VTPCompilerERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI12MaterialDefsEEddddd"></span><span id="VTPCompiler::VTPCompiler__std::shared_ptr:Node:CR.std::shared_ptr:MaterialDefs:CR.double.double.double.double.double"></span><span class="target" id="class_v_t_p_compiler_1a3216dd69f244d99654af15fc9f482611"></span><span class="sig-name descname"><span class="n"><span class="pre">VTPCompiler</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">root</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-utils.html#_CPPv412MaterialDefs" title="MaterialDefs"><span class="n"><span class="pre">MaterialDefs</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">material_defs</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">nozzle_diameter</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">filament_diameter</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">alpha</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">edot</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">layer_height</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N11VTPCompiler11VTPCompilerERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI12MaterialDefsEEddddd" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11VTPCompiler7m_alphaE">
+<span id="_CPPv3N11VTPCompiler7m_alphaE"></span><span id="_CPPv2N11VTPCompiler7m_alphaE"></span><span id="VTPCompiler::m_alpha__double"></span><span class="target" id="class_v_t_p_compiler_1a9ea09c15ab85f980594d384b4fdf5f4f"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_alpha</span></span></span><a class="headerlink" href="#_CPPv4N11VTPCompiler7m_alphaE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11VTPCompiler6m_edotE">
+<span id="_CPPv3N11VTPCompiler6m_edotE"></span><span id="_CPPv2N11VTPCompiler6m_edotE"></span><span id="VTPCompiler::m_edot__double"></span><span class="target" id="class_v_t_p_compiler_1ace434c216865b6036bba9a8513ca5895"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_edot</span></span></span><a class="headerlink" href="#_CPPv4N11VTPCompiler6m_edotE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11VTPCompiler19m_filament_diameterE">
+<span id="_CPPv3N11VTPCompiler19m_filament_diameterE"></span><span id="_CPPv2N11VTPCompiler19m_filament_diameterE"></span><span id="VTPCompiler::m_filament_diameter__double"></span><span class="target" id="class_v_t_p_compiler_1a48b9ec634ae47041296515a35c58952e"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_filament_diameter</span></span></span><a class="headerlink" href="#_CPPv4N11VTPCompiler19m_filament_diameterE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11VTPCompiler14m_layer_heightE">
+<span id="_CPPv3N11VTPCompiler14m_layer_heightE"></span><span id="_CPPv2N11VTPCompiler14m_layer_heightE"></span><span id="VTPCompiler::m_layer_height__double"></span><span class="target" id="class_v_t_p_compiler_1a26d49bfddbf27891de3d7977a8e70793"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_layer_height</span></span></span><a class="headerlink" href="#_CPPv4N11VTPCompiler14m_layer_heightE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11VTPCompiler15m_material_defsE">
+<span id="_CPPv3N11VTPCompiler15m_material_defsE"></span><span id="_CPPv2N11VTPCompiler15m_material_defsE"></span><span id="VTPCompiler::m_material_defs__std::shared_ptr:MaterialDefs:"></span><span class="target" id="class_v_t_p_compiler_1a8d8eec6257fed85cfc234e77a011f315"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-utils.html#_CPPv412MaterialDefs" title="MaterialDefs"><span class="n"><span class="pre">MaterialDefs</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_material_defs</span></span></span><a class="headerlink" href="#_CPPv4N11VTPCompiler15m_material_defsE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11VTPCompiler17m_nozzle_diameterE">
+<span id="_CPPv3N11VTPCompiler17m_nozzle_diameterE"></span><span id="_CPPv2N11VTPCompiler17m_nozzle_diameterE"></span><span id="VTPCompiler::m_nozzle_diameter__double"></span><span class="target" id="class_v_t_p_compiler_1a707310425067a1dee3c6a39164020f95"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_nozzle_diameter</span></span></span><a class="headerlink" href="#_CPPv4N11VTPCompiler17m_nozzle_diameterE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N11VTPCompiler6m_rootE">
+<span id="_CPPv3N11VTPCompiler6m_rootE"></span><span id="_CPPv2N11VTPCompiler6m_rootE"></span><span id="VTPCompiler::m_root__std::shared_ptr:Node:"></span><span class="target" id="class_v_t_p_compiler_1a9c65da8200d95dfedebfb9b4241f7ec9"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_root</span></span></span><a class="headerlink" href="#_CPPv4N11VTPCompiler6m_rootE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="libvcad-compilers-inkjet.html" class="btn btn-neutral float-left" title="Compilers — inkjet" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="libvcad-compilers-brep.html" class="btn btn-neutral float-right" title="Compilers — B-rep" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Charles Wade and Robert MacCurdy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

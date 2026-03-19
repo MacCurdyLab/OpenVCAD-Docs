@@ -1,0 +1,242 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compilers — B-rep &mdash; OpenVCAD 2.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=57236720"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Compilers — VAT" href="libvcad-compilers-vat.html" />
+    <link rel="prev" title="Compilers — writers" href="libvcad-compilers-writers.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenVCAD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/math-expressions.html">Math Expression Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad_compilers/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad_rendering/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code> package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">C++ API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-core.html">Tree — core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-leaves.html">Tree — leaves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-composition.html">Tree — composition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-material.html">Tree — material</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-parser.html">Parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-2d.html">Geometry — 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-3d.html">Geometry — 3D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-surface-parameterizer.html">Geometry — surface parameterization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-utils.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-analysis.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-inkjet.html">Compilers — inkjet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-writers.html">Compilers — writers</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Compilers — B-rep</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv412MeshCompiler"><code class="docutils literal notranslate"><span class="pre">MeshCompiler</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12MeshCompiler7compileEv"><code class="docutils literal notranslate"><span class="pre">compile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12MeshCompiler12MeshCompilerERKNSt10shared_ptrI4NodeEE4vec3RKNSt6stringERKNSt6stringE6size_t"><code class="docutils literal notranslate"><span class="pre">MeshCompiler()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12MeshCompiler19setProgressCallbackERKNSt8functionIFvdEEE"><code class="docutils literal notranslate"><span class="pre">setProgressCallback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12MeshCompiler22compute_total_progressEd"><code class="docutils literal notranslate"><span class="pre">compute_total_progress()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12MeshCompiler17GenerateImageDataERKNSt10shared_ptrI4NodeEERKN3glm4vec3ERKN3glm4vec3ERKN3glm4vec3Edd"><code class="docutils literal notranslate"><span class="pre">GenerateImageData()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12MeshCompiler13m_file_prefixE"><code class="docutils literal notranslate"><span class="pre">m_file_prefix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12MeshCompiler12m_iso_rangesE"><code class="docutils literal notranslate"><span class="pre">m_iso_ranges</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12MeshCompiler22m_iso_ranges_completedE"><code class="docutils literal notranslate"><span class="pre">m_iso_ranges_completed</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12MeshCompiler16m_num_iso_slicesE"><code class="docutils literal notranslate"><span class="pre">m_num_iso_slices</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12MeshCompiler18m_output_directoryE"><code class="docutils literal notranslate"><span class="pre">m_output_directory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12MeshCompiler19m_progress_callbackE"><code class="docutils literal notranslate"><span class="pre">m_progress_callback</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12MeshCompiler6m_rootE"><code class="docutils literal notranslate"><span class="pre">m_root</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12MeshCompiler12m_voxel_sizeE"><code class="docutils literal notranslate"><span class="pre">m_voxel_size</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-vat.html">Compilers — VAT</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../papers.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenVCAD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">C++ API Reference</a></li>
+      <li class="breadcrumb-item active">Compilers — B-rep</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/cpp-api/libvcad-compilers-brep.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="compilers-b-rep">
+<h1>Compilers — B-rep<a class="headerlink" href="#compilers-b-rep" title="Link to this heading"></a></h1>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv412MeshCompiler">
+<span id="_CPPv312MeshCompiler"></span><span id="_CPPv212MeshCompiler"></span><span id="MeshCompiler"></span><span class="target" id="class_mesh_compiler"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MeshCompiler</span></span></span><a class="headerlink" href="#_CPPv412MeshCompiler" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;mesh_compiler.h&gt;</em></div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12MeshCompiler7compileEv">
+<span id="_CPPv3N12MeshCompiler7compileEv"></span><span id="_CPPv2N12MeshCompiler7compileEv"></span><span id="MeshCompiler::compile"></span><span class="target" id="class_mesh_compiler_1a0e51fe2a0fbb1b4e6893d4798a3125aa"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">compile</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12MeshCompiler7compileEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12MeshCompiler12MeshCompilerERKNSt10shared_ptrI4NodeEE4vec3RKNSt6stringERKNSt6stringE6size_t">
+<span id="_CPPv3N12MeshCompiler12MeshCompilerERKNSt10shared_ptrI4NodeEE4vec3RKNSt6stringERKNSt6stringE6size_t"></span><span id="_CPPv2N12MeshCompiler12MeshCompilerERKNSt10shared_ptrI4NodeEE4vec3RKNSt6stringERKNSt6stringE6size_t"></span><span id="MeshCompiler::MeshCompiler__std::shared_ptr:Node:CR.vec3.ssCR.ssCR.s"></span><span class="target" id="class_mesh_compiler_1a873d7ded2a9e892b335be37183c3e41f"></span><span class="sig-name descname"><span class="n"><span class="pre">MeshCompiler</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">root</span></span>, <span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">voxel_size</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">output_directory</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">file_prefix</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">num_iso_slices</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12MeshCompiler12MeshCompilerERKNSt10shared_ptrI4NodeEE4vec3RKNSt6stringERKNSt6stringE6size_t" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12MeshCompiler19setProgressCallbackERKNSt8functionIFvdEEE">
+<span id="_CPPv3N12MeshCompiler19setProgressCallbackERKNSt8functionIFvdEEE"></span><span id="_CPPv2N12MeshCompiler19setProgressCallbackERKNSt8functionIFvdEEE"></span><span class="target" id="class_mesh_compiler_1a0d5f1d428ccfeda6871ba935e7150c2e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setProgressCallback</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">progress_callback</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12MeshCompiler19setProgressCallbackERKNSt8functionIFvdEEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-functions">Private Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12MeshCompiler22compute_total_progressEd">
+<span id="_CPPv3N12MeshCompiler22compute_total_progressEd"></span><span id="_CPPv2N12MeshCompiler22compute_total_progressEd"></span><span id="MeshCompiler::compute_total_progress__double"></span><span class="target" id="class_mesh_compiler_1aeba1073717a6b8d7416b8942c76a3d5e"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">compute_total_progress</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">local_progress</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12MeshCompiler22compute_total_progressEd" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12MeshCompiler17GenerateImageDataERKNSt10shared_ptrI4NodeEERKN3glm4vec3ERKN3glm4vec3ERKN3glm4vec3Edd">
+<span id="_CPPv3N12MeshCompiler17GenerateImageDataERKNSt10shared_ptrI4NodeEERKN3glm4vec3ERKN3glm4vec3ERKN3glm4vec3Edd"></span><span id="_CPPv2N12MeshCompiler17GenerateImageDataERKNSt10shared_ptrI4NodeEERKN3glm4vec3ERKN3glm4vec3ERKN3glm4vec3Edd"></span><span id="MeshCompiler::GenerateImageData__std::shared_ptr:Node:CR.glm::vec3CR.glm::vec3CR.glm::vec3CR.double.double"></span><span class="target" id="class_mesh_compiler_1a4356b115d915f154f976739541a5e97b"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">vtkSmartPointer</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">vtkImageData</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">vtkSmartPointer</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">vtkImageData</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GenerateImageData</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">root</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">min</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">max</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">voxel_size</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">lower_material_iso</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">upper_material_iso</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12MeshCompiler17GenerateImageDataERKNSt10shared_ptrI4NodeEERKN3glm4vec3ERKN3glm4vec3ERKN3glm4vec3Edd" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12MeshCompiler13m_file_prefixE">
+<span id="_CPPv3N12MeshCompiler13m_file_prefixE"></span><span id="_CPPv2N12MeshCompiler13m_file_prefixE"></span><span id="MeshCompiler::m_file_prefix__ss"></span><span class="target" id="class_mesh_compiler_1aa1c10ac1a6213f2184b1bbe6adf511f4"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_file_prefix</span></span></span><a class="headerlink" href="#_CPPv4N12MeshCompiler13m_file_prefixE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12MeshCompiler12m_iso_rangesE">
+<span id="_CPPv3N12MeshCompiler12m_iso_rangesE"></span><span id="_CPPv2N12MeshCompiler12m_iso_rangesE"></span><span id="MeshCompiler::m_iso_ranges__std::vector:std::pair:double.double::"></span><span class="target" id="class_mesh_compiler_1a5163e85f0e8beebd6cf180714bb275d8"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_iso_ranges</span></span></span><a class="headerlink" href="#_CPPv4N12MeshCompiler12m_iso_rangesE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12MeshCompiler22m_iso_ranges_completedE">
+<span id="_CPPv3N12MeshCompiler22m_iso_ranges_completedE"></span><span id="_CPPv2N12MeshCompiler22m_iso_ranges_completedE"></span><span id="MeshCompiler::m_iso_ranges_completed__s"></span><span class="target" id="class_mesh_compiler_1ab35759170f7694213817579e0b85453b"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_iso_ranges_completed</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N12MeshCompiler22m_iso_ranges_completedE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12MeshCompiler16m_num_iso_slicesE">
+<span id="_CPPv3N12MeshCompiler16m_num_iso_slicesE"></span><span id="_CPPv2N12MeshCompiler16m_num_iso_slicesE"></span><span id="MeshCompiler::m_num_iso_slices__s"></span><span class="target" id="class_mesh_compiler_1a8a02de76062664c6e685cf955f4eff1e"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_num_iso_slices</span></span></span><a class="headerlink" href="#_CPPv4N12MeshCompiler16m_num_iso_slicesE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12MeshCompiler18m_output_directoryE">
+<span id="_CPPv3N12MeshCompiler18m_output_directoryE"></span><span id="_CPPv2N12MeshCompiler18m_output_directoryE"></span><span id="MeshCompiler::m_output_directory__ss"></span><span class="target" id="class_mesh_compiler_1a83c59515ba1d81622e420189b8f1e2ad"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_output_directory</span></span></span><a class="headerlink" href="#_CPPv4N12MeshCompiler18m_output_directoryE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12MeshCompiler19m_progress_callbackE">
+<span id="_CPPv3N12MeshCompiler19m_progress_callbackE"></span><span id="_CPPv2N12MeshCompiler19m_progress_callbackE"></span><span class="target" id="class_mesh_compiler_1aad62b88fd6aa1415be5a431c0ec16c2e"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_progress_callback</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">nullptr</span></span><a class="headerlink" href="#_CPPv4N12MeshCompiler19m_progress_callbackE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12MeshCompiler6m_rootE">
+<span id="_CPPv3N12MeshCompiler6m_rootE"></span><span id="_CPPv2N12MeshCompiler6m_rootE"></span><span id="MeshCompiler::m_root__std::shared_ptr:Node:"></span><span class="target" id="class_mesh_compiler_1a54282be240b190de5f86409e8aa14a7d"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_root</span></span></span><a class="headerlink" href="#_CPPv4N12MeshCompiler6m_rootE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12MeshCompiler12m_voxel_sizeE">
+<span id="_CPPv3N12MeshCompiler12m_voxel_sizeE"></span><span id="_CPPv2N12MeshCompiler12m_voxel_sizeE"></span><span id="MeshCompiler::m_voxel_size__vec3"></span><span class="target" id="class_mesh_compiler_1aeb524648ddef407978d54a44be4c21a3"></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_voxel_size</span></span></span><a class="headerlink" href="#_CPPv4N12MeshCompiler12m_voxel_sizeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="libvcad-compilers-writers.html" class="btn btn-neutral float-left" title="Compilers — writers" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="libvcad-compilers-vat.html" class="btn btn-neutral float-right" title="Compilers — VAT" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Charles Wade and Robert MacCurdy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

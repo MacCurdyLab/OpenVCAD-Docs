@@ -1,0 +1,774 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compilers — inkjet &mdash; OpenVCAD 2.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=57236720"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Compilers — writers" href="libvcad-compilers-writers.html" />
+    <link rel="prev" title="Analysis" href="libvcad-analysis.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenVCAD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/math-expressions.html">Math Expression Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad_compilers/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad_rendering/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code> package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">C++ API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-core.html">Tree — core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-leaves.html">Tree — leaves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-composition.html">Tree — composition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-material.html">Tree — material</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-parser.html">Parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-2d.html">Geometry — 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-3d.html">Geometry — 3D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-surface-parameterizer.html">Geometry — surface parameterization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-utils.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-analysis.html">Analysis</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Compilers — inkjet</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv412GCVFExporter"><code class="docutils literal notranslate"><span class="pre">GCVFExporter</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter13ProgressPhaseE"><code class="docutils literal notranslate"><span class="pre">ProgressPhase</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter7compileEv"><code class="docutils literal notranslate"><span class="pre">compile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter12GCVFExporterERKNSt10shared_ptrI4NodeEEN3glm4vec3ERKNSt10shared_ptrI12MaterialDefsEERKNSt6stringEbd"><code class="docutils literal notranslate"><span class="pre">GCVFExporter()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter19setProgressCallbackERKNSt8functionIFv13ProgressPhasedEEE"><code class="docutils literal notranslate"><span class="pre">setProgressCallback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter7cleanupEv"><code class="docutils literal notranslate"><span class="pre">cleanup()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter18generate_bbox_fileEv"><code class="docutils literal notranslate"><span class="pre">generate_bbox_file()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter18generate_png_stackEv"><code class="docutils literal notranslate"><span class="pre">generate_png_stack()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter12generate_stlEv"><code class="docutils literal notranslate"><span class="pre">generate_stl()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter19generate_xml_configEv"><code class="docutils literal notranslate"><span class="pre">generate_xml_config()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter22generate_zbuffer_imageEv"><code class="docutils literal notranslate"><span class="pre">generate_zbuffer_image()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter16prepare_temp_dirEv"><code class="docutils literal notranslate"><span class="pre">prepare_temp_dir()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter9zip_filesEv"><code class="docutils literal notranslate"><span class="pre">zip_files()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter10m_filenameE"><code class="docutils literal notranslate"><span class="pre">m_filename</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter17m_liquid_keep_outE"><code class="docutils literal notranslate"><span class="pre">m_liquid_keep_out</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter26m_liquid_keep_out_distanceE"><code class="docutils literal notranslate"><span class="pre">m_liquid_keep_out_distance</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter15m_material_defsE"><code class="docutils literal notranslate"><span class="pre">m_material_defs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter23m_material_voxel_countsE"><code class="docutils literal notranslate"><span class="pre">m_material_voxel_counts</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter5m_maxE"><code class="docutils literal notranslate"><span class="pre">m_max</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter5m_minE"><code class="docutils literal notranslate"><span class="pre">m_min</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter19m_progress_callbackE"><code class="docutils literal notranslate"><span class="pre">m_progress_callback</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter6m_rootE"><code class="docutils literal notranslate"><span class="pre">m_root</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter20m_slice_thickness_nmE"><code class="docutils literal notranslate"><span class="pre">m_slice_thickness_nm</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter11m_temp_pathE"><code class="docutils literal notranslate"><span class="pre">m_temp_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter12m_voxel_sizeE"><code class="docutils literal notranslate"><span class="pre">m_voxel_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter7m_x_dpiE"><code class="docutils literal notranslate"><span class="pre">m_x_dpi</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter14m_x_resolutionE"><code class="docutils literal notranslate"><span class="pre">m_x_resolution</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter7m_y_dpiE"><code class="docutils literal notranslate"><span class="pre">m_y_dpi</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter14m_y_resolutionE"><code class="docutils literal notranslate"><span class="pre">m_y_resolution</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12GCVFExporter14m_z_resolutionE"><code class="docutils literal notranslate"><span class="pre">m_z_resolution</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv422DirectMaterialCompiler"><code class="docutils literal notranslate"><span class="pre">DirectMaterialCompiler</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N22DirectMaterialCompiler7compileEv"><code class="docutils literal notranslate"><span class="pre">compile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N22DirectMaterialCompiler22DirectMaterialCompilerERKNSt10shared_ptrI4NodeEEN3glm4vec3ERKNSt10shared_ptrI12MaterialDefsEERKNSt6stringERKNSt6stringEbd"><code class="docutils literal notranslate"><span class="pre">DirectMaterialCompiler()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK22DirectMaterialCompiler21material_voxel_countsEv"><code class="docutils literal notranslate"><span class="pre">material_voxel_counts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK22DirectMaterialCompiler10resolutionEv"><code class="docutils literal notranslate"><span class="pre">resolution()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N22DirectMaterialCompiler19setProgressCallbackERKNSt8functionIFvdEEE"><code class="docutils literal notranslate"><span class="pre">setProgressCallback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N22DirectMaterialCompiler34remove_empty_images_from_beginningENSt6vectorI6size_tEERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">remove_empty_images_from_beginning()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N22DirectMaterialCompiler28remove_empty_images_from_endENSt6vectorI6size_tEERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">remove_empty_images_from_end()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N22DirectMaterialCompiler13m_file_prefixE"><code class="docutils literal notranslate"><span class="pre">m_file_prefix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N22DirectMaterialCompiler17m_liquid_keep_outE"><code class="docutils literal notranslate"><span class="pre">m_liquid_keep_out</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N22DirectMaterialCompiler26m_liquid_keep_out_distanceE"><code class="docutils literal notranslate"><span class="pre">m_liquid_keep_out_distance</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N22DirectMaterialCompiler15m_material_defsE"><code class="docutils literal notranslate"><span class="pre">m_material_defs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N22DirectMaterialCompiler23m_material_voxel_countsE"><code class="docutils literal notranslate"><span class="pre">m_material_voxel_counts</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N22DirectMaterialCompiler5m_maxE"><code class="docutils literal notranslate"><span class="pre">m_max</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N22DirectMaterialCompiler5m_minE"><code class="docutils literal notranslate"><span class="pre">m_min</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N22DirectMaterialCompiler18m_output_directoryE"><code class="docutils literal notranslate"><span class="pre">m_output_directory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N22DirectMaterialCompiler19m_progress_callbackE"><code class="docutils literal notranslate"><span class="pre">m_progress_callback</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N22DirectMaterialCompiler6m_rootE"><code class="docutils literal notranslate"><span class="pre">m_root</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N22DirectMaterialCompiler12m_voxel_sizeE"><code class="docutils literal notranslate"><span class="pre">m_voxel_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N22DirectMaterialCompiler14m_x_resolutionE"><code class="docutils literal notranslate"><span class="pre">m_x_resolution</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N22DirectMaterialCompiler14m_y_resolutionE"><code class="docutils literal notranslate"><span class="pre">m_y_resolution</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N22DirectMaterialCompiler14m_z_resolutionE"><code class="docutils literal notranslate"><span class="pre">m_z_resolution</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv415MAX_IMAGE_WIDTH"><code class="docutils literal notranslate"><span class="pre">MAX_IMAGE_WIDTH</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv415MyersonCompiler"><code class="docutils literal notranslate"><span class="pre">MyersonCompiler</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15MyersonCompiler7compileEv"><code class="docutils literal notranslate"><span class="pre">compile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15MyersonCompiler15MyersonCompilerEd6size_t6size_tddRKNSt6stringERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI12MaterialDefsEE"><code class="docutils literal notranslate"><span class="pre">MyersonCompiler()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15MyersonCompiler19setProgressCallbackERKNSt8functionIFvdEEE"><code class="docutils literal notranslate"><span class="pre">setProgressCallback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15MyersonCompiler15centerImageDataERKNSt6vectorIbEEiii"><code class="docutils literal notranslate"><span class="pre">centerImageData()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15MyersonCompiler16write1BitBmpFileERKNSt6stringEiiRKNSt6vectorIbEE"><code class="docutils literal notranslate"><span class="pre">write1BitBmpFile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15MyersonCompiler13m_extra_widthE"><code class="docutils literal notranslate"><span class="pre">m_extra_width</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15MyersonCompiler15m_material_defsE"><code class="docutils literal notranslate"><span class="pre">m_material_defs</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15MyersonCompiler13m_output_pathE"><code class="docutils literal notranslate"><span class="pre">m_output_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15MyersonCompiler19m_progress_callbackE"><code class="docutils literal notranslate"><span class="pre">m_progress_callback</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15MyersonCompiler6m_rootE"><code class="docutils literal notranslate"><span class="pre">m_root</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15MyersonCompiler17m_taper_angle_degE"><code class="docutils literal notranslate"><span class="pre">m_taper_angle_deg</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15MyersonCompiler12m_voxel_sizeE"><code class="docutils literal notranslate"><span class="pre">m_voxel_size</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv417FullColorCompiler"><code class="docutils literal notranslate"><span class="pre">FullColorCompiler</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N17FullColorCompiler7compileEv"><code class="docutils literal notranslate"><span class="pre">compile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N17FullColorCompiler17FullColorCompilerERKNSt10shared_ptrI4NodeEE4vec3RKNSt6stringERKNSt6stringERKNSt6stringERKNSt6vectorIN3glm4vec4EEEb"><code class="docutils literal notranslate"><span class="pre">FullColorCompiler()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N17FullColorCompiler19setProgressCallbackERNSt8functionIFvdEEE"><code class="docutils literal notranslate"><span class="pre">setProgressCallback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N17FullColorCompiler9ApplyCMYKERNSt6vectorINSt6vectorI4vec3EEEERKNSt6vectorI4vec4EE"><code class="docutils literal notranslate"><span class="pre">ApplyCMYK()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N17FullColorCompiler25m_attribute_def_file_pathE"><code class="docutils literal notranslate"><span class="pre">m_attribute_def_file_path</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N17FullColorCompiler15m_color_paletteE"><code class="docutils literal notranslate"><span class="pre">m_color_palette</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N17FullColorCompiler13m_file_prefixE"><code class="docutils literal notranslate"><span class="pre">m_file_prefix</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N17FullColorCompiler5m_maxE"><code class="docutils literal notranslate"><span class="pre">m_max</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N17FullColorCompiler5m_minE"><code class="docutils literal notranslate"><span class="pre">m_min</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N17FullColorCompiler18m_output_directoryE"><code class="docutils literal notranslate"><span class="pre">m_output_directory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N17FullColorCompiler19m_progress_callbackE"><code class="docutils literal notranslate"><span class="pre">m_progress_callback</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N17FullColorCompiler6m_rootE"><code class="docutils literal notranslate"><span class="pre">m_root</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N17FullColorCompiler18m_use_transparencyE"><code class="docutils literal notranslate"><span class="pre">m_use_transparency</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N17FullColorCompiler12m_voxel_sizeE"><code class="docutils literal notranslate"><span class="pre">m_voxel_size</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N17FullColorCompiler17ApplyTransparencyEN4Node13ColorGridType3PtrEN4Node8GridType3PtrEN3glm4vec3EN3glm4vec3E"><code class="docutils literal notranslate"><span class="pre">ApplyTransparency()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N17FullColorCompiler9RGBtoCMYKERKN3glm4vec3E"><code class="docutils literal notranslate"><span class="pre">RGBtoCMYK()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N17FullColorCompiler9SaveImageERKNSt6vectorIhEE6size_t6size_tRKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">SaveImage()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N17FullColorCompiler21SliceGridIntoPNGStackEN4Node13ColorGridType3PtrEN4Node8GridType3PtrEN3glm4vec3ERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">SliceGridIntoPNGStack()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-writers.html">Compilers — writers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-brep.html">Compilers — B-rep</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-vat.html">Compilers — VAT</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../papers.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenVCAD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">C++ API Reference</a></li>
+      <li class="breadcrumb-item active">Compilers — inkjet</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/cpp-api/libvcad-compilers-inkjet.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="compilers-inkjet">
+<h1>Compilers — inkjet<a class="headerlink" href="#compilers-inkjet" title="Link to this heading"></a></h1>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv412GCVFExporter">
+<span id="_CPPv312GCVFExporter"></span><span id="_CPPv212GCVFExporter"></span><span id="GCVFExporter"></span><span class="target" id="class_g_c_v_f_exporter"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GCVFExporter</span></span></span><a class="headerlink" href="#_CPPv412GCVFExporter" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;gcvf_exporter.h&gt;</em></div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
+<dl class="cpp enum">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter13ProgressPhaseE">
+<span id="_CPPv3N12GCVFExporter13ProgressPhaseE"></span><span id="_CPPv2N12GCVFExporter13ProgressPhaseE"></span><span class="target" id="class_g_c_v_f_exporter_1ad1fd43f02174672c75c6e94b3c7fcefd"></span><span class="k"><span class="pre">enum</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ProgressPhase</span></span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter13ProgressPhaseE" title="Link to this definition"></a><br /></dt>
+<dd><p><em>Values:</em></p>
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter13ProgressPhase18GENERATE_PNG_STACKE">
+<span id="_CPPv3N12GCVFExporter13ProgressPhase18GENERATE_PNG_STACKE"></span><span id="_CPPv2N12GCVFExporter13ProgressPhase18GENERATE_PNG_STACKE"></span><span class="target" id="class_g_c_v_f_exporter_1ad1fd43f02174672c75c6e94b3c7fcefdad05a4d263005aeb6f91aef9d351356d5"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GENERATE_PNG_STACK</span></span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter13ProgressPhase18GENERATE_PNG_STACKE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter13ProgressPhase16GENERATE_ZBUFFERE">
+<span id="_CPPv3N12GCVFExporter13ProgressPhase16GENERATE_ZBUFFERE"></span><span id="_CPPv2N12GCVFExporter13ProgressPhase16GENERATE_ZBUFFERE"></span><span class="target" id="class_g_c_v_f_exporter_1ad1fd43f02174672c75c6e94b3c7fcefda7e2b188a35e50c5cc3e13e918dcb9738"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GENERATE_ZBUFFER</span></span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter13ProgressPhase16GENERATE_ZBUFFERE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter13ProgressPhase13GENERATE_MESHE">
+<span id="_CPPv3N12GCVFExporter13ProgressPhase13GENERATE_MESHE"></span><span id="_CPPv2N12GCVFExporter13ProgressPhase13GENERATE_MESHE"></span><span class="target" id="class_g_c_v_f_exporter_1ad1fd43f02174672c75c6e94b3c7fcefda5e6c725ae2af91f277f3d17619b722bc"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">GENERATE_MESH</span></span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter13ProgressPhase13GENERATE_MESHE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp enumerator">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter13ProgressPhase9ZIP_FILESE">
+<span id="_CPPv3N12GCVFExporter13ProgressPhase9ZIP_FILESE"></span><span id="_CPPv2N12GCVFExporter13ProgressPhase9ZIP_FILESE"></span><span class="target" id="class_g_c_v_f_exporter_1ad1fd43f02174672c75c6e94b3c7fcefdabd0b78883c596569c034673f196bb0aa"></span><span class="k"><span class="pre">enumerator</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ZIP_FILES</span></span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter13ProgressPhase9ZIP_FILESE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter7compileEv">
+<span id="_CPPv3N12GCVFExporter7compileEv"></span><span id="_CPPv2N12GCVFExporter7compileEv"></span><span id="GCVFExporter::compile"></span><span class="target" id="class_g_c_v_f_exporter_1a506f580105bcbe9e79affb8ef86dddf0"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">compile</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12GCVFExporter7compileEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter12GCVFExporterERKNSt10shared_ptrI4NodeEEN3glm4vec3ERKNSt10shared_ptrI12MaterialDefsEERKNSt6stringEbd">
+<span id="_CPPv3N12GCVFExporter12GCVFExporterERKNSt10shared_ptrI4NodeEEN3glm4vec3ERKNSt10shared_ptrI12MaterialDefsEERKNSt6stringEbd"></span><span id="_CPPv2N12GCVFExporter12GCVFExporterERKNSt10shared_ptrI4NodeEEN3glm4vec3ERKNSt10shared_ptrI12MaterialDefsEERKNSt6stringEbd"></span><span id="GCVFExporter::GCVFExporter__std::shared_ptr:Node:CR.glm::vec3.std::shared_ptr:MaterialDefs:CR.ssCR.b.double"></span><span class="target" id="class_g_c_v_f_exporter_1ae891e42646155501d233de4817a21c46"></span><span class="sig-name descname"><span class="n"><span class="pre">GCVFExporter</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m_root</span></span>, <a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">voxel_size</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-utils.html#_CPPv412MaterialDefs" title="MaterialDefs"><span class="n"><span class="pre">MaterialDefs</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">material_defs</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">filename</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">liquid_keep_out</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">liquid_keep_out_distance</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12GCVFExporter12GCVFExporterERKNSt10shared_ptrI4NodeEEN3glm4vec3ERKNSt10shared_ptrI12MaterialDefsEERKNSt6stringEbd" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter19setProgressCallbackERKNSt8functionIFv13ProgressPhasedEEE">
+<span id="_CPPv3N12GCVFExporter19setProgressCallbackERKNSt8functionIFv13ProgressPhasedEEE"></span><span id="_CPPv2N12GCVFExporter19setProgressCallbackERKNSt8functionIFv13ProgressPhasedEEE"></span><span class="target" id="class_g_c_v_f_exporter_1a019ae8d3a46907ee068bac9ea22db8c6"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setProgressCallback</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><a class="reference internal" href="#_CPPv4N12GCVFExporter13ProgressPhaseE" title="GCVFExporter::ProgressPhase"><span class="n"><span class="pre">ProgressPhase</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">progress_callback</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12GCVFExporter19setProgressCallbackERKNSt8functionIFv13ProgressPhasedEEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-functions">Private Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter7cleanupEv">
+<span id="_CPPv3N12GCVFExporter7cleanupEv"></span><span id="_CPPv2N12GCVFExporter7cleanupEv"></span><span id="GCVFExporter::cleanup"></span><span class="target" id="class_g_c_v_f_exporter_1a448fe11a40fc9e6d843abbd6529afd6c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cleanup</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12GCVFExporter7cleanupEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter18generate_bbox_fileEv">
+<span id="_CPPv3N12GCVFExporter18generate_bbox_fileEv"></span><span id="_CPPv2N12GCVFExporter18generate_bbox_fileEv"></span><span id="GCVFExporter::generate_bbox_file"></span><span class="target" id="class_g_c_v_f_exporter_1a45106e7be8c756a53be4ee7cdbc48082"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">generate_bbox_file</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12GCVFExporter18generate_bbox_fileEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter18generate_png_stackEv">
+<span id="_CPPv3N12GCVFExporter18generate_png_stackEv"></span><span id="_CPPv2N12GCVFExporter18generate_png_stackEv"></span><span id="GCVFExporter::generate_png_stack"></span><span class="target" id="class_g_c_v_f_exporter_1afe8307ceedf2f8b0ec67c43cdfbed59d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">generate_png_stack</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12GCVFExporter18generate_png_stackEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter12generate_stlEv">
+<span id="_CPPv3N12GCVFExporter12generate_stlEv"></span><span id="_CPPv2N12GCVFExporter12generate_stlEv"></span><span id="GCVFExporter::generate_stl"></span><span class="target" id="class_g_c_v_f_exporter_1a81a24d871665c6b034956865ec4e1555"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">generate_stl</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12GCVFExporter12generate_stlEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter19generate_xml_configEv">
+<span id="_CPPv3N12GCVFExporter19generate_xml_configEv"></span><span id="_CPPv2N12GCVFExporter19generate_xml_configEv"></span><span id="GCVFExporter::generate_xml_config"></span><span class="target" id="class_g_c_v_f_exporter_1ae315ffb8e02159cf9e927b85a70b8969"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">generate_xml_config</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12GCVFExporter19generate_xml_configEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter22generate_zbuffer_imageEv">
+<span id="_CPPv3N12GCVFExporter22generate_zbuffer_imageEv"></span><span id="_CPPv2N12GCVFExporter22generate_zbuffer_imageEv"></span><span id="GCVFExporter::generate_zbuffer_image"></span><span class="target" id="class_g_c_v_f_exporter_1af0d966b9b6716fad20bdb2919090118a"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">generate_zbuffer_image</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12GCVFExporter22generate_zbuffer_imageEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter16prepare_temp_dirEv">
+<span id="_CPPv3N12GCVFExporter16prepare_temp_dirEv"></span><span id="_CPPv2N12GCVFExporter16prepare_temp_dirEv"></span><span id="GCVFExporter::prepare_temp_dir"></span><span class="target" id="class_g_c_v_f_exporter_1a1e15852c9a0163489dacca1290c900b2"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">prepare_temp_dir</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12GCVFExporter16prepare_temp_dirEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter9zip_filesEv">
+<span id="_CPPv3N12GCVFExporter9zip_filesEv"></span><span id="_CPPv2N12GCVFExporter9zip_filesEv"></span><span id="GCVFExporter::zip_files"></span><span class="target" id="class_g_c_v_f_exporter_1a3d6d661cf942f19b937941874421feed"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">zip_files</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12GCVFExporter9zip_filesEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter10m_filenameE">
+<span id="_CPPv3N12GCVFExporter10m_filenameE"></span><span id="_CPPv2N12GCVFExporter10m_filenameE"></span><span id="GCVFExporter::m_filename__ss"></span><span class="target" id="class_g_c_v_f_exporter_1a2e64b251e6a585a5e7558f90aa756e19"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_filename</span></span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter10m_filenameE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter17m_liquid_keep_outE">
+<span id="_CPPv3N12GCVFExporter17m_liquid_keep_outE"></span><span id="_CPPv2N12GCVFExporter17m_liquid_keep_outE"></span><span id="GCVFExporter::m_liquid_keep_out__b"></span><span class="target" id="class_g_c_v_f_exporter_1a789f63e9da2488aadd1b160f8f0ebc2c"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_liquid_keep_out</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter17m_liquid_keep_outE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter26m_liquid_keep_out_distanceE">
+<span id="_CPPv3N12GCVFExporter26m_liquid_keep_out_distanceE"></span><span id="_CPPv2N12GCVFExporter26m_liquid_keep_out_distanceE"></span><span id="GCVFExporter::m_liquid_keep_out_distance__double"></span><span class="target" id="class_g_c_v_f_exporter_1a05e58367b61b829c558cf78048e4c1c2"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_liquid_keep_out_distance</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.0</span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter26m_liquid_keep_out_distanceE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter15m_material_defsE">
+<span id="_CPPv3N12GCVFExporter15m_material_defsE"></span><span id="_CPPv2N12GCVFExporter15m_material_defsE"></span><span id="GCVFExporter::m_material_defs__std::shared_ptr:MaterialDefs:"></span><span class="target" id="class_g_c_v_f_exporter_1ae1198aaef84de5fb5db39de2c152ab75"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-utils.html#_CPPv412MaterialDefs" title="MaterialDefs"><span class="n"><span class="pre">MaterialDefs</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_material_defs</span></span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter15m_material_defsE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter23m_material_voxel_countsE">
+<span id="_CPPv3N12GCVFExporter23m_material_voxel_countsE"></span><span id="_CPPv2N12GCVFExporter23m_material_voxel_countsE"></span><span id="GCVFExporter::m_material_voxel_counts__std::unordered_map:uint8_t.s:"></span><span class="target" id="class_g_c_v_f_exporter_1a1fa608f2dc35baaa671f3adb95969018"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">unordered_map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_material_voxel_counts</span></span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter23m_material_voxel_countsE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter5m_maxE">
+<span id="_CPPv3N12GCVFExporter5m_maxE"></span><span id="_CPPv2N12GCVFExporter5m_maxE"></span><span id="GCVFExporter::m_max__glm::vec3"></span><span class="target" id="class_g_c_v_f_exporter_1a6e70ae61132f969ea38831e6bda1567d"></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_max</span></span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter5m_maxE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter5m_minE">
+<span id="_CPPv3N12GCVFExporter5m_minE"></span><span id="_CPPv2N12GCVFExporter5m_minE"></span><span id="GCVFExporter::m_min__glm::vec3"></span><span class="target" id="class_g_c_v_f_exporter_1a2e1dae6246db78649d69f23a71abc31e"></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_min</span></span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter5m_minE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter19m_progress_callbackE">
+<span id="_CPPv3N12GCVFExporter19m_progress_callbackE"></span><span id="_CPPv2N12GCVFExporter19m_progress_callbackE"></span><span class="target" id="class_g_c_v_f_exporter_1a4edb413a991b7e21e9169235541ee341"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><a class="reference internal" href="#_CPPv4N12GCVFExporter13ProgressPhaseE" title="GCVFExporter::ProgressPhase"><span class="n"><span class="pre">ProgressPhase</span></span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_progress_callback</span></span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter19m_progress_callbackE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter6m_rootE">
+<span id="_CPPv3N12GCVFExporter6m_rootE"></span><span id="_CPPv2N12GCVFExporter6m_rootE"></span><span id="GCVFExporter::m_root__std::shared_ptr:Node:"></span><span class="target" id="class_g_c_v_f_exporter_1a1be2abf8dd268cfd0e1f269884141064"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_root</span></span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter6m_rootE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter20m_slice_thickness_nmE">
+<span id="_CPPv3N12GCVFExporter20m_slice_thickness_nmE"></span><span id="_CPPv2N12GCVFExporter20m_slice_thickness_nmE"></span><span id="GCVFExporter::m_slice_thickness_nm__s"></span><span class="target" id="class_g_c_v_f_exporter_1a82ed33c456481fcdd1fc39bd65f0a3f4"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_slice_thickness_nm</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">27000</span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter20m_slice_thickness_nmE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter11m_temp_pathE">
+<span id="_CPPv3N12GCVFExporter11m_temp_pathE"></span><span id="_CPPv2N12GCVFExporter11m_temp_pathE"></span><span id="GCVFExporter::m_temp_path__ss"></span><span class="target" id="class_g_c_v_f_exporter_1a2cbe065ba3ef683f65ce37d4e75cd871"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_temp_path</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="s"><span class="pre">&quot;temp_gcvf_export&quot;</span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter11m_temp_pathE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter12m_voxel_sizeE">
+<span id="_CPPv3N12GCVFExporter12m_voxel_sizeE"></span><span id="_CPPv2N12GCVFExporter12m_voxel_sizeE"></span><span id="GCVFExporter::m_voxel_size__glm::vec3"></span><span class="target" id="class_g_c_v_f_exporter_1aee4ee5434be02efd707f4136339ce0a8"></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_voxel_size</span></span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter12m_voxel_sizeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter7m_x_dpiE">
+<span id="_CPPv3N12GCVFExporter7m_x_dpiE"></span><span id="_CPPv2N12GCVFExporter7m_x_dpiE"></span><span id="GCVFExporter::m_x_dpi__s"></span><span class="target" id="class_g_c_v_f_exporter_1aa4c934da3005f81a73431470cabf5594"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_x_dpi</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">600</span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter7m_x_dpiE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter14m_x_resolutionE">
+<span id="_CPPv3N12GCVFExporter14m_x_resolutionE"></span><span id="_CPPv2N12GCVFExporter14m_x_resolutionE"></span><span id="GCVFExporter::m_x_resolution__s"></span><span class="target" id="class_g_c_v_f_exporter_1ad312ac277995b6e7b543722a9c20a776"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_x_resolution</span></span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter14m_x_resolutionE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter7m_y_dpiE">
+<span id="_CPPv3N12GCVFExporter7m_y_dpiE"></span><span id="_CPPv2N12GCVFExporter7m_y_dpiE"></span><span id="GCVFExporter::m_y_dpi__s"></span><span class="target" id="class_g_c_v_f_exporter_1ae2e5f0b0e4da3acd56bed984d02a985b"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_y_dpi</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">300</span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter7m_y_dpiE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter14m_y_resolutionE">
+<span id="_CPPv3N12GCVFExporter14m_y_resolutionE"></span><span id="_CPPv2N12GCVFExporter14m_y_resolutionE"></span><span id="GCVFExporter::m_y_resolution__s"></span><span class="target" id="class_g_c_v_f_exporter_1af1c752c280f380e07485ac842f29b714"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_y_resolution</span></span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter14m_y_resolutionE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12GCVFExporter14m_z_resolutionE">
+<span id="_CPPv3N12GCVFExporter14m_z_resolutionE"></span><span id="_CPPv2N12GCVFExporter14m_z_resolutionE"></span><span id="GCVFExporter::m_z_resolution__s"></span><span class="target" id="class_g_c_v_f_exporter_1a5f23bfd93bf75e36bc137b03732616d0"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_z_resolution</span></span></span><a class="headerlink" href="#_CPPv4N12GCVFExporter14m_z_resolutionE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv422DirectMaterialCompiler">
+<span id="_CPPv322DirectMaterialCompiler"></span><span id="_CPPv222DirectMaterialCompiler"></span><span id="DirectMaterialCompiler"></span><span class="target" id="class_direct_material_compiler"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DirectMaterialCompiler</span></span></span><a class="headerlink" href="#_CPPv422DirectMaterialCompiler" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;direct_material_compiler.h&gt;</em></div>
+<p>This class samples an OpenVCAD tree into a stack of images. This makes the assumption that the user is directly expressing the materials in the tree. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N22DirectMaterialCompiler7compileEv">
+<span id="_CPPv3N22DirectMaterialCompiler7compileEv"></span><span id="_CPPv2N22DirectMaterialCompiler7compileEv"></span><span id="DirectMaterialCompiler::compile"></span><span class="target" id="class_direct_material_compiler_1a8a6cb63408b259bf8b3d7d62f916fac2"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">compile</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N22DirectMaterialCompiler7compileEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N22DirectMaterialCompiler22DirectMaterialCompilerERKNSt10shared_ptrI4NodeEEN3glm4vec3ERKNSt10shared_ptrI12MaterialDefsEERKNSt6stringERKNSt6stringEbd">
+<span id="_CPPv3N22DirectMaterialCompiler22DirectMaterialCompilerERKNSt10shared_ptrI4NodeEEN3glm4vec3ERKNSt10shared_ptrI12MaterialDefsEERKNSt6stringERKNSt6stringEbd"></span><span id="_CPPv2N22DirectMaterialCompiler22DirectMaterialCompilerERKNSt10shared_ptrI4NodeEEN3glm4vec3ERKNSt10shared_ptrI12MaterialDefsEERKNSt6stringERKNSt6stringEbd"></span><span id="DirectMaterialCompiler::DirectMaterialCompiler__std::shared_ptr:Node:CR.glm::vec3.std::shared_ptr:MaterialDefs:CR.ssCR.ssCR.b.double"></span><span class="target" id="class_direct_material_compiler_1ad5464036757c7a489da1dc8822bfc229"></span><span class="sig-name descname"><span class="n"><span class="pre">DirectMaterialCompiler</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m_root</span></span>, <a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">voxel_size</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-utils.html#_CPPv412MaterialDefs" title="MaterialDefs"><span class="n"><span class="pre">MaterialDefs</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">material_defs</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">output_directory</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">file_prefix</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">liquid_keep_out</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">liquid_keep_out_distance</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N22DirectMaterialCompiler22DirectMaterialCompilerERKNSt10shared_ptrI4NodeEEN3glm4vec3ERKNSt10shared_ptrI12MaterialDefsEERKNSt6stringERKNSt6stringEbd" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK22DirectMaterialCompiler21material_voxel_countsEv">
+<span id="_CPPv3NK22DirectMaterialCompiler21material_voxel_countsEv"></span><span id="_CPPv2NK22DirectMaterialCompiler21material_voxel_countsEv"></span><span id="DirectMaterialCompiler::material_voxel_countsC"></span><span class="target" id="class_direct_material_compiler_1a9c92da9a3e4668b1d8d2393344bfe124"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">unordered_map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">material_voxel_counts</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK22DirectMaterialCompiler21material_voxel_countsEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK22DirectMaterialCompiler10resolutionEv">
+<span id="_CPPv3NK22DirectMaterialCompiler10resolutionEv"></span><span id="_CPPv2NK22DirectMaterialCompiler10resolutionEv"></span><span id="DirectMaterialCompiler::resolutionC"></span><span class="target" id="class_direct_material_compiler_1af4fe354ca39220709f891b8e5973243c"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">tuple</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">size_t</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">resolution</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK22DirectMaterialCompiler10resolutionEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N22DirectMaterialCompiler19setProgressCallbackERKNSt8functionIFvdEEE">
+<span id="_CPPv3N22DirectMaterialCompiler19setProgressCallbackERKNSt8functionIFvdEEE"></span><span id="_CPPv2N22DirectMaterialCompiler19setProgressCallbackERKNSt8functionIFvdEEE"></span><span class="target" id="class_direct_material_compiler_1a4c9b354775ff96e66fca5d4b1b8fcecc"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setProgressCallback</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">progress_callback</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N22DirectMaterialCompiler19setProgressCallbackERKNSt8functionIFvdEEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-functions">Private Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N22DirectMaterialCompiler34remove_empty_images_from_beginningENSt6vectorI6size_tEERKNSt6stringE">
+<span id="_CPPv3N22DirectMaterialCompiler34remove_empty_images_from_beginningENSt6vectorI6size_tEERKNSt6stringE"></span><span id="_CPPv2N22DirectMaterialCompiler34remove_empty_images_from_beginningENSt6vectorI6size_tEERKNSt6stringE"></span><span id="DirectMaterialCompiler::remove_empty_images_from_beginning__std::vector:s:.ssCR"></span><span class="target" id="class_direct_material_compiler_1a1a9de2d63bd1cd5618a3b26893ccee6f"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">remove_empty_images_from_beginning</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">size_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">active_voxel_counts</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">filename_root</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N22DirectMaterialCompiler34remove_empty_images_from_beginningENSt6vectorI6size_tEERKNSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N22DirectMaterialCompiler28remove_empty_images_from_endENSt6vectorI6size_tEERKNSt6stringE">
+<span id="_CPPv3N22DirectMaterialCompiler28remove_empty_images_from_endENSt6vectorI6size_tEERKNSt6stringE"></span><span id="_CPPv2N22DirectMaterialCompiler28remove_empty_images_from_endENSt6vectorI6size_tEERKNSt6stringE"></span><span id="DirectMaterialCompiler::remove_empty_images_from_end__std::vector:s:.ssCR"></span><span class="target" id="class_direct_material_compiler_1ab05cf10a68416201d7b8bbcdf026a6b0"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">remove_empty_images_from_end</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">size_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">active_voxel_counts</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">filename_root</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N22DirectMaterialCompiler28remove_empty_images_from_endENSt6vectorI6size_tEERKNSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22DirectMaterialCompiler13m_file_prefixE">
+<span id="_CPPv3N22DirectMaterialCompiler13m_file_prefixE"></span><span id="_CPPv2N22DirectMaterialCompiler13m_file_prefixE"></span><span id="DirectMaterialCompiler::m_file_prefix__ssC"></span><span class="target" id="class_direct_material_compiler_1afdf23de128da4cb3aab4aa6c5853042c"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_file_prefix</span></span></span><a class="headerlink" href="#_CPPv4N22DirectMaterialCompiler13m_file_prefixE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22DirectMaterialCompiler17m_liquid_keep_outE">
+<span id="_CPPv3N22DirectMaterialCompiler17m_liquid_keep_outE"></span><span id="_CPPv2N22DirectMaterialCompiler17m_liquid_keep_outE"></span><span id="DirectMaterialCompiler::m_liquid_keep_out__b"></span><span class="target" id="class_direct_material_compiler_1a9261cd7d256aef11910dfc2e3e9987ca"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_liquid_keep_out</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><a class="headerlink" href="#_CPPv4N22DirectMaterialCompiler17m_liquid_keep_outE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22DirectMaterialCompiler26m_liquid_keep_out_distanceE">
+<span id="_CPPv3N22DirectMaterialCompiler26m_liquid_keep_out_distanceE"></span><span id="_CPPv2N22DirectMaterialCompiler26m_liquid_keep_out_distanceE"></span><span id="DirectMaterialCompiler::m_liquid_keep_out_distance__double"></span><span class="target" id="class_direct_material_compiler_1a49a8e6cc7374516155142860579fb5f1"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_liquid_keep_out_distance</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.0</span></span><a class="headerlink" href="#_CPPv4N22DirectMaterialCompiler26m_liquid_keep_out_distanceE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22DirectMaterialCompiler15m_material_defsE">
+<span id="_CPPv3N22DirectMaterialCompiler15m_material_defsE"></span><span id="_CPPv2N22DirectMaterialCompiler15m_material_defsE"></span><span id="DirectMaterialCompiler::m_material_defs__std::shared_ptr:MaterialDefs:"></span><span class="target" id="class_direct_material_compiler_1ad962a801e61bdb8609e5c82d535538fd"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-utils.html#_CPPv412MaterialDefs" title="MaterialDefs"><span class="n"><span class="pre">MaterialDefs</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_material_defs</span></span></span><a class="headerlink" href="#_CPPv4N22DirectMaterialCompiler15m_material_defsE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22DirectMaterialCompiler23m_material_voxel_countsE">
+<span id="_CPPv3N22DirectMaterialCompiler23m_material_voxel_countsE"></span><span id="_CPPv2N22DirectMaterialCompiler23m_material_voxel_countsE"></span><span id="DirectMaterialCompiler::m_material_voxel_counts__std::unordered_map:uint8_t.s:"></span><span class="target" id="class_direct_material_compiler_1ace51d82b5de315df4f7f12f3b3f4b2b1"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">unordered_map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_material_voxel_counts</span></span></span><a class="headerlink" href="#_CPPv4N22DirectMaterialCompiler23m_material_voxel_countsE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22DirectMaterialCompiler5m_maxE">
+<span id="_CPPv3N22DirectMaterialCompiler5m_maxE"></span><span id="_CPPv2N22DirectMaterialCompiler5m_maxE"></span><span id="DirectMaterialCompiler::m_max__glm::vec3"></span><span class="target" id="class_direct_material_compiler_1a5a917c364d87cfe5d193e68616ecf32c"></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_max</span></span></span><a class="headerlink" href="#_CPPv4N22DirectMaterialCompiler5m_maxE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22DirectMaterialCompiler5m_minE">
+<span id="_CPPv3N22DirectMaterialCompiler5m_minE"></span><span id="_CPPv2N22DirectMaterialCompiler5m_minE"></span><span id="DirectMaterialCompiler::m_min__glm::vec3"></span><span class="target" id="class_direct_material_compiler_1a7b13628bb5251075ffd3e3116fdf47d5"></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_min</span></span></span><a class="headerlink" href="#_CPPv4N22DirectMaterialCompiler5m_minE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22DirectMaterialCompiler18m_output_directoryE">
+<span id="_CPPv3N22DirectMaterialCompiler18m_output_directoryE"></span><span id="_CPPv2N22DirectMaterialCompiler18m_output_directoryE"></span><span id="DirectMaterialCompiler::m_output_directory__ssC"></span><span class="target" id="class_direct_material_compiler_1a8f420b507e663fcec0f4715f43de82e5"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_output_directory</span></span></span><a class="headerlink" href="#_CPPv4N22DirectMaterialCompiler18m_output_directoryE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22DirectMaterialCompiler19m_progress_callbackE">
+<span id="_CPPv3N22DirectMaterialCompiler19m_progress_callbackE"></span><span id="_CPPv2N22DirectMaterialCompiler19m_progress_callbackE"></span><span class="target" id="class_direct_material_compiler_1a0df0d965141f696d835526eead9b41b3"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_progress_callback</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">nullptr</span></span><a class="headerlink" href="#_CPPv4N22DirectMaterialCompiler19m_progress_callbackE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22DirectMaterialCompiler6m_rootE">
+<span id="_CPPv3N22DirectMaterialCompiler6m_rootE"></span><span id="_CPPv2N22DirectMaterialCompiler6m_rootE"></span><span id="DirectMaterialCompiler::m_root__std::shared_ptr:Node:"></span><span class="target" id="class_direct_material_compiler_1a3d7c17bd907acac354b94dbd88d5d8e7"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_root</span></span></span><a class="headerlink" href="#_CPPv4N22DirectMaterialCompiler6m_rootE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22DirectMaterialCompiler12m_voxel_sizeE">
+<span id="_CPPv3N22DirectMaterialCompiler12m_voxel_sizeE"></span><span id="_CPPv2N22DirectMaterialCompiler12m_voxel_sizeE"></span><span id="DirectMaterialCompiler::m_voxel_size__glm::vec3"></span><span class="target" id="class_direct_material_compiler_1ae31f980d0661455e5d9c5b7a6e1a6b2a"></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_voxel_size</span></span></span><a class="headerlink" href="#_CPPv4N22DirectMaterialCompiler12m_voxel_sizeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22DirectMaterialCompiler14m_x_resolutionE">
+<span id="_CPPv3N22DirectMaterialCompiler14m_x_resolutionE"></span><span id="_CPPv2N22DirectMaterialCompiler14m_x_resolutionE"></span><span id="DirectMaterialCompiler::m_x_resolution__s"></span><span class="target" id="class_direct_material_compiler_1ac742044714401891fef515f8c986152d"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_x_resolution</span></span></span><a class="headerlink" href="#_CPPv4N22DirectMaterialCompiler14m_x_resolutionE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22DirectMaterialCompiler14m_y_resolutionE">
+<span id="_CPPv3N22DirectMaterialCompiler14m_y_resolutionE"></span><span id="_CPPv2N22DirectMaterialCompiler14m_y_resolutionE"></span><span id="DirectMaterialCompiler::m_y_resolution__s"></span><span class="target" id="class_direct_material_compiler_1ab430b2264c0b007b6e33439186e61cb2"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_y_resolution</span></span></span><a class="headerlink" href="#_CPPv4N22DirectMaterialCompiler14m_y_resolutionE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N22DirectMaterialCompiler14m_z_resolutionE">
+<span id="_CPPv3N22DirectMaterialCompiler14m_z_resolutionE"></span><span id="_CPPv2N22DirectMaterialCompiler14m_z_resolutionE"></span><span id="DirectMaterialCompiler::m_z_resolution__s"></span><span class="target" id="class_direct_material_compiler_1af4e59d8562a4aafb2f04c4d80efeaedb"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_z_resolution</span></span></span><a class="headerlink" href="#_CPPv4N22DirectMaterialCompiler14m_z_resolutionE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-variables">Variables</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv415MAX_IMAGE_WIDTH">
+<span id="_CPPv315MAX_IMAGE_WIDTH"></span><span id="_CPPv215MAX_IMAGE_WIDTH"></span><span id="MAX_IMAGE_WIDTH__i"></span><span class="target" id="myerson__compiler_8h_1a782744edfe435aea9570fddab3eb6664"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MAX_IMAGE_WIDTH</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">880</span></span><a class="headerlink" href="#_CPPv415MAX_IMAGE_WIDTH" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv415MyersonCompiler">
+<span id="_CPPv315MyersonCompiler"></span><span id="_CPPv215MyersonCompiler"></span><span id="MyersonCompiler"></span><span class="target" id="class_myerson_compiler"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MyersonCompiler</span></span></span><a class="headerlink" href="#_CPPv415MyersonCompiler" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;myerson_compiler.h&gt;</em></div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N15MyersonCompiler7compileEv">
+<span id="_CPPv3N15MyersonCompiler7compileEv"></span><span id="_CPPv2N15MyersonCompiler7compileEv"></span><span id="MyersonCompiler::compile"></span><span class="target" id="class_myerson_compiler_1abaef371ba1d21815465a56072fb4cacd"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">compile</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15MyersonCompiler7compileEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N15MyersonCompiler15MyersonCompilerEd6size_t6size_tddRKNSt6stringERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI12MaterialDefsEE">
+<span id="_CPPv3N15MyersonCompiler15MyersonCompilerEd6size_t6size_tddRKNSt6stringERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI12MaterialDefsEE"></span><span id="_CPPv2N15MyersonCompiler15MyersonCompilerEd6size_t6size_tddRKNSt6stringERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI12MaterialDefsEE"></span><span id="MyersonCompiler::MyersonCompiler__double.s.s.double.double.ssCR.std::shared_ptr:Node:CR.std::shared_ptr:MaterialDefs:CR"></span><span class="target" id="class_myerson_compiler_1a22ce3c1aa56ff789e92ed4c43b303121"></span><span class="sig-name descname"><span class="n"><span class="pre">MyersonCompiler</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">layer_height</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x_dpi</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y_dpi</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">taper_angle_deg</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">extra_width</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">output_path</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">root</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-utils.html#_CPPv412MaterialDefs" title="MaterialDefs"><span class="n"><span class="pre">MaterialDefs</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">material_defs</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15MyersonCompiler15MyersonCompilerEd6size_t6size_tddRKNSt6stringERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI12MaterialDefsEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Constructor. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layer_height</strong> – Layer height in mm </p></li>
+<li><p><strong>x_dpi</strong> – X resolution in dots per inch </p></li>
+<li><p><strong>y_dpi</strong> – Y resolution in dots per inch </p></li>
+<li><p><strong>root</strong> – Root node of the OpenVCAD tree </p></li>
+<li><p><strong>material_defs</strong> – Material definitions </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N15MyersonCompiler19setProgressCallbackERKNSt8functionIFvdEEE">
+<span id="_CPPv3N15MyersonCompiler19setProgressCallbackERKNSt8functionIFvdEEE"></span><span id="_CPPv2N15MyersonCompiler19setProgressCallbackERKNSt8functionIFvdEEE"></span><span class="target" id="class_myerson_compiler_1a5aed6f59bb31adb6c8100ef729656e58"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setProgressCallback</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">progress_callback</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15MyersonCompiler19setProgressCallbackERKNSt8functionIFvdEEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-functions">Private Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N15MyersonCompiler15centerImageDataERKNSt6vectorIbEEiii">
+<span id="_CPPv3N15MyersonCompiler15centerImageDataERKNSt6vectorIbEEiii"></span><span id="_CPPv2N15MyersonCompiler15centerImageDataERKNSt6vectorIbEEiii"></span><span id="MyersonCompiler::centerImageData__std::vector:b:CR.i.i.i"></span><span class="target" id="class_myerson_compiler_1ad3097a0e40bac47bacf32423a3e5465f"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">bool</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">centerImageData</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">bool</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">original_width</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">original_height</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y_padding</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15MyersonCompiler15centerImageDataERKNSt6vectorIbEEiii" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N15MyersonCompiler16write1BitBmpFileERKNSt6stringEiiRKNSt6vectorIbEE">
+<span id="_CPPv3N15MyersonCompiler16write1BitBmpFileERKNSt6stringEiiRKNSt6vectorIbEE"></span><span id="_CPPv2N15MyersonCompiler16write1BitBmpFileERKNSt6stringEiiRKNSt6vectorIbEE"></span><span id="MyersonCompiler::write1BitBmpFile__ssCR.i.i.std::vector:b:CR"></span><span class="target" id="class_myerson_compiler_1aad9048f80a6dd8ec8ee60d9888deaca6"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">write1BitBmpFile</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">filename</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">width</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">height</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">bool</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">data</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15MyersonCompiler16write1BitBmpFileERKNSt6stringEiiRKNSt6vectorIbEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15MyersonCompiler13m_extra_widthE">
+<span id="_CPPv3N15MyersonCompiler13m_extra_widthE"></span><span id="_CPPv2N15MyersonCompiler13m_extra_widthE"></span><span id="MyersonCompiler::m_extra_width__double"></span><span class="target" id="class_myerson_compiler_1a0f47392380402824ac595405e5583486"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_extra_width</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.0</span></span><a class="headerlink" href="#_CPPv4N15MyersonCompiler13m_extra_widthE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15MyersonCompiler15m_material_defsE">
+<span id="_CPPv3N15MyersonCompiler15m_material_defsE"></span><span id="_CPPv2N15MyersonCompiler15m_material_defsE"></span><span id="MyersonCompiler::m_material_defs__std::shared_ptr:MaterialDefs:"></span><span class="target" id="class_myerson_compiler_1a44e52157f79249e58eccd2c4177e6b82"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-utils.html#_CPPv412MaterialDefs" title="MaterialDefs"><span class="n"><span class="pre">MaterialDefs</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_material_defs</span></span></span><a class="headerlink" href="#_CPPv4N15MyersonCompiler15m_material_defsE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15MyersonCompiler13m_output_pathE">
+<span id="_CPPv3N15MyersonCompiler13m_output_pathE"></span><span id="_CPPv2N15MyersonCompiler13m_output_pathE"></span><span id="MyersonCompiler::m_output_path__ss"></span><span class="target" id="class_myerson_compiler_1a052e28c3c3d49b21137716449523fdde"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_output_path</span></span></span><a class="headerlink" href="#_CPPv4N15MyersonCompiler13m_output_pathE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15MyersonCompiler19m_progress_callbackE">
+<span id="_CPPv3N15MyersonCompiler19m_progress_callbackE"></span><span id="_CPPv2N15MyersonCompiler19m_progress_callbackE"></span><span class="target" id="class_myerson_compiler_1ac663c58647e324871a251f7534c47e54"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_progress_callback</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">nullptr</span></span><a class="headerlink" href="#_CPPv4N15MyersonCompiler19m_progress_callbackE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15MyersonCompiler6m_rootE">
+<span id="_CPPv3N15MyersonCompiler6m_rootE"></span><span id="_CPPv2N15MyersonCompiler6m_rootE"></span><span id="MyersonCompiler::m_root__std::shared_ptr:Node:"></span><span class="target" id="class_myerson_compiler_1a3d01e6e6a94fb8c6310782106a1147dd"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_root</span></span></span><a class="headerlink" href="#_CPPv4N15MyersonCompiler6m_rootE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15MyersonCompiler17m_taper_angle_degE">
+<span id="_CPPv3N15MyersonCompiler17m_taper_angle_degE"></span><span id="_CPPv2N15MyersonCompiler17m_taper_angle_degE"></span><span id="MyersonCompiler::m_taper_angle_deg__double"></span><span class="target" id="class_myerson_compiler_1a66823069c0203cc7f84928a969d17f06"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_taper_angle_deg</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.0</span></span><a class="headerlink" href="#_CPPv4N15MyersonCompiler17m_taper_angle_degE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15MyersonCompiler12m_voxel_sizeE">
+<span id="_CPPv3N15MyersonCompiler12m_voxel_sizeE"></span><span id="_CPPv2N15MyersonCompiler12m_voxel_sizeE"></span><span id="MyersonCompiler::m_voxel_size__glm::vec3"></span><span class="target" id="class_myerson_compiler_1a85d7d0070e828d417dc7d22ad72d3efe"></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_voxel_size</span></span></span><a class="headerlink" href="#_CPPv4N15MyersonCompiler12m_voxel_sizeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv417FullColorCompiler">
+<span id="_CPPv317FullColorCompiler"></span><span id="_CPPv217FullColorCompiler"></span><span id="FullColorCompiler"></span><span class="target" id="class_full_color_compiler"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">FullColorCompiler</span></span></span><a class="headerlink" href="#_CPPv417FullColorCompiler" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;full_color_compiler.h&gt;</em></div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N17FullColorCompiler7compileEv">
+<span id="_CPPv3N17FullColorCompiler7compileEv"></span><span id="_CPPv2N17FullColorCompiler7compileEv"></span><span id="FullColorCompiler::compile"></span><span class="target" id="class_full_color_compiler_1a4fe65caa6a7d8d4c1584a5748654d6ef"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">compile</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17FullColorCompiler7compileEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N17FullColorCompiler17FullColorCompilerERKNSt10shared_ptrI4NodeEE4vec3RKNSt6stringERKNSt6stringERKNSt6stringERKNSt6vectorIN3glm4vec4EEEb">
+<span id="_CPPv3N17FullColorCompiler17FullColorCompilerERKNSt10shared_ptrI4NodeEE4vec3RKNSt6stringERKNSt6stringERKNSt6stringERKNSt6vectorIN3glm4vec4EEEb"></span><span id="_CPPv2N17FullColorCompiler17FullColorCompilerERKNSt10shared_ptrI4NodeEE4vec3RKNSt6stringERKNSt6stringERKNSt6stringERKNSt6vectorIN3glm4vec4EEEb"></span><span id="FullColorCompiler::FullColorCompiler__std::shared_ptr:Node:CR.vec3.ssCR.ssCR.ssCR.std::vector:glm::vec4:CR.b"></span><span class="target" id="class_full_color_compiler_1ac6ff218ba197041eb87a79b7b639530b"></span><span class="sig-name descname"><span class="n"><span class="pre">FullColorCompiler</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">m_root</span></span>, <span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">voxel_size</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">attribute_def_file_path</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">output_directory</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">file_prefix</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec4</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">color_palette</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">use_transparency</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17FullColorCompiler17FullColorCompilerERKNSt10shared_ptrI4NodeEE4vec3RKNSt6stringERKNSt6stringERKNSt6stringERKNSt6vectorIN3glm4vec4EEEb" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N17FullColorCompiler19setProgressCallbackERNSt8functionIFvdEEE">
+<span id="_CPPv3N17FullColorCompiler19setProgressCallbackERNSt8functionIFvdEEE"></span><span id="_CPPv2N17FullColorCompiler19setProgressCallbackERNSt8functionIFvdEEE"></span><span class="target" id="class_full_color_compiler_1ac7544d26c3ea20cff3746e0219105b62"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setProgressCallback</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">progress_callback</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17FullColorCompiler19setProgressCallbackERNSt8functionIFvdEEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N17FullColorCompiler9ApplyCMYKERNSt6vectorINSt6vectorI4vec3EEEERKNSt6vectorI4vec4EE">
+<span id="_CPPv3N17FullColorCompiler9ApplyCMYKERNSt6vectorINSt6vectorI4vec3EEEERKNSt6vectorI4vec4EE"></span><span id="_CPPv2N17FullColorCompiler9ApplyCMYKERNSt6vectorINSt6vectorI4vec3EEEERKNSt6vectorI4vec4EE"></span><span id="FullColorCompiler::ApplyCMYK__std::vector:std::vector:vec3::R.std::vector:vec4:CR"></span><span class="target" id="class_full_color_compiler_1ab3ae651277b6f7c2667d880f80ef370f"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ApplyCMYK</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">vec3</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">image</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">vec4</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">palette_rgba</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17FullColorCompiler9ApplyCMYKERNSt6vectorINSt6vectorI4vec3EEEERKNSt6vectorI4vec4EE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17FullColorCompiler25m_attribute_def_file_pathE">
+<span id="_CPPv3N17FullColorCompiler25m_attribute_def_file_pathE"></span><span id="_CPPv2N17FullColorCompiler25m_attribute_def_file_pathE"></span><span id="FullColorCompiler::m_attribute_def_file_path__ssC"></span><span class="target" id="class_full_color_compiler_1a56402f7f4b55024f36e182a58a29e7bc"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_attribute_def_file_path</span></span></span><a class="headerlink" href="#_CPPv4N17FullColorCompiler25m_attribute_def_file_pathE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17FullColorCompiler15m_color_paletteE">
+<span id="_CPPv3N17FullColorCompiler15m_color_paletteE"></span><span id="_CPPv2N17FullColorCompiler15m_color_paletteE"></span><span id="FullColorCompiler::m_color_palette__std::vector:glm::vec4:C"></span><span class="target" id="class_full_color_compiler_1afb325c9db1043535ca8273eda2ccc8d4"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec4</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_color_palette</span></span></span><a class="headerlink" href="#_CPPv4N17FullColorCompiler15m_color_paletteE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17FullColorCompiler13m_file_prefixE">
+<span id="_CPPv3N17FullColorCompiler13m_file_prefixE"></span><span id="_CPPv2N17FullColorCompiler13m_file_prefixE"></span><span id="FullColorCompiler::m_file_prefix__ssC"></span><span class="target" id="class_full_color_compiler_1aa599bd6dddffa307c716e72b95691a95"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_file_prefix</span></span></span><a class="headerlink" href="#_CPPv4N17FullColorCompiler13m_file_prefixE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17FullColorCompiler5m_maxE">
+<span id="_CPPv3N17FullColorCompiler5m_maxE"></span><span id="_CPPv2N17FullColorCompiler5m_maxE"></span><span id="FullColorCompiler::m_max__vec3"></span><span class="target" id="class_full_color_compiler_1aae897d374d20305082e34d706f80a77f"></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_max</span></span></span><a class="headerlink" href="#_CPPv4N17FullColorCompiler5m_maxE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17FullColorCompiler5m_minE">
+<span id="_CPPv3N17FullColorCompiler5m_minE"></span><span id="_CPPv2N17FullColorCompiler5m_minE"></span><span id="FullColorCompiler::m_min__vec3"></span><span class="target" id="class_full_color_compiler_1aa3c0b1360a1b45fbfdf12135233cf8ad"></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_min</span></span></span><a class="headerlink" href="#_CPPv4N17FullColorCompiler5m_minE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17FullColorCompiler18m_output_directoryE">
+<span id="_CPPv3N17FullColorCompiler18m_output_directoryE"></span><span id="_CPPv2N17FullColorCompiler18m_output_directoryE"></span><span id="FullColorCompiler::m_output_directory__ssC"></span><span class="target" id="class_full_color_compiler_1abd6676f367930fb24d352d0dd4edf33a"></span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_output_directory</span></span></span><a class="headerlink" href="#_CPPv4N17FullColorCompiler18m_output_directoryE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17FullColorCompiler19m_progress_callbackE">
+<span id="_CPPv3N17FullColorCompiler19m_progress_callbackE"></span><span id="_CPPv2N17FullColorCompiler19m_progress_callbackE"></span><span class="target" id="class_full_color_compiler_1a08de3a6abcd5d0979ec048f38069d686"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">void</span></span><span class="p"><span class="pre">(</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">)</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_progress_callback</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">nullptr</span></span><a class="headerlink" href="#_CPPv4N17FullColorCompiler19m_progress_callbackE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17FullColorCompiler6m_rootE">
+<span id="_CPPv3N17FullColorCompiler6m_rootE"></span><span id="_CPPv2N17FullColorCompiler6m_rootE"></span><span id="FullColorCompiler::m_root__std::shared_ptr:Node:"></span><span class="target" id="class_full_color_compiler_1ac465bcc0352534f2e543d58f17468b11"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_root</span></span></span><a class="headerlink" href="#_CPPv4N17FullColorCompiler6m_rootE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17FullColorCompiler18m_use_transparencyE">
+<span id="_CPPv3N17FullColorCompiler18m_use_transparencyE"></span><span id="_CPPv2N17FullColorCompiler18m_use_transparencyE"></span><span id="FullColorCompiler::m_use_transparency__b"></span><span class="target" id="class_full_color_compiler_1ac001879f596399f11acdb561f63f273d"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_use_transparency</span></span></span><a class="headerlink" href="#_CPPv4N17FullColorCompiler18m_use_transparencyE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N17FullColorCompiler12m_voxel_sizeE">
+<span id="_CPPv3N17FullColorCompiler12m_voxel_sizeE"></span><span id="_CPPv2N17FullColorCompiler12m_voxel_sizeE"></span><span id="FullColorCompiler::m_voxel_size__vec3"></span><span class="target" id="class_full_color_compiler_1af57d9a6e7e8e4249bb32cd65d587596f"></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_voxel_size</span></span></span><a class="headerlink" href="#_CPPv4N17FullColorCompiler12m_voxel_sizeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-static-functions">Private Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N17FullColorCompiler17ApplyTransparencyEN4Node13ColorGridType3PtrEN4Node8GridType3PtrEN3glm4vec3EN3glm4vec3E">
+<span id="_CPPv3N17FullColorCompiler17ApplyTransparencyEN4Node13ColorGridType3PtrEN4Node8GridType3PtrEN3glm4vec3EN3glm4vec3E"></span><span id="_CPPv2N17FullColorCompiler17ApplyTransparencyEN4Node13ColorGridType3PtrEN4Node8GridType3PtrEN3glm4vec3EN3glm4vec3E"></span><span id="FullColorCompiler::ApplyTransparency__Node::ColorGridType::Ptr.Node::GridType::Ptr.glm::vec3.glm::vec3"></span><span class="target" id="class_full_color_compiler_1a586b6652ac66fddc6125ea5c4459de44"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ApplyTransparency</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv4N4Node13ColorGridTypeE" title="Node::ColorGridType"><span class="n"><span class="pre">ColorGridType</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Ptr</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">color_grid</span></span>, <a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv4N4Node8GridTypeE" title="Node::GridType"><span class="n"><span class="pre">GridType</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Ptr</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">alpha_grid</span></span>, <a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">clear_color</span></span>, <a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dims</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17FullColorCompiler17ApplyTransparencyEN4Node13ColorGridType3PtrEN4Node8GridType3PtrEN3glm4vec3EN3glm4vec3E" title="Link to this definition"></a><br /></dt>
+<dd><p>Given a color grid and alpha grid, apply transparency by mixing in a clear material. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>color_grid</strong> – The color grid to apply transparency to </p></li>
+<li><p><strong>alpha_grid</strong> – The alpha grid to apply transparency to </p></li>
+<li><p><strong>palette</strong> – The color palette to apply transparency to </p></li>
+<li><p><strong>palette_alpha</strong> – The alpha values of the color palette </p></li>
+<li><p><strong>clear_color</strong> – The clear color to mix in </p></li>
+<li><p><strong>dims</strong> – The dimensions of the grid </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N17FullColorCompiler9RGBtoCMYKERKN3glm4vec3E">
+<span id="_CPPv3N17FullColorCompiler9RGBtoCMYKERKN3glm4vec3E"></span><span id="_CPPv2N17FullColorCompiler9RGBtoCMYKERKN3glm4vec3E"></span><span id="FullColorCompiler::RGBtoCMYK__glm::vec3CR"></span><span class="target" id="class_full_color_compiler_1a97b56dd65415402064f6462af918fc52"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec4</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">RGBtoCMYK</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">rgb</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17FullColorCompiler9RGBtoCMYKERKN3glm4vec3E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N17FullColorCompiler9SaveImageERKNSt6vectorIhEE6size_t6size_tRKNSt6stringE">
+<span id="_CPPv3N17FullColorCompiler9SaveImageERKNSt6vectorIhEE6size_t6size_tRKNSt6stringE"></span><span id="_CPPv2N17FullColorCompiler9SaveImageERKNSt6vectorIhEE6size_t6size_tRKNSt6stringE"></span><span id="FullColorCompiler::SaveImage__std::vector:unsigned-c:CR.s.s.ssCR"></span><span class="target" id="class_full_color_compiler_1aa19567da64118b15e481477563555097"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SaveImage</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">unsigned</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">image</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">height</span></span>, <span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">width</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">filename</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17FullColorCompiler9SaveImageERKNSt6vectorIhEE6size_t6size_tRKNSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N17FullColorCompiler21SliceGridIntoPNGStackEN4Node13ColorGridType3PtrEN4Node8GridType3PtrEN3glm4vec3ERKNSt6stringE">
+<span id="_CPPv3N17FullColorCompiler21SliceGridIntoPNGStackEN4Node13ColorGridType3PtrEN4Node8GridType3PtrEN3glm4vec3ERKNSt6stringE"></span><span id="_CPPv2N17FullColorCompiler21SliceGridIntoPNGStackEN4Node13ColorGridType3PtrEN4Node8GridType3PtrEN3glm4vec3ERKNSt6stringE"></span><span id="FullColorCompiler::SliceGridIntoPNGStack__Node::ColorGridType::Ptr.Node::GridType::Ptr.glm::vec3.ssCR"></span><span class="target" id="class_full_color_compiler_1a4902942e1dbba904e96b7ec09a7d1d01"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SliceGridIntoPNGStack</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv4N4Node13ColorGridTypeE" title="Node::ColorGridType"><span class="n"><span class="pre">ColorGridType</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Ptr</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">color_grid</span></span>, <a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv4N4Node8GridTypeE" title="Node::GridType"><span class="n"><span class="pre">GridType</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Ptr</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">alpha_grid</span></span>, <a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dims</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">filename_root</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N17FullColorCompiler21SliceGridIntoPNGStackEN4Node13ColorGridType3PtrEN4Node8GridType3PtrEN3glm4vec3ERKNSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd><p>Given a color and alpha grid, slice the grids into a stack of PNG images. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>color_grid</strong> – The color grid to slice </p></li>
+<li><p><strong>alpha_grid</strong> – The alpha grid to slice </p></li>
+<li><p><strong>dims</strong> – The dimensions of the grid </p></li>
+<li><p><strong>filename_root</strong> – The filename template of the PNG stack </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="libvcad-analysis.html" class="btn btn-neutral float-left" title="Analysis" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="libvcad-compilers-writers.html" class="btn btn-neutral float-right" title="Compilers — writers" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Charles Wade and Robert MacCurdy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

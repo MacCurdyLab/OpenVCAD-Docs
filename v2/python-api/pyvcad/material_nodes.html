@@ -1,0 +1,354 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tree — material nodes &mdash; OpenVCAD 2.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=57236720"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Tree — composition nodes" href="composition.html" />
+    <link rel="prev" title="Tree — leaf nodes" href="leaves.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenVCAD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides/math-expressions.html">Math Expression Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometry.html">Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parser.html">Parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree.html">Tree — base classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="leaves.html">Tree — leaf nodes</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tree — material nodes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Convolution"><code class="docutils literal notranslate"><span class="pre">Convolution</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Convolution.BlendKernel"><code class="docutils literal notranslate"><span class="pre">Convolution.BlendKernel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Convolution.PassKernel"><code class="docutils literal notranslate"><span class="pre">Convolution.PassKernel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Convolution.__init__"><code class="docutils literal notranslate"><span class="pre">Convolution.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.FGrade"><code class="docutils literal notranslate"><span class="pre">FGrade</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.FGrade.__init__"><code class="docutils literal notranslate"><span class="pre">FGrade.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Blend"><code class="docutils literal notranslate"><span class="pre">Blend</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Blend.__init__"><code class="docutils literal notranslate"><span class="pre">Blend.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="composition.html">Tree — composition nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analysis.html">Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pyvcad_compilers/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pyvcad_rendering/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code> package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-api/index.html">C++ API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../papers.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenVCAD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> package</a></li>
+      <li class="breadcrumb-item active">Tree — material nodes</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/python-api/pyvcad/material_nodes.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tree-material-nodes">
+<h1>Tree — material nodes<a class="headerlink" href="#tree-material-nodes" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Convolution">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Convolution</span></span><a class="headerlink" href="#pyvcad.Convolution" title="Link to this definition"></a></dt>
+<dd><p>A node that applies a discrete convolution to its child node. This can be used with a kernel to apply a filter to design. This include blurring, sharpening, edge detection, and more. See the paper(<a class="reference external" href="https://doi.org/10.1016/j.addma.2023.103912">https://doi.org/10.1016/j.addma.2023.103912</a>) for details.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Convolution.BlendKernel">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">BlendKernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Convolution.BlendKernel" title="Link to this definition"></a></dt>
+<dd><p>Creates a kernel that averages all values (blends). This means all values are one, including the center value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>int</em>) – The x dimension of the kernel.</p></li>
+<li><p><strong>y</strong> (<em>int</em>) – The y dimension of the kernel.</p></li>
+<li><p><strong>z</strong> (<em>int</em>) – The z dimension of the kernel.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Convolution.PassKernel">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">PassKernel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Convolution.PassKernel" title="Link to this definition"></a></dt>
+<dd><p>Creates a kernel that passes all values through. This means all values are zero except for the center value which is one.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>int</em>) – The x dimension of the kernel.</p></li>
+<li><p><strong>y</strong> (<em>int</em>) – The y dimension of the kernel.</p></li>
+<li><p><strong>z</strong> (<em>int</em>) – The z dimension of the kernel.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Convolution.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Convolution.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Convolution, kernel: collections.abc.Sequence[collections.abc.Sequence[collections.abc.Sequence[typing.SupportsInt]]]) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a Convolution with a kernel.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>kernel</strong> (<em>Convolution::Kernel</em>) – The convolution kernel, a 3D matrix of integers. The kernel must be odd in all dimensions.</p>
+</dd>
+</dl>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Convolution, kernel: collections.abc.Sequence[collections.abc.Sequence[collections.abc.Sequence[typing.SupportsInt]]], child: pyvcad.pyvcad.Node) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a Convolution with a kernel and a child node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>kernel</strong> (<em>Convolution::Kernel</em>) – The convolution kernel, a 3D matrix of integers. The kernel must be odd in all dimensions.</p></li>
+<li><p><strong>child</strong> (<a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The child node.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.FGrade">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">FGrade</span></span><a class="headerlink" href="#pyvcad.FGrade" title="Link to this definition"></a></dt>
+<dd><p>A node that applies grading functions to a child. The grading functions are probability density functions that must all sum to 1 for any given point. The functions are evaluated, and the material is chosen based on the discrete probability of the location in space. The syntax for the expressions must follow the same format as the Function class. The node has two modes: Probability mode and Threshold mode. This node is unary and must have a single child. It runs in O(n) time, where n is tokens in the longest expression.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.FGrade.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.FGrade.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.FGrade, functions: collections.abc.Sequence[str], materials: collections.abc.Sequence[typing.SupportsInt], prob_mode: bool) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a FGrade with a list of expressions, corresponding materials, and a mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>functions</strong> (<em>std::vector&lt;std::string&gt;</em>) – A list of expressions that are probability density functions.</p></li>
+<li><p><strong>materials</strong> (<em>std::vector&lt;uint8_t&gt;</em>) – A list of materials that correspond to the expressions.</p></li>
+<li><p><strong>prob_mode</strong> (<em>bool</em>) – If true, the node runs in probability mode. If false, the node runs in threshold mode.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">MaterialDefs</span><span class="p">(</span><span class="s1">&#39;configs/default.json&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bar</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s1">&#39;gray&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FGrade</span><span class="p">([</span><span class="s1">&#39;x/100 + 0.5&#39;</span><span class="p">,</span> <span class="s1">&#39;-x/100 + 0.5&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">),</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s1">&#39;blue&#39;</span><span class="p">)],</span> <span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">root</span><span class="o">.</span><span class="n">set_child</span><span class="p">(</span><span class="n">bar</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.FGrade, functions: collections.abc.Sequence[str], materials: collections.abc.Sequence[typing.SupportsInt], prob_mode: bool, child: pyvcad.pyvcad.Node) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a FGrade with a list of expressions, corresponding materials, a mode, and a child node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>functions</strong> (<em>std::vector&lt;std::string&gt;</em>) – A list of expressions that are probability density functions.</p></li>
+<li><p><strong>materials</strong> (<em>std::vector&lt;uint8_t&gt;</em>) – A list of materials that correspond to the expressions.</p></li>
+<li><p><strong>prob_mode</strong> (<em>bool</em>) – If true, the node runs in probability mode. If false, the node runs in threshold mode.</p></li>
+<li><p><strong>child</strong> (<a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The child node.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">MaterialDefs</span><span class="p">(</span><span class="s1">&#39;configs/default.json&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bar</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s1">&#39;gray&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FGrade</span><span class="p">([</span><span class="s1">&#39;x/100 + 0.5&#39;</span><span class="p">,</span> <span class="s1">&#39;-x/100 + 0.5&#39;</span><span class="p">],</span> <span class="p">[</span><span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">),</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s1">&#39;blue&#39;</span><span class="p">)],</span> <span class="kc">False</span><span class="p">,</span> <span class="n">bar</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>__init__(self: pyvcad.pyvcad.FGrade, functions: collections.abc.Sequence[collections.abc.Callable[[typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat], float]], materials: collections.abc.Sequence[typing.SupportsInt], prob_mode: bool) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a FGrade with a list of lambda functions, corresponding materials, and a mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>functions</strong> (<em>std::vector&lt;std::function&lt;double</em><em>(</em><em>double x</em><em>, </em><em>double y</em><em>, </em><em>double z</em><em>, </em><em>double rho</em><em>, </em><em>double phic</em><em>, </em><em>double r</em><em>, </em><em>double theta</em><em>, </em><em>double phis</em><em>)</em><em>&gt;&gt;</em>) – A list of lambda functions that are volume fraction functions. They should all sum to one for any location in space. The functions must each take three parameters (all vec3): xyz, cylindrical coordinates, and spherical coordinates.</p></li>
+<li><p><strong>materials</strong> (<em>std::vector&lt;uint8_t&gt;</em>) – A list of materials that correspond to the functions.</p></li>
+<li><p><strong>prob_mode</strong> (<em>bool</em>) – If true, the node runs in probability mode. If false, the node runs in threshold mode.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">MaterialDefs</span><span class="p">(</span><span class="s1">&#39;configs/default.json&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bar</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s1">&#39;gray&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">func_a</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">phic</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phis</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span><span class="o">/</span><span class="mi">100</span> <span class="o">+</span> <span class="mf">0.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">func_b</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">phic</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phis</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="o">-</span><span class="n">x</span><span class="o">/</span><span class="mi">100</span> <span class="o">+</span> <span class="mf">0.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FGrade</span><span class="p">([</span><span class="n">func_a</span><span class="p">,</span> <span class="n">func_b</span><span class="p">],</span> <span class="p">[</span><span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">),</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s1">&#39;blue&#39;</span><span class="p">)],</span> <span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">root</span><span class="o">.</span><span class="n">set_child</span><span class="p">(</span><span class="n">bar</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>__init__(self: pyvcad.pyvcad.FGrade, functions: collections.abc.Sequence[collections.abc.Callable[[typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat], float]], materials: collections.abc.Sequence[typing.SupportsInt], prob_mode: bool, child: pyvcad.pyvcad.Node) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a FGrade with a list of lambda functions, corresponding materials, a mode, and a child node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>functions</strong> (<em>List&lt;function&lt;double</em><em>(</em><em>double x</em><em>, </em><em>double y</em><em>, </em><em>double z</em><em>, </em><em>double rho</em><em>, </em><em>double phic</em><em>, </em><em>double r</em><em>, </em><em>double theta</em><em>, </em><em>double phis</em><em>)</em><em>&gt;&gt;</em>) – A list of lambda functions that are volume fraction functions. They should all sum to one for any location in space. The functions must each take parameters: xyz, cylindrical coordinates, and spherical coordinates.</p></li>
+<li><p><strong>materials</strong> (<em>List&lt;uint8_t&gt;</em>) – A list of materials that correspond to the functions.</p></li>
+<li><p><strong>prob_mode</strong> (<em>bool</em>) – If true, the node runs in probability mode. If false, the node runs in threshold mode.</p></li>
+<li><p><strong>child</strong> (<a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The child node.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">MaterialDefs</span><span class="p">(</span><span class="s1">&#39;configs/default.json&#39;</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">bar</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span><span class="mi">50</span><span class="p">,</span><span class="mi">10</span><span class="p">),</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s1">&#39;gray&#39;</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">func_a</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">phic</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phis</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="n">x</span><span class="o">/</span><span class="mi">100</span> <span class="o">+</span> <span class="mf">0.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">func_b</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">phic</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phis</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="o">-</span><span class="n">x</span><span class="o">/</span><span class="mi">100</span> <span class="o">+</span> <span class="mf">0.5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FGrade</span><span class="p">([</span><span class="n">func_a</span><span class="p">,</span> <span class="n">func_b</span><span class="p">],</span> <span class="p">[</span><span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s1">&#39;red&#39;</span><span class="p">),</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s1">&#39;blue&#39;</span><span class="p">)],</span> <span class="kc">False</span><span class="p">,</span> <span class="n">bar</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Blend">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Blend</span></span><a class="headerlink" href="#pyvcad.Blend" title="Link to this definition"></a></dt>
+<dd><p>A node that blends the material distributions of its child node over a specified radius.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Blend.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Blend.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Blend, radius: typing.SupportsFloat) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a Blend with a specified radius.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>radius</strong> (<em>double</em>) – The radius over which to blend the material distributions.</p>
+</dd>
+</dl>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Blend, radius: typing.SupportsFloat, child: pyvcad.pyvcad.Node) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a Blend with a specified radius and a child node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>radius</strong> (<em>double</em>) – The radius over which to blend the material distributions.</p></li>
+<li><p><strong>child</strong> (<a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The child node.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="leaves.html" class="btn btn-neutral float-left" title="Tree — leaf nodes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="composition.html" class="btn btn-neutral float-right" title="Tree — composition nodes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Charles Wade and Robert MacCurdy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

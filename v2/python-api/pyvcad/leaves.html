@@ -1,0 +1,935 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tree — leaf nodes &mdash; OpenVCAD 2.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=57236720"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Tree — material nodes" href="material_nodes.html" />
+    <link rel="prev" title="Tree — base classes" href="tree.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenVCAD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides/math-expressions.html">Math Expression Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometry.html">Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parser.html">Parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree.html">Tree — base classes</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tree — leaf nodes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Function"><code class="docutils literal notranslate"><span class="pre">Function</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Function.__init__"><code class="docutils literal notranslate"><span class="pre">Function.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Mesh"><code class="docutils literal notranslate"><span class="pre">Mesh</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Mesh.__init__"><code class="docutils literal notranslate"><span class="pre">Mesh.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.PointMap"><code class="docutils literal notranslate"><span class="pre">PointMap</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.PointMap.__init__"><code class="docutils literal notranslate"><span class="pre">PointMap.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.RectPrism"><code class="docutils literal notranslate"><span class="pre">RectPrism</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.RectPrism.__init__"><code class="docutils literal notranslate"><span class="pre">RectPrism.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Sphere"><code class="docutils literal notranslate"><span class="pre">Sphere</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Sphere.__init__"><code class="docutils literal notranslate"><span class="pre">Sphere.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Strut"><code class="docutils literal notranslate"><span class="pre">Strut</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Strut.__init__"><code class="docutils literal notranslate"><span class="pre">Strut.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Voxels"><code class="docutils literal notranslate"><span class="pre">Voxels</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Voxels.__init__"><code class="docutils literal notranslate"><span class="pre">Voxels.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Voxels.populate_with_equation"><code class="docutils literal notranslate"><span class="pre">Voxels.populate_with_equation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Voxels.populate_with_png_stack"><code class="docutils literal notranslate"><span class="pre">Voxels.populate_with_png_stack()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Voxels.save_to_file"><code class="docutils literal notranslate"><span class="pre">Voxels.save_to_file()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.CAD"><code class="docutils literal notranslate"><span class="pre">CAD</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.CAD.__init__"><code class="docutils literal notranslate"><span class="pre">CAD.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Cylinder"><code class="docutils literal notranslate"><span class="pre">Cylinder</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Cylinder.__init__"><code class="docutils literal notranslate"><span class="pre">Cylinder.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.GraphLattice"><code class="docutils literal notranslate"><span class="pre">GraphLattice</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.GraphLattice.__init__"><code class="docutils literal notranslate"><span class="pre">GraphLattice.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Text"><code class="docutils literal notranslate"><span class="pre">Text</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Text.__init__"><code class="docutils literal notranslate"><span class="pre">Text.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Text.bounding_box"><code class="docutils literal notranslate"><span class="pre">Text.bounding_box()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Text.clone"><code class="docutils literal notranslate"><span class="pre">Text.clone()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Text.distribution"><code class="docutils literal notranslate"><span class="pre">Text.distribution()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Text.evaluate"><code class="docutils literal notranslate"><span class="pre">Text.evaluate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Text.material_list"><code class="docutils literal notranslate"><span class="pre">Text.material_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Text.prepare"><code class="docutils literal notranslate"><span class="pre">Text.prepare()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.SignedDistanceField"><code class="docutils literal notranslate"><span class="pre">SignedDistanceField</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.SignedDistanceField.__init__"><code class="docutils literal notranslate"><span class="pre">SignedDistanceField.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.SignedDistanceField.bounding_box"><code class="docutils literal notranslate"><span class="pre">SignedDistanceField.bounding_box()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.SignedDistanceField.clone"><code class="docutils literal notranslate"><span class="pre">SignedDistanceField.clone()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.SignedDistanceField.distribution"><code class="docutils literal notranslate"><span class="pre">SignedDistanceField.distribution()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.SignedDistanceField.evaluate"><code class="docutils literal notranslate"><span class="pre">SignedDistanceField.evaluate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.SignedDistanceField.material_list"><code class="docutils literal notranslate"><span class="pre">SignedDistanceField.material_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.SignedDistanceField.prepare"><code class="docutils literal notranslate"><span class="pre">SignedDistanceField.prepare()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.SignedDistanceField.save_openvdb_grid"><code class="docutils literal notranslate"><span class="pre">SignedDistanceField.save_openvdb_grid()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.PolygonExtrude"><code class="docutils literal notranslate"><span class="pre">PolygonExtrude</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.PolygonExtrude.__init__"><code class="docutils literal notranslate"><span class="pre">PolygonExtrude.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Map"><code class="docutils literal notranslate"><span class="pre">Map</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Map.__init__"><code class="docutils literal notranslate"><span class="pre">Map.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="material_nodes.html">Tree — material nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="composition.html">Tree — composition nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analysis.html">Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pyvcad_compilers/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pyvcad_rendering/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code> package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-api/index.html">C++ API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../papers.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenVCAD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> package</a></li>
+      <li class="breadcrumb-item active">Tree — leaf nodes</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/python-api/pyvcad/leaves.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tree-leaf-nodes">
+<h1>Tree — leaf nodes<a class="headerlink" href="#tree-leaf-nodes" title="Link to this heading"></a></h1>
+<p>Primitive and data leaves. Compositing layouts are under <a class="reference internal" href="composition.html"><span class="doc">Tree — composition nodes</span></a>.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Function">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Function</span></span><a class="headerlink" href="#pyvcad.Function" title="Link to this definition"></a></dt>
+<dd><p>A function geometry primitive/leaf node. This is analogous to an F-rep. Functions can be defined in Cartesian, cylindrical, or spherical coordinates.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Function.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Function.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Function, function: str, material: typing.SupportsInt = 1, min: pyvcad.pyvcad.Vec3 = &lt;pyvcad.pyvcad.Vec3 object at 0x10b929f70&gt;, max: pyvcad.pyvcad.Vec3 = &lt;pyvcad.pyvcad.Vec3 object at 0x10b929fb0&gt;) -&gt; None</p></li>
+</ol>
+<p>Constructor that takes a function to evaluate, a material, and bounding box.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>function</strong> (<em>string</em>) – The function expression to evaluate. This can be any math expression, such as x^2 + y^2 + z^2 - 1.</p></li>
+<li><p><strong>material</strong> (<em>uint8_t</em>) – The material for the function.</p></li>
+<li><p><strong>min</strong> (<em>glm::vec3</em>) – The minimum bounding box coordinates.</p></li>
+<li><p><strong>max</strong> (<em>glm::vec3</em>) – The maximum bounding box coordinates.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">function</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="s1">&#39;x^2 + y^2 + z^2 - 1&#39;</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">))</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Function, function: collections.abc.Callable[[typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat], float], material: typing.SupportsInt = 1, min: pyvcad.pyvcad.Vec3 = &lt;pyvcad.pyvcad.Vec3 object at 0x10b92a270&gt;, max: pyvcad.pyvcad.Vec3 = &lt;pyvcad.pyvcad.Vec3 object at 0x10b92a2b0&gt;) -&gt; None</p></li>
+</ol>
+<p>Constructor that takes a native python function to evaluate, a material id, and bounding box.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>function</strong> (<em>function&lt;double</em><em>(</em><em>double x</em><em>, </em><em>double y</em><em>, </em><em>double z</em><em>, </em><em>double rho</em><em>, </em><em>double phic</em><em>, </em><em>double r</em><em>, </em><em>double theta</em><em>, </em><em>double phis</em><em>)</em><em>&gt;</em>) – The function to evaluate. This must return the signed distance to the surface. The function must take three parameters (all vec3): xyz, cylindrical coordinates, and spherical coordinates. You may use those to compute the signed distance.</p></li>
+<li><p><strong>material</strong> (<em>uint8_t</em>) – The material for the function.</p></li>
+<li><p><strong>min</strong> (<em>glm::vec3</em>) – The minimum bounding box coordinates.</p></li>
+<li><p><strong>max</strong> (<em>glm::vec3</em>) – The maximum bounding box coordinates.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="k">def</span><span class="w"> </span><span class="nf">my_function</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">rho</span><span class="p">,</span> <span class="n">phic</span><span class="p">,</span> <span class="n">r</span><span class="p">,</span> <span class="n">theta</span><span class="p">,</span> <span class="n">phis</span><span class="p">):</span>
+<span class="gp">&gt;&gt;&gt; </span>    <span class="k">return</span> <span class="n">x</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">y</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">z</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="mi">1</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">function</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">my_function</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">10.0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Mesh">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Mesh</span></span><a class="headerlink" href="#pyvcad.Mesh" title="Link to this definition"></a></dt>
+<dd><p>A mesh geometry primitive/leaf node. The mesh is loaded from a file and converted into a signed distance field using OpenVDB.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Mesh.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Mesh.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Mesh, path: str, material: typing.SupportsInt = 1, disable_validation: bool = False) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a Mesh with a file path and material.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>string</em>) – The path to the mesh file to load.</p></li>
+<li><p><strong>material</strong> – The material of the mesh.</p></li>
+</ul>
+</dd>
+</dl>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Mesh, path: str, sample_size: pyvcad.pyvcad.Vec3, material: typing.SupportsInt = 1, disable_validation: bool = False) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a Mesh with a file path, sample size, and material.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>string</em>) – The path to the mesh file to load.</p></li>
+<li><p><strong>sample_size</strong> (<em>glm::vec3</em>) – The size of each voxel in the grid. Make this your sample size if your are missing small mesh features</p></li>
+<li><p><strong>material</strong> – The material of the mesh.</p></li>
+</ul>
+</dd>
+</dl>
+<ol class="arabic simple" start="3">
+<li><p>__init__(self: pyvcad.pyvcad.Mesh, mesh: SurfaceMesh, material: typing.SupportsInt = 1) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a Mesh with a SurfaceMesh and material.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh</strong> (<em>SurfaceMesh</em>) – The mesh to load.</p></li>
+<li><p><strong>material</strong> (<em>uint8_t</em>) – The material of the mesh.</p></li>
+</ul>
+</dd>
+</dl>
+<ol class="arabic simple" start="4">
+<li><p>__init__(self: pyvcad.pyvcad.Mesh, path: str, override_voxel_size: typing.SupportsFloat, material: typing.SupportsInt = 1, disable_validation: bool = False) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a Mesh with a file path and an explicit voxel size for SDF voxelization, bypassing the minimum bound heuristic.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>string</em>) – The path to the mesh file to load.</p></li>
+<li><p><strong>override_voxel_size</strong> (<em>float</em>) – The explicit voxel size to use when voxelizing the mesh into an SDF.</p></li>
+<li><p><strong>material</strong> (<em>uint8_t</em>) – The material of the mesh.</p></li>
+<li><p><strong>disable_validation</strong> (<em>bool</em>) – Defaults to false. If true, the mesh will not be validated for errors.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.PointMap">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">PointMap</span></span><a class="headerlink" href="#pyvcad.PointMap" title="Link to this definition"></a></dt>
+<dd><p>A leaf node that represents simulation results that are imported. This class is used to import simulation results from external files and map a multi-material distribution them as a design. The simulation results must be stored in a tetrahedral mesh saved as a .inp file and a displacement field saved as a .csv file. This class assumes nodal displacements are stored in the displacement field file and that the indices of the nodes in the tetrahedral mesh correspond to the indices of the nodes in the displacement field file. The displacement field file must have the following format (where xyz is the coordinates of the node and uvw is the displacement vector): x1, y1, z1, u1, v1, w1, x2, y2, z2, u2, v2, w2, … The tetrahedral mesh file must be an Abaqus .inp file using C3D4 elements. The point map can be used to evaluate functions at any point in space by interpolating the simulation results. However, the material distribution is only available within the tetrahedral mesh. Likewise, the signed distance returned by the evaluate() function is simple point membership. Mapping functions are defined using the exprtk library and are similar to the f_grade() node. When sampling a point in space, the following variables are available in math expressions: - x, y, z: The coordinates of the point - rho, phic, r: The cylindrical coordinates of the point - theta, phis: The spherical coordinates of the point - dx, dy, dz: The displacement vector at the point - len: The length of the displacement vector. Similar to f_grade(), each function defined must also have a corresponding material id defined with it. When sampled using distribution() the volume fractions/ probability density is returned as evaluated by the functions. The point map can be used in probability mode where the material() function uses the material distribution as a probability masses and returns a random material id based on the distribution. Threshold mode is also available where the material() function returns the material id with the highest probability mass. Note: This class only supports tetrahedral meshes and displacement fields.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.PointMap.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.PointMap" title="pyvcad.pyvcad.PointMap"><span class="pre">pyvcad.pyvcad.PointMap</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mesh_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tet_mesh_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">displacement_field_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">functions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">materials</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsInt</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prob_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.PointMap.__init__" title="Link to this definition"></a></dt>
+<dd><p>Constructor. Creates a PointMap with a tetrahedron mesh file path, displacement field file path, functions, materials, and probability mode.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh_path</strong> (<em>std::string</em>) – The path to the surface mesh file.</p></li>
+<li><p><strong>tet_mesh_path</strong> (<em>std::string</em>) – The path to the tetrahedron mesh file (INP).</p></li>
+<li><p><strong>displacement_field_path</strong> (<em>std::string</em>) – The path to the displacement field file (CSV).</p></li>
+<li><p><strong>functions</strong> (<em>std::vector&lt;std::string&gt;</em>) – The functions to evaluate, similar to F-reps or F-grades. These functions map the displacement field to multi-material distribution.</p></li>
+<li><p><strong>materials</strong> (<em>std::vector&lt;uint8_t&gt;</em>) – The materials for the functions.</p></li>
+<li><p><strong>prob_mode</strong> (<em>bool</em>) – The probability mode of the functions. When sampled using distribution() the volume fractions/ probability density is returned as evaluated by the functions. The point map can be used in probability mode where the material() function uses the material distribution as a probability masses and returns a random material id based on the distribution. Threshold mode is also available where the material() function returns the material id with the highest probability mass.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">functions</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x + y + z&#39;</span><span class="p">,</span> <span class="s1">&#39;x * y * z&#39;</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">materials</span> <span class="o">=</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">point_map</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">PointMap</span><span class="p">(</span><span class="s1">&#39;path/to/meshfile.inp&#39;</span><span class="p">,</span> <span class="s1">&#39;path/to/displacementfile.csv&#39;</span><span class="p">,</span> <span class="n">functions</span><span class="p">,</span> <span class="n">materials</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.RectPrism">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">RectPrism</span></span><a class="headerlink" href="#pyvcad.RectPrism" title="Link to this definition"></a></dt>
+<dd><p>A rectangular prism leaf node/geometric primitive. This node is a rectangular prism with a center point, size, and material ID.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.RectPrism.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.RectPrism.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.RectPrism) -&gt; None</p></li>
+</ol>
+<p>Default constructor. Creates a RectPrism with a center of (0, 0, 0), size of (1, 1, 1), and material id of 1.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rect_prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">()</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.RectPrism, center: pyvcad.pyvcad.Vec3, size: pyvcad.pyvcad.Vec3, material: typing.SupportsInt = 1) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a RectPrism with a center, size, and material id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>center</strong> (<em>vec3</em>) – The center point of the RectPrism.</p></li>
+<li><p><strong>size</strong> (<em>vec3</em>) – The side length of the RectPrism.</p></li>
+<li><p><strong>material</strong> (<em>uint8_t</em>) – The material id of the RectPrism.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">center</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">size</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rect_prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Sphere">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Sphere</span></span><a class="headerlink" href="#pyvcad.Sphere" title="Link to this definition"></a></dt>
+<dd><p>A sphere leaf node/geometric primitive. This node is a sphere with a center point, radius, and material ID.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Sphere.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Sphere.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Sphere) -&gt; None</p></li>
+</ol>
+<p>Default constructor. Creates a Sphere with a center of (0, 0, 0), radius of 1, and material id of 1.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">()</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Sphere, cx: typing.SupportsFloat, cy: typing.SupportsFloat, cz: typing.SupportsFloat, radius: typing.SupportsFloat, material: typing.SupportsInt = 1) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a Sphere with a center, radius, and material id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cx</strong> (<em>double</em>) – The x coordinate of the center point of the Sphere.</p></li>
+<li><p><strong>cy</strong> (<em>double</em>) – The y coordinate of the center point of the Sphere.</p></li>
+<li><p><strong>cz</strong> (<em>double</em>) – The z coordinate of the center point of the Sphere.</p></li>
+<li><p><strong>radius</strong> (<em>double</em>) – The radius of the Sphere.</p></li>
+<li><p><strong>material</strong> (<em>uint8_t</em>) – The material id of the Sphere.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>__init__(self: pyvcad.pyvcad.Sphere, center: pyvcad.pyvcad.Vec3, radius: typing.SupportsFloat, material: typing.SupportsInt = 1) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a Sphere with a center, radius, and material id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>center</strong> (<em>vec3</em>) – The center point of the Sphere.</p></li>
+<li><p><strong>radius</strong> (<em>double</em>) – The radius of the Sphere.</p></li>
+<li><p><strong>material</strong> (<em>uint8_t</em>) – The material id of the Sphere.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">center</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Strut">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Strut</span></span><a class="headerlink" href="#pyvcad.Strut" title="Link to this definition"></a></dt>
+<dd><p>A leaf node that represents a strut.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Strut.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Strut" title="pyvcad.pyvcad.Strut"><span class="pre">pyvcad.pyvcad.Strut</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Strut.__init__" title="Link to this definition"></a></dt>
+<dd><p>Constructor. Creates a Strut with a start point, end point, radius, and material ID.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>start</strong> (<em>vec3</em>) – The start point of the strut.</p></li>
+<li><p><strong>end</strong> (<em>vec3</em>) – The end point of the strut.</p></li>
+<li><p><strong>radius</strong> (<em>double</em>) – The radius of the strut.</p></li>
+<li><p><strong>material</strong> (<em>uint8_t</em>) – The material ID for the strut.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">start</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">end</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">strut</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Strut</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Voxels">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Voxels</span></span><a class="headerlink" href="#pyvcad.Voxels" title="Link to this definition"></a></dt>
+<dd><p>A leaf node/geometric primitive that contains a voxel grid, which can be loaded from disk or generated from an equation. Voxels are stored in an OpenVDB grid.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Voxels.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Voxels.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Voxels, file_path: str, voxel_size: pyvcad.pyvcad.Vec3, min: pyvcad.pyvcad.Vec3, material_defs: MaterialDefs) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates Voxels with a file path, voxel size, minimum coordinate of the grid, and material definitions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>file_path</strong> (<em>string</em>) – The path to the file from which to load the voxel grid.</p></li>
+<li><p><strong>voxel_size</strong> (<em>vec3</em>) – The size of each voxel in the grid. It doesn’t need to match what you sample, and can be asymmetric.</p></li>
+<li><p><strong>min</strong> (<em>vec3</em>) – The minimum coordinate of the grid.</p></li>
+<li><p><strong>material_defs</strong> (<a class="reference internal" href="utilities.html#pyvcad.MaterialDefs" title="pyvcad.MaterialDefs"><em>MaterialDefs</em></a>) – A pointer to the material definitions. Required to convert material values in the grid into OpenVCAD material values.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">material_defs</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">MaterialDefs</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">voxels</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Voxels</span><span class="p">(</span><span class="s1">&#39;path/to/voxelgrid.vdb&#39;</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">material_defs</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Voxels, voxel_size: pyvcad.pyvcad.Vec3, min: pyvcad.pyvcad.Vec3) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates Voxels with voxel size and minimum coordinate of the grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>voxel_size</strong> (<em>vec3</em>) – The size of each voxel in the grid. It doesn’t need to match what you sample, and can be asymmetric.</p></li>
+<li><p><strong>min</strong> (<em>vec3</em>) – The minimum coordinate of the grid.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">voxels</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Voxels</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Voxels.populate_with_equation">
+<span class="sig-name descname"><span class="pre">populate_with_equation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Voxels" title="pyvcad.pyvcad.Voxels"><span class="pre">pyvcad.pyvcad.Voxels</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">equation</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Voxels.populate_with_equation" title="Link to this definition"></a></dt>
+<dd><p>Populates the grid with a VDB file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>equation</strong> (<em>string</em>) – The equation to populate the grid.</p></li>
+<li><p><strong>min</strong> (<em>vec3</em>) – The minimum coordinate of the grid.</p></li>
+<li><p><strong>max</strong> (<em>vec3</em>) – The maximum coordinate of the grid.</p></li>
+<li><p><strong>voxel_size</strong> (<em>vec3</em>) – The size of each voxel in the grid. It doesn’t need to match what you sample, and can be asymmetric.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">voxels</span><span class="o">.</span><span class="n">populate_with_equation</span><span class="p">(</span><span class="s1">&#39;x^2 + y^2 + z^2 - 1&#39;</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Voxels.populate_with_png_stack">
+<span class="sig-name descname"><span class="pre">populate_with_png_stack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Voxels" title="pyvcad.pyvcad.Voxels"><span class="pre">pyvcad.pyvcad.Voxels</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">dir</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Voxels.populate_with_png_stack" title="Link to this definition"></a></dt>
+<dd><p>Populates the grid with a PNG stack given a directory. The PNG files are assumed to be named in order (i.e. 001.png, 002.png, etc.). The material values are converted to OpenVCAD material values using the material definitions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>dir</strong> (<em>string</em>) – The directory containing the PNG files.</p></li>
+<li><p><strong>min</strong> (<em>vec3</em>) – The minimum coordinate of the grid.</p></li>
+<li><p><strong>voxel_size</strong> (<em>vec3</em>) – The size of each voxel in the grid. It doesn’t need to match what you sample, and can be asymmetric.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">voxels</span><span class="o">.</span><span class="n">populate_with_png_stack</span><span class="p">(</span><span class="s1">&#39;path/to/png_stack&#39;</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Voxels.save_to_file">
+<span class="sig-name descname"><span class="pre">save_to_file</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Voxels" title="pyvcad.pyvcad.Voxels"><span class="pre">pyvcad.pyvcad.Voxels</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Voxels.save_to_file" title="Link to this definition"></a></dt>
+<dd><p>Saves the grid to a VDB file.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>file_path</strong> (<em>string</em>) – The path to the VDB file to save the grid.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">voxels</span><span class="o">.</span><span class="n">save_to_file</span><span class="p">(</span><span class="s1">&#39;path/to/savefile.vdb&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.CAD">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">CAD</span></span><a class="headerlink" href="#pyvcad.CAD" title="Link to this definition"></a></dt>
+<dd><p>A CAD geometry primitive/leaf node. The CAD is loaded from a file into memory for sampling. The node supports .STEP and .igs files. NOTE: using fast mode will convert the CAD model into a mesh for faster sampling. This hurts acuracy but dramatically speeds up performance. For the Inkjet compiler fast mode is recommended.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CAD.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CAD" title="pyvcad.pyvcad.CAD"><span class="pre">pyvcad.pyvcad.CAD</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_fast_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.CAD.__init__" title="Link to this definition"></a></dt>
+<dd><p>Constructor that takes a path to the CAD file to load, whether to use fast mode, and the material of the CAD.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>string</em>) – The path to the CAD file to load.</p></li>
+<li><p><strong>use_fast_mode</strong> (<em>bool</em>) – Whether to use fast mode.</p></li>
+<li><p><strong>material</strong> (<em>uint8_t</em>) – The material of the CAD.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cad</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CAD</span><span class="p">(</span><span class="s1">&#39;path/to/cadfile.step&#39;</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Cylinder">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Cylinder</span></span><a class="headerlink" href="#pyvcad.Cylinder" title="Link to this definition"></a></dt>
+<dd><p>A cylinder leaf node/ geometric primitive. The cylinder is aligned along the Z-axis, standing upright, and centered at (0,0,0).</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Cylinder.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Cylinder.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Cylinder) -&gt; None</p></li>
+</ol>
+<p>Default constructor. Creates a Cylinder with a center of (0,0,0), radius of 1, height of 1, and material id of 1.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cylinder</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Cylinder</span><span class="p">()</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Cylinder, center: pyvcad.pyvcad.Vec3, radius: typing.SupportsFloat, height: typing.SupportsFloat, material: typing.SupportsInt = 1) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a Cylinder with a center, radius, height, and material id.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>center</strong> (<em>vec3</em>) – The center point of the Cylinder.</p></li>
+<li><p><strong>radius</strong> (<em>double</em>) – The radius of the Cylinder.</p></li>
+<li><p><strong>height</strong> (<em>double</em>) – The height of the Cylinder.</p></li>
+<li><p><strong>material</strong> (<em>uint8_t</em>) – The material id of the Cylinder.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">center</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">cylinder</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Cylinder</span><span class="p">(</span><span class="n">center</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.GraphLattice">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">GraphLattice</span></span><a class="headerlink" href="#pyvcad.GraphLattice" title="Link to this definition"></a></dt>
+<dd><p>A graph lattice leaf node. This class represents a lattice structure defined by a set of edges and a radius for the struts.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.GraphLattice.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.GraphLattice.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.GraphLattice, edges: collections.abc.Sequence[tuple[pyvcad.pyvcad.Vec3, pyvcad.pyvcad.Vec3]], radius: typing.SupportsFloat, material: typing.SupportsInt) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a GraphLattice with edges, radius, and material.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>edges</strong> (<em>List</em><em>[</em><em>Tuple</em><em>[</em><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a><em>, </em><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a><em>]</em><em>]</em>) – The edges of the lattice.</p></li>
+<li><p><strong>radius</strong> (<em>float</em>) – The radius of the struts.</p></li>
+<li><p><strong>material</strong> (<em>uint8_t</em>) – The material ID of the lattice.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">edges</span> <span class="o">=</span> <span class="p">[(</span><span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">))]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">graph_lattice</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">GraphLattice</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.GraphLattice, type: pyvcad.pyvcad.LatticeType, size: pyvcad.pyvcad.Vec3, radius: typing.SupportsFloat, material: typing.SupportsInt) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a GraphLattice with a lattice type, size, radius, and material.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>type</strong> (<em>LatticeType</em>) – The type of the lattice (BodyCenteredCubic, FaceCenteredCubic, Cubic, or KelvinCell).</p></li>
+<li><p><strong>size</strong> (<a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a>) – The size of the lattice unit cell.</p></li>
+<li><p><strong>radius</strong> (<em>float</em>) – The radius of the struts.</p></li>
+<li><p><strong>material</strong> (<em>uint8_t</em>) – The material ID of the lattice.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">size</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">graph_lattice</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">GraphLattice</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">LatticeType</span><span class="o">.</span><span class="n">BodyCenteredCubic</span><span class="p">,</span> <span class="n">size</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Text">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Text</span></span><a class="headerlink" href="#pyvcad.Text" title="Link to this definition"></a></dt>
+<dd><p>A text leaf node which generates a 3D text object by extruding the text along the Z-axis. The node takes a string, height, depth, material id, font aspect, font name, and alignment options. The CAD part is created from the provided text.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Text.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Text" title="pyvcad.pyvcad.Text"><span class="pre">pyvcad.pyvcad.Text</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">depth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">aspect</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pyvcad.pyvcad.FontAspect</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;FontAspect.Regular:</span> <span class="pre">0&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">font</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'Consolas'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h_align</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pyvcad.pyvcad.HorizontalAlignment</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;HorizontalAlignment.Center:</span> <span class="pre">1&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_align</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pyvcad.pyvcad.VerticalAlignment</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;VerticalAlignment.Center:</span> <span class="pre">1&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Text.__init__" title="Link to this definition"></a></dt>
+<dd><p>Constructor. Creates a Text node with the provided text content, height, depth, material id, font aspect, font name and alignment options.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>text</strong> (<em>str</em>) – The text content for the 3D text.</p></li>
+<li><p><strong>height</strong> (<em>float</em>) – The height of the text.</p></li>
+<li><p><strong>depth</strong> (<em>float</em>) – The extrusion depth of the text.</p></li>
+<li><p><strong>material</strong> (<em>int</em><em>, </em><em>optional</em>) – The material id of the text node. Defaults to 1.</p></li>
+<li><p><strong>aspect</strong> (<em>FontAspect</em><em>, </em><em>optional</em>) – The font aspect. Defaults to FontAspect.Regular.</p></li>
+<li><p><strong>font</strong> (<em>str</em><em>, </em><em>optional</em>) – The name of the font to use. Defaults to Consolas.</p></li>
+<li><p><strong>h_align</strong> (<em>HorizontalAlignment</em><em>, </em><em>optional</em>) – Horizontal alignment of the text. Defaults to Center.</p></li>
+<li><p><strong>v_align</strong> (<em>VerticalAlignment</em><em>, </em><em>optional</em>) – Vertical alignment of the text. Defaults to Center.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Text.bounding_box">
+<span class="sig-name descname"><span class="pre">bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Text" title="pyvcad.pyvcad.Text"><span class="pre">pyvcad.pyvcad.Text</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Text.bounding_box" title="Link to this definition"></a></dt>
+<dd><p>Computes the axis-aligned bounding box of the text node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A pair of vec3 objects representing the minimum and maximum points of the bounding box.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Text.clone">
+<span class="sig-name descname"><span class="pre">clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Text" title="pyvcad.pyvcad.Text"><span class="pre">pyvcad.pyvcad.Text</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.pyvcad.Node"><span class="pre">pyvcad.pyvcad.Node</span></a></span></span><a class="headerlink" href="#pyvcad.Text.clone" title="Link to this definition"></a></dt>
+<dd><p>Creates a deep copy of the text node.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Text.distribution">
+<span class="sig-name descname"><span class="pre">distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Text" title="pyvcad.pyvcad.Text"><span class="pre">pyvcad.pyvcad.Text</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Text.distribution" title="Link to this definition"></a></dt>
+<dd><p>Provides the material distribution at a given point.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – X-coordinate.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Y-coordinate.</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – Z-coordinate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A dictionary with the material id as key and occupancy as value if the point is inside; otherwise, an empty dict.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>dict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Text.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Text" title="pyvcad.pyvcad.Text"><span class="pre">pyvcad.pyvcad.Text</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pyvcad.Text.evaluate" title="Link to this definition"></a></dt>
+<dd><p>Evaluates the text node at a given coordinate to compute the signed distance to the surface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – X-coordinate.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Y-coordinate.</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – Z-coordinate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The signed distance from the point to the text surface.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Text.material_list">
+<span class="sig-name descname"><span class="pre">material_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Text" title="pyvcad.pyvcad.Text"><span class="pre">pyvcad.pyvcad.Text</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Text.material_list" title="Link to this definition"></a></dt>
+<dd><p>Returns a list containing the material id associated with this text node.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Text.prepare">
+<span class="sig-name descname"><span class="pre">prepare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Text" title="pyvcad.pyvcad.Text"><span class="pre">pyvcad.pyvcad.Text</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Text.prepare" title="Link to this definition"></a></dt>
+<dd><p>Prepares the text node by generating its CAD representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>voxel_size</strong> (<em>vec3</em>) – The voxel size of the grid.</p></li>
+<li><p><strong>interior_bandwidth</strong> (<em>float</em>) – The interior bandwidth for calculations.</p></li>
+<li><p><strong>exterior_bandwidth</strong> (<em>float</em>) – The exterior bandwidth for calculations.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.SignedDistanceField">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">SignedDistanceField</span></span><a class="headerlink" href="#pyvcad.SignedDistanceField" title="Link to this definition"></a></dt>
+<dd><p>Represents a signed distance field using OpenVDB.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.SignedDistanceField.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.SignedDistanceField.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.SignedDistanceField, material: typing.SupportsInt = 1) -&gt; None</p></li>
+<li><p>__init__(self: pyvcad.pyvcad.SignedDistanceField, grid: openvdb::v13_0::Grid&lt;openvdb::v13_0::tree::Tree&lt;openvdb::v13_0::tree::RootNode&lt;openvdb::v13_0::tree::InternalNode&lt;openvdb::v13_0::tree::InternalNode&lt;openvdb::v13_0::tree::LeafNode&lt;float, 3u&gt;, 4u&gt;, 5u&gt;&gt;&gt;&gt;, material: typing.SupportsInt = 1) -&gt; None</p></li>
+<li><p>__init__(self: pyvcad.pyvcad.SignedDistanceField, occupancy_grid: openvdb::v13_0::Grid&lt;openvdb::v13_0::tree::Tree&lt;openvdb::v13_0::tree::RootNode&lt;openvdb::v13_0::tree::InternalNode&lt;openvdb::v13_0::tree::InternalNode&lt;openvdb::v13_0::tree::LeafNode&lt;bool, 3u&gt;, 4u&gt;, 5u&gt;&gt;&gt;&gt;, material: typing.SupportsInt = 1) -&gt; None</p></li>
+</ol>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.SignedDistanceField.bounding_box">
+<span class="sig-name descname"><span class="pre">bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.SignedDistanceField" title="pyvcad.pyvcad.SignedDistanceField"><span class="pre">pyvcad.pyvcad.SignedDistanceField</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.SignedDistanceField.bounding_box" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.SignedDistanceField.clone">
+<span class="sig-name descname"><span class="pre">clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.SignedDistanceField" title="pyvcad.pyvcad.SignedDistanceField"><span class="pre">pyvcad.pyvcad.SignedDistanceField</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.pyvcad.Node"><span class="pre">pyvcad.pyvcad.Node</span></a></span></span><a class="headerlink" href="#pyvcad.SignedDistanceField.clone" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.SignedDistanceField.distribution">
+<span class="sig-name descname"><span class="pre">distribution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.SignedDistanceField" title="pyvcad.pyvcad.SignedDistanceField"><span class="pre">pyvcad.pyvcad.SignedDistanceField</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.SignedDistanceField.distribution" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.SignedDistanceField.evaluate">
+<span class="sig-name descname"><span class="pre">evaluate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.SignedDistanceField" title="pyvcad.pyvcad.SignedDistanceField"><span class="pre">pyvcad.pyvcad.SignedDistanceField</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pyvcad.SignedDistanceField.evaluate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.SignedDistanceField.material_list">
+<span class="sig-name descname"><span class="pre">material_list</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.SignedDistanceField" title="pyvcad.pyvcad.SignedDistanceField"><span class="pre">pyvcad.pyvcad.SignedDistanceField</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.SignedDistanceField.material_list" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.SignedDistanceField.prepare">
+<span class="sig-name descname"><span class="pre">prepare</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.SignedDistanceField" title="pyvcad.pyvcad.SignedDistanceField"><span class="pre">pyvcad.pyvcad.SignedDistanceField</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">interior_bandwidth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exterior_bandwidth</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.SignedDistanceField.prepare" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.SignedDistanceField.save_openvdb_grid">
+<span class="sig-name descname"><span class="pre">save_openvdb_grid</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.SignedDistanceField" title="pyvcad.pyvcad.SignedDistanceField"><span class="pre">pyvcad.pyvcad.SignedDistanceField</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.SignedDistanceField.save_openvdb_grid" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.PolygonExtrude">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">PolygonExtrude</span></span><a class="headerlink" href="#pyvcad.PolygonExtrude" title="Link to this definition"></a></dt>
+<dd><p>An extruded polygon leaf node/geometric primitive. Takes a planar polygon defined by 3D vertices and extrudes it along its computed normal (right-hand rule) by a given height.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.PolygonExtrude.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.PolygonExtrude.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.PolygonExtrude) -&gt; None</p></li>
+</ol>
+<p>Default constructor. Creates a unit square in the XY plane extruded 1 unit in +Z.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">PolygonExtrude</span><span class="p">()</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.PolygonExtrude, vertices: collections.abc.Sequence[pyvcad.pyvcad.Vec3], height: typing.SupportsFloat, symmetric: bool = False, material: typing.SupportsInt = 1) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates an extruded polygon from coplanar 3D vertices.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vertices</strong> (<em>list</em><em>[</em><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a><em>]</em>) – The vertices of the planar polygon (minimum 3, must be coplanar).</p></li>
+<li><p><strong>height</strong> (<em>float</em>) – The extrusion distance along the polygon normal.</p></li>
+<li><p><strong>symmetric</strong> (<em>bool</em>) – If True, extrudes height/2 on each side of the polygon plane.</p></li>
+<li><p><strong>material</strong> (<em>int</em>) – The material id of the PolygonExtrude.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">verts</span> <span class="o">=</span> <span class="p">[</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">10</span><span class="p">,</span><span class="mi">0</span><span class="p">)]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">poly</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">PolygonExtrude</span><span class="p">(</span><span class="n">verts</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Map">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Map</span></span><a class="headerlink" href="#pyvcad.Map" title="Link to this definition"></a></dt>
+<dd><p>Maps a surface parameterization onto a closed mesh.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Map.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Map" title="pyvcad.pyvcad.Map"><span class="pre">pyvcad.pyvcad.Map</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">closed_mesh_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Map.__init__" title="Link to this definition"></a></dt>
+<dd><p>Constructor with surface and closed mesh paths.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>surface_path</strong> (<em>str</em>) – Path to the surface file.</p></li>
+<li><p><strong>closed_mesh_path</strong> (<em>str</em>) – Path to the closed mesh file.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="tree.html" class="btn btn-neutral float-left" title="Tree — base classes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="material_nodes.html" class="btn btn-neutral float-right" title="Tree — material nodes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Charles Wade and Robert MacCurdy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

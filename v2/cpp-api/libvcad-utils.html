@@ -1,0 +1,878 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Utilities &mdash; OpenVCAD 2.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=57236720"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Analysis" href="libvcad-analysis.html" />
+    <link rel="prev" title="Geometry — surface parameterization" href="libvcad-geometry-surface-parameterizer.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenVCAD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/math-expressions.html">Math Expression Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad_compilers/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad_rendering/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code> package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">C++ API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-core.html">Tree — core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-leaves.html">Tree — leaves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-composition.html">Tree — composition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-material.html">Tree — material</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-parser.html">Parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-2d.html">Geometry — 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-3d.html">Geometry — 3D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-surface-parameterizer.html">Geometry — surface parameterization</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Utilities</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv412MaterialDefs"><code class="docutils literal notranslate"><span class="pre">MaterialDefs</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK12MaterialDefs5colorERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">color()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK12MaterialDefs5colorE7uint8_t"><code class="docutils literal notranslate"><span class="pre">color()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK12MaterialDefs8containsERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">contains()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK12MaterialDefs16get_raw_settingsERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">get_raw_settings()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK12MaterialDefs2idERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK12MaterialDefs2idEN3glm4vec4E"><code class="docutils literal notranslate"><span class="pre">id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12MaterialDefs12MaterialDefsERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">MaterialDefs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK12MaterialDefs4nameE7uint8_t"><code class="docutils literal notranslate"><span class="pre">name()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK12MaterialDefs13num_materialsEv"><code class="docutils literal notranslate"><span class="pre">num_materials()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK12MaterialDefs7paletteEv"><code class="docutils literal notranslate"><span class="pre">palette()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK12MaterialDefs20prescaled_color_listEv"><code class="docutils literal notranslate"><span class="pre">prescaled_color_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12MaterialDefs12update_colorE7uint8_tN3glm4vec4E"><code class="docutils literal notranslate"><span class="pre">update_color()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12MaterialDefs20m_id_to_color_lookupE"><code class="docutils literal notranslate"><span class="pre">m_id_to_color_lookup</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N12MaterialDefs11m_materialsE"><code class="docutils literal notranslate"><span class="pre">m_materials</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv418MaterialExceptions"><code class="docutils literal notranslate"><span class="pre">MaterialExceptions</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N18MaterialExceptions16MaterialNotFoundE"><code class="docutils literal notranslate"><span class="pre">MaterialExceptions::MaterialNotFound</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv48Samplers"><code class="docutils literal notranslate"><span class="pre">Samplers</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N8Samplers12EvaluateFillERNSt10shared_ptrI4NodeEEPdN3glm4vec3EiiiN3glm4vec3E"><code class="docutils literal notranslate"><span class="pre">EvaluateFill()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv419ExpressionEvaluator"><code class="docutils literal notranslate"><span class="pre">ExpressionEvaluator</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N19ExpressionEvaluator7compileERKNSt6stringERKNSt13unordered_mapINSt6stringEPdEE"><code class="docutils literal notranslate"><span class="pre">compile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N19ExpressionEvaluator5errorEv"><code class="docutils literal notranslate"><span class="pre">error()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N19ExpressionEvaluator8evaluateEv"><code class="docutils literal notranslate"><span class="pre">evaluate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N19ExpressionEvaluator19ExpressionEvaluatorEv"><code class="docutils literal notranslate"><span class="pre">ExpressionEvaluator()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N19ExpressionEvaluator11getVariableERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">getVariable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N19ExpressionEvaluator11setVariableERKNSt6stringEd"><code class="docutils literal notranslate"><span class="pre">setVariable()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N19ExpressionEvaluator10m_compiledE"><code class="docutils literal notranslate"><span class="pre">m_compiled</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N19ExpressionEvaluator12m_expressionE"><code class="docutils literal notranslate"><span class="pre">m_expression</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N19ExpressionEvaluator10m_functionE"><code class="docutils literal notranslate"><span class="pre">m_function</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N19ExpressionEvaluator8m_parserE"><code class="docutils literal notranslate"><span class="pre">m_parser</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N19ExpressionEvaluator14m_symbol_tableE"><code class="docutils literal notranslate"><span class="pre">m_symbol_table</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N19ExpressionEvaluator11m_variablesE"><code class="docutils literal notranslate"><span class="pre">m_variables</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv49MathUtils"><code class="docutils literal notranslate"><span class="pre">MathUtils</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N9MathUtils12CombinedBBoxENSt6vectorINSt4pairIN3glm4vec3EN3glm4vec3EEEEE"><code class="docutils literal notranslate"><span class="pre">CombinedBBox()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N9MathUtils20compute_new_materialERKNSt13unordered_mapI7uint8_tfEEb"><code class="docutils literal notranslate"><span class="pre">compute_new_material()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N9MathUtils27FilterNearlyCollinearPointsERNSt6vectorI7Point_2EEd"><code class="docutils literal notranslate"><span class="pre">FilterNearlyCollinearPoints()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N9MathUtils17IsNearlyCollinearERKN3glm4vec2ERKN3glm4vec2ERKN3glm4vec2Ed"><code class="docutils literal notranslate"><span class="pre">IsNearlyCollinear()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N9MathUtils17IsNearlyCollinearERK7Point_2RK7Point_2RK7Point_2d"><code class="docutils literal notranslate"><span class="pre">IsNearlyCollinear()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4I0EN9MathUtils15tet_interpolateE1TRKN3glm4vec4ERK1TRK1TRK1TRK1T"><code class="docutils literal notranslate"><span class="pre">tet_interpolate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N9MathUtils10tet_volumeERKN3glm4vec3ERKN3glm4vec3ERKN3glm4vec3ERKN3glm4vec3E"><code class="docutils literal notranslate"><span class="pre">tet_volume()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv46Random"><code class="docutils literal notranslate"><span class="pre">Random</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6Random13random_doubleEdd"><code class="docutils literal notranslate"><span class="pre">random_double()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6Random10random_intEii"><code class="docutils literal notranslate"><span class="pre">random_int()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6Random6reseedEi"><code class="docutils literal notranslate"><span class="pre">reseed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6Random11getInstanceEv"><code class="docutils literal notranslate"><span class="pre">getInstance()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6Random22WeightedMaterialSampleERKNSt13unordered_mapI7uint8_tfEE"><code class="docutils literal notranslate"><span class="pre">WeightedMaterialSample()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6Random14WeightedSampleERKNSt6vectorIdEE"><code class="docutils literal notranslate"><span class="pre">WeightedSample()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6Random6RandomEv"><code class="docutils literal notranslate"><span class="pre">Random()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6Random10m_instanceE"><code class="docutils literal notranslate"><span class="pre">m_instance</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv414report_versionv"><code class="docutils literal notranslate"><span class="pre">report_version()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#c.STBIWDEF"><code class="docutils literal notranslate"><span class="pre">STBIWDEF</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv415stbi_write_func"><code class="docutils literal notranslate"><span class="pre">stbi_write_func</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv429stbi_flip_vertically_on_writei"><code class="docutils literal notranslate"><span class="pre">stbi_flip_vertically_on_write()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv414stbi_write_bmpPKciiiPKv"><code class="docutils literal notranslate"><span class="pre">stbi_write_bmp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv422stbi_write_bmp_to_funcP15stbi_write_funcPviiiPKv"><code class="docutils literal notranslate"><span class="pre">stbi_write_bmp_to_func()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv414stbi_write_hdrPKciiiPKf"><code class="docutils literal notranslate"><span class="pre">stbi_write_hdr()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv422stbi_write_hdr_to_funcP15stbi_write_funcPviiiPKf"><code class="docutils literal notranslate"><span class="pre">stbi_write_hdr_to_func()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv414stbi_write_jpgPKciiiPKvi"><code class="docutils literal notranslate"><span class="pre">stbi_write_jpg()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv422stbi_write_jpg_to_funcP15stbi_write_funcPviiiPKvi"><code class="docutils literal notranslate"><span class="pre">stbi_write_jpg_to_func()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv414stbi_write_pngPKciiiPKvi"><code class="docutils literal notranslate"><span class="pre">stbi_write_png()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv422stbi_write_png_to_funcP15stbi_write_funcPviiiPKvi"><code class="docutils literal notranslate"><span class="pre">stbi_write_png_to_func()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv414stbi_write_tgaPKciiiPKv"><code class="docutils literal notranslate"><span class="pre">stbi_write_tga()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv422stbi_write_tga_to_funcP15stbi_write_funcPviiiPKv"><code class="docutils literal notranslate"><span class="pre">stbi_write_tga_to_func()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv427stbi_write_force_png_filter"><code class="docutils literal notranslate"><span class="pre">stbi_write_force_png_filter</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv432stbi_write_png_compression_level"><code class="docutils literal notranslate"><span class="pre">stbi_write_png_compression_level</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv423stbi_write_tga_with_rle"><code class="docutils literal notranslate"><span class="pre">stbi_write_tga_with_rle</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv419VolumetricDithering"><code class="docutils literal notranslate"><span class="pre">VolumetricDithering</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N19VolumetricDithering19AdjustPrimaryColorsE4vec3"><code class="docutils literal notranslate"><span class="pre">AdjustPrimaryColors()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N19VolumetricDithering11AdjustVoxelERN4Node13ColorGridType8AccessorEN7openvdb5CoordE4vec3"><code class="docutils literal notranslate"><span class="pre">AdjustVoxel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N19VolumetricDithering27CovnertColorGridToIndexGridERKN4Node13ColorGridType3PtrERKN4Node8GridType3PtrERKNSt6vectorIN3glm4vec4EEE4vec3"><code class="docutils literal notranslate"><span class="pre">CovnertColorGridToIndexGrid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N19VolumetricDithering17DitherIntoPaletteERKN4Node13ColorGridType3PtrERKN4Node8GridType3PtrERKNSt6vectorIN3glm4vec4EEE4vec3b"><code class="docutils literal notranslate"><span class="pre">DitherIntoPalette()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-analysis.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-inkjet.html">Compilers — inkjet</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-writers.html">Compilers — writers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-brep.html">Compilers — B-rep</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-vat.html">Compilers — VAT</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../papers.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenVCAD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">C++ API Reference</a></li>
+      <li class="breadcrumb-item active">Utilities</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/cpp-api/libvcad-utils.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="utilities">
+<h1>Utilities<a class="headerlink" href="#utilities" title="Link to this heading"></a></h1>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv412MaterialDefs">
+<span id="_CPPv312MaterialDefs"></span><span id="_CPPv212MaterialDefs"></span><span id="MaterialDefs"></span><span class="target" id="class_material_defs"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MaterialDefs</span></span></span><a class="headerlink" href="#_CPPv412MaterialDefs" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;material_defs.h&gt;</em></div>
+<p>Class representing material definitions that translates between material names, colors, and ids. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK12MaterialDefs5colorERKNSt6stringE">
+<span id="_CPPv3NK12MaterialDefs5colorERKNSt6stringE"></span><span id="_CPPv2NK12MaterialDefs5colorERKNSt6stringE"></span><span id="MaterialDefs::color__ssCRC"></span><span class="target" id="class_material_defs_1a71c81aebdf10a06b318c9edb2b34f4fb"></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec4</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">color</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK12MaterialDefs5colorERKNSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the color of the material given the name. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – The name of the material </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK12MaterialDefs5colorE7uint8_t">
+<span id="_CPPv3NK12MaterialDefs5colorE7uint8_t"></span><span id="_CPPv2NK12MaterialDefs5colorE7uint8_t"></span><span id="MaterialDefs::color__uint8_tC"></span><span class="target" id="class_material_defs_1ac28209e9945da274b03a287868202cfa"></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec4</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">color</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">material</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK12MaterialDefs5colorE7uint8_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the color of the material given the id. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>material</strong> – The id of the material </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK12MaterialDefs8containsERKNSt6stringE">
+<span id="_CPPv3NK12MaterialDefs8containsERKNSt6stringE"></span><span id="_CPPv2NK12MaterialDefs8containsERKNSt6stringE"></span><span id="MaterialDefs::contains__ssCRC"></span><span class="target" id="class_material_defs_1a7eb244f4427bad1155ccf72b77fa3312"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">contains</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK12MaterialDefs8containsERKNSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns true if the material exists. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – The name of the material </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK12MaterialDefs16get_raw_settingsERKNSt6stringE">
+<span id="_CPPv3NK12MaterialDefs16get_raw_settingsERKNSt6stringE"></span><span id="_CPPv2NK12MaterialDefs16get_raw_settingsERKNSt6stringE"></span><span id="MaterialDefs::get_raw_settings__ssCRC"></span><span class="target" id="class_material_defs_1a61f56817f5a0541cd659748b5412295b"></span><span class="n"><span class="pre">nlohmann</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">json</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_raw_settings</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK12MaterialDefs16get_raw_settingsERKNSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK12MaterialDefs2idERKNSt6stringE">
+<span id="_CPPv3NK12MaterialDefs2idERKNSt6stringE"></span><span id="_CPPv2NK12MaterialDefs2idERKNSt6stringE"></span><span id="MaterialDefs::id__ssCRC"></span><span class="target" id="class_material_defs_1a3fe8d572530142ea0764b98e6d62190f"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">id</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK12MaterialDefs2idERKNSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the id of the material given the name. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – The name of the material </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK12MaterialDefs2idEN3glm4vec4E">
+<span id="_CPPv3NK12MaterialDefs2idEN3glm4vec4E"></span><span id="_CPPv2NK12MaterialDefs2idEN3glm4vec4E"></span><span id="MaterialDefs::id__glm::vec4C"></span><span class="target" id="class_material_defs_1a908b72638bd012b46f88168e049ff3af"></span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">id</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec4</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">color</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK12MaterialDefs2idEN3glm4vec4E" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the id of the material given the color. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>color</strong> – The color of the material </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12MaterialDefs12MaterialDefsERKNSt6stringE">
+<span id="_CPPv3N12MaterialDefs12MaterialDefsERKNSt6stringE"></span><span id="_CPPv2N12MaterialDefs12MaterialDefsERKNSt6stringE"></span><span id="MaterialDefs::MaterialDefs__ssCR"></span><span class="target" id="class_material_defs_1a4656bff714fb8d4dffd85b3480514bee"></span><span class="sig-name descname"><span class="n"><span class="pre">MaterialDefs</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">path</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12MaterialDefs12MaterialDefsERKNSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd><p>Constructor that takes a string. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> – The path to the material configuration file </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK12MaterialDefs4nameE7uint8_t">
+<span id="_CPPv3NK12MaterialDefs4nameE7uint8_t"></span><span id="_CPPv2NK12MaterialDefs4nameE7uint8_t"></span><span id="MaterialDefs::name__uint8_tC"></span><span class="target" id="class_material_defs_1aac01450688ddc3a87086771d7962c114"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">name</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">material</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK12MaterialDefs4nameE7uint8_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the name of the material given the id. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>material</strong> – The id of the material </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK12MaterialDefs13num_materialsEv">
+<span id="_CPPv3NK12MaterialDefs13num_materialsEv"></span><span id="_CPPv2NK12MaterialDefs13num_materialsEv"></span><span id="MaterialDefs::num_materialsC"></span><span class="target" id="class_material_defs_1aa149490ac9d466e5a0e0658aaf16fa94"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">num_materials</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK12MaterialDefs13num_materialsEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the number of materials. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of materials </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK12MaterialDefs7paletteEv">
+<span id="_CPPv3NK12MaterialDefs7paletteEv"></span><span id="_CPPv2NK12MaterialDefs7paletteEv"></span><span id="MaterialDefs::paletteC"></span><span class="target" id="class_material_defs_1a80663fe6ecdf405b0c7336041f66179e"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec4</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">palette</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK12MaterialDefs7paletteEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns a list of colors that are in the floating point range [0, 1]. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of 4-component colors (RGBA) that are in the floating point range [0, 1] </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK12MaterialDefs20prescaled_color_listEv">
+<span id="_CPPv3NK12MaterialDefs20prescaled_color_listEv"></span><span id="_CPPv2NK12MaterialDefs20prescaled_color_listEv"></span><span id="MaterialDefs::prescaled_color_listC"></span><span class="target" id="class_material_defs_1ad1d7c31ba3bfe1519eb6e7a51f62f789"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec4</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">prescaled_color_list</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK12MaterialDefs20prescaled_color_listEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns a list of colors that are prescaled to the range [0, 255]. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of 4-component colors (RGBA) that are prescaled to the range [0, 255] </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12MaterialDefs12update_colorE7uint8_tN3glm4vec4E">
+<span id="_CPPv3N12MaterialDefs12update_colorE7uint8_tN3glm4vec4E"></span><span id="_CPPv2N12MaterialDefs12update_colorE7uint8_tN3glm4vec4E"></span><span id="MaterialDefs::update_color__uint8_t.glm::vec4"></span><span class="target" id="class_material_defs_1a11afd333af37f520fb3d8e460eab94eb"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">update_color</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">id</span></span>, <a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec4</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">color</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12MaterialDefs12update_colorE7uint8_tN3glm4vec4E" title="Link to this definition"></a><br /></dt>
+<dd><p>Updates the color of the material given the id. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>id</strong> – The id of the material </p></li>
+<li><p><strong>color</strong> – The new color of the material (RGBA) </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12MaterialDefs20m_id_to_color_lookupE">
+<span id="_CPPv3N12MaterialDefs20m_id_to_color_lookupE"></span><span id="_CPPv2N12MaterialDefs20m_id_to_color_lookupE"></span><span id="MaterialDefs::m_id_to_color_lookup__std::vector:glm::vec4:"></span><span class="target" id="class_material_defs_1a95ed91118bb068b868d7d23c3631f5b5"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec4</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_id_to_color_lookup</span></span></span><a class="headerlink" href="#_CPPv4N12MaterialDefs20m_id_to_color_lookupE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12MaterialDefs11m_materialsE">
+<span id="_CPPv3N12MaterialDefs11m_materialsE"></span><span id="_CPPv2N12MaterialDefs11m_materialsE"></span><span id="MaterialDefs::m_materials__nlohmann::json"></span><span class="target" id="class_material_defs_1a850ab512d3ca0340f5b2d3f9e3f4d92f"></span><span class="n"><span class="pre">nlohmann</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">json</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_materials</span></span></span><a class="headerlink" href="#_CPPv4N12MaterialDefs11m_materialsE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv418MaterialExceptions">
+<span id="_CPPv318MaterialExceptions"></span><span id="_CPPv218MaterialExceptions"></span><span id="MaterialExceptions"></span><span class="target" id="namespace_material_exceptions"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MaterialExceptions</span></span></span><a class="headerlink" href="#_CPPv418MaterialExceptions" title="Link to this definition"></a><br /></dt>
+<dd><dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N18MaterialExceptions16MaterialNotFoundE">
+<span id="_CPPv3N18MaterialExceptions16MaterialNotFoundE"></span><span id="_CPPv2N18MaterialExceptions16MaterialNotFoundE"></span><span id="MaterialExceptions::MaterialNotFound"></span><span class="target" id="struct_material_exceptions_1_1_material_not_found"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MaterialNotFound</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">exception</span></span><a class="headerlink" href="#_CPPv4N18MaterialExceptions16MaterialNotFoundE" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;material_defs.h&gt;</em></div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N18MaterialExceptions16MaterialNotFound16MaterialNotFoundERKNSt6stringE">
+<span id="_CPPv3N18MaterialExceptions16MaterialNotFound16MaterialNotFoundERKNSt6stringE"></span><span id="_CPPv2N18MaterialExceptions16MaterialNotFound16MaterialNotFoundERKNSt6stringE"></span><span id="MaterialExceptions::MaterialNotFound::MaterialNotFound__ssCR"></span><span class="target" id="struct_material_exceptions_1_1_material_not_found_1a27100bfda9ca80c71d066946e0d3f694"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MaterialNotFound</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">message</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N18MaterialExceptions16MaterialNotFound16MaterialNotFoundERKNSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N18MaterialExceptions16MaterialNotFound4whatEv">
+<span id="_CPPv3N18MaterialExceptions16MaterialNotFound4whatEv"></span><span id="_CPPv2N18MaterialExceptions16MaterialNotFound4whatEv"></span><span id="MaterialExceptions::MaterialNotFound::what"></span><span class="target" id="struct_material_exceptions_1_1_material_not_found_1ad51d90c36160525e50c09902193c5ea3"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">what</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N18MaterialExceptions16MaterialNotFound4whatEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N18MaterialExceptions16MaterialNotFound9m_messageE">
+<span id="_CPPv3N18MaterialExceptions16MaterialNotFound9m_messageE"></span><span id="_CPPv2N18MaterialExceptions16MaterialNotFound9m_messageE"></span><span id="MaterialExceptions::MaterialNotFound::m_message__ss"></span><span class="target" id="struct_material_exceptions_1_1_material_not_found_1a446a1a9b9dd2323356b94d20731b6811"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_message</span></span></span><a class="headerlink" href="#_CPPv4N18MaterialExceptions16MaterialNotFound9m_messageE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv48Samplers">
+<span id="_CPPv38Samplers"></span><span id="_CPPv28Samplers"></span><span id="Samplers"></span><span class="target" id="namespace_samplers"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Samplers</span></span></span><a class="headerlink" href="#_CPPv48Samplers" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N8Samplers12EvaluateFillERNSt10shared_ptrI4NodeEEPdN3glm4vec3EiiiN3glm4vec3E">
+<span id="_CPPv3N8Samplers12EvaluateFillERNSt10shared_ptrI4NodeEEPdN3glm4vec3EiiiN3glm4vec3E"></span><span id="_CPPv2N8Samplers12EvaluateFillERNSt10shared_ptrI4NodeEEPdN3glm4vec3EiiiN3glm4vec3E"></span><span id="Samplers::EvaluateFill__std::shared_ptr:Node:R.doubleP.glm::vec3.i.i.i.glm::vec3"></span><span class="target" id="namespace_samplers_1a0b51a918c6cd766f25994a70bab923d9"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">EvaluateFill</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">node</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">out</span></span>, <a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">start</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">nx</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">ny</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">nz</span></span>, <a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">voxel_size</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Samplers12EvaluateFillERNSt10shared_ptrI4NodeEEPdN3glm4vec3EiiiN3glm4vec3E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv419ExpressionEvaluator">
+<span id="_CPPv319ExpressionEvaluator"></span><span id="_CPPv219ExpressionEvaluator"></span><span id="ExpressionEvaluator"></span><span class="target" id="class_expression_evaluator"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ExpressionEvaluator</span></span></span><a class="headerlink" href="#_CPPv419ExpressionEvaluator" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;expression_evaluator.h&gt;</em></div>
+<p>A class to evaluate mathematical expressions. </p>
+<p>This class uses the exprtk library to evaluate mathematical expressions. The class can compile a function and evaluate it with a set of variables. The variables are passed in as a map of variable names to pointers to double values. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This class is thread <em>NOT</em> safe. </p>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N19ExpressionEvaluator7compileERKNSt6stringERKNSt13unordered_mapINSt6stringEPdEE">
+<span id="_CPPv3N19ExpressionEvaluator7compileERKNSt6stringERKNSt13unordered_mapINSt6stringEPdEE"></span><span id="_CPPv2N19ExpressionEvaluator7compileERKNSt6stringERKNSt13unordered_mapINSt6stringEPdEE"></span><span id="ExpressionEvaluator::compile__ssCR.std::unordered_map:ss.doubleP:CR"></span><span class="target" id="class_expression_evaluator_1af4494e5647681abc8f2ec4aa28f50db6"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">compile</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">function</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">unordered_map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">variables</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N19ExpressionEvaluator7compileERKNSt6stringERKNSt13unordered_mapINSt6stringEPdEE" title="Link to this definition"></a><br /></dt>
+<dd><p>compiles a function with a set of variables </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>function</strong> – The function to compile </p></li>
+<li><p><strong>variables</strong> – A map of variable names to pointers to double values </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the function compiled successfully, false otherwise </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N19ExpressionEvaluator5errorEv">
+<span id="_CPPv3N19ExpressionEvaluator5errorEv"></span><span id="_CPPv2N19ExpressionEvaluator5errorEv"></span><span id="ExpressionEvaluator::error"></span><span class="target" id="class_expression_evaluator_1a02e93a188f0b41845dbcdbe3dc61f32a"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">error</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N19ExpressionEvaluator5errorEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N19ExpressionEvaluator8evaluateEv">
+<span id="_CPPv3N19ExpressionEvaluator8evaluateEv"></span><span id="_CPPv2N19ExpressionEvaluator8evaluateEv"></span><span id="ExpressionEvaluator::evaluate"></span><span class="target" id="class_expression_evaluator_1a51c44eb14c18e7d37d5014478deb85e1"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">evaluate</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N19ExpressionEvaluator8evaluateEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Evaluates the compiled function. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The result of the function </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N19ExpressionEvaluator19ExpressionEvaluatorEv">
+<span id="_CPPv3N19ExpressionEvaluator19ExpressionEvaluatorEv"></span><span id="_CPPv2N19ExpressionEvaluator19ExpressionEvaluatorEv"></span><span id="ExpressionEvaluator::ExpressionEvaluator"></span><span class="target" id="class_expression_evaluator_1ae7b8b11d37359302ce9f836c3be0f694"></span><span class="sig-name descname"><span class="n"><span class="pre">ExpressionEvaluator</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N19ExpressionEvaluator19ExpressionEvaluatorEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Default constructor. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N19ExpressionEvaluator11getVariableERKNSt6stringE">
+<span id="_CPPv3N19ExpressionEvaluator11getVariableERKNSt6stringE"></span><span id="_CPPv2N19ExpressionEvaluator11getVariableERKNSt6stringE"></span><span id="ExpressionEvaluator::getVariable__ssCR"></span><span class="target" id="class_expression_evaluator_1ab47898628b61dee30bfa05cc2dbe05ef"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">getVariable</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N19ExpressionEvaluator11getVariableERKNSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N19ExpressionEvaluator11setVariableERKNSt6stringEd">
+<span id="_CPPv3N19ExpressionEvaluator11setVariableERKNSt6stringEd"></span><span id="_CPPv2N19ExpressionEvaluator11setVariableERKNSt6stringEd"></span><span id="ExpressionEvaluator::setVariable__ssCR.double"></span><span class="target" id="class_expression_evaluator_1a0012edd48b48d2b96947f4ff690fe15e"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setVariable</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">value</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N19ExpressionEvaluator11setVariableERKNSt6stringEd" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N19ExpressionEvaluator10m_compiledE">
+<span id="_CPPv3N19ExpressionEvaluator10m_compiledE"></span><span id="_CPPv2N19ExpressionEvaluator10m_compiledE"></span><span id="ExpressionEvaluator::m_compiled__b"></span><span class="target" id="class_expression_evaluator_1a43c17ee603aaaf960af49cb8028ec9b7"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_compiled</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><a class="headerlink" href="#_CPPv4N19ExpressionEvaluator10m_compiledE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N19ExpressionEvaluator12m_expressionE">
+<span id="_CPPv3N19ExpressionEvaluator12m_expressionE"></span><span id="_CPPv2N19ExpressionEvaluator12m_expressionE"></span><span id="ExpressionEvaluator::m_expression__exprtk::expression:double:"></span><span class="target" id="class_expression_evaluator_1a99c98ee7b7afec0a6de417138574ccd4"></span><span class="n"><span class="pre">exprtk</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">expression</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_expression</span></span></span><a class="headerlink" href="#_CPPv4N19ExpressionEvaluator12m_expressionE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N19ExpressionEvaluator10m_functionE">
+<span id="_CPPv3N19ExpressionEvaluator10m_functionE"></span><span id="_CPPv2N19ExpressionEvaluator10m_functionE"></span><span id="ExpressionEvaluator::m_function__ss"></span><span class="target" id="class_expression_evaluator_1aea3c7a565267bc3d6d61178c7a204583"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_function</span></span></span><a class="headerlink" href="#_CPPv4N19ExpressionEvaluator10m_functionE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N19ExpressionEvaluator8m_parserE">
+<span id="_CPPv3N19ExpressionEvaluator8m_parserE"></span><span id="_CPPv2N19ExpressionEvaluator8m_parserE"></span><span id="ExpressionEvaluator::m_parser__exprtk::parser:double:"></span><span class="target" id="class_expression_evaluator_1abc8c3fe353ebeb0cdf16f87b74846d5a"></span><span class="n"><span class="pre">exprtk</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">parser</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_parser</span></span></span><a class="headerlink" href="#_CPPv4N19ExpressionEvaluator8m_parserE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N19ExpressionEvaluator14m_symbol_tableE">
+<span id="_CPPv3N19ExpressionEvaluator14m_symbol_tableE"></span><span id="_CPPv2N19ExpressionEvaluator14m_symbol_tableE"></span><span id="ExpressionEvaluator::m_symbol_table__exprtk::symbol_table:double:"></span><span class="target" id="class_expression_evaluator_1a5b6baf3662c8be05635ef18e74f5f1f9"></span><span class="n"><span class="pre">exprtk</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">symbol_table</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_symbol_table</span></span></span><a class="headerlink" href="#_CPPv4N19ExpressionEvaluator14m_symbol_tableE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N19ExpressionEvaluator11m_variablesE">
+<span id="_CPPv3N19ExpressionEvaluator11m_variablesE"></span><span id="_CPPv2N19ExpressionEvaluator11m_variablesE"></span><span id="ExpressionEvaluator::m_variables__std::unordered_map:ss.doubleP:"></span><span class="target" id="class_expression_evaluator_1a8e1e62fe27f253715f17abd52476c10e"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">unordered_map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">*</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_variables</span></span></span><a class="headerlink" href="#_CPPv4N19ExpressionEvaluator11m_variablesE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv49MathUtils">
+<span id="_CPPv39MathUtils"></span><span id="_CPPv29MathUtils"></span><span id="MathUtils"></span><span class="target" id="namespace_math_utils"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">MathUtils</span></span></span><a class="headerlink" href="#_CPPv49MathUtils" title="Link to this definition"></a><br /></dt>
+<dd><p>A namespace for mathematical utility functions. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N9MathUtils12CombinedBBoxENSt6vectorINSt4pairIN3glm4vec3EN3glm4vec3EEEEE">
+<span id="_CPPv3N9MathUtils12CombinedBBoxENSt6vectorINSt4pairIN3glm4vec3EN3glm4vec3EEEEE"></span><span id="_CPPv2N9MathUtils12CombinedBBoxENSt6vectorINSt4pairIN3glm4vec3EN3glm4vec3EEEEE"></span><span id="MathUtils::CombinedBBox__std::vector:std::pair:glm::vec3.glm::vec3::"></span><span class="target" id="namespace_math_utils_1a01988d361096114fbc8e1cc31cf7c886"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CombinedBBox</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bboxes</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N9MathUtils12CombinedBBoxENSt6vectorINSt4pairIN3glm4vec3EN3glm4vec3EEEEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Computes the bounding box of a list of bounding boxes. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If any of the bounding boxes are infinite, they are ignored </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If no bounding boxes are finite, the function returns an infinite bounding box </p>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>If the vector is empty, the function returns [0,0,0] to [0,0,0] </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>bboxes</strong> – The list of bounding boxes </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The combined bounding box TODO: this function is used in the composition nodes. However it might be smarter to use a tighter bounding box depending on the operation (e.g. intersection, union, etc.) </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N9MathUtils20compute_new_materialERKNSt13unordered_mapI7uint8_tfEEb">
+<span id="_CPPv3N9MathUtils20compute_new_materialERKNSt13unordered_mapI7uint8_tfEEb"></span><span id="_CPPv2N9MathUtils20compute_new_materialERKNSt13unordered_mapI7uint8_tfEEb"></span><span id="MathUtils::compute_new_material__std::unordered_map:uint8_t.float:CR.b"></span><span class="target" id="namespace_math_utils_1ae4a0ed14d639563c84f3f342a7948849"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">compute_new_material</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">unordered_map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">probabilities</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">prob_mode</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N9MathUtils20compute_new_materialERKNSt13unordered_mapI7uint8_tfEEb" title="Link to this definition"></a><br /></dt>
+<dd><p>Computes the new material based on the probabilities. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>probabilities</strong> – A map of material IDs to probabilities </p></li>
+<li><p><strong>prob_mode</strong> – Whether to use probability mode or threshold mode </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The new material ID </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N9MathUtils27FilterNearlyCollinearPointsERNSt6vectorI7Point_2EEd">
+<span id="_CPPv3N9MathUtils27FilterNearlyCollinearPointsERNSt6vectorI7Point_2EEd"></span><span id="_CPPv2N9MathUtils27FilterNearlyCollinearPointsERNSt6vectorI7Point_2EEd"></span><span id="MathUtils::FilterNearlyCollinearPoints__std::vector:Point_2:R.double"></span><span class="target" id="namespace_math_utils_1a01df1900e7919cda895fa8f01152639c"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">FilterNearlyCollinearPoints</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-geometry-3d.html#_CPPv47Point_2" title="Point_2"><span class="n"><span class="pre">Point_2</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">points</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">epsilon</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N9MathUtils27FilterNearlyCollinearPointsERNSt6vectorI7Point_2EEd" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N9MathUtils17IsNearlyCollinearERKN3glm4vec2ERKN3glm4vec2ERKN3glm4vec2Ed">
+<span id="_CPPv3N9MathUtils17IsNearlyCollinearERKN3glm4vec2ERKN3glm4vec2ERKN3glm4vec2Ed"></span><span id="_CPPv2N9MathUtils17IsNearlyCollinearERKN3glm4vec2ERKN3glm4vec2ERKN3glm4vec2Ed"></span><span id="MathUtils::IsNearlyCollinear__glm::vec2CR.glm::vec2CR.glm::vec2CR.double"></span><span class="target" id="namespace_math_utils_1a24a56043fcf367225c0e2a0aff267aef"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IsNearlyCollinear</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">point1</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">point2</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">point3</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">epsilon</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N9MathUtils17IsNearlyCollinearERKN3glm4vec2ERKN3glm4vec2ERKN3glm4vec2Ed" title="Link to this definition"></a><br /></dt>
+<dd><p>Checks if three 2D points are nearly collinear. </p>
+<p>Uses the area of the triangle formed by the points to determine collinearity </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>point1</strong> – The first point </p></li>
+<li><p><strong>point2</strong> – The second point </p></li>
+<li><p><strong>point3</strong> – The third point </p></li>
+<li><p><strong>epsilon</strong> – The epsilon value </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the points are nearly collinear, false otherwise </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N9MathUtils17IsNearlyCollinearERK7Point_2RK7Point_2RK7Point_2d">
+<span id="_CPPv3N9MathUtils17IsNearlyCollinearERK7Point_2RK7Point_2RK7Point_2d"></span><span id="_CPPv2N9MathUtils17IsNearlyCollinearERK7Point_2RK7Point_2RK7Point_2d"></span><span id="MathUtils::IsNearlyCollinear__Point_2CR.Point_2CR.Point_2CR.double"></span><span class="target" id="namespace_math_utils_1a6d3bd9c8dc60223ec89b7aa21f973937"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">IsNearlyCollinear</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-geometry-3d.html#_CPPv47Point_2" title="Point_2"><span class="n"><span class="pre">Point_2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">point1</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-geometry-3d.html#_CPPv47Point_2" title="Point_2"><span class="n"><span class="pre">Point_2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">point2</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-geometry-3d.html#_CPPv47Point_2" title="Point_2"><span class="n"><span class="pre">Point_2</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">point3</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">epsilon</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N9MathUtils17IsNearlyCollinearERK7Point_2RK7Point_2RK7Point_2d" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4I0EN9MathUtils15tet_interpolateE1TRKN3glm4vec4ERK1TRK1TRK1TRK1T">
+<span id="_CPPv3I0EN9MathUtils15tet_interpolateERKN3glm4vec4ERK1TRK1TRK1TRK1T"></span><span id="_CPPv2I0EN9MathUtils15tet_interpolateERKN3glm4vec4ERK1TRK1TRK1TRK1T"></span><span class="k"><span class="pre">template</span></span><span class="p"><span class="pre">&lt;</span></span><span class="k"><span class="pre">typename</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">T</span></span></span><span class="p"><span class="pre">&gt;</span></span><br /><span class="target" id="namespace_math_utils_1af104490c8f48ee084471dd40fa4cd46c"></span><a class="reference internal" href="#_CPPv4I0EN9MathUtils15tet_interpolateE1TRKN3glm4vec4ERK1TRK1TRK1TRK1T" title="MathUtils::tet_interpolate::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">tet_interpolate</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec4</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">bary_coords</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN9MathUtils15tet_interpolateE1TRKN3glm4vec4ERK1TRK1TRK1TRK1T" title="MathUtils::tet_interpolate::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">a</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN9MathUtils15tet_interpolateE1TRKN3glm4vec4ERK1TRK1TRK1TRK1T" title="MathUtils::tet_interpolate::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">b</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN9MathUtils15tet_interpolateE1TRKN3glm4vec4ERK1TRK1TRK1TRK1T" title="MathUtils::tet_interpolate::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">c</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4I0EN9MathUtils15tet_interpolateE1TRKN3glm4vec4ERK1TRK1TRK1TRK1T" title="MathUtils::tet_interpolate::T"><span class="n"><span class="pre">T</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">d</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4I0EN9MathUtils15tet_interpolateE1TRKN3glm4vec4ERK1TRK1TRK1TRK1T" title="Link to this definition"></a><br /></dt>
+<dd><p>Interpolates a value using barycentric coordinates. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bary_coords</strong> – The barycentric coordinates </p></li>
+<li><p><strong>a</strong> – The value at the first vertex </p></li>
+<li><p><strong>b</strong> – The value at the second vertex </p></li>
+<li><p><strong>c</strong> – The value at the third vertex </p></li>
+<li><p><strong>d</strong> – The value at the fourth vertex </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The interpolated value </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N9MathUtils10tet_volumeERKN3glm4vec3ERKN3glm4vec3ERKN3glm4vec3ERKN3glm4vec3E">
+<span id="_CPPv3N9MathUtils10tet_volumeERKN3glm4vec3ERKN3glm4vec3ERKN3glm4vec3ERKN3glm4vec3E"></span><span id="_CPPv2N9MathUtils10tet_volumeERKN3glm4vec3ERKN3glm4vec3ERKN3glm4vec3ERKN3glm4vec3E"></span><span id="MathUtils::tet_volume__glm::vec3CR.glm::vec3CR.glm::vec3CR.glm::vec3CR"></span><span class="target" id="namespace_math_utils_1a27f4ac30e30a0e24f6f894fc9651854b"></span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">tet_volume</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">a</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">b</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">c</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">d</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N9MathUtils10tet_volumeERKN3glm4vec3ERKN3glm4vec3ERKN3glm4vec3ERKN3glm4vec3E" title="Link to this definition"></a><br /></dt>
+<dd><p>Computes the volume of a tetrahedron. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>a</strong> – The first vertex of the tetrahedron </p></li>
+<li><p><strong>b</strong> – The second vertex of the tetrahedron </p></li>
+<li><p><strong>c</strong> – The third vertex of the tetrahedron </p></li>
+<li><p><strong>d</strong> – The fourth vertex of the tetrahedron </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The volume of the tetrahedron </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv46Random">
+<span id="_CPPv36Random"></span><span id="_CPPv26Random"></span><span id="Random"></span><span class="target" id="class_random"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Random</span></span></span><a class="headerlink" href="#_CPPv46Random" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;random.h&gt;</em></div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N6Random13random_doubleEdd">
+<span id="_CPPv3N6Random13random_doubleEdd"></span><span id="_CPPv2N6Random13random_doubleEdd"></span><span id="Random::random_double__double.double"></span><span class="target" id="class_random_1a0d5cab18c72c4cf84c764119abfa07ca"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">random_double</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">min</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">max</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6Random13random_doubleEdd" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N6Random10random_intEii">
+<span id="_CPPv3N6Random10random_intEii"></span><span id="_CPPv2N6Random10random_intEii"></span><span id="Random::random_int__i.i"></span><span class="target" id="class_random_1a223f8f482f0bdfc4cbe469bd6ee93612"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">random_int</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">min</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">max</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6Random10random_intEii" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N6Random6reseedEi">
+<span id="_CPPv3N6Random6reseedEi"></span><span id="_CPPv2N6Random6reseedEi"></span><span id="Random::reseed__i"></span><span class="target" id="class_random_1a9e0d9a24bd60e4b00e4d068061b7489f"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">reseed</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">seed</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6Random6reseedEi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-static-functions">Public Static Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N6Random11getInstanceEv">
+<span id="_CPPv3N6Random11getInstanceEv"></span><span id="_CPPv2N6Random11getInstanceEv"></span><span id="Random::getInstance"></span><span class="target" id="class_random_1a1b26e3491ace0cdd512f8cc2d0b3ca16"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv46Random" title="Random"><span class="n"><span class="pre">Random</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">getInstance</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6Random11getInstanceEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N6Random22WeightedMaterialSampleERKNSt13unordered_mapI7uint8_tfEE">
+<span id="_CPPv3N6Random22WeightedMaterialSampleERKNSt13unordered_mapI7uint8_tfEE"></span><span id="_CPPv2N6Random22WeightedMaterialSampleERKNSt13unordered_mapI7uint8_tfEE"></span><span id="Random::WeightedMaterialSample__std::unordered_map:uint8_t.float:CR"></span><span class="target" id="class_random_1ae877a0cd5ac591cd63d4c93cfa973882"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">WeightedMaterialSample</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">unordered_map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">uint8_t</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">materials_with_weights</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6Random22WeightedMaterialSampleERKNSt13unordered_mapI7uint8_tfEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N6Random14WeightedSampleERKNSt6vectorIdEE">
+<span id="_CPPv3N6Random14WeightedSampleERKNSt6vectorIdEE"></span><span id="_CPPv2N6Random14WeightedSampleERKNSt6vectorIdEE"></span><span id="Random::WeightedSample__std::vector:double:CR"></span><span class="target" id="class_random_1a460f3f35b409373530bb4bb8a591ab92"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">WeightedSample</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">weights</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6Random14WeightedSampleERKNSt6vectorIdEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-functions">Private Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N6Random6RandomEv">
+<span id="_CPPv3N6Random6RandomEv"></span><span id="_CPPv2N6Random6RandomEv"></span><span id="Random::Random"></span><span class="target" id="class_random_1acb76b49c3903a3c4fb67fd216341f08d"></span><span class="sig-name descname"><span class="n"><span class="pre">Random</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6Random6RandomEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-static-attributes">Private Static Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N6Random10m_instanceE">
+<span id="_CPPv3N6Random10m_instanceE"></span><span id="_CPPv2N6Random10m_instanceE"></span><span id="Random::m_instance__RandomP"></span><span class="target" id="class_random_1a8d56dc737d1b91a3938a6ac8dc55b278"></span><span class="k"><span class="pre">static</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv46Random" title="Random"><span class="n"><span class="pre">Random</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="sig-name descname"><span class="n"><span class="pre">m_instance</span></span></span><a class="headerlink" href="#_CPPv4N6Random10m_instanceE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414report_versionv">
+<span id="_CPPv314report_versionv"></span><span id="_CPPv214report_versionv"></span><span id="report_version"></span><span class="target" id="report__version_8h_1aec4c738d92f2685ea3d7afb5e2f41272"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">report_version</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414report_versionv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-defines">Defines</p>
+<dl class="cpp macro">
+<dt class="sig sig-object cpp" id="c.STBIWDEF">
+<span class="target" id="stb__image__write_8h_1a1d964457ebf7cc898b8cb14e66cbfaa8"></span><span class="sig-name descname"><span class="n"><span class="pre">STBIWDEF</span></span></span><a class="headerlink" href="#c.STBIWDEF" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-typedefs">Typedefs</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv415stbi_write_func">
+<span id="_CPPv315stbi_write_func"></span><span id="_CPPv215stbi_write_func"></span><span id="stbi_write_func"></span><span class="target" id="stb__image__write_8h_1a2326fd2fd79095b9ef34695a0bda114f"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stbi_write_func</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">size</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv415stbi_write_func" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv429stbi_flip_vertically_on_writei">
+<span id="_CPPv329stbi_flip_vertically_on_writei"></span><span id="_CPPv229stbi_flip_vertically_on_writei"></span><span id="stbi_flip_vertically_on_write__i"></span><span class="target" id="stb__image__write_8h_1ab6555bbfd2ab53f9db7a948994122375"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stbi_flip_vertically_on_write</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">flip_boolean</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv429stbi_flip_vertically_on_writei" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414stbi_write_bmpPKciiiPKv">
+<span id="_CPPv314stbi_write_bmpPKciiiPKv"></span><span id="_CPPv214stbi_write_bmpPKciiiPKv"></span><span id="stbi_write_bmp__cCP.i.i.i.voidCP"></span><span class="target" id="stb__image__write_8h_1adb12037a58d9e12e7a58c479b8e0ab8e"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stbi_write_bmp</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">filename</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">w</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">h</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">comp</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414stbi_write_bmpPKciiiPKv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv422stbi_write_bmp_to_funcP15stbi_write_funcPviiiPKv">
+<span id="_CPPv322stbi_write_bmp_to_funcP15stbi_write_funcPviiiPKv"></span><span id="_CPPv222stbi_write_bmp_to_funcP15stbi_write_funcPviiiPKv"></span><span id="stbi_write_bmp_to_func__stbi_write_funcP.voidP.i.i.i.voidCP"></span><span class="target" id="stb__image__write_8h_1a829108c2bd26508d2255da2645bd7c2e"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stbi_write_bmp_to_func</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv415stbi_write_func" title="stbi_write_func"><span class="n"><span class="pre">stbi_write_func</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">func</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">w</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">h</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">comp</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422stbi_write_bmp_to_funcP15stbi_write_funcPviiiPKv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414stbi_write_hdrPKciiiPKf">
+<span id="_CPPv314stbi_write_hdrPKciiiPKf"></span><span id="_CPPv214stbi_write_hdrPKciiiPKf"></span><span id="stbi_write_hdr__cCP.i.i.i.floatCP"></span><span class="target" id="stb__image__write_8h_1a023b416084712e734500e5fff03568da"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stbi_write_hdr</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">filename</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">w</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">h</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">comp</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414stbi_write_hdrPKciiiPKf" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv422stbi_write_hdr_to_funcP15stbi_write_funcPviiiPKf">
+<span id="_CPPv322stbi_write_hdr_to_funcP15stbi_write_funcPviiiPKf"></span><span id="_CPPv222stbi_write_hdr_to_funcP15stbi_write_funcPviiiPKf"></span><span id="stbi_write_hdr_to_func__stbi_write_funcP.voidP.i.i.i.floatCP"></span><span class="target" id="stb__image__write_8h_1a85a66ad13fb4086d4419df08d70be4d0"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stbi_write_hdr_to_func</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv415stbi_write_func" title="stbi_write_func"><span class="n"><span class="pre">stbi_write_func</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">func</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">w</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">h</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">comp</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">float</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422stbi_write_hdr_to_funcP15stbi_write_funcPviiiPKf" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414stbi_write_jpgPKciiiPKvi">
+<span id="_CPPv314stbi_write_jpgPKciiiPKvi"></span><span id="_CPPv214stbi_write_jpgPKciiiPKvi"></span><span id="stbi_write_jpg__cCP.i.i.i.voidCP.i"></span><span class="target" id="stb__image__write_8h_1af9fea74052e737358fe4a6e911c9c2a1"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stbi_write_jpg</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">filename</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">comp</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">quality</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414stbi_write_jpgPKciiiPKvi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv422stbi_write_jpg_to_funcP15stbi_write_funcPviiiPKvi">
+<span id="_CPPv322stbi_write_jpg_to_funcP15stbi_write_funcPviiiPKvi"></span><span id="_CPPv222stbi_write_jpg_to_funcP15stbi_write_funcPviiiPKvi"></span><span id="stbi_write_jpg_to_func__stbi_write_funcP.voidP.i.i.i.voidCP.i"></span><span class="target" id="stb__image__write_8h_1ae4e92d28f8f923861defecb29c33f78b"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stbi_write_jpg_to_func</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv415stbi_write_func" title="stbi_write_func"><span class="n"><span class="pre">stbi_write_func</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">func</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">comp</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">quality</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422stbi_write_jpg_to_funcP15stbi_write_funcPviiiPKvi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414stbi_write_pngPKciiiPKvi">
+<span id="_CPPv314stbi_write_pngPKciiiPKvi"></span><span id="_CPPv214stbi_write_pngPKciiiPKvi"></span><span id="stbi_write_png__cCP.i.i.i.voidCP.i"></span><span class="target" id="stb__image__write_8h_1aace2f6525144ac808cec21600cfe4498"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stbi_write_png</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">filename</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">w</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">h</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">comp</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">stride_in_bytes</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414stbi_write_pngPKciiiPKvi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv422stbi_write_png_to_funcP15stbi_write_funcPviiiPKvi">
+<span id="_CPPv322stbi_write_png_to_funcP15stbi_write_funcPviiiPKvi"></span><span id="_CPPv222stbi_write_png_to_funcP15stbi_write_funcPviiiPKvi"></span><span id="stbi_write_png_to_func__stbi_write_funcP.voidP.i.i.i.voidCP.i"></span><span class="target" id="stb__image__write_8h_1a960a85427af7f5b19c97d884f4110854"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stbi_write_png_to_func</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv415stbi_write_func" title="stbi_write_func"><span class="n"><span class="pre">stbi_write_func</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">func</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">w</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">h</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">comp</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">stride_in_bytes</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422stbi_write_png_to_funcP15stbi_write_funcPviiiPKvi" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv414stbi_write_tgaPKciiiPKv">
+<span id="_CPPv314stbi_write_tgaPKciiiPKv"></span><span id="_CPPv214stbi_write_tgaPKciiiPKv"></span><span id="stbi_write_tga__cCP.i.i.i.voidCP"></span><span class="target" id="stb__image__write_8h_1a3ae29b478d6da0d99705825591f6d20b"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stbi_write_tga</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">char</span></span><span class="w"> </span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">filename</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">w</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">h</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">comp</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv414stbi_write_tgaPKciiiPKv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv422stbi_write_tga_to_funcP15stbi_write_funcPviiiPKv">
+<span id="_CPPv322stbi_write_tga_to_funcP15stbi_write_funcPviiiPKv"></span><span id="_CPPv222stbi_write_tga_to_funcP15stbi_write_funcPviiiPKv"></span><span id="stbi_write_tga_to_func__stbi_write_funcP.voidP.i.i.i.voidCP"></span><span class="target" id="stb__image__write_8h_1afffbf9c171942139935f871320f70e1c"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stbi_write_tga_to_func</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="#_CPPv415stbi_write_func" title="stbi_write_func"><span class="n"><span class="pre">stbi_write_func</span></span></a><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">func</span></span>, <span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">context</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">w</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">h</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">comp</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="p"><span class="pre">*</span></span><span class="n sig-param"><span class="pre">data</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv422stbi_write_tga_to_funcP15stbi_write_funcPviiiPKv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-variables">Variables</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv427stbi_write_force_png_filter">
+<span id="_CPPv327stbi_write_force_png_filter"></span><span id="_CPPv227stbi_write_force_png_filter"></span><span id="stbi_write_force_png_filter__i"></span><span class="target" id="stb__image__write_8h_1acfc7bbb01f0c4f6079727cfa1b086912"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stbi_write_force_png_filter</span></span></span><a class="headerlink" href="#_CPPv427stbi_write_force_png_filter" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv432stbi_write_png_compression_level">
+<span id="_CPPv332stbi_write_png_compression_level"></span><span id="_CPPv232stbi_write_png_compression_level"></span><span id="stbi_write_png_compression_level__i"></span><span class="target" id="stb__image__write_8h_1ac40d349d241f781ed7b621259ce2b3c2"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stbi_write_png_compression_level</span></span></span><a class="headerlink" href="#_CPPv432stbi_write_png_compression_level" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv423stbi_write_tga_with_rle">
+<span id="_CPPv323stbi_write_tga_with_rle"></span><span id="_CPPv223stbi_write_tga_with_rle"></span><span id="stbi_write_tga_with_rle__i"></span><span class="target" id="stb__image__write_8h_1a7aa69838d830bd1e917b2a20d2030e0c"></span><span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">stbi_write_tga_with_rle</span></span></span><a class="headerlink" href="#_CPPv423stbi_write_tga_with_rle" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv419VolumetricDithering">
+<span id="_CPPv319VolumetricDithering"></span><span id="_CPPv219VolumetricDithering"></span><span id="VolumetricDithering"></span><span class="target" id="namespace_volumetric_dithering"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">VolumetricDithering</span></span></span><a class="headerlink" href="#_CPPv419VolumetricDithering" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N19VolumetricDithering19AdjustPrimaryColorsE4vec3">
+<span id="_CPPv3N19VolumetricDithering19AdjustPrimaryColorsE4vec3"></span><span id="_CPPv2N19VolumetricDithering19AdjustPrimaryColorsE4vec3"></span><span id="VolumetricDithering::AdjustPrimaryColors__vec3"></span><span class="target" id="namespace_volumetric_dithering_1a69e3d0e3a738aa3ffc3ac7772c218e0e"></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AdjustPrimaryColors</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">color</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N19VolumetricDithering19AdjustPrimaryColorsE4vec3" title="Link to this definition"></a><br /></dt>
+<dd><p>A workaround to handle an edge case where primary colors dither incorrectly. </p>
+<p>It adjusts the primary colors with a nonce to avoid this issue. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>color</strong> – The color to adjust </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The adjusted color </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N19VolumetricDithering11AdjustVoxelERN4Node13ColorGridType8AccessorEN7openvdb5CoordE4vec3">
+<span id="_CPPv3N19VolumetricDithering11AdjustVoxelERN4Node13ColorGridType8AccessorEN7openvdb5CoordE4vec3"></span><span id="_CPPv2N19VolumetricDithering11AdjustVoxelERN4Node13ColorGridType8AccessorEN7openvdb5CoordE4vec3"></span><span id="VolumetricDithering::AdjustVoxel__Node::ColorGridType::AccessorR.openvdb::Coord.vec3"></span><span class="target" id="namespace_volumetric_dithering_1a60904484a9846bcd193fb1bcc2549e28"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">AdjustVoxel</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv4N4Node13ColorGridTypeE" title="Node::ColorGridType"><span class="n"><span class="pre">ColorGridType</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Accessor</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">acc</span></span>, <span class="n"><span class="pre">openvdb</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Coord</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">coord</span></span>, <span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">error</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N19VolumetricDithering11AdjustVoxelERN4Node13ColorGridType8AccessorEN7openvdb5CoordE4vec3" title="Link to this definition"></a><br /></dt>
+<dd><p>Given a grid and coordinates, adjust the voxel at the coordinates by the error This function ensures that the voxel is within valid bounds (0-255). </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grid</strong> – The grid to adjust </p></li>
+<li><p><strong>coord</strong> – The coordinates of the voxel to adjust </p></li>
+<li><p><strong>error</strong> – The error to adjust the voxel by </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N19VolumetricDithering27CovnertColorGridToIndexGridERKN4Node13ColorGridType3PtrERKN4Node8GridType3PtrERKNSt6vectorIN3glm4vec4EEE4vec3">
+<span id="_CPPv3N19VolumetricDithering27CovnertColorGridToIndexGridERKN4Node13ColorGridType3PtrERKN4Node8GridType3PtrERKNSt6vectorIN3glm4vec4EEE4vec3"></span><span id="_CPPv2N19VolumetricDithering27CovnertColorGridToIndexGridERKN4Node13ColorGridType3PtrERKN4Node8GridType3PtrERKNSt6vectorIN3glm4vec4EEE4vec3"></span><span id="VolumetricDithering::CovnertColorGridToIndexGrid__Node::ColorGridType::PtrCR.Node::GridType::PtrCR.std::vector:glm::vec4:CR.vec3"></span><span class="target" id="namespace_volumetric_dithering_1a3b75e5404427cb08b99921415c1f57e0"></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv4N4Node8GridTypeE" title="Node::GridType"><span class="n"><span class="pre">GridType</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Ptr</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">CovnertColorGridToIndexGrid</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv4N4Node13ColorGridTypeE" title="Node::ColorGridType"><span class="n"><span class="pre">ColorGridType</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Ptr</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">color_grid</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv4N4Node8GridTypeE" title="Node::GridType"><span class="n"><span class="pre">GridType</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Ptr</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">alpha_grid</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec4</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">rgba_palette</span></span>, <span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dims</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N19VolumetricDithering27CovnertColorGridToIndexGridERKN4Node13ColorGridType3PtrERKN4Node8GridType3PtrERKNSt6vectorIN3glm4vec4EEE4vec3" title="Link to this definition"></a><br /></dt>
+<dd><p>Given a dithered color grid and color palette, convert the color grid to an index grid. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>color_grid</strong> – The dithered color grid </p></li>
+<li><p><strong>alpha_grid</strong> – The alpha grid that corresponds to the color grid </p></li>
+<li><p><strong>rgba_palette</strong> – The color palette that the color grid was dithered to </p></li>
+<li><p><strong>dims</strong> – The dimensions of the grid </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N19VolumetricDithering17DitherIntoPaletteERKN4Node13ColorGridType3PtrERKN4Node8GridType3PtrERKNSt6vectorIN3glm4vec4EEE4vec3b">
+<span id="_CPPv3N19VolumetricDithering17DitherIntoPaletteERKN4Node13ColorGridType3PtrERKN4Node8GridType3PtrERKNSt6vectorIN3glm4vec4EEE4vec3b"></span><span id="_CPPv2N19VolumetricDithering17DitherIntoPaletteERKN4Node13ColorGridType3PtrERKN4Node8GridType3PtrERKNSt6vectorIN3glm4vec4EEE4vec3b"></span><span id="VolumetricDithering::DitherIntoPalette__Node::ColorGridType::PtrCR.Node::GridType::PtrCR.std::vector:glm::vec4:CR.vec3.b"></span><span class="target" id="namespace_volumetric_dithering_1a6ee957915b4a04803d63a85eb0b956a8"></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv4N4Node13ColorGridTypeE" title="Node::ColorGridType"><span class="n"><span class="pre">ColorGridType</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Ptr</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">DitherIntoPalette</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv4N4Node13ColorGridTypeE" title="Node::ColorGridType"><span class="n"><span class="pre">ColorGridType</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Ptr</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">color_grid</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">::</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv4N4Node8GridTypeE" title="Node::GridType"><span class="n"><span class="pre">GridType</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">Ptr</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">alpha_grid</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv43glm" title="glm"><span class="n"><span class="pre">glm</span></span></a><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec4</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">rgba_palette</span></span>, <span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">dims</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">use_full_volumetric_dithering</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N19VolumetricDithering17DitherIntoPaletteERKN4Node13ColorGridType3PtrERKN4Node8GridType3PtrERKNSt6vectorIN3glm4vec4EEE4vec3b" title="Link to this definition"></a><br /></dt>
+<dd><p>Given a full color grid and color palette, dither the grid to use the palette. </p>
+<p>This function uses the an adapted 3D Floyd-Steinberg dithering algorithm. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grid</strong> – The color grid to dither </p></li>
+<li><p><strong>alpha_grid</strong> – The alpha grid that corresponds to the color grid </p></li>
+<li><p><strong>palette</strong> – The color palette to dither to </p></li>
+<li><p><strong>dims</strong> – The dimensions of the grid </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="libvcad-geometry-surface-parameterizer.html" class="btn btn-neutral float-left" title="Geometry — surface parameterization" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="libvcad-analysis.html" class="btn btn-neutral float-right" title="Analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Charles Wade and Robert MacCurdy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

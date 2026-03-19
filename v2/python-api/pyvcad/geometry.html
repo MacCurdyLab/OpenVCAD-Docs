@@ -1,0 +1,850 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Geometry &mdash; OpenVCAD 2.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=57236720"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Parser" href="parser.html" />
+    <link rel="prev" title="Utilities" href="utilities.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenVCAD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides/math-expressions.html">Math Expression Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Geometry</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Point2"><code class="docutils literal notranslate"><span class="pre">Point2</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Point2.__init__"><code class="docutils literal notranslate"><span class="pre">Point2.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Point2.x"><code class="docutils literal notranslate"><span class="pre">Point2.x()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Point2.y"><code class="docutils literal notranslate"><span class="pre">Point2.y()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Segment2"><code class="docutils literal notranslate"><span class="pre">Segment2</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Segment2.__init__"><code class="docutils literal notranslate"><span class="pre">Segment2.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Segment2.source"><code class="docutils literal notranslate"><span class="pre">Segment2.source()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Segment2.target"><code class="docutils literal notranslate"><span class="pre">Segment2.target()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Vec2"><code class="docutils literal notranslate"><span class="pre">Vec2</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Vec2.__init__"><code class="docutils literal notranslate"><span class="pre">Vec2.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Vec2.x"><code class="docutils literal notranslate"><span class="pre">Vec2.x</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Vec2.y"><code class="docutils literal notranslate"><span class="pre">Vec2.y</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Vec3"><code class="docutils literal notranslate"><span class="pre">Vec3</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Vec3.__init__"><code class="docutils literal notranslate"><span class="pre">Vec3.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Vec3.x"><code class="docutils literal notranslate"><span class="pre">Vec3.x</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Vec3.y"><code class="docutils literal notranslate"><span class="pre">Vec3.y</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Vec3.z"><code class="docutils literal notranslate"><span class="pre">Vec3.z</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Vec4"><code class="docutils literal notranslate"><span class="pre">Vec4</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Vec4.__init__"><code class="docutils literal notranslate"><span class="pre">Vec4.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Vec4.a"><code class="docutils literal notranslate"><span class="pre">Vec4.a</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Vec4.b"><code class="docutils literal notranslate"><span class="pre">Vec4.b</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Vec4.g"><code class="docutils literal notranslate"><span class="pre">Vec4.g</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Vec4.r"><code class="docutils literal notranslate"><span class="pre">Vec4.r</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Polygon2"><code class="docutils literal notranslate"><span class="pre">Polygon2</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.Clip"><code class="docutils literal notranslate"><span class="pre">Polygon2.Clip()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.Difference"><code class="docutils literal notranslate"><span class="pre">Polygon2.Difference()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.Intersection"><code class="docutils literal notranslate"><span class="pre">Polygon2.Intersection()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.Offset"><code class="docutils literal notranslate"><span class="pre">Polygon2.Offset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.Union"><code class="docutils literal notranslate"><span class="pre">Polygon2.Union()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.__init__"><code class="docutils literal notranslate"><span class="pre">Polygon2.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.bounding_box"><code class="docutils literal notranslate"><span class="pre">Polygon2.bounding_box()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.diff"><code class="docutils literal notranslate"><span class="pre">Polygon2.diff()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.do_clip"><code class="docutils literal notranslate"><span class="pre">Polygon2.do_clip()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.do_union"><code class="docutils literal notranslate"><span class="pre">Polygon2.do_union()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.double_area"><code class="docutils literal notranslate"><span class="pre">Polygon2.double_area()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.draw"><code class="docutils literal notranslate"><span class="pre">Polygon2.draw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.holes"><code class="docutils literal notranslate"><span class="pre">Polygon2.holes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.inside"><code class="docutils literal notranslate"><span class="pre">Polygon2.inside()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.intersect"><code class="docutils literal notranslate"><span class="pre">Polygon2.intersect()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.is_ccw"><code class="docutils literal notranslate"><span class="pre">Polygon2.is_ccw()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.offset"><code class="docutils literal notranslate"><span class="pre">Polygon2.offset()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.on_boundary"><code class="docutils literal notranslate"><span class="pre">Polygon2.on_boundary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.reverse"><code class="docutils literal notranslate"><span class="pre">Polygon2.reverse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.set_holes"><code class="docutils literal notranslate"><span class="pre">Polygon2.set_holes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.simplify"><code class="docutils literal notranslate"><span class="pre">Polygon2.simplify()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polygon2.to_polyline"><code class="docutils literal notranslate"><span class="pre">Polygon2.to_polyline()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Polyline2"><code class="docutils literal notranslate"><span class="pre">Polyline2</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polyline2.__init__"><code class="docutils literal notranslate"><span class="pre">Polyline2.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polyline2.append"><code class="docutils literal notranslate"><span class="pre">Polyline2.append()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polyline2.length"><code class="docutils literal notranslate"><span class="pre">Polyline2.length()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polyline2.points"><code class="docutils literal notranslate"><span class="pre">Polyline2.points()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polyline2.prepend"><code class="docutils literal notranslate"><span class="pre">Polyline2.prepend()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polyline2.reverse"><code class="docutils literal notranslate"><span class="pre">Polyline2.reverse()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polyline2.segments"><code class="docutils literal notranslate"><span class="pre">Polyline2.segments()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polyline2.simplify"><code class="docutils literal notranslate"><span class="pre">Polyline2.simplify()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Polyline2.translate"><code class="docutils literal notranslate"><span class="pre">Polyline2.translate()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Arrangement2"><code class="docutils literal notranslate"><span class="pre">Arrangement2</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Arrangement2.__init__"><code class="docutils literal notranslate"><span class="pre">Arrangement2.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Arrangement2.getBoundedFaces"><code class="docutils literal notranslate"><span class="pre">Arrangement2.getBoundedFaces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Arrangement2.getUnboundedFaces"><code class="docutils literal notranslate"><span class="pre">Arrangement2.getUnboundedFaces()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Arrangement2.insert"><code class="docutils literal notranslate"><span class="pre">Arrangement2.insert()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.TetrahedralMesh"><code class="docutils literal notranslate"><span class="pre">TetrahedralMesh</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.TetrahedralMesh.__init__"><code class="docutils literal notranslate"><span class="pre">TetrahedralMesh.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.TetrahedralMesh.from_tree"><code class="docutils literal notranslate"><span class="pre">TetrahedralMesh.from_tree()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.TetrahedralMesh.write_to_inp"><code class="docutils literal notranslate"><span class="pre">TetrahedralMesh.write_to_inp()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.HexahedralMesh"><code class="docutils literal notranslate"><span class="pre">HexahedralMesh</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.HexahedralMesh.__init__"><code class="docutils literal notranslate"><span class="pre">HexahedralMesh.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.HexahedralMesh.bounding_box"><code class="docutils literal notranslate"><span class="pre">HexahedralMesh.bounding_box()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.HexahedralMesh.compute"><code class="docutils literal notranslate"><span class="pre">HexahedralMesh.compute()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.HexahedralMesh.elements"><code class="docutils literal notranslate"><span class="pre">HexahedralMesh.elements()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.HexahedralMesh.material_assignments"><code class="docutils literal notranslate"><span class="pre">HexahedralMesh.material_assignments()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.HexahedralMesh.nodes"><code class="docutils literal notranslate"><span class="pre">HexahedralMesh.nodes()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="parser.html">Parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree.html">Tree — base classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="leaves.html">Tree — leaf nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="material_nodes.html">Tree — material nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="composition.html">Tree — composition nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analysis.html">Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pyvcad_compilers/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pyvcad_rendering/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code> package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-api/index.html">C++ API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../papers.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenVCAD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> package</a></li>
+      <li class="breadcrumb-item active">Geometry</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/python-api/pyvcad/geometry.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="geometry">
+<h1>Geometry<a class="headerlink" href="#geometry" title="Link to this heading"></a></h1>
+<p>CGAL-backed 2D types, GLM vector wrappers, meshes, and arrangements.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Point2">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Point2</span></span><a class="headerlink" href="#pyvcad.Point2" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Point2.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Point2.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Point2) -&gt; None</p></li>
+</ol>
+<p>Default constructor creating a point at origin (0,0)</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Point2</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="p">()</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="p">()</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="go">(0.0, 0.0)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Point2, arg0: typing.SupportsFloat, arg1: typing.SupportsFloat) -&gt; None</p></li>
+</ol>
+<p>Create a 2D point with given x and y coordinates</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – X coordinate</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Y coordinate</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p</span> <span class="o">=</span> <span class="n">Point2</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">x</span><span class="p">()</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">p</span><span class="o">.</span><span class="n">y</span><span class="p">()</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="go">(1.0, 2.0)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Point2.x">
+<span class="sig-name descname"><span class="pre">x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Point2" title="pyvcad.pyvcad.Point2"><span class="pre">pyvcad.pyvcad.Point2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pyvcad.Point2.x" title="Link to this definition"></a></dt>
+<dd><p>Get the x coordinate of the point</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>X coordinate</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Point2.y">
+<span class="sig-name descname"><span class="pre">y</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Point2" title="pyvcad.pyvcad.Point2"><span class="pre">pyvcad.pyvcad.Point2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pyvcad.Point2.y" title="Link to this definition"></a></dt>
+<dd><p>Get the y coordinate of the point</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Y coordinate</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Segment2">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Segment2</span></span><a class="headerlink" href="#pyvcad.Segment2" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Segment2.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Segment2" title="pyvcad.pyvcad.Segment2"><span class="pre">pyvcad.pyvcad.Segment2</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Point2" title="pyvcad.pyvcad.Point2"><span class="pre">pyvcad.pyvcad.Point2</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Point2" title="pyvcad.pyvcad.Point2"><span class="pre">pyvcad.pyvcad.Point2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Segment2.__init__" title="Link to this definition"></a></dt>
+<dd><p>Create a 2D line segment between two points</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>p1</strong> (<a class="reference internal" href="#pyvcad.Point2" title="pyvcad.Point2"><em>Point2</em></a>) – The first point of the segment</p></li>
+<li><p><strong>p2</strong> (<a class="reference internal" href="#pyvcad.Point2" title="pyvcad.Point2"><em>Point2</em></a>) – The second point of the segment</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">p1</span> <span class="o">=</span> <span class="n">Point2</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">p2</span> <span class="o">=</span> <span class="n">Point2</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">segment</span> <span class="o">=</span> <span class="n">Segment2</span><span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">source</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">source</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">target</span> <span class="o">=</span> <span class="n">segment</span><span class="o">.</span><span class="n">target</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;From (</span><span class="si">{</span><span class="n">source</span><span class="o">.</span><span class="n">x</span><span class="p">()</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">source</span><span class="o">.</span><span class="n">y</span><span class="p">()</span><span class="si">}</span><span class="s1">) to (</span><span class="si">{</span><span class="n">target</span><span class="o">.</span><span class="n">x</span><span class="p">()</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">target</span><span class="o">.</span><span class="n">y</span><span class="p">()</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="go">From (0.0, 0.0) to (1.0, 1.0)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Segment2.source">
+<span class="sig-name descname"><span class="pre">source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Segment2" title="pyvcad.pyvcad.Segment2"><span class="pre">pyvcad.pyvcad.Segment2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.Point2" title="pyvcad.pyvcad.Point2"><span class="pre">pyvcad.pyvcad.Point2</span></a></span></span><a class="headerlink" href="#pyvcad.Segment2.source" title="Link to this definition"></a></dt>
+<dd><p>Returns the source point of the segment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The starting point of the segment</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#pyvcad.Point2" title="pyvcad.Point2">Point2</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Segment2.target">
+<span class="sig-name descname"><span class="pre">target</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Segment2" title="pyvcad.pyvcad.Segment2"><span class="pre">pyvcad.pyvcad.Segment2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.Point2" title="pyvcad.pyvcad.Point2"><span class="pre">pyvcad.pyvcad.Point2</span></a></span></span><a class="headerlink" href="#pyvcad.Segment2.target" title="Link to this definition"></a></dt>
+<dd><p>Returns the target point of the segment</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The ending point of the segment</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#pyvcad.Point2" title="pyvcad.Point2">Point2</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Vec2">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Vec2</span></span><a class="headerlink" href="#pyvcad.Vec2" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec2.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Vec2.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Vec2) -&gt; None</p></li>
+</ol>
+<p>Default constructor creating a zero vector (0,0)</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">Vec2</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">x</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">y</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="go">(0.0, 0.0)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Vec2, arg0: typing.SupportsFloat, arg1: typing.SupportsFloat) -&gt; None</p></li>
+</ol>
+<p>Create a 2D vector with given x and y components</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – X component</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Y component</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">Vec2</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">x</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">y</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="go">(1.0, 2.0)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.Vec2.x">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">x</span></span><a class="headerlink" href="#pyvcad.Vec2.x" title="Link to this definition"></a></dt>
+<dd><p>X component of the vector</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.Vec2.y">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">y</span></span><a class="headerlink" href="#pyvcad.Vec2.y" title="Link to this definition"></a></dt>
+<dd><p>Y component of the vector</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Vec3">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Vec3</span></span><a class="headerlink" href="#pyvcad.Vec3" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec3.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Vec3.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Vec3) -&gt; None</p></li>
+</ol>
+<p>Default constructor creating a zero vector (0,0,0)</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">Vec3</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">x</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">y</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">z</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="go">(0.0, 0.0, 0.0)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Vec3, arg0: typing.SupportsFloat, arg1: typing.SupportsFloat, arg2: typing.SupportsFloat) -&gt; None</p></li>
+</ol>
+<p>Create a 3D vector with given x, y, and z components</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – X component</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Y component</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – Z component</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">Vec3</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">x</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">y</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">z</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="go">(1.0, 2.0, 3.0)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>__init__(self: pyvcad.pyvcad.Vec3, arg0: collections.abc.Sequence[typing.SupportsFloat]) -&gt; None</p></li>
+</ol>
+<p>Create a 3D vector from a list or tuple of 3 floats</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">Vec3</span><span class="p">([</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">])</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">x</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">y</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">z</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="go">(1.0, 2.0, 3.0)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.Vec3.x">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">x</span></span><a class="headerlink" href="#pyvcad.Vec3.x" title="Link to this definition"></a></dt>
+<dd><p>X component of the vector</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.Vec3.y">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">y</span></span><a class="headerlink" href="#pyvcad.Vec3.y" title="Link to this definition"></a></dt>
+<dd><p>Y component of the vector</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.Vec3.z">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">z</span></span><a class="headerlink" href="#pyvcad.Vec3.z" title="Link to this definition"></a></dt>
+<dd><p>Z component of the vector</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Vec4">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Vec4</span></span><a class="headerlink" href="#pyvcad.Vec4" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec4.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Vec4.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Vec4) -&gt; None</p></li>
+</ol>
+<p>Default constructor creating a zero vector (0,0,0,0)</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">Vec4</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">r</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">g</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">b</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">a</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="go">(0.0, 0.0, 0.0, 0.0)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Vec4, arg0: typing.SupportsFloat, arg1: typing.SupportsFloat, arg2: typing.SupportsFloat, arg3: typing.SupportsFloat) -&gt; None</p></li>
+</ol>
+<p>Create a 4D vector with given r, g, b, and a components</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>r</strong> (<em>float</em>) – Red component</p></li>
+<li><p><strong>g</strong> (<em>float</em>) – Green component</p></li>
+<li><p><strong>b</strong> (<em>float</em>) – Blue component</p></li>
+<li><p><strong>a</strong> (<em>float</em>) – Alpha component</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">v</span> <span class="o">=</span> <span class="n">Vec4</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>  <span class="c1"># Red color with full opacity</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">r</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">g</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">b</span><span class="si">}</span><span class="s1">, </span><span class="si">{</span><span class="n">v</span><span class="o">.</span><span class="n">a</span><span class="si">}</span><span class="s1">)&#39;</span><span class="p">)</span>
+<span class="go">(1.0, 0.0, 0.0, 1.0)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.Vec4.a">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">a</span></span><a class="headerlink" href="#pyvcad.Vec4.a" title="Link to this definition"></a></dt>
+<dd><p>Alpha component of the vector</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.Vec4.b">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">b</span></span><a class="headerlink" href="#pyvcad.Vec4.b" title="Link to this definition"></a></dt>
+<dd><p>Blue component of the vector</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.Vec4.g">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">g</span></span><a class="headerlink" href="#pyvcad.Vec4.g" title="Link to this definition"></a></dt>
+<dd><p>Green component of the vector</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.Vec4.r">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">r</span></span><a class="headerlink" href="#pyvcad.Vec4.r" title="Link to this definition"></a></dt>
+<dd><p>Red component of the vector</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Polygon2">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Polygon2</span></span><a class="headerlink" href="#pyvcad.Polygon2" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.Clip">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Clip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polyline2" title="pyvcad.Polyline2"><span class="pre">Polyline2</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polyline2" title="pyvcad.Polyline2"><span class="pre">Polyline2</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Polygon2.Clip" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.Difference">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Difference</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Polygon2.Difference" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.Intersection">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Intersection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Polygon2.Intersection" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.Offset">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Offset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Polygon2.Offset" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.Union">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">Union</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Polygon2.Union" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Polygon2.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Polygon2) -&gt; None</p></li>
+<li><p>__init__(self: pyvcad.pyvcad.Polygon2, arg0: collections.abc.Sequence[pyvcad.pyvcad.Point2]) -&gt; None</p></li>
+<li><p>__init__(self: pyvcad.pyvcad.Polygon2, arg0: collections.abc.Sequence[pyvcad.pyvcad.Vec2]) -&gt; None</p></li>
+</ol>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.bounding_box">
+<span class="sig-name descname"><span class="pre">bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Point2" title="pyvcad.pyvcad.Point2"><span class="pre">pyvcad.pyvcad.Point2</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pyvcad.Point2" title="pyvcad.pyvcad.Point2"><span class="pre">pyvcad.pyvcad.Point2</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Polygon2.bounding_box" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.diff">
+<span class="sig-name descname"><span class="pre">diff</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Polygon2.diff" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.do_clip">
+<span class="sig-name descname"><span class="pre">do_clip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polyline2" title="pyvcad.Polyline2"><span class="pre">Polyline2</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polyline2" title="pyvcad.Polyline2"><span class="pre">Polyline2</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Polygon2.do_clip" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.do_union">
+<span class="sig-name descname"><span class="pre">do_union</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Polygon2.do_union" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>do_union(self: pyvcad.pyvcad.Polygon2, arg0: pyvcad.pyvcad.Polygon2) -&gt; list[pyvcad.pyvcad.Polygon2]</p></li>
+<li><p>do_union(self: pyvcad.pyvcad.Polygon2, arg0: collections.abc.Sequence[pyvcad.pyvcad.Polygon2]) -&gt; list[pyvcad.pyvcad.Polygon2]</p></li>
+</ol>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.double_area">
+<span class="sig-name descname"><span class="pre">double_area</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pyvcad.Polygon2.double_area" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.draw">
+<span class="sig-name descname"><span class="pre">draw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Polygon2.draw" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.holes">
+<span class="sig-name descname"><span class="pre">holes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Polygon2.holes" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.inside">
+<span class="sig-name descname"><span class="pre">inside</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Point2" title="pyvcad.pyvcad.Point2"><span class="pre">pyvcad.pyvcad.Point2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#pyvcad.Polygon2.inside" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.intersect">
+<span class="sig-name descname"><span class="pre">intersect</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Polygon2.intersect" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>intersect(self: pyvcad.pyvcad.Polygon2, arg0: pyvcad.pyvcad.Polygon2) -&gt; list[pyvcad.pyvcad.Polygon2]</p></li>
+<li><p>intersect(self: pyvcad.pyvcad.Polygon2, arg0: collections.abc.Sequence[pyvcad.pyvcad.Polygon2]) -&gt; list[pyvcad.pyvcad.Polygon2]</p></li>
+</ol>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.is_ccw">
+<span class="sig-name descname"><span class="pre">is_ccw</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#pyvcad.Polygon2.is_ccw" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.offset">
+<span class="sig-name descname"><span class="pre">offset</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Polygon2.offset" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.on_boundary">
+<span class="sig-name descname"><span class="pre">on_boundary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Point2" title="pyvcad.pyvcad.Point2"><span class="pre">pyvcad.pyvcad.Point2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#pyvcad.Polygon2.on_boundary" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.reverse">
+<span class="sig-name descname"><span class="pre">reverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Polygon2.reverse" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.set_holes">
+<span class="sig-name descname"><span class="pre">set_holes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Polygon2.set_holes" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.simplify">
+<span class="sig-name descname"><span class="pre">simplify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Polygon2.simplify" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polygon2.to_polyline">
+<span class="sig-name descname"><span class="pre">to_polyline</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.Polyline2" title="pyvcad.Polyline2"><span class="pre">Polyline2</span></a></span></span><a class="headerlink" href="#pyvcad.Polygon2.to_polyline" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Polyline2">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Polyline2</span></span><a class="headerlink" href="#pyvcad.Polyline2" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polyline2.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Polyline2.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Polyline2) -&gt; None</p></li>
+<li><p>__init__(self: pyvcad.pyvcad.Polyline2, arg0: collections.abc.Sequence[pyvcad.pyvcad.Point2]) -&gt; None</p></li>
+<li><p>__init__(self: pyvcad.pyvcad.Polyline2, arg0: collections.abc.Sequence[pyvcad.pyvcad.Vec2]) -&gt; None</p></li>
+</ol>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polyline2.append">
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polyline2" title="pyvcad.pyvcad.Polyline2"><span class="pre">pyvcad.pyvcad.Polyline2</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polyline2" title="pyvcad.pyvcad.Polyline2"><span class="pre">pyvcad.pyvcad.Polyline2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Polyline2.append" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polyline2.length">
+<span class="sig-name descname"><span class="pre">length</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polyline2" title="pyvcad.pyvcad.Polyline2"><span class="pre">pyvcad.pyvcad.Polyline2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pyvcad.Polyline2.length" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polyline2.points">
+<span class="sig-name descname"><span class="pre">points</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polyline2" title="pyvcad.pyvcad.Polyline2"><span class="pre">pyvcad.pyvcad.Polyline2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Point2" title="pyvcad.pyvcad.Point2"><span class="pre">pyvcad.pyvcad.Point2</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Polyline2.points" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polyline2.prepend">
+<span class="sig-name descname"><span class="pre">prepend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polyline2" title="pyvcad.pyvcad.Polyline2"><span class="pre">pyvcad.pyvcad.Polyline2</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polyline2" title="pyvcad.pyvcad.Polyline2"><span class="pre">pyvcad.pyvcad.Polyline2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Polyline2.prepend" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polyline2.reverse">
+<span class="sig-name descname"><span class="pre">reverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polyline2" title="pyvcad.pyvcad.Polyline2"><span class="pre">pyvcad.pyvcad.Polyline2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Polyline2.reverse" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polyline2.segments">
+<span class="sig-name descname"><span class="pre">segments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polyline2" title="pyvcad.pyvcad.Polyline2"><span class="pre">pyvcad.pyvcad.Polyline2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Segment2" title="pyvcad.pyvcad.Segment2"><span class="pre">pyvcad.pyvcad.Segment2</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Polyline2.segments" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polyline2.simplify">
+<span class="sig-name descname"><span class="pre">simplify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polyline2" title="pyvcad.pyvcad.Polyline2"><span class="pre">pyvcad.pyvcad.Polyline2</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.001</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Polyline2.simplify" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Polyline2.translate">
+<span class="sig-name descname"><span class="pre">translate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Polyline2" title="pyvcad.pyvcad.Polyline2"><span class="pre">pyvcad.pyvcad.Polyline2</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Point2" title="pyvcad.pyvcad.Point2"><span class="pre">pyvcad.pyvcad.Point2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Polyline2.translate" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Arrangement2">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Arrangement2</span></span><a class="headerlink" href="#pyvcad.Arrangement2" title="Link to this definition"></a></dt>
+<dd><p>A class representing a 2D arrangement of polygons and polylines. When polygons and polylines are inserted into the arrangement, they are split by each other and the resulting faces are stored in the arrangement.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Arrangement2.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Arrangement2" title="pyvcad.pyvcad.Arrangement2"><span class="pre">pyvcad.pyvcad.Arrangement2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Arrangement2.__init__" title="Link to this definition"></a></dt>
+<dd><p>Default constructor. Creates an Arrangement2 object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Arrangement2.getBoundedFaces">
+<span class="sig-name descname"><span class="pre">getBoundedFaces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Arrangement2" title="pyvcad.pyvcad.Arrangement2"><span class="pre">pyvcad.pyvcad.Arrangement2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Arrangement2.getBoundedFaces" title="Link to this definition"></a></dt>
+<dd><p>Returns a list of all bounded faces in the arrangement.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Arrangement2.getUnboundedFaces">
+<span class="sig-name descname"><span class="pre">getUnboundedFaces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Arrangement2" title="pyvcad.pyvcad.Arrangement2"><span class="pre">pyvcad.pyvcad.Arrangement2</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Arrangement2.getUnboundedFaces" title="Link to this definition"></a></dt>
+<dd><p>Returns a list of all unbounded faces in the arrangement.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Arrangement2.insert">
+<span class="sig-name descname"><span class="pre">insert</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Arrangement2.insert" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>insert(self: pyvcad.pyvcad.Arrangement2, polygon: pyvcad.pyvcad.Polygon2) -&gt; None</p></li>
+</ol>
+<p>Inserts a Polygon2 into the arrangement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>polygon</strong> (<a class="reference internal" href="#pyvcad.Polygon2" title="pyvcad.Polygon2"><em>Polygon2</em></a>) – The polygon to insert.</p>
+</dd>
+</dl>
+<ol class="arabic simple" start="2">
+<li><p>insert(self: pyvcad.pyvcad.Arrangement2, polyline: pyvcad.pyvcad.Polyline2) -&gt; None</p></li>
+</ol>
+<p>Inserts a Polyline2 into the arrangement.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>polyline</strong> (<a class="reference internal" href="#pyvcad.Polyline2" title="pyvcad.Polyline2"><em>Polyline2</em></a>) – The polyline to insert.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.TetrahedralMesh">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">TetrahedralMesh</span></span><a class="headerlink" href="#pyvcad.TetrahedralMesh" title="Link to this definition"></a></dt>
+<dd><p>Class representing a tetrahedral mesh using CGAL. Contains functions to build a mesh from a tree, write the mesh to an INP file</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.TetrahedralMesh.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.TetrahedralMesh" title="pyvcad.pyvcad.TetrahedralMesh"><span class="pre">pyvcad.pyvcad.TetrahedralMesh</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">CGAL::Mesh_complex_3_in_triangulation_3&lt;CGAL::Mesh_3_regular_triangulation_3_wrapper&lt;CGAL::Robust_weighted_circumcenter_filtered_traits_3&lt;CGAL::Epick&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CGAL</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">:Mesh_triangulation_3&lt;CGAL::Labeled_mesh_domain_3&lt;CGAL::Epick</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">:__1::pair&lt;int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int&gt;&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CGAL</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">:Default</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CGAL</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">:Parallel_tag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CGAL</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">:Default</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">CGAL</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">:Default&gt;::Tds&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">int&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.TetrahedralMesh.__init__" title="Link to this definition"></a></dt>
+<dd><p>Constructor that takes a C3t3 object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.TetrahedralMesh.from_tree">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_tree</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.TetrahedralMesh.from_tree" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>from_tree(arg0: pyvcad.pyvcad.Node, arg1: typing.SupportsFloat, arg2: typing.SupportsFloat, arg3: typing.SupportsFloat, arg4: typing.SupportsInt, arg5: typing.SupportsFloat) -&gt; pyvcad.pyvcad.TetrahedralMesh</p></li>
+</ol>
+<p>Creates a TetrahedralMesh from a tree using a static cell size.</p>
+<ol class="arabic simple" start="2">
+<li><p>from_tree(arg0: pyvcad.pyvcad.Node, arg1: typing.SupportsFloat, arg2: typing.SupportsFloat, arg3: typing.SupportsFloat, arg4: typing.SupportsInt, arg5: typing.SupportsFloat, arg6: typing.SupportsFloat, arg7: str) -&gt; pyvcad.pyvcad.TetrahedralMesh</p></li>
+</ol>
+<p>Creates a TetrahedralMesh from a tree using a variable cell size based on the material properties gradient.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.TetrahedralMesh.write_to_inp">
+<span class="sig-name descname"><span class="pre">write_to_inp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.TetrahedralMesh" title="pyvcad.pyvcad.TetrahedralMesh"><span class="pre">pyvcad.pyvcad.TetrahedralMesh</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="utilities.html#pyvcad.MaterialDefs" title="pyvcad.MaterialDefs"><span class="pre">MaterialDefs</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.pyvcad.Node"><span class="pre">pyvcad.pyvcad.Node</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.TetrahedralMesh.write_to_inp" title="Link to this definition"></a></dt>
+<dd><p>Writes the tetrahedral mesh to an INP file.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.HexahedralMesh">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">HexahedralMesh</span></span><a class="headerlink" href="#pyvcad.HexahedralMesh" title="Link to this definition"></a></dt>
+<dd><p>Class representing a hexahedral mesh.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.HexahedralMesh.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.HexahedralMesh" title="pyvcad.pyvcad.HexahedralMesh"><span class="pre">pyvcad.pyvcad.HexahedralMesh</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">node</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.pyvcad.Node"><span class="pre">pyvcad.pyvcad.Node</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_vox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_vox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_vox</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.HexahedralMesh.__init__" title="Link to this definition"></a></dt>
+<dd><p>Constructor that takes a root node and voxel counts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.HexahedralMesh.bounding_box">
+<span class="sig-name descname"><span class="pre">bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.HexahedralMesh" title="pyvcad.pyvcad.HexahedralMesh"><span class="pre">pyvcad.pyvcad.HexahedralMesh</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.HexahedralMesh.bounding_box" title="Link to this definition"></a></dt>
+<dd><p>Returns the mesh bounding box.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.HexahedralMesh.compute">
+<span class="sig-name descname"><span class="pre">compute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.HexahedralMesh" title="pyvcad.pyvcad.HexahedralMesh"><span class="pre">pyvcad.pyvcad.HexahedralMesh</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.HexahedralMesh.compute" title="Link to this definition"></a></dt>
+<dd><p>Computes the hexahedral mesh based on the root node and voxel counts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.HexahedralMesh.elements">
+<span class="sig-name descname"><span class="pre">elements</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.HexahedralMesh" title="pyvcad.pyvcad.HexahedralMesh"><span class="pre">pyvcad.pyvcad.HexahedralMesh</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.HexahedralMesh.elements" title="Link to this definition"></a></dt>
+<dd><p>Returns the mesh elements.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.HexahedralMesh.material_assignments">
+<span class="sig-name descname"><span class="pre">material_assignments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.HexahedralMesh" title="pyvcad.pyvcad.HexahedralMesh"><span class="pre">pyvcad.pyvcad.HexahedralMesh</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.HexahedralMesh.material_assignments" title="Link to this definition"></a></dt>
+<dd><p>Returns the material assignments.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.HexahedralMesh.nodes">
+<span class="sig-name descname"><span class="pre">nodes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.HexahedralMesh" title="pyvcad.pyvcad.HexahedralMesh"><span class="pre">pyvcad.pyvcad.HexahedralMesh</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.HexahedralMesh.nodes" title="Link to this definition"></a></dt>
+<dd><p>Returns the mesh nodes.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="utilities.html" class="btn btn-neutral float-left" title="Utilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="parser.html" class="btn btn-neutral float-right" title="Parser" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Charles Wade and Robert MacCurdy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

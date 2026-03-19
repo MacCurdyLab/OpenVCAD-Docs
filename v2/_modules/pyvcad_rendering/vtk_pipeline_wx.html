@@ -1,0 +1,817 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyvcad_rendering.vtk_pipeline_wx &mdash; OpenVCAD 2.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=57236720"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenVCAD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides/math-expressions.html">Math Expression Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../python-api/pyvcad/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../python-api/pyvcad_compilers/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../python-api/pyvcad_rendering/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code> package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-api/index.html">C++ API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../papers.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenVCAD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyvcad_rendering.vtk_pipeline_wx</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyvcad_rendering.vtk_pipeline_wx</h1><div class="highlight"><pre>
+<span></span><span class="c1"># vtk_pipeline_wx.py</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">threading</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">wx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">wx.lib.newevent</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">ne</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">vtkmodules.util.numpy_support</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">vtk_np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">vtkmodules.vtkInteractionStyle</span>  <span class="c1"># Ensure interactor styles are registered</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkCommonCore</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">VTK_FLOAT</span><span class="p">,</span>
+    <span class="n">VTK_UNSIGNED_CHAR</span><span class="p">,</span>
+    <span class="n">vtkCommand</span><span class="p">,</span>
+    <span class="n">vtkUnsignedCharArray</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkCommonDataModel</span><span class="w"> </span><span class="kn">import</span> <span class="n">vtkImageData</span><span class="p">,</span> <span class="n">vtkPiecewiseFunction</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkFiltersCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">vtkContourFilter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkFiltersSources</span><span class="w"> </span><span class="kn">import</span> <span class="n">vtkCubeSource</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkRenderingCore</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">vtkActor</span><span class="p">,</span>
+    <span class="n">vtkColorTransferFunction</span><span class="p">,</span>
+    <span class="n">vtkPolyDataMapper</span><span class="p">,</span>
+    <span class="n">vtkRenderWindow</span><span class="p">,</span>
+    <span class="n">vtkRenderer</span><span class="p">,</span>
+    <span class="n">vtkVolume</span><span class="p">,</span>
+    <span class="n">vtkVolumeProperty</span><span class="p">,</span>
+    <span class="n">vtkWindowToImageFilter</span><span class="p">,</span>
+    <span class="n">vtkTextActor</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkIOImage</span><span class="w"> </span><span class="kn">import</span> <span class="n">vtkPNGWriter</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkRenderingAnnotation</span><span class="w"> </span><span class="kn">import</span> <span class="n">vtkAxesActor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkInteractionWidgets</span><span class="w"> </span><span class="kn">import</span> <span class="n">vtkOrientationMarkerWidget</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkRenderingVolumeOpenGL2</span><span class="w"> </span><span class="kn">import</span> <span class="n">vtkSmartVolumeMapper</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkInteractionStyle</span><span class="w"> </span><span class="kn">import</span> <span class="n">vtkInteractorStyleTrackballCamera</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+
+
+<span class="c1"># --------------------------</span>
+<span class="c1"># wx Custom Events (binders)</span>
+<span class="c1"># --------------------------</span>
+<span class="n">BuildStartedEvent</span><span class="p">,</span> <span class="n">EVT_BUILD_STARTED</span> <span class="o">=</span> <span class="n">ne</span><span class="o">.</span><span class="n">NewEvent</span><span class="p">()</span>
+<span class="n">BuildFinishedEvent</span><span class="p">,</span> <span class="n">EVT_BUILD_FINISHED</span> <span class="o">=</span> <span class="n">ne</span><span class="o">.</span><span class="n">NewEvent</span><span class="p">()</span>
+<span class="n">BuildFailedEvent</span><span class="p">,</span> <span class="n">EVT_BUILD_FAILED</span> <span class="o">=</span> <span class="n">ne</span><span class="o">.</span><span class="n">NewEvent</span><span class="p">()</span>
+
+<span class="n">IsoSampleEvent</span><span class="p">,</span> <span class="n">EVT_ISO_SAMPLE</span> <span class="o">=</span> <span class="n">ne</span><span class="o">.</span><span class="n">NewEvent</span><span class="p">()</span>
+<span class="n">IsoContourEvent</span><span class="p">,</span> <span class="n">EVT_ISO_CONTOUR</span> <span class="o">=</span> <span class="n">ne</span><span class="o">.</span><span class="n">NewEvent</span><span class="p">()</span>
+<span class="n">IsoColorEvent</span><span class="p">,</span> <span class="n">EVT_ISO_COLOR</span> <span class="o">=</span> <span class="n">ne</span><span class="o">.</span><span class="n">NewEvent</span><span class="p">()</span>
+<span class="n">VolSampleEvent</span><span class="p">,</span> <span class="n">EVT_VOL_SAMPLE</span> <span class="o">=</span> <span class="n">ne</span><span class="o">.</span><span class="n">NewEvent</span><span class="p">()</span>
+
+
+<div class="viewcode-block" id="VTKRenderPipeline">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/vtk_pipeline_wx.html#pyvcad_rendering.vtk_pipeline_wx.VTKRenderPipeline">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">VTKRenderPipeline</span><span class="p">:</span>
+
+<div class="viewcode-block" id="VTKRenderPipeline.__init__">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/vtk_pipeline_wx.html#pyvcad_rendering.vtk_pipeline_wx.VTKRenderPipeline.__init__">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_target</span><span class="p">:</span> <span class="n">wx</span><span class="o">.</span><span class="n">Window</span><span class="p">,</span> <span class="n">use_default_interaction</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">render_window</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event_target</span> <span class="o">=</span> <span class="n">event_target</span>
+
+        <span class="c1"># Rendering resources</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span> <span class="o">=</span> <span class="n">vtkRenderer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span> <span class="o">=</span> <span class="n">render_window</span> <span class="ow">or</span> <span class="n">vtkRenderWindow</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">AddRenderer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="p">)</span>
+
+        <span class="c1"># Interactor style (GUI thread only)</span>
+        <span class="k">if</span> <span class="n">use_default_interaction</span><span class="p">:</span>
+            <span class="n">interactor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">GetInteractor</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">interactor</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">style</span> <span class="o">=</span> <span class="n">vtkInteractorStyleTrackballCamera</span><span class="p">()</span>
+                <span class="n">interactor</span><span class="o">.</span><span class="n">SetInteractorStyle</span><span class="p">(</span><span class="n">style</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">corner_axis_widget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_corner_axis_widget</span><span class="p">()</span>
+
+        <span class="c1"># Render state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_mode</span> <span class="o">=</span> <span class="s2">&quot;iso_surface&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quality_profile</span> <span class="o">=</span> <span class="s2">&quot;low&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_orthogonal_projection</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_volume_shading</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_volume_blending</span> <span class="o">=</span> <span class="kc">True</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_show_bounding_box</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bbox_actor</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_pt_text</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_pt_text</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_show_origin</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">origin_actor</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">vcad_object</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">materials</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">voxel_size</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_volume</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_iso_surface</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Async build state</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_gen</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pending_reset_camera</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_worker_thread</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_worker_lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span><span class="p">()</span>
+
+        <span class="c1"># Default progress callbacks -&gt; post wx events</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iso_surface_sample_progress_callback</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">IsoSampleEvent</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iso_surface_contouring_progress_callback</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">IsoContourEvent</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">iso_surface_coloring_progress_callback</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">IsoColorEvent</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">volume_sample_progress_callback</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">VolSampleEvent</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="VTKRenderPipeline.update_vcad_object">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/vtk_pipeline_wx.html#pyvcad_rendering.vtk_pipeline_wx.VTKRenderPipeline.update_vcad_object">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">update_vcad_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vcad_object</span><span class="p">,</span> <span class="n">materials</span><span class="p">,</span> <span class="n">reset_camera</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="c1"># Clear current view props immediately (GUI thread)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">RemoveAllViewProps</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bbox_actor</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_iso_surface</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_volume</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">vcad_object</span> <span class="o">=</span> <span class="n">vcad_object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">materials</span> <span class="o">=</span> <span class="n">materials</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_pending_reset_camera</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">reset_camera</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vcad_object</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">materials</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">Render</span><span class="p">()</span>
+            <span class="k">return</span>
+
+        <span class="c1"># Bump generation to invalidate prior builds</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_worker_lock</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_gen</span> <span class="o">+=</span> <span class="mi">1</span>
+            <span class="n">gen</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_gen</span>
+
+        <span class="c1"># Snapshot config for the worker</span>
+        <span class="n">cfg</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">(</span>
+            <span class="n">render_mode</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">render_mode</span><span class="p">,</span>
+            <span class="n">quality_profile</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">quality_profile</span><span class="p">,</span>
+            <span class="n">use_volume_shading</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">use_volume_shading</span><span class="p">,</span>
+            <span class="n">show_bbox</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_show_bounding_box</span><span class="p">,</span>
+            <span class="n">show_origin</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_show_origin</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Start worker thread</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_start_worker</span><span class="p">(</span><span class="n">gen</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">vcad_object</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">materials</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">BuildStartedEvent</span><span class="p">,</span> <span class="n">generation</span><span class="o">=</span><span class="n">gen</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VTKRenderPipeline.set_progress_callbacks">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/vtk_pipeline_wx.html#pyvcad_rendering.vtk_pipeline_wx.VTKRenderPipeline.set_progress_callbacks">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_progress_callbacks</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">iso_surface_sample</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">iso_surface_contouring</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">iso_surface_coloring</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+        <span class="n">volume_sample</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="k">if</span> <span class="n">iso_surface_sample</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">iso_surface_sample_progress_callback</span> <span class="o">=</span> <span class="n">iso_surface_sample</span>
+        <span class="k">if</span> <span class="n">iso_surface_contouring</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">iso_surface_contouring_progress_callback</span> <span class="o">=</span> <span class="n">iso_surface_contouring</span>
+        <span class="k">if</span> <span class="n">iso_surface_coloring</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">iso_surface_coloring_progress_callback</span> <span class="o">=</span> <span class="n">iso_surface_coloring</span>
+        <span class="k">if</span> <span class="n">volume_sample</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">volume_sample_progress_callback</span> <span class="o">=</span> <span class="n">volume_sample</span></div>
+
+
+<div class="viewcode-block" id="VTKRenderPipeline.get_render_mode">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/vtk_pipeline_wx.html#pyvcad_rendering.vtk_pipeline_wx.VTKRenderPipeline.get_render_mode">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">get_render_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_mode</span></div>
+
+
+<div class="viewcode-block" id="VTKRenderPipeline.show_bounding_box">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/vtk_pipeline_wx.html#pyvcad_rendering.vtk_pipeline_wx.VTKRenderPipeline.show_bounding_box">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">show_bounding_box</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show</span><span class="p">):</span>
+        <span class="n">show</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">show</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bbox_actor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">min_pt_text</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">max_pt_text</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_bbox_actor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vcad_object</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">AddActor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox_actor</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">AddActor2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_pt_text</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">AddActor2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_pt_text</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">RemoveActor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox_actor</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">RemoveActor2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_pt_text</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">RemoveActor2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_pt_text</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bbox_actor</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">min_pt_text</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">max_pt_text</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_show_bounding_box</span> <span class="o">=</span> <span class="n">show</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">Render</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="VTKRenderPipeline.show_origin">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/vtk_pipeline_wx.html#pyvcad_rendering.vtk_pipeline_wx.VTKRenderPipeline.show_origin">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">show_origin</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">show</span><span class="p">):</span>
+        <span class="n">show</span> <span class="o">=</span> <span class="nb">bool</span><span class="p">(</span><span class="n">show</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">show</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">origin_actor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_origin_actor</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">AddActor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">origin_actor</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">RemoveActor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">origin_actor</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">origin_actor</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_show_origin</span> <span class="o">=</span> <span class="n">show</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">Render</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="VTKRenderPipeline.enable_orthogonal_projection">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/vtk_pipeline_wx.html#pyvcad_rendering.vtk_pipeline_wx.VTKRenderPipeline.enable_orthogonal_projection">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">enable_orthogonal_projection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enable</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">GetActiveCamera</span><span class="p">()</span><span class="o">.</span><span class="n">SetParallelProjection</span><span class="p">(</span><span class="n">enable</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">Render</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="VTKRenderPipeline.enable_volume_shading">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/vtk_pipeline_wx.html#pyvcad_rendering.vtk_pipeline_wx.VTKRenderPipeline.enable_volume_shading">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">enable_volume_shading</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enable</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_mode</span> <span class="o">==</span> <span class="s2">&quot;volumetric&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">use_volume_shading</span> <span class="o">=</span> <span class="n">enable</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_volume</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">if</span> <span class="n">enable</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">current_volume</span><span class="o">.</span><span class="n">GetProperty</span><span class="p">()</span><span class="o">.</span><span class="n">ShadeOn</span><span class="p">()</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">current_volume</span><span class="o">.</span><span class="n">GetProperty</span><span class="p">()</span><span class="o">.</span><span class="n">ShadeOff</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">Render</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="VTKRenderPipeline.reset_camera">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/vtk_pipeline_wx.html#pyvcad_rendering.vtk_pipeline_wx.VTKRenderPipeline.reset_camera">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">reset_camera</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="nb">min</span><span class="p">,</span> <span class="nb">max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vcad_object</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">()</span>
+        <span class="n">center</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span>
+            <span class="p">(</span><span class="nb">min</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="nb">max</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="nb">min</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="nb">max</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span><span class="p">,</span> <span class="p">(</span><span class="nb">min</span><span class="o">.</span><span class="n">z</span> <span class="o">+</span> <span class="nb">max</span><span class="o">.</span><span class="n">z</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span>
+        <span class="p">)</span>
+        <span class="n">size</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="nb">max</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="nb">min</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="nb">max</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="nb">min</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="nb">max</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="nb">min</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">distance</span> <span class="o">=</span> <span class="p">((</span><span class="n">size</span><span class="o">.</span><span class="n">x</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">size</span><span class="o">.</span><span class="n">y</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="p">(</span><span class="n">size</span><span class="o">.</span><span class="n">z</span><span class="o">**</span><span class="mi">2</span><span class="p">))</span> <span class="o">**</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="mf">1.5</span>
+        <span class="n">offset</span> <span class="o">=</span> <span class="n">distance</span> <span class="o">/</span> <span class="mi">3</span><span class="o">**</span><span class="mf">0.5</span>
+
+        <span class="n">cam</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">GetActiveCamera</span><span class="p">()</span>
+        <span class="n">cam</span><span class="o">.</span><span class="n">SetPosition</span><span class="p">(</span><span class="n">center</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">offset</span><span class="p">,</span> <span class="n">center</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">offset</span><span class="p">,</span> <span class="n">center</span><span class="o">.</span><span class="n">z</span> <span class="o">+</span> <span class="n">offset</span><span class="p">)</span>
+        <span class="n">cam</span><span class="o">.</span><span class="n">SetFocalPoint</span><span class="p">(</span><span class="n">center</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">center</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">center</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+        <span class="n">cam</span><span class="o">.</span><span class="n">SetViewUp</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">ResetCamera</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">ResetCameraClippingRange</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">Render</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="VTKRenderPipeline.set_top_view">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/vtk_pipeline_wx.html#pyvcad_rendering.vtk_pipeline_wx.VTKRenderPipeline.set_top_view">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_top_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cam</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">GetActiveCamera</span><span class="p">()</span>
+        <span class="n">cam</span><span class="o">.</span><span class="n">SetPosition</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">cam</span><span class="o">.</span><span class="n">SetViewUp</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">cam</span><span class="o">.</span><span class="n">SetFocalPoint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">ResetCamera</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">Render</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="VTKRenderPipeline.set_side_view">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/vtk_pipeline_wx.html#pyvcad_rendering.vtk_pipeline_wx.VTKRenderPipeline.set_side_view">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_side_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cam</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">GetActiveCamera</span><span class="p">()</span>
+        <span class="n">cam</span><span class="o">.</span><span class="n">SetPosition</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">cam</span><span class="o">.</span><span class="n">SetViewUp</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">cam</span><span class="o">.</span><span class="n">SetFocalPoint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">ResetCamera</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">Render</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="VTKRenderPipeline.set_bottom_view">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/vtk_pipeline_wx.html#pyvcad_rendering.vtk_pipeline_wx.VTKRenderPipeline.set_bottom_view">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_bottom_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cam</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">GetActiveCamera</span><span class="p">()</span>
+        <span class="n">cam</span><span class="o">.</span><span class="n">SetPosition</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">cam</span><span class="o">.</span><span class="n">SetViewUp</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">cam</span><span class="o">.</span><span class="n">SetFocalPoint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">ResetCamera</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">Render</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="VTKRenderPipeline.set_corner_view">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/vtk_pipeline_wx.html#pyvcad_rendering.vtk_pipeline_wx.VTKRenderPipeline.set_corner_view">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_corner_view</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">cam</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">GetActiveCamera</span><span class="p">()</span>
+        <span class="n">cam</span><span class="o">.</span><span class="n">SetPosition</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">cam</span><span class="o">.</span><span class="n">SetViewUp</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">cam</span><span class="o">.</span><span class="n">SetFocalPoint</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">ResetCamera</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">Render</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="VTKRenderPipeline.set_render_mode">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/vtk_pipeline_wx.html#pyvcad_rendering.vtk_pipeline_wx.VTKRenderPipeline.set_render_mode">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_render_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mode</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;volumetric&quot;</span><span class="p">,</span> <span class="s2">&quot;iso_surface&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid render mode: </span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_mode</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_mode</span> <span class="o">=</span> <span class="n">mode</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vcad_object</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">materials</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_vcad_object</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vcad_object</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">materials</span><span class="p">,</span> <span class="n">reset_camera</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VTKRenderPipeline.set_quality_profile">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/vtk_pipeline_wx.html#pyvcad_rendering.vtk_pipeline_wx.VTKRenderPipeline.set_quality_profile">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_quality_profile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">profile</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;low&quot;</span><span class="p">,</span> <span class="s2">&quot;medium&quot;</span><span class="p">,</span> <span class="s2">&quot;high&quot;</span><span class="p">,</span> <span class="s2">&quot;ultra&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid quality profile: </span><span class="si">{</span><span class="n">profile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">profile</span> <span class="o">==</span> <span class="bp">self</span><span class="o">.</span><span class="n">quality_profile</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quality_profile</span> <span class="o">=</span> <span class="n">profile</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">vcad_object</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">materials</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">update_vcad_object</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vcad_object</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">materials</span><span class="p">,</span> <span class="n">reset_camera</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VTKRenderPipeline.take_screenshot">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/vtk_pipeline_wx.html#pyvcad_rendering.vtk_pipeline_wx.VTKRenderPipeline.take_screenshot">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">take_screenshot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">corner_axis_widget</span><span class="o">.</span><span class="n">SetEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="n">origin_was_visible</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_show_origin</span>
+        <span class="k">if</span> <span class="n">origin_was_visible</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">origin_actor</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">RemoveActor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">origin_actor</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">Render</span><span class="p">()</span>
+
+        <span class="n">bbox_was_visible</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_show_bounding_box</span>
+        <span class="k">if</span> <span class="n">bbox_was_visible</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">bbox_actor</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">RemoveActor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox_actor</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">RemoveActor2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_pt_text</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">RemoveActor2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_pt_text</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">Render</span><span class="p">()</span>
+
+        <span class="n">window_to_image_filter</span> <span class="o">=</span> <span class="n">vtkWindowToImageFilter</span><span class="p">()</span>
+        <span class="n">window_to_image_filter</span><span class="o">.</span><span class="n">SetInput</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="p">)</span>
+        <span class="n">window_to_image_filter</span><span class="o">.</span><span class="n">SetScale</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">window_to_image_filter</span><span class="o">.</span><span class="n">SetInputBufferTypeToRGBA</span><span class="p">()</span>
+        <span class="n">window_to_image_filter</span><span class="o">.</span><span class="n">ReadFrontBufferOff</span><span class="p">()</span>
+        <span class="n">window_to_image_filter</span><span class="o">.</span><span class="n">Update</span><span class="p">()</span>
+
+        <span class="n">writer</span> <span class="o">=</span> <span class="n">vtkPNGWriter</span><span class="p">()</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">SetFileName</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">SetInputConnection</span><span class="p">(</span><span class="n">window_to_image_filter</span><span class="o">.</span><span class="n">GetOutputPort</span><span class="p">())</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">SetFileDimensionality</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">writer</span><span class="o">.</span><span class="n">Write</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">corner_axis_widget</span><span class="o">.</span><span class="n">SetEnabled</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">origin_was_visible</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">origin_actor</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">AddActor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">origin_actor</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">Render</span><span class="p">()</span>
+
+        <span class="k">if</span> <span class="n">bbox_was_visible</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">bbox_actor</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">AddActor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox_actor</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">AddActor2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_pt_text</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">AddActor2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_pt_text</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">Render</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="VTKRenderPipeline.set_background_color">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/vtk_pipeline_wx.html#pyvcad_rendering.vtk_pipeline_wx.VTKRenderPipeline.set_background_color">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">set_background_color</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">g</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">SetBackground</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="VTKRenderPipeline.enable_volume_blending">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/vtk_pipeline_wx.html#pyvcad_rendering.vtk_pipeline_wx.VTKRenderPipeline.enable_volume_blending">[docs]</a>
+    <span class="k">def</span><span class="w"> </span><span class="nf">enable_volume_blending</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">enable</span><span class="p">:</span> <span class="nb">bool</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">use_volume_blending</span> <span class="o">=</span> <span class="n">enable</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_mode</span> <span class="o">==</span> <span class="s2">&quot;volumetric&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">update_vcad_object</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vcad_object</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">materials</span><span class="p">,</span> <span class="n">reset_camera</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="c1"># Full rebuild required</span></div>
+
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_start_worker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gen</span><span class="p">,</span> <span class="n">vcad_object</span><span class="p">,</span> <span class="n">materials</span><span class="p">,</span> <span class="n">cfg</span><span class="p">):</span>
+        <span class="n">worker</span> <span class="o">=</span> <span class="n">_BuildWorker</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">gen</span><span class="p">,</span> <span class="n">vcad_object</span><span class="p">,</span> <span class="n">materials</span><span class="p">,</span> <span class="n">cfg</span><span class="p">)</span>
+        <span class="n">t</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Thread</span><span class="p">(</span><span class="n">target</span><span class="o">=</span><span class="n">worker</span><span class="o">.</span><span class="n">run</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;VTKBuild-</span><span class="si">{</span><span class="n">gen</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">daemon</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_worker_thread</span> <span class="o">=</span> <span class="n">t</span>
+        <span class="n">t</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">EventClass</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+        <span class="n">evt</span> <span class="o">=</span> <span class="n">EventClass</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="n">wx</span><span class="o">.</span><span class="n">PostEvent</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">event_target</span><span class="p">,</span> <span class="n">evt</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_apply_payload</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">payload</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="c1"># Reset current props</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">RemoveAllViewProps</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_iso_surface</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">current_volume</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bbox_actor</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">min_pt_text</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">max_pt_text</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">origin_actor</span> <span class="o">=</span> <span class="kc">None</span>
+
+        <span class="c1"># Update voxel size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">voxel_size</span> <span class="o">=</span> <span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;voxel_size&quot;</span><span class="p">)</span>
+
+        <span class="c1"># Optional items</span>
+        <span class="k">if</span> <span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;bbox&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bbox_actor</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;bbox&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">AddActor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bbox_actor</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;min_pt&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">min_pt_text</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;min_pt&quot;</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">AddActor2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">min_pt_text</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;max_pt&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">max_pt_text</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;max_pt&quot;</span><span class="p">]</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">AddActor2D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">max_pt_text</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;origin&quot;</span><span class="p">)</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">origin_actor</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;origin&quot;</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">AddActor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">origin_actor</span><span class="p">)</span>
+
+        <span class="c1"># Main renderable</span>
+        <span class="k">if</span> <span class="n">payload</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;mode&quot;</span><span class="p">)</span> <span class="o">==</span> <span class="s2">&quot;vol&quot;</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_volume</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;volume&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_volume</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">AddVolume</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_volume</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">current_iso_surface</span> <span class="o">=</span> <span class="n">payload</span><span class="p">[</span><span class="s2">&quot;actor&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">current_iso_surface</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">AddActor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">current_iso_surface</span><span class="p">)</span>
+
+        <span class="c1"># Corner axis widget (needs interactor; GUI thread only)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">corner_axis_widget</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_corner_axis_widget</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">Render</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pending_reset_camera</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">reset_camera</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_pending_reset_camera</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_bbox_actor</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vcad_object</span><span class="p">):</span>
+        <span class="n">min_pt</span><span class="p">,</span> <span class="n">max_pt</span> <span class="o">=</span> <span class="n">vcad_object</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">()</span>
+
+        <span class="n">cube</span> <span class="o">=</span> <span class="n">vtkCubeSource</span><span class="p">()</span>
+        <span class="n">cube</span><span class="o">.</span><span class="n">SetBounds</span><span class="p">(</span><span class="n">min_pt</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">max_pt</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">min_pt</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">max_pt</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">min_pt</span><span class="o">.</span><span class="n">z</span><span class="p">,</span> <span class="n">max_pt</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+
+        <span class="n">cube_mapper</span> <span class="o">=</span> <span class="n">vtkPolyDataMapper</span><span class="p">()</span>
+        <span class="n">cube_mapper</span><span class="o">.</span><span class="n">SetInputConnection</span><span class="p">(</span><span class="n">cube</span><span class="o">.</span><span class="n">GetOutputPort</span><span class="p">())</span>
+
+        <span class="n">cube_actor</span> <span class="o">=</span> <span class="n">vtkActor</span><span class="p">()</span>
+        <span class="n">cube_actor</span><span class="o">.</span><span class="n">SetMapper</span><span class="p">(</span><span class="n">cube_mapper</span><span class="p">)</span>
+        <span class="n">cube_actor</span><span class="o">.</span><span class="n">GetProperty</span><span class="p">()</span><span class="o">.</span><span class="n">SetOpacity</span><span class="p">(</span><span class="mf">0.1</span><span class="p">)</span>
+
+        <span class="c1"># Create text for min/max coordinates</span>
+        <span class="n">min_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Min: (</span><span class="si">{</span><span class="n">min_pt</span><span class="o">.</span><span class="n">x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">min_pt</span><span class="o">.</span><span class="n">y</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">min_pt</span><span class="o">.</span><span class="n">z</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="n">max_text</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Max: (</span><span class="si">{</span><span class="n">max_pt</span><span class="o">.</span><span class="n">x</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">max_pt</span><span class="o">.</span><span class="n">y</span><span class="si">}</span><span class="s2">, </span><span class="si">{</span><span class="n">max_pt</span><span class="o">.</span><span class="n">z</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+        <span class="n">min_pt_text</span> <span class="o">=</span> <span class="n">vtkTextActor</span><span class="p">()</span>
+        <span class="n">min_pt_text</span><span class="o">.</span><span class="n">SetInput</span><span class="p">(</span><span class="n">min_text</span><span class="p">)</span>
+        <span class="n">min_pt_text</span><span class="o">.</span><span class="n">SetPosition</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+        <span class="n">min_pt_text</span><span class="o">.</span><span class="n">GetTextProperty</span><span class="p">()</span><span class="o">.</span><span class="n">SetFontSize</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+        <span class="n">min_pt_text</span><span class="o">.</span><span class="n">GetTextProperty</span><span class="p">()</span><span class="o">.</span><span class="n">SetColor</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+        <span class="n">max_pt_text</span> <span class="o">=</span> <span class="n">vtkTextActor</span><span class="p">()</span>
+        <span class="n">max_pt_text</span><span class="o">.</span><span class="n">SetInput</span><span class="p">(</span><span class="n">max_text</span><span class="p">)</span>
+        <span class="n">max_pt_text</span><span class="o">.</span><span class="n">SetPosition</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">40</span><span class="p">)</span>
+        <span class="n">max_pt_text</span><span class="o">.</span><span class="n">GetTextProperty</span><span class="p">()</span><span class="o">.</span><span class="n">SetFontSize</span><span class="p">(</span><span class="mi">24</span><span class="p">)</span>
+        <span class="n">max_pt_text</span><span class="o">.</span><span class="n">GetTextProperty</span><span class="p">()</span><span class="o">.</span><span class="n">SetColor</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">cube_actor</span><span class="p">,</span> <span class="n">min_pt_text</span><span class="p">,</span> <span class="n">max_pt_text</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_origin_actor</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">axes</span> <span class="o">=</span> <span class="n">vtkAxesActor</span><span class="p">()</span>
+        <span class="n">axes</span><span class="o">.</span><span class="n">SetTotalLength</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
+        <span class="n">axes</span><span class="o">.</span><span class="n">SetShaftTypeToLine</span><span class="p">()</span>
+        <span class="n">axes</span><span class="o">.</span><span class="n">SetNormalizedShaftLength</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">axes</span><span class="o">.</span><span class="n">SetNormalizedTipLength</span><span class="p">(</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">)</span>
+        <span class="n">axes</span><span class="o">.</span><span class="n">SetPosition</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">axes</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_corner_axis_widget</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">axes</span> <span class="o">=</span> <span class="n">vtkAxesActor</span><span class="p">()</span>
+        <span class="n">widget</span> <span class="o">=</span> <span class="n">vtkOrientationMarkerWidget</span><span class="p">()</span>
+        <span class="n">widget</span><span class="o">.</span><span class="n">SetOrientationMarker</span><span class="p">(</span><span class="n">axes</span><span class="p">)</span>
+        <span class="n">widget</span><span class="o">.</span><span class="n">SetInteractor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">GetInteractor</span><span class="p">())</span>
+        <span class="n">widget</span><span class="o">.</span><span class="n">SetViewport</span><span class="p">(</span><span class="mf">0.8</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+        <span class="n">widget</span><span class="o">.</span><span class="n">SetEnabled</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">widget</span><span class="o">.</span><span class="n">InteractiveOff</span><span class="p">()</span>
+        <span class="k">return</span> <span class="n">widget</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_volume_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vcad_object</span><span class="p">,</span> <span class="n">materials</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">):</span>
+        <span class="n">volume_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_image_data_from_object</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+
+        <span class="n">volume_mapper</span> <span class="o">=</span> <span class="n">vtkSmartVolumeMapper</span><span class="p">()</span>
+        <span class="n">volume_mapper</span><span class="o">.</span><span class="n">SetInputData</span><span class="p">(</span><span class="n">volume_data</span><span class="p">)</span>
+
+        <span class="n">color_transfer_function</span> <span class="o">=</span> <span class="n">vtkColorTransferFunction</span><span class="p">()</span>
+        <span class="n">color_transfer_function</span><span class="o">.</span><span class="n">AddRGBPoint</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">color_transfer_function</span><span class="o">.</span><span class="n">AddRGBPoint</span><span class="p">(</span><span class="mf">255.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+        <span class="n">opacity_transfer_function</span> <span class="o">=</span> <span class="n">vtkPiecewiseFunction</span><span class="p">()</span>
+        <span class="n">opacity_transfer_function</span><span class="o">.</span><span class="n">AddPoint</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+        <span class="n">opacity_transfer_function</span><span class="o">.</span><span class="n">AddPoint</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">)</span>
+        <span class="n">opacity_transfer_function</span><span class="o">.</span><span class="n">AddPoint</span><span class="p">(</span><span class="mf">128.0</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">)</span>
+        <span class="n">opacity_transfer_function</span><span class="o">.</span><span class="n">AddPoint</span><span class="p">(</span><span class="mf">200.0</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">)</span>
+        <span class="n">opacity_transfer_function</span><span class="o">.</span><span class="n">AddPoint</span><span class="p">(</span><span class="mf">255.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+
+        <span class="n">volume_property</span> <span class="o">=</span> <span class="n">vtkVolumeProperty</span><span class="p">()</span>
+        <span class="n">volume_property</span><span class="o">.</span><span class="n">SetColor</span><span class="p">(</span><span class="n">color_transfer_function</span><span class="p">)</span>
+        <span class="n">volume_property</span><span class="o">.</span><span class="n">SetScalarOpacity</span><span class="p">(</span><span class="n">opacity_transfer_function</span><span class="p">)</span>
+        <span class="n">volume_property</span><span class="o">.</span><span class="n">SetInterpolationTypeToLinear</span><span class="p">()</span>
+        <span class="n">volume_property</span><span class="o">.</span><span class="n">IndependentComponentsOff</span><span class="p">()</span>
+
+        <span class="n">volume</span> <span class="o">=</span> <span class="n">vtkVolume</span><span class="p">()</span>
+        <span class="n">volume</span><span class="o">.</span><span class="n">SetMapper</span><span class="p">(</span><span class="n">volume_mapper</span><span class="p">)</span>
+        <span class="n">volume</span><span class="o">.</span><span class="n">SetProperty</span><span class="p">(</span><span class="n">volume_property</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">volume</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_iso_surface_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vcad_object</span><span class="p">,</span> <span class="n">materials</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">,</span> <span class="n">iso_value</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
+        <span class="n">sdf_volume_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_create_sdf_from_object</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">)</span>
+
+        <span class="k">def</span><span class="w"> </span><span class="nf">contour_progress_callback</span><span class="p">(</span><span class="n">caller</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+            <span class="n">progress</span> <span class="o">=</span> <span class="n">caller</span><span class="o">.</span><span class="n">GetProgress</span><span class="p">()</span>
+            <span class="c1"># Only update progress every five percent to reduce overhead</span>
+            <span class="k">if</span> <span class="n">progress</span> <span class="o">%</span> <span class="mf">0.05</span> <span class="o">&lt;</span> <span class="mf">0.001</span><span class="p">:</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">iso_surface_contouring_progress_callback</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">iso_surface_contouring_progress_callback</span><span class="p">(</span><span class="n">progress</span> <span class="o">*</span> <span class="mf">100.0</span><span class="p">)</span>
+
+        <span class="n">contour</span> <span class="o">=</span> <span class="n">vtkContourFilter</span><span class="p">()</span>
+        <span class="n">contour</span><span class="o">.</span><span class="n">AddObserver</span><span class="p">(</span><span class="n">vtkCommand</span><span class="o">.</span><span class="n">ProgressEvent</span><span class="p">,</span> <span class="n">contour_progress_callback</span><span class="p">)</span>
+        <span class="n">contour</span><span class="o">.</span><span class="n">SetInputData</span><span class="p">(</span><span class="n">sdf_volume_data</span><span class="p">)</span>
+        <span class="n">contour</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">iso_value</span><span class="p">)</span>
+        <span class="n">contour</span><span class="o">.</span><span class="n">Update</span><span class="p">()</span>
+
+        <span class="n">mapper</span> <span class="o">=</span> <span class="n">vtkPolyDataMapper</span><span class="p">()</span>
+        <span class="n">mapper</span><span class="o">.</span><span class="n">SetInputConnection</span><span class="p">(</span><span class="n">contour</span><span class="o">.</span><span class="n">GetOutputPort</span><span class="p">())</span>
+
+        <span class="n">actor</span> <span class="o">=</span> <span class="n">vtkActor</span><span class="p">()</span>
+        <span class="n">actor</span><span class="o">.</span><span class="n">SetMapper</span><span class="p">(</span><span class="n">mapper</span><span class="p">)</span>
+
+        <span class="n">points</span> <span class="o">=</span> <span class="n">contour</span><span class="o">.</span><span class="n">GetOutput</span><span class="p">()</span><span class="o">.</span><span class="n">GetPoints</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">points</span><span class="p">:</span>
+            <span class="n">colors</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_colors_for_points</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">materials</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">)</span>
+            <span class="n">contour</span><span class="o">.</span><span class="n">GetOutput</span><span class="p">()</span><span class="o">.</span><span class="n">GetPointData</span><span class="p">()</span><span class="o">.</span><span class="n">SetScalars</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">actor</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_image_data_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vcad_object</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">,</span> <span class="n">materials</span><span class="p">):</span>
+        <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">data</span> <span class="o">=</span> <span class="n">vcad_object</span><span class="o">.</span><span class="n">toRGBAArray</span><span class="p">(</span><span class="n">voxel_size</span><span class="p">,</span> <span class="n">materials</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">use_volume_blending</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">volume_sample_progress_callback</span><span class="p">)</span>
+
+        <span class="n">volume_data</span> <span class="o">=</span> <span class="n">vtkImageData</span><span class="p">()</span>
+        <span class="n">volume_data</span><span class="o">.</span><span class="n">SetDimensions</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
+        <span class="n">volume_data</span><span class="o">.</span><span class="n">SetSpacing</span><span class="p">(</span><span class="n">voxel_size</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+
+        <span class="n">min_bbox</span><span class="p">,</span> <span class="n">max_bbox</span> <span class="o">=</span> <span class="n">vcad_object</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">()</span>
+        <span class="n">volume_data</span><span class="o">.</span><span class="n">SetOrigin</span><span class="p">(</span><span class="n">min_bbox</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">min_bbox</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">min_bbox</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+
+        <span class="n">vtk_data_array</span> <span class="o">=</span> <span class="n">vtk_np</span><span class="o">.</span><span class="n">numpy_to_vtk</span><span class="p">(</span>
+            <span class="n">num_array</span><span class="o">=</span><span class="n">data</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">array_type</span><span class="o">=</span><span class="n">VTK_UNSIGNED_CHAR</span>
+        <span class="p">)</span>
+        <span class="n">vtk_data_array</span><span class="o">.</span><span class="n">SetNumberOfComponents</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">volume_data</span><span class="o">.</span><span class="n">GetPointData</span><span class="p">()</span><span class="o">.</span><span class="n">SetScalars</span><span class="p">(</span><span class="n">vtk_data_array</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">volume_data</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_create_sdf_from_object</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vcad_object</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">):</span>
+        <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">,</span> <span class="n">sdf_data</span> <span class="o">=</span> <span class="n">vcad_object</span><span class="o">.</span><span class="n">toSignedDistanceArray</span><span class="p">(</span>
+            <span class="n">voxel_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">iso_surface_sample_progress_callback</span>
+        <span class="p">)</span>
+
+        <span class="c1"># Ensure C-contiguous float32 (NO COPY if already correct)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="p">(</span><span class="n">sdf_data</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span> <span class="ow">and</span> <span class="n">sdf_data</span><span class="o">.</span><span class="n">flags</span><span class="p">[</span><span class="s1">&#39;C_CONTIGUOUS&#39;</span><span class="p">]):</span>
+            <span class="n">sdf_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">ascontiguousarray</span><span class="p">(</span><span class="n">sdf_data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+
+        <span class="n">sdf_volume_data</span> <span class="o">=</span> <span class="n">vtkImageData</span><span class="p">()</span>
+        <span class="n">sdf_volume_data</span><span class="o">.</span><span class="n">SetDimensions</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
+        <span class="n">sdf_volume_data</span><span class="o">.</span><span class="n">SetSpacing</span><span class="p">(</span><span class="n">voxel_size</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+
+        <span class="n">min_bbox</span><span class="p">,</span> <span class="n">max_bbox</span> <span class="o">=</span> <span class="n">vcad_object</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">()</span>
+        <span class="c1"># Expand by two voxels to ensure full coverage</span>
+        <span class="n">min_bbox</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">min_bbox</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="p">(</span><span class="n">voxel_size</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">),</span> <span class="n">min_bbox</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="p">(</span><span class="n">voxel_size</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">),</span> <span class="n">min_bbox</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="p">(</span><span class="n">voxel_size</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">))</span>
+        <span class="n">sdf_volume_data</span><span class="o">.</span><span class="n">SetOrigin</span><span class="p">(</span><span class="n">min_bbox</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">min_bbox</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">min_bbox</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+
+        <span class="n">vtk_data_array</span> <span class="o">=</span> <span class="n">vtk_np</span><span class="o">.</span><span class="n">numpy_to_vtk</span><span class="p">(</span><span class="n">num_array</span><span class="o">=</span><span class="n">sdf_data</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">array_type</span><span class="o">=</span><span class="n">VTK_FLOAT</span><span class="p">)</span>
+        <span class="n">vtk_data_array</span><span class="o">.</span><span class="n">SetNumberOfComponents</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">sdf_volume_data</span><span class="o">.</span><span class="n">GetPointData</span><span class="p">()</span><span class="o">.</span><span class="n">SetScalars</span><span class="p">(</span><span class="n">vtk_data_array</span><span class="p">)</span>
+
+        <span class="c1"># --- keepalive: prevent GC of the NumPy owner while VTK reads it ---</span>
+        <span class="c1"># Either attach to the image:</span>
+        <span class="nb">setattr</span><span class="p">(</span><span class="n">sdf_volume_data</span><span class="p">,</span> <span class="s2">&quot;_np_ref&quot;</span><span class="p">,</span> <span class="n">sdf_data</span><span class="p">)</span>
+        <span class="c1"># (Or to the data array: setattr(vtk_data_array, &quot;_np_ref&quot;, sdf_data))</span>
+
+        <span class="k">return</span> <span class="n">sdf_volume_data</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_colors_for_points</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">vcad_object</span><span class="p">,</span> <span class="n">materials</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">):</span>
+        <span class="n">pv_points</span> <span class="o">=</span> <span class="p">[</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">*</span><span class="n">points</span><span class="o">.</span><span class="n">GetPoint</span><span class="p">(</span><span class="n">i</span><span class="p">))</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">points</span><span class="o">.</span><span class="n">GetNumberOfPoints</span><span class="p">())]</span>
+        <span class="n">colors_as_rgb</span> <span class="o">=</span> <span class="n">vcad_object</span><span class="o">.</span><span class="n">sample_points_color</span><span class="p">(</span>
+            <span class="n">pv_points</span><span class="p">,</span> <span class="n">materials</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">iso_surface_coloring_progress_callback</span>
+        <span class="p">)</span>
+
+        <span class="n">colors</span> <span class="o">=</span> <span class="n">vtkUnsignedCharArray</span><span class="p">()</span>
+        <span class="n">colors</span><span class="o">.</span><span class="n">SetNumberOfComponents</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+        <span class="n">colors</span><span class="o">.</span><span class="n">SetName</span><span class="p">(</span><span class="s2">&quot;Colors&quot;</span><span class="p">)</span>
+
+        <span class="k">for</span> <span class="n">color</span> <span class="ow">in</span> <span class="n">colors_as_rgb</span><span class="p">:</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">color</span><span class="o">.</span><span class="n">x</span><span class="p">)</span>
+            <span class="n">g</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">color</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">color</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+            <span class="n">colors</span><span class="o">.</span><span class="n">InsertNextTuple4</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">g</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="mi">255</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">colors</span>
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_compute_voxel_size_for_quality_profile</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">profile</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">:</span>
+        <span class="n">LOW_TARGET_VOXELS</span> <span class="o">=</span> <span class="mi">128</span>
+        <span class="n">MEDIUM_TARGET_VOXELS</span> <span class="o">=</span> <span class="mi">256</span>
+        <span class="n">HIGH_TARGET_VOXELS</span> <span class="o">=</span> <span class="mi">512</span>
+        <span class="n">ULTRA_TARGET_VOXELS</span> <span class="o">=</span> <span class="mi">1024</span>
+        
+        <span class="n">min_pt</span><span class="p">,</span> <span class="n">max_pt</span> <span class="o">=</span> <span class="n">vcad_object</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">()</span>
+        <span class="n">max_dimension</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+            <span class="n">max_pt</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">min_pt</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+            <span class="n">max_pt</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">min_pt</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+            <span class="n">max_pt</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">min_pt</span><span class="o">.</span><span class="n">z</span><span class="p">,</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">profile</span> <span class="o">==</span> <span class="s2">&quot;low&quot;</span><span class="p">:</span>
+            <span class="n">computed_voxel_size</span> <span class="o">=</span> <span class="n">max_dimension</span> <span class="o">/</span> <span class="n">LOW_TARGET_VOXELS</span>
+        <span class="k">elif</span> <span class="n">profile</span> <span class="o">==</span> <span class="s2">&quot;medium&quot;</span><span class="p">:</span>
+            <span class="n">computed_voxel_size</span> <span class="o">=</span> <span class="n">max_dimension</span> <span class="o">/</span> <span class="n">MEDIUM_TARGET_VOXELS</span>
+        <span class="k">elif</span> <span class="n">profile</span> <span class="o">==</span> <span class="s2">&quot;high&quot;</span><span class="p">:</span>
+            <span class="n">computed_voxel_size</span> <span class="o">=</span> <span class="n">max_dimension</span> <span class="o">/</span> <span class="n">HIGH_TARGET_VOXELS</span>
+        <span class="k">elif</span> <span class="n">profile</span> <span class="o">==</span> <span class="s2">&quot;ultra&quot;</span><span class="p">:</span>
+            <span class="n">computed_voxel_size</span> <span class="o">=</span> <span class="n">max_dimension</span> <span class="o">/</span> <span class="n">ULTRA_TARGET_VOXELS</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid quality profile to auto compute for: </span><span class="si">{</span><span class="n">profile</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">computed_voxel_size</span><span class="p">,</span> <span class="n">computed_voxel_size</span><span class="p">,</span> <span class="n">computed_voxel_size</span><span class="p">)</span></div>
+
+
+
+<span class="k">class</span><span class="w"> </span><span class="nc">_BuildWorker</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pipeline</span><span class="p">:</span> <span class="n">VTKRenderPipeline</span><span class="p">,</span> <span class="n">gen</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">vcad_object</span><span class="p">,</span> <span class="n">materials</span><span class="p">,</span> <span class="n">cfg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span> <span class="o">=</span> <span class="n">pipeline</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">gen</span> <span class="o">=</span> <span class="n">gen</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vcad_object</span> <span class="o">=</span> <span class="n">vcad_object</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">materials</span> <span class="o">=</span> <span class="n">materials</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span> <span class="o">=</span> <span class="n">cfg</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">p</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">pipeline</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">old_iso_sample</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">iso_surface_sample_progress_callback</span>
+            <span class="n">old_iso_contour</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">iso_surface_contouring_progress_callback</span>
+            <span class="n">old_iso_color</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">iso_surface_coloring_progress_callback</span>
+            <span class="n">old_vol_sample</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">volume_sample_progress_callback</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">iso_surface_sample_progress_callback</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">IsoSampleEvent</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">iso_surface_contouring_progress_callback</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">IsoContourEvent</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">iso_surface_coloring_progress_callback</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">IsoColorEvent</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">volume_sample_progress_callback</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">v</span><span class="p">:</span> <span class="n">p</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">VolSampleEvent</span><span class="p">,</span> <span class="n">progress</span><span class="o">=</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">))</span>
+
+            <span class="c1"># Compute heavy stuff (off-thread)</span>
+            <span class="n">voxel_size</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">_compute_voxel_size_for_quality_profile</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">vcad_object</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;quality_profile&quot;</span><span class="p">]</span>
+            <span class="p">)</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;show_bbox&quot;</span><span class="p">):</span>
+                <span class="n">bbox_actor</span><span class="p">,</span> <span class="n">min_pt_text</span><span class="p">,</span> <span class="n">max_pt_text</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">_create_bbox_actor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vcad_object</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">bbox_actor</span> <span class="o">=</span> <span class="n">min_pt_text</span> <span class="o">=</span> <span class="n">max_pt_text</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="n">origin_actor</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">_create_origin_actor</span><span class="p">()</span> <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;show_origin&quot;</span><span class="p">]</span> <span class="k">else</span> <span class="kc">None</span>
+
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;render_mode&quot;</span><span class="p">]</span> <span class="o">==</span> <span class="s2">&quot;volumetric&quot;</span><span class="p">:</span>
+                <span class="n">volume</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">_create_volume_from_object</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vcad_object</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">materials</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">)</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">cfg</span><span class="p">[</span><span class="s2">&quot;use_volume_shading&quot;</span><span class="p">]</span> <span class="ow">and</span> <span class="n">volume</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">volume</span><span class="o">.</span><span class="n">GetProperty</span><span class="p">()</span><span class="o">.</span><span class="n">ShadeOn</span><span class="p">()</span>
+                <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;vol&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;voxel_size&quot;</span><span class="p">:</span> <span class="n">voxel_size</span><span class="p">,</span>
+                    <span class="s2">&quot;volume&quot;</span><span class="p">:</span> <span class="n">volume</span><span class="p">,</span>
+                    <span class="s2">&quot;bbox&quot;</span><span class="p">:</span> <span class="n">bbox_actor</span><span class="p">,</span>
+                    <span class="s2">&quot;min_pt&quot;</span><span class="p">:</span> <span class="n">min_pt_text</span><span class="p">,</span>
+                    <span class="s2">&quot;max_pt&quot;</span><span class="p">:</span> <span class="n">max_pt_text</span><span class="p">,</span>
+                    <span class="s2">&quot;origin&quot;</span><span class="p">:</span> <span class="n">origin_actor</span><span class="p">,</span>
+                <span class="p">}</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">iso_actor</span> <span class="o">=</span> <span class="n">p</span><span class="o">.</span><span class="n">_create_iso_surface_from_object</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">vcad_object</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">materials</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">,</span> <span class="n">iso_value</span><span class="o">=</span><span class="mf">0.0</span>
+                <span class="p">)</span>
+                <span class="n">payload</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;mode&quot;</span><span class="p">:</span> <span class="s2">&quot;iso&quot;</span><span class="p">,</span>
+                    <span class="s2">&quot;voxel_size&quot;</span><span class="p">:</span> <span class="n">voxel_size</span><span class="p">,</span>
+                    <span class="s2">&quot;actor&quot;</span><span class="p">:</span> <span class="n">iso_actor</span><span class="p">,</span>
+                    <span class="s2">&quot;bbox&quot;</span><span class="p">:</span> <span class="n">bbox_actor</span><span class="p">,</span>
+                    <span class="s2">&quot;min_pt&quot;</span><span class="p">:</span> <span class="n">min_pt_text</span><span class="p">,</span>
+                    <span class="s2">&quot;max_pt&quot;</span><span class="p">:</span> <span class="n">max_pt_text</span><span class="p">,</span>
+                    <span class="s2">&quot;origin&quot;</span><span class="p">:</span> <span class="n">origin_actor</span><span class="p">,</span>
+                <span class="p">}</span>
+
+            <span class="c1"># Only the newest generation should apply</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">finish_on_ui</span><span class="p">():</span>
+                <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">gen</span> <span class="o">!=</span> <span class="n">p</span><span class="o">.</span><span class="n">_gen</span><span class="p">:</span>
+                    <span class="k">return</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">_apply_payload</span><span class="p">(</span><span class="n">payload</span><span class="p">)</span>
+                <span class="n">p</span><span class="o">.</span><span class="n">_post</span><span class="p">(</span><span class="n">BuildFinishedEvent</span><span class="p">,</span> <span class="n">generation</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">gen</span><span class="p">)</span>
+
+            <span class="n">wx</span><span class="o">.</span><span class="n">CallAfter</span><span class="p">(</span><span class="n">finish_on_ui</span><span class="p">)</span>
+
+        <span class="k">finally</span><span class="p">:</span>
+            <span class="c1"># Restore original callbacks</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">iso_surface_sample_progress_callback</span> <span class="o">=</span> <span class="n">old_iso_sample</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">iso_surface_contouring_progress_callback</span> <span class="o">=</span> <span class="n">old_iso_contour</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">iso_surface_coloring_progress_callback</span> <span class="o">=</span> <span class="n">old_iso_color</span>
+            <span class="n">p</span><span class="o">.</span><span class="n">volume_sample_progress_callback</span> <span class="o">=</span> <span class="n">old_vol_sample</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Charles Wade and Robert MacCurdy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

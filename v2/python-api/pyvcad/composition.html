@@ -1,0 +1,956 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tree — composition nodes &mdash; OpenVCAD 2.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=57236720"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Analysis" href="analysis.html" />
+    <link rel="prev" title="Tree — material nodes" href="material_nodes.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenVCAD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides/math-expressions.html">Math Expression Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometry.html">Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="parser.html">Parser</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree.html">Tree — base classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="leaves.html">Tree — leaf nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="material_nodes.html">Tree — material nodes</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tree — composition nodes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Rotate"><code class="docutils literal notranslate"><span class="pre">Rotate</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Rotate.__init__"><code class="docutils literal notranslate"><span class="pre">Rotate.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Scale"><code class="docutils literal notranslate"><span class="pre">Scale</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Scale.__init__"><code class="docutils literal notranslate"><span class="pre">Scale.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Translate"><code class="docutils literal notranslate"><span class="pre">Translate</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Translate.__init__"><code class="docutils literal notranslate"><span class="pre">Translate.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Sum"><code class="docutils literal notranslate"><span class="pre">Sum</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Sum.__init__"><code class="docutils literal notranslate"><span class="pre">Sum.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Tile"><code class="docutils literal notranslate"><span class="pre">Tile</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Tile.__init__"><code class="docutils literal notranslate"><span class="pre">Tile.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Difference"><code class="docutils literal notranslate"><span class="pre">Difference</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Difference.__init__"><code class="docutils literal notranslate"><span class="pre">Difference.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Intersection"><code class="docutils literal notranslate"><span class="pre">Intersection</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Intersection.__init__"><code class="docutils literal notranslate"><span class="pre">Intersection.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Union"><code class="docutils literal notranslate"><span class="pre">Union</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Union.__init__"><code class="docutils literal notranslate"><span class="pre">Union.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.BBoxUnion"><code class="docutils literal notranslate"><span class="pre">BBoxUnion</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.BBoxUnion.__init__"><code class="docutils literal notranslate"><span class="pre">BBoxUnion.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Offset"><code class="docutils literal notranslate"><span class="pre">Offset</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Offset.__init__"><code class="docutils literal notranslate"><span class="pre">Offset.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Offset.set_child"><code class="docutils literal notranslate"><span class="pre">Offset.set_child()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Shell"><code class="docutils literal notranslate"><span class="pre">Shell</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Shell.__init__"><code class="docutils literal notranslate"><span class="pre">Shell.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.ConformalMap"><code class="docutils literal notranslate"><span class="pre">ConformalMap</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.ConformalMap.__init__"><code class="docutils literal notranslate"><span class="pre">ConformalMap.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="analysis.html">Analysis</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pyvcad_compilers/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pyvcad_rendering/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code> package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-api/index.html">C++ API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../papers.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenVCAD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> package</a></li>
+      <li class="breadcrumb-item active">Tree — composition nodes</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/python-api/pyvcad/composition.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tree-composition-nodes">
+<h1>Tree — composition nodes<a class="headerlink" href="#tree-composition-nodes" title="Link to this heading"></a></h1>
+<p>Transforms, tiling, boolean CSG, offsets, shells, and mapping helpers.</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Rotate">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Rotate</span></span><a class="headerlink" href="#pyvcad.Rotate" title="Link to this definition"></a></dt>
+<dd><p>Rotates a child node around a point. The rotation is specified by a pitch, yaw, and roll angles and a point around which the rotation is performed. The rotation is performed in the order: roll, yaw, pitch. By default, rotation is around the point (0, 0, 0), but you can specify a different point in the constructor.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Rotate.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Rotate.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Rotate) -&gt; None</p></li>
+</ol>
+<p>Default constructor. Defaults to no rotation.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rect_prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rotate</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Rotate</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rotate</span><span class="o">.</span><span class="n">set_child</span><span class="p">(</span><span class="n">rect_prism</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Rotate, pitch: typing.SupportsFloat, yaw: typing.SupportsFloat, roll: typing.SupportsFloat, around: pyvcad.pyvcad.Vec3 = &lt;pyvcad.pyvcad.Vec3 object at 0x10b93b630&gt;) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a Rotate with pitch, yaw, roll angles, and a point around which the rotation is performed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pitch</strong> (<em>double</em>) – Pitch angle in degrees.</p></li>
+<li><p><strong>yaw</strong> (<em>double</em>) – Yaw angle in degrees.</p></li>
+<li><p><strong>roll</strong> (<em>double</em>) – Roll angle in degrees.</p></li>
+<li><p><strong>around</strong> (<em>glm::vec3</em>) – Point around which the rotation is performed. Defaults to (0, 0, 0).</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pitch</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yaw</span> <span class="o">=</span> <span class="mi">45</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">roll</span> <span class="o">=</span> <span class="mi">60</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">around</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rect_prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rotate</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Rotate</span><span class="p">(</span><span class="n">pitch</span><span class="p">,</span> <span class="n">yaw</span><span class="p">,</span> <span class="n">roll</span><span class="p">,</span> <span class="n">around</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rotate</span><span class="o">.</span><span class="n">set_child</span><span class="p">(</span><span class="n">rect_prism</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>__init__(self: pyvcad.pyvcad.Rotate, pitch: typing.SupportsFloat, yaw: typing.SupportsFloat, roll: typing.SupportsFloat, around: pyvcad.pyvcad.Vec3, child: pyvcad.pyvcad.Node) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a Rotate with pitch, yaw, roll angles, a point around which the rotation is performed, and a child node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>pitch</strong> (<em>double</em>) – Pitch angle in degrees.</p></li>
+<li><p><strong>yaw</strong> (<em>double</em>) – Yaw angle in degrees.</p></li>
+<li><p><strong>roll</strong> (<em>double</em>) – Roll angle in degrees.</p></li>
+<li><p><strong>around</strong> (<em>glm::vec3</em>) – Point around which the rotation is performed.</p></li>
+<li><p><strong>child</strong> (<em>std::shared_ptr&lt;Node&gt;</em>) – The child node.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pitch</span> <span class="o">=</span> <span class="mi">30</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">yaw</span> <span class="o">=</span> <span class="mi">45</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">roll</span> <span class="o">=</span> <span class="mi">60</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">around</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rect_prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rotate</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Rotate</span><span class="p">(</span><span class="n">pitch</span><span class="p">,</span> <span class="n">yaw</span><span class="p">,</span> <span class="n">roll</span><span class="p">,</span> <span class="n">around</span><span class="p">,</span> <span class="n">rect_prism</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Scale">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Scale</span></span><a class="headerlink" href="#pyvcad.Scale" title="Link to this definition"></a></dt>
+<dd><p>Scales a child by a factor in each dimension. This node is unary, therefore can only have one child. The scale is applied during evaluate() and performs the inverse of the scaling on the point.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Scale.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Scale.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Scale) -&gt; None</p></li>
+</ol>
+<p>Default constructor. Sets the scale to 1.0 in each dimension.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rect_prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scale</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Scale</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scale</span><span class="o">.</span><span class="n">set_child</span><span class="p">(</span><span class="n">rect_prism</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Scale, x: typing.SupportsFloat, y: typing.SupportsFloat, z: typing.SupportsFloat) -&gt; None</p></li>
+</ol>
+<p>Constructor. Sets the scale to the supplied values.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>double</em>) – The scale in the x dimension.</p></li>
+<li><p><strong>y</strong> (<em>double</em>) – The scale in the y dimension.</p></li>
+<li><p><strong>z</strong> (<em>double</em>) – The scale in the z dimension.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rect_prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scale</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Scale</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scale</span><span class="o">.</span><span class="n">set_child</span><span class="p">(</span><span class="n">rect_prism</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>__init__(self: pyvcad.pyvcad.Scale, x: typing.SupportsFloat, y: typing.SupportsFloat, z: typing.SupportsFloat, child: pyvcad.pyvcad.Node) -&gt; None</p></li>
+</ol>
+<p>Constructor. Sets the scale to the supplied values and sets the child.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>double</em>) – The scale in the x dimension.</p></li>
+<li><p><strong>y</strong> (<em>double</em>) – The scale in the y dimension.</p></li>
+<li><p><strong>z</strong> (<em>double</em>) – The scale in the z dimension.</p></li>
+<li><p><strong>child</strong> (<em>std::shared_ptr&lt;Node&gt;</em>) – The child node.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rect_prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">scale</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Scale</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">rect_prism</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Translate">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Translate</span></span><a class="headerlink" href="#pyvcad.Translate" title="Link to this definition"></a></dt>
+<dd><p>Translates a child in Cartesian space by a given amount. This node is unary, with only one child, and performs the inverse translation on coordinates during material() and evaluate().</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Translate.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Translate.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Translate) -&gt; None</p></li>
+</ol>
+<p>Default constructor. Sets the translation to 0, 0, 0.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rect_prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">translate</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Translate</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">translate</span><span class="o">.</span><span class="n">set_child</span><span class="p">(</span><span class="n">rect_prism</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Translate, x: typing.SupportsFloat, y: typing.SupportsFloat, z: typing.SupportsFloat) -&gt; None</p></li>
+</ol>
+<p>Constructor. Sets the translation to given values in Cartesian space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>double</em>) – Translation in the x direction.</p></li>
+<li><p><strong>y</strong> (<em>double</em>) – Translation in the y direction.</p></li>
+<li><p><strong>z</strong> (<em>double</em>) – Translation in the z direction.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rect_prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">translate</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Translate</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">translate</span><span class="o">.</span><span class="n">set_child</span><span class="p">(</span><span class="n">rect_prism</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>__init__(self: pyvcad.pyvcad.Translate, x: typing.SupportsFloat, y: typing.SupportsFloat, z: typing.SupportsFloat, child: pyvcad.pyvcad.Node) -&gt; None</p></li>
+</ol>
+<p>Constructor. Sets the translation to given values and sets the child.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>double</em>) – Translation in the x direction.</p></li>
+<li><p><strong>y</strong> (<em>double</em>) – Translation in the y direction.</p></li>
+<li><p><strong>z</strong> (<em>double</em>) – Translation in the z direction.</p></li>
+<li><p><strong>child</strong> (<em>std::shared_ptr&lt;Node&gt;</em>) – The child to set.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rect_prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">vec3</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">translate</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Translate</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="n">rect_prism</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Sum">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Sum</span></span><a class="headerlink" href="#pyvcad.Sum" title="Link to this definition"></a></dt>
+<dd><p>A node that sums all child Signed Distance Fields (SDFs). This node is N-ary, meaning it can have multiple children. The sum is calculated during evaluate() and results in the combined sum of all child SDFs.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Sum.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Sum.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Sum) -&gt; None</p></li>
+</ol>
+<p>Default constructor.</p>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Sum, iso_value: typing.SupportsFloat) -&gt; None</p></li>
+</ol>
+<p>Constructor. Sets the iso value for the sum node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>iso_value</strong> (<em>double</em>) – The iso value for the sum node.</p>
+</dd>
+</dl>
+<ol class="arabic simple" start="3">
+<li><p>__init__(self: pyvcad.pyvcad.Sum, iso_value: typing.SupportsFloat, children: collections.abc.Sequence[pyvcad.pyvcad.Node]) -&gt; None</p></li>
+</ol>
+<p>Constructor. Sets the iso value and the children for the sum node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>iso_value</strong> (<em>double</em>) – The iso value for the sum node.</p></li>
+<li><p><strong>children</strong> (<em>std::vector&lt;std::shared_ptr&lt;Node&gt;&gt;</em>) – The children of the sum node.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Tile">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Tile</span></span><a class="headerlink" href="#pyvcad.Tile" title="Link to this definition"></a></dt>
+<dd><p>A node that tiles a child geometry in a grid pattern. This unary operator repeats a geometry based on specified cell dimensions. The tiling occurs when evaluate() or material() is called, which can be used to create lattice structures.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Tile.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Tile.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Tile) -&gt; None</p></li>
+</ol>
+<p>Default constructor. The cell dimensions will be calculated from the child node when prepare is called.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tile</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Tile</span><span class="p">()</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Tile, child: pyvcad.pyvcad.Node) -&gt; None</p></li>
+</ol>
+<p>Constructor. Sets the child node. The cell dimensions will be calculated from the child node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>child</strong> (<em>std::shared_ptr&lt;Node&gt;</em>) – The child node.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rect_prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tile</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Tile</span><span class="p">(</span><span class="n">rect_prism</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>__init__(self: pyvcad.pyvcad.Tile, cell_x: typing.SupportsFloat, cell_y: typing.SupportsFloat, cell_z: typing.SupportsFloat) -&gt; None</p></li>
+</ol>
+<p>Constructor. Sets the dimensions of a cell in the grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cell_x</strong> (<em>double</em>) – The x dimension of a cell.</p></li>
+<li><p><strong>cell_y</strong> (<em>double</em>) – The y dimension of a cell.</p></li>
+<li><p><strong>cell_z</strong> (<em>double</em>) – The z dimension of a cell.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tile</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Tile</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>__init__(self: pyvcad.pyvcad.Tile, cell_x: typing.SupportsFloat, cell_y: typing.SupportsFloat, cell_z: typing.SupportsFloat, child: pyvcad.pyvcad.Node) -&gt; None</p></li>
+</ol>
+<p>Constructor. Sets the dimensions of a cell in the grid and sets the child.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cell_x</strong> (<em>double</em>) – The x dimension of a cell.</p></li>
+<li><p><strong>cell_y</strong> (<em>double</em>) – The y dimension of a cell.</p></li>
+<li><p><strong>cell_z</strong> (<em>double</em>) – The z dimension of a cell.</p></li>
+<li><p><strong>child</strong> (<em>std::shared_ptr&lt;Node&gt;</em>) – The child node.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">rect_prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">tile</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Tile</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">rect_prism</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Difference">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Difference</span></span><a class="headerlink" href="#pyvcad.Difference" title="Link to this definition"></a></dt>
+<dd><p>A difference binary node. The difference is taken as the left child minus the right child. This node is binary, so it can have two children. Supports optional smooth blending with a radius parameter k.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Difference.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Difference.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Difference) -&gt; None</p></li>
+</ol>
+<p>Default constructor. Creates a Difference node.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">radius</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">left_sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="n">radius</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right_sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">radius</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">difference</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Difference</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">difference</span><span class="o">.</span><span class="n">set_left</span><span class="p">(</span><span class="n">left_sphere</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">difference</span><span class="o">.</span><span class="n">set_right</span><span class="p">(</span><span class="n">right_sphere</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Difference, left: pyvcad.pyvcad.Node, right: pyvcad.pyvcad.Node) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a Difference node with the given left and right children.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>left</strong> (<a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The left child node.</p></li>
+<li><p><strong>right</strong> (<a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The right child node.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">radius</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">left_sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="n">radius</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right_sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">radius</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">difference</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Difference</span><span class="p">(</span><span class="n">left_sphere</span><span class="p">,</span> <span class="n">right_sphere</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>__init__(self: pyvcad.pyvcad.Difference, k: typing.SupportsFloat) -&gt; None</p></li>
+</ol>
+<p>Constructor for smooth difference.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>k</strong> (<em>float</em>) – The smoothing radius. When k &gt; 0, produces a smooth subtraction.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">smooth_diff</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Difference</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">smooth_diff</span><span class="o">.</span><span class="n">set_left</span><span class="p">(</span><span class="n">left_sphere</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">smooth_diff</span><span class="o">.</span><span class="n">set_right</span><span class="p">(</span><span class="n">right_sphere</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>__init__(self: pyvcad.pyvcad.Difference, k: typing.SupportsFloat, left: pyvcad.pyvcad.Node, right: pyvcad.pyvcad.Node) -&gt; None</p></li>
+</ol>
+<p>Constructor for smooth difference with children.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> (<em>float</em>) – The smoothing radius. When k &gt; 0, produces a smooth subtraction.</p></li>
+<li><p><strong>left</strong> (<a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The left child node.</p></li>
+<li><p><strong>right</strong> (<a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The right child node.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">left_sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">right_sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">smooth_diff</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Difference</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">left_sphere</span><span class="p">,</span> <span class="n">right_sphere</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Intersection">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Intersection</span></span><a class="headerlink" href="#pyvcad.Intersection" title="Link to this definition"></a></dt>
+<dd><p>Intersection of two or more nodes. This node is N-ary, so it can have multiple children. Supports optional smooth blending with a radius parameter k.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Intersection.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Intersection.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Intersection) -&gt; None</p></li>
+</ol>
+<p>Default constructor. Creates an Intersection node.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">radius</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere1</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="n">radius</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere2</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">radius</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">intersection</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Intersection</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">intersection</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="n">sphere1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">intersection</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="n">sphere2</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Intersection, intersect_distribution: bool) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates an Intersection node with the option to intersect the distribution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>intersect_distribution</strong> (<em>bool</em>) – If true, the distribution will be intersected. If false, the distribution will be summed.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">radius</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere1</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="n">radius</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere2</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">radius</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">intersection</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Intersection</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">intersection</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="n">sphere1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">intersection</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="n">sphere2</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>__init__(self: pyvcad.pyvcad.Intersection, intersect_distribution: bool, children: collections.abc.Sequence[pyvcad.pyvcad.Node]) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates an Intersection node with the option to intersect the distribution and sets the children.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>intersect_distribution</strong> (<em>bool</em>) – If true, the distribution will be intersected. If false, the distribution will be summed.</p></li>
+<li><p><strong>children</strong> (<em>list</em><em>[</em><a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a><em>]</em>) – The children nodes.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">radius</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere1</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="n">radius</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere2</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">radius</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">intersection</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Intersection</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="p">[</span><span class="n">sphere1</span><span class="p">,</span> <span class="n">sphere2</span><span class="p">])</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>__init__(self: pyvcad.pyvcad.Intersection, k: typing.SupportsFloat, intersect_distribution: bool = False) -&gt; None</p></li>
+</ol>
+<p>Constructor for smooth intersection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> (<em>float</em>) – The smoothing radius. When k &gt; 0, produces a smooth blend.</p></li>
+<li><p><strong>intersect_distribution</strong> (<em>bool</em>) – If true, the distribution will be intersected.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere1</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere2</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">smooth_inter</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Intersection</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">smooth_inter</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="n">sphere1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">smooth_inter</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="n">sphere2</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>__init__(self: pyvcad.pyvcad.Intersection, k: typing.SupportsFloat, intersect_distribution: bool, children: collections.abc.Sequence[pyvcad.pyvcad.Node]) -&gt; None</p></li>
+</ol>
+<p>Constructor for smooth intersection with children.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> (<em>float</em>) – The smoothing radius. When k &gt; 0, produces a smooth blend.</p></li>
+<li><p><strong>intersect_distribution</strong> (<em>bool</em>) – If true, the distribution will be intersected.</p></li>
+<li><p><strong>children</strong> (<em>list</em><em>[</em><a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a><em>]</em>) – The children nodes.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere1</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere2</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">smooth_inter</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Intersection</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="p">[</span><span class="n">sphere1</span><span class="p">,</span> <span class="n">sphere2</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Union">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Union</span></span><a class="headerlink" href="#pyvcad.Union" title="Link to this definition"></a></dt>
+<dd><p>A union of two or more nodes. This is equivalent to the summing of the children. This node is N-ary, so it can have multiple children. Supports optional smooth blending with a radius parameter k.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Union.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Union.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Union) -&gt; None</p></li>
+</ol>
+<p>Default constructor. Creates a Union node with no children.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">radius</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere1</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="n">radius</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere2</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">radius</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">union_node</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">union_node</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="n">sphere1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">union_node</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="n">sphere2</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Union, should_union_distribution: bool) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a Union node with an option to union distributions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>should_union_distribution</strong> (<em>bool</em>) – If true, the distribution will be unioned. If false, the distribution will be summed.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">radius</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere1</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="n">radius</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere2</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">radius</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">union_node</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">union_node</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="n">sphere1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">union_node</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="n">sphere2</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>__init__(self: pyvcad.pyvcad.Union, should_union_distribution: bool, children: collections.abc.Sequence[pyvcad.pyvcad.Node]) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a Union node with an option to union distributions and sets the children.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>should_union_distribution</strong> (<em>bool</em>) – If true, the distribution will be unioned. If false, the distribution will be summed.</p></li>
+<li><p><strong>children</strong> (<em>list</em><em>[</em><a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a><em>]</em>) – The children nodes.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">radius</span> <span class="o">=</span> <span class="mi">5</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere1</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="n">radius</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere2</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">radius</span><span class="o">/</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">union_node</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="p">[</span><span class="n">sphere1</span><span class="p">,</span> <span class="n">sphere2</span><span class="p">])</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="4">
+<li><p>__init__(self: pyvcad.pyvcad.Union, k: typing.SupportsFloat, should_union_distribution: bool = False) -&gt; None</p></li>
+</ol>
+<p>Constructor for smooth union.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> (<em>float</em>) – The smoothing radius. When k &gt; 0, produces a smooth blend between children.</p></li>
+<li><p><strong>should_union_distribution</strong> (<em>bool</em>) – If true, the distribution will be unioned.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere1</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere2</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">smooth_union</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">smooth_union</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="n">sphere1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">smooth_union</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="n">sphere2</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="5">
+<li><p>__init__(self: pyvcad.pyvcad.Union, k: typing.SupportsFloat, should_union_distribution: bool, children: collections.abc.Sequence[pyvcad.pyvcad.Node]) -&gt; None</p></li>
+</ol>
+<p>Constructor for smooth union with children.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>k</strong> (<em>float</em>) – The smoothing radius. When k &gt; 0, produces a smooth blend between children.</p></li>
+<li><p><strong>should_union_distribution</strong> (<em>bool</em>) – If true, the distribution will be unioned.</p></li>
+<li><p><strong>children</strong> (<em>list</em><em>[</em><a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a><em>]</em>) – The children nodes.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere1</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">sphere2</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">smooth_union</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="p">[</span><span class="n">sphere1</span><span class="p">,</span> <span class="n">sphere2</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.BBoxUnion">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">BBoxUnion</span></span><a class="headerlink" href="#pyvcad.BBoxUnion" title="Link to this definition"></a></dt>
+<dd><p>An n-ary node that represents the union of bounding boxes.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.BBoxUnion.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.BBoxUnion.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.BBoxUnion) -&gt; None</p></li>
+</ol>
+<p>Default constructor for BBoxUnion.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">union_node</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">BBoxUnion</span><span class="p">()</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.BBoxUnion, children: collections.abc.Sequence[pyvcad.pyvcad.Node]) -&gt; None</p></li>
+</ol>
+<p>Constructor that creates a BBoxUnion node with the given list of child nodes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>children</strong> (<em>list</em><em> of </em><a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The list of child nodes.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">children</span> <span class="o">=</span> <span class="p">[</span><span class="n">child1</span><span class="p">,</span> <span class="n">child2</span><span class="p">]</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">union_node</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">BBoxUnion</span><span class="p">(</span><span class="n">children</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Offset">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Offset</span></span><a class="headerlink" href="#pyvcad.Offset" title="Link to this definition"></a></dt>
+<dd><p>Shifts a child’s signed distance by a constant value. Negative offset moves the surface inward and positive offset moves it outward.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Offset.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Offset.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Offset) -&gt; None</p></li>
+</ol>
+<p>Default constructor with zero offset.</p>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Offset, arg0: typing.SupportsFloat) -&gt; None</p></li>
+</ol>
+<p>Constructor with a specified offset.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>offset</strong> (<em>double</em>) – The offset to apply to the signed distance.</p>
+</dd>
+</dl>
+<ol class="arabic simple" start="3">
+<li><p>__init__(self: pyvcad.pyvcad.Offset, arg0: typing.SupportsFloat, arg1: pyvcad.pyvcad.Node) -&gt; None</p></li>
+</ol>
+<p>Constructor with a specified offset and a child node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>offset</strong> (<em>double</em>) – The offset to apply to the signed distance.</p></li>
+<li><p><strong>child</strong> (<a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The child node.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Offset.set_child">
+<span class="sig-name descname"><span class="pre">set_child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Offset" title="pyvcad.pyvcad.Offset"><span class="pre">pyvcad.pyvcad.Offset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">child</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.pyvcad.Node"><span class="pre">pyvcad.pyvcad.Node</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Offset.set_child" title="Link to this definition"></a></dt>
+<dd><p>Sets the single child of this node.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Shell">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Shell</span></span><a class="headerlink" href="#pyvcad.Shell" title="Link to this definition"></a></dt>
+<dd><p>Computes an inward shell of a child node using a specified thickness.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Shell.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Shell.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Shell, thickness: typing.SupportsFloat) -&gt; None</p></li>
+</ol>
+<p>Constructor with shell thickness. Thickness must be positive.</p>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Shell, thickness: typing.SupportsFloat, child: pyvcad.pyvcad.Node) -&gt; None</p></li>
+</ol>
+<p>Constructor with shell thickness and a child node. Thickness must be positive.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.ConformalMap">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">ConformalMap</span></span><a class="headerlink" href="#pyvcad.ConformalMap" title="Link to this definition"></a></dt>
+<dd><p>A conformal map node that wraps a pattern node onto the surface of a base node. This mapping preserves angles during the transformation. The base node serves as the surface to wrap onto (left child) while the pattern node (right child) is mapped onto this surface.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.ConformalMap.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.ConformalMap.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.ConformalMap) -&gt; None</p></li>
+</ol>
+<p>Default constructor. Creates an empty ConformalMap node.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">base_surface</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pattern</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conformal</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">ConformalMap</span><span class="p">()</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conformal</span><span class="o">.</span><span class="n">set_left</span><span class="p">(</span><span class="n">base_surface</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conformal</span><span class="o">.</span><span class="n">set_right</span><span class="p">(</span><span class="n">pattern</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.ConformalMap, base: pyvcad.pyvcad.Node, pattern: pyvcad.pyvcad.Node) -&gt; None</p></li>
+</ol>
+<p>Constructor that sets the base surface and pattern children.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base</strong> (<em>std::shared_ptr&lt;Node&gt;</em>) – The base surface node to wrap onto (left child).</p></li>
+<li><p><strong>pattern</strong> (<em>std::shared_ptr&lt;Node&gt;</em>) – The pattern node to be wrapped onto the base surface (right child).</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">base_surface</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pattern</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conformal</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">ConformalMap</span><span class="p">(</span><span class="n">base_surface</span><span class="p">,</span> <span class="n">pattern</span><span class="p">)</span>
+</pre></div>
+</div>
+<ol class="arabic simple" start="3">
+<li><p>__init__(self: pyvcad.pyvcad.ConformalMap, base: pyvcad.pyvcad.Node, pattern: pyvcad.pyvcad.Node, ref_dir: pyvcad.pyvcad.Vec3) -&gt; None</p></li>
+</ol>
+<p>Constructor with explicit reference direction.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base</strong> (<em>std::shared_ptr&lt;Node&gt;</em>) – The base surface node to wrap onto (left child).</p></li>
+<li><p><strong>pattern</strong> (<em>std::shared_ptr&lt;Node&gt;</em>) – The pattern node to be wrapped onto the base surface (right child).</p></li>
+<li><p><strong>ref_dir</strong> (<a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a>) – A reference direction vector used to orient the mapping.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">base_surface</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">pattern</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.2</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">),</span> <span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ref_direction</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># Use Y-axis as reference</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">conformal</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">ConformalMap</span><span class="p">(</span><span class="n">base_surface</span><span class="p">,</span> <span class="n">pattern</span><span class="p">,</span> <span class="n">ref_direction</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="material_nodes.html" class="btn btn-neutral float-left" title="Tree — material nodes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="analysis.html" class="btn btn-neutral float-right" title="Analysis" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Charles Wade and Robert MacCurdy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

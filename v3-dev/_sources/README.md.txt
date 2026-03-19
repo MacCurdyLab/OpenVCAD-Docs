@@ -34,7 +34,7 @@ Python API reference pages are generated through `autodoc` imports (e.g., `pyvca
 - `docs/source/index.rst`: site landing + toctrees
 - `docs/source/python-api/`: Python API reference pages
 - `docs/source/cpp-api/index.rst`: C++ API entry page
-- `docs/source/_templates/versions.html`: version picker template
+- `docs/source/_templates/versions.html`: empty override (sidebar version dropdown disabled)
 - `docs/source/_static/`: static assets (including tutorial images)
 - `docs/Doxyfile`: Doxygen config used before Sphinx build
 
@@ -79,9 +79,7 @@ This script is the standard way to build and publish both v2 and v3-dev docs.
    - `-e <worktree>/medical` (if present)
 5. Verifies core Python imports (`pyvcad`, `pyvcad_compilers`).
 6. Runs `doxygen docs/Doxyfile` for each branch, requiring XML output.
-7. Runs Sphinx build for each branch with version metadata environment vars:
-   - `OPENVCAD_DOCS_VERSION`
-   - `OPENVCAD_VERSIONS_JSON`
+7. Runs Sphinx build for each branch.
 8. Copies built outputs into deploy layout:
    - `deploy/v2/`
    - `deploy/v3-dev/`

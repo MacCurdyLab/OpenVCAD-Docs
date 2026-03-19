@@ -1,0 +1,262 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyvcad_rendering.render &mdash; OpenVCAD 3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=110ea713"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenVCAD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides/math-expressions.html">Math Expression Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../python-api/pyvcad.html">pyvcad Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../python-api/pyvcad_compilers.html">pyvcad_compilers Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../python-api/pyvcad_rendering.html">pyvcad_rendering Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-api/index.html">C++ API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../gallery.html">Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../papers.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenVCAD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyvcad_rendering.render</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyvcad_rendering.render</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">wx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.render_frame</span><span class="w"> </span><span class="kn">import</span> <span class="n">RenderFrame</span>
+
+<span class="c1"># Path to persistent state file in user home directory</span>
+<span class="n">STATE_FILE</span> <span class="o">=</span> <span class="n">Path</span><span class="o">.</span><span class="n">home</span><span class="p">()</span> <span class="o">/</span> <span class="s2">&quot;.pyvcad_render_state.json&quot;</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_caller_id</span><span class="p">():</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Identify the script invoking the render function.&quot;&quot;&quot;</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="c1"># Step back through stack: 0=here, 1=renderWrapper, 2=caller</span>
+        <span class="c1"># We look for the first frame outside of this module</span>
+        <span class="k">for</span> <span class="n">frame_info</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">stack</span><span class="p">():</span>
+            <span class="n">filename</span> <span class="o">=</span> <span class="n">frame_info</span><span class="o">.</span><span class="n">filename</span>
+            <span class="c1"># Ignore calls from within the library itself</span>
+            <span class="k">if</span> <span class="s2">&quot;pyvcad_rendering&quot;</span> <span class="ow">in</span> <span class="n">filename</span><span class="p">:</span>
+                <span class="k">continue</span>
+            <span class="k">return</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">filename</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+        <span class="k">pass</span>
+    <span class="k">return</span> <span class="s2">&quot;unknown&quot;</span>
+
+<div class="viewcode-block" id="render">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering.html#pyvcad_rendering.render">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">render</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">materials</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">caller_id</span> <span class="o">=</span> <span class="n">_get_caller_id</span><span class="p">()</span>
+
+    <span class="c1"># Load state</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">if</span> <span class="n">STATE_FILE</span><span class="o">.</span><span class="n">exists</span><span class="p">():</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">STATE_FILE</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">state</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">Exception</span><span class="p">:</span>
+            <span class="n">state</span> <span class="o">=</span> <span class="p">{}</span> <span class="c1"># Corrupt file, reset</span>
+
+    <span class="n">last_caller</span> <span class="o">=</span> <span class="n">state</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;last_caller&quot;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="n">settings_to_use</span> <span class="o">=</span> <span class="p">{}</span>
+
+    <span class="c1"># If the caller matches the last run, reuse settings</span>
+    <span class="k">if</span> <span class="n">last_caller</span> <span class="o">==</span> <span class="n">caller_id</span> <span class="ow">and</span> <span class="s2">&quot;last_settings&quot;</span> <span class="ow">in</span> <span class="n">state</span><span class="p">:</span>
+        <span class="n">settings_to_use</span> <span class="o">=</span> <span class="n">state</span><span class="p">[</span><span class="s2">&quot;last_settings&quot;</span><span class="p">]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="c1"># New design context -&gt; reset settings (empty dict uses defaults in RenderFrame)</span>
+        <span class="n">settings_to_use</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="c1"># Update state with new caller immediately so if they crash/close, we track it</span>
+        <span class="n">state</span><span class="p">[</span><span class="s2">&quot;last_caller&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">caller_id</span>
+        <span class="c1"># Clear old settings in file to avoid confusion</span>
+        <span class="n">state</span><span class="p">[</span><span class="s2">&quot;last_settings&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">STATE_FILE</span><span class="p">,</span> <span class="s1">&#39;w&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+                <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">state</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+        <span class="k">except</span><span class="p">:</span>
+            <span class="k">pass</span>
+
+    <span class="n">app</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">App</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="c1"># Pass state file path so Frame can save on close</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">RenderFrame</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">state_file</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">STATE_FILE</span><span class="p">),</span> <span class="n">initial_settings</span><span class="o">=</span><span class="n">settings_to_use</span><span class="p">,</span> <span class="n">materials</span><span class="o">=</span><span class="n">materials</span><span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">MainLoop</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Render">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering.html#pyvcad_rendering.Render">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">Render</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">materials</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">render</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="render_image">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering.html#pyvcad_rendering.render_image">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">render_image</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1920</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1080</span><span class="p">,</span> <span class="n">materials</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># settings can include scale_bar_palette: &quot;auto&quot; or a named palette override.</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.headless_renderer</span><span class="w"> </span><span class="kn">import</span> <span class="n">HeadlessRenderer</span>
+    <span class="n">renderer</span> <span class="o">=</span> <span class="n">HeadlessRenderer</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">)</span>
+    <span class="n">renderer</span><span class="o">.</span><span class="n">render_and_save</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">,</span> <span class="n">materials</span><span class="o">=</span><span class="n">materials</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Render_Image">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering.html#pyvcad_rendering.Render_Image">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">Render_Image</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1920</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1080</span><span class="p">,</span> <span class="n">materials</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">render_image</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">filepath</span><span class="p">,</span> <span class="n">settings</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">materials</span><span class="o">=</span><span class="n">materials</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="render_turntable_animation">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering.html#pyvcad_rendering.render_turntable_animation">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">render_turntable_animation</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">distance_multiplier</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">elevation_angle_deg</span><span class="o">=</span><span class="mf">30.0</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1920</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1080</span><span class="p">,</span> <span class="n">output_format</span><span class="o">=</span><span class="s2">&quot;gif&quot;</span><span class="p">,</span> <span class="n">keep_frames</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">materials</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="c1"># settings can include scale_bar_palette: &quot;auto&quot; or a named palette override.</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.headless_renderer</span><span class="w"> </span><span class="kn">import</span> <span class="n">HeadlessRenderer</span>
+    <span class="n">renderer</span> <span class="o">=</span> <span class="n">HeadlessRenderer</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">)</span>
+    <span class="n">renderer</span><span class="o">.</span><span class="n">render_turntable_animation</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">fps</span><span class="p">,</span> <span class="n">distance_multiplier</span><span class="o">=</span><span class="n">distance_multiplier</span><span class="p">,</span> <span class="n">elevation_angle_deg</span><span class="o">=</span><span class="n">elevation_angle_deg</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">,</span> <span class="n">output_format</span><span class="o">=</span><span class="n">output_format</span><span class="p">,</span> <span class="n">keep_frames</span><span class="o">=</span><span class="n">keep_frames</span><span class="p">,</span> <span class="n">materials</span><span class="o">=</span><span class="n">materials</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Render_Turntable_Animation">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering.html#pyvcad_rendering.Render_Turntable_Animation">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">Render_Turntable_Animation</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">distance_multiplier</span><span class="o">=</span><span class="mf">1.5</span><span class="p">,</span> <span class="n">elevation_angle_deg</span><span class="o">=</span><span class="mf">30.0</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1920</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1080</span><span class="p">,</span> <span class="n">output_format</span><span class="o">=</span><span class="s2">&quot;gif&quot;</span><span class="p">,</span> <span class="n">keep_frames</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">materials</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">render_turntable_animation</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">fps</span><span class="p">,</span> <span class="n">distance_multiplier</span><span class="p">,</span> <span class="n">elevation_angle_deg</span><span class="p">,</span> <span class="n">settings</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">output_format</span><span class="p">,</span> <span class="n">keep_frames</span><span class="p">,</span> <span class="n">materials</span><span class="o">=</span><span class="n">materials</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="render_sweep_animation">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering.html#pyvcad_rendering.render_sweep_animation">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">render_sweep_animation</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pause_seconds</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1920</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1080</span><span class="p">,</span> <span class="n">output_format</span><span class="o">=</span><span class="s2">&quot;gif&quot;</span><span class="p">,</span> <span class="n">keep_frames</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">materials</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">.headless_renderer</span><span class="w"> </span><span class="kn">import</span> <span class="n">HeadlessRenderer</span>
+    <span class="n">renderer</span> <span class="o">=</span> <span class="n">HeadlessRenderer</span><span class="p">(</span><span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">)</span>
+    <span class="n">renderer</span><span class="o">.</span><span class="n">render_sweep_animation</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">axis</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="n">duration</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="n">fps</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="n">loop</span><span class="p">,</span> <span class="n">pause_seconds</span><span class="o">=</span><span class="n">pause_seconds</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">,</span> <span class="n">output_format</span><span class="o">=</span><span class="n">output_format</span><span class="p">,</span> <span class="n">keep_frames</span><span class="o">=</span><span class="n">keep_frames</span><span class="p">,</span> <span class="n">materials</span><span class="o">=</span><span class="n">materials</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Render_Sweep_Animation">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering.html#pyvcad_rendering.Render_Sweep_Animation">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">Render_Sweep_Animation</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="s2">&quot;z&quot;</span><span class="p">,</span> <span class="n">duration</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">fps</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span> <span class="n">loop</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">pause_seconds</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">1920</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mi">1080</span><span class="p">,</span> <span class="n">output_format</span><span class="o">=</span><span class="s2">&quot;gif&quot;</span><span class="p">,</span> <span class="n">keep_frames</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">materials</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">render_sweep_animation</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">duration</span><span class="p">,</span> <span class="n">fps</span><span class="p">,</span> <span class="n">loop</span><span class="p">,</span> <span class="n">pause_seconds</span><span class="p">,</span> <span class="n">settings</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">output_format</span><span class="p">,</span> <span class="n">keep_frames</span><span class="p">,</span> <span class="n">materials</span><span class="o">=</span><span class="n">materials</span><span class="p">)</span></div>
+
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;render&quot;</span><span class="p">,</span> <span class="s2">&quot;Render&quot;</span><span class="p">,</span> <span class="s2">&quot;render_image&quot;</span><span class="p">,</span> <span class="s2">&quot;Render_Image&quot;</span><span class="p">,</span> <span class="s2">&quot;render_turntable_animation&quot;</span><span class="p">,</span> <span class="s2">&quot;Render_Turntable_Animation&quot;</span><span class="p">,</span> <span class="s2">&quot;render_sweep_animation&quot;</span><span class="p">,</span> <span class="s2">&quot;Render_Sweep_Animation&quot;</span><span class="p">]</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Charles Wade and Robert MacCurdy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+
+
+
+<div class="version-picker" style="padding: 12px; margin-bottom: 12px;">
+  <label for="version-select" style="font-weight: bold; display: block; margin-bottom: 4px; font-size: 0.85em; color: #999;">
+    Version
+  </label>
+  <select id="version-select"
+          onchange="if(this.value) window.location.href=this.value;"
+          style="width: 100%; padding: 4px; border-radius: 4px; border: 1px solid #555; background: #333; color: #eee;">
+    
+      <option value="../v2/index.html"
+              >
+        v2
+      </option>
+    
+      <option value="../v3-dev/index.html"
+              selected>
+        v3-dev
+      </option>
+    
+  </select>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,320 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="./">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OpenVCAD Documentation Build and Deploy Guide &mdash; OpenVCAD 2.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=57236720"></script>
+      <script src="_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            OpenVCAD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/math-expressions.html">Math Expression Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="python-api/pyvcad.html">pyvcad Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python-api/pyvcad_compilers.html">pyvcad_compilers Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="python-api/pyvcad_rendering.html">pyvcad_rendering Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="cpp-api/index.html">C++ API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="gallery.html">Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="papers.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">OpenVCAD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">OpenVCAD Documentation Build and Deploy Guide</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/README.md.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="openvcad-documentation-build-and-deploy-guide">
+<h1>OpenVCAD Documentation Build and Deploy Guide<a class="headerlink" href="#openvcad-documentation-build-and-deploy-guide" title="Link to this heading"></a></h1>
+<p>This directory (<code class="docutils literal notranslate"><span class="pre">docs/source/</span></code>) is the canonical Sphinx source for OpenVCAD docs.</p>
+<p>It powers the public multi-version docs site:</p>
+<ul class="simple">
+<li><p>v2 docs from <code class="docutils literal notranslate"><span class="pre">main</span></code></p></li>
+<li><p>v3-dev docs from <code class="docutils literal notranslate"><span class="pre">attribute-modeling</span></code></p></li>
+</ul>
+<section id="repositories-and-roles">
+<h2>Repositories and Roles<a class="headerlink" href="#repositories-and-roles" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">openvcad-internal</span></code> (this repo)</p>
+<ul>
+<li><p>Authoring source for docs (<code class="docutils literal notranslate"><span class="pre">docs/source/</span></code>)</p></li>
+<li><p>Build/deploy automation (<code class="docutils literal notranslate"><span class="pre">build_scripts/deploy_docs.sh</span></code>)</p></li>
+<li><p>C++ API extraction config (<code class="docutils literal notranslate"><span class="pre">docs/Doxyfile</span></code>)</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OpenVCAD-Docs</span></code> (deployment target)</p>
+<ul>
+<li><p>Static built HTML for GitHub Pages</p></li>
+<li><p>Receives versioned outputs (<code class="docutils literal notranslate"><span class="pre">v2/</span></code>, <code class="docutils literal notranslate"><span class="pre">v3-dev/</span></code>) and landing page (<code class="docutils literal notranslate"><span class="pre">index.html</span></code>)</p></li>
+</ul>
+</li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OpenVCAD-Public</span></code></p>
+<ul>
+<li><p>Public hub/examples; some docs content may link to it</p></li>
+<li><p>Not the docs deployment target</p></li>
+</ul>
+</li>
+</ul>
+</section>
+<section id="documentation-stack">
+<h2>Documentation Stack<a class="headerlink" href="#documentation-stack" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Sphinx</strong> for site generation</p></li>
+<li><p><strong>MyST-Parser</strong> for Markdown pages (<code class="docutils literal notranslate"><span class="pre">.md</span></code>)</p></li>
+<li><p><strong>Doxygen</strong> for C++ API XML</p></li>
+<li><p><strong>Breathe</strong> to render Doxygen XML in Sphinx</p></li>
+</ul>
+<p>Python API reference pages are generated through <code class="docutils literal notranslate"><span class="pre">autodoc</span></code> imports (e.g., <code class="docutils literal notranslate"><span class="pre">pyvcad</span></code>, <code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code>, <code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code>).</p>
+</section>
+<section id="source-layout">
+<h2>Source Layout<a class="headerlink" href="#source-layout" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">docs/source/index.rst</span></code>: site landing + toctrees</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs/source/python-api/</span></code>: Python API reference pages</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs/source/cpp-api/index.rst</span></code>: C++ API entry page</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs/source/_templates/versions.html</span></code>: version picker template</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs/source/_static/</span></code>: static assets (including tutorial images)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs/Doxyfile</span></code>: Doxygen config used before Sphinx build</p></li>
+</ul>
+</section>
+<section id="local-build-single-branch">
+<h2>Local Build (single branch)<a class="headerlink" href="#local-build-single-branch" title="Link to this heading"></a></h2>
+<p>From repo root:</p>
+<ol class="arabic simple">
+<li><p>Create/activate a Python environment.</p></li>
+<li><p>Install docs tooling:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">sphinx</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sphinx_rtd_theme</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">myst-parser</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">breathe</span></code></p></li>
+</ul>
+</li>
+<li><p>Install local packages (editable) so autodoc can import:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">-e</span> <span class="pre">.</span> <span class="pre">-e</span> <span class="pre">rendering</span></code></p></li>
+<li><p>(and <code class="docutils literal notranslate"><span class="pre">-e</span> <span class="pre">medical</span></code> if needed)</p></li>
+</ul>
+</li>
+<li><p>Generate C++ XML:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">doxygen</span> <span class="pre">docs/Doxyfile</span></code></p></li>
+</ul>
+</li>
+<li><p>Build HTML:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">-m</span> <span class="pre">sphinx.cmd.build</span> <span class="pre">-b</span> <span class="pre">html</span> <span class="pre">docs/source</span> <span class="pre">docs/build/html</span></code></p></li>
+</ul>
+</li>
+</ol>
+<p>Output appears in <code class="docutils literal notranslate"><span class="pre">docs/build/html</span></code>.</p>
+</section>
+<section id="multi-version-deploy-script">
+<h2>Multi-Version Deploy Script<a class="headerlink" href="#multi-version-deploy-script" title="Link to this heading"></a></h2>
+<p>Primary script:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">build_scripts/deploy_docs.sh</span></code></p></li>
+</ul>
+<p>This script is the standard way to build and publish both v2 and v3-dev docs.</p>
+<section id="what-it-does">
+<h3>What it does<a class="headerlink" href="#what-it-does" title="Link to this heading"></a></h3>
+<ol class="arabic simple">
+<li><p>Defines version mapping:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">main</span> <span class="pre">-&gt;</span> <span class="pre">v2</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">attribute-modeling</span> <span class="pre">-&gt;</span> <span class="pre">v3-dev</span></code></p></li>
+</ul>
+</li>
+<li><p>Creates per-branch <code class="docutils literal notranslate"><span class="pre">git</span> <span class="pre">worktree</span></code>s.</p></li>
+<li><p>Creates isolated per-version virtual environments.</p></li>
+<li><p>Installs docs tooling and local editable packages in one pip invocation:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">-e</span> <span class="pre">&lt;worktree</span> <span class="pre">root&gt;</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-e</span> <span class="pre">&lt;worktree&gt;/rendering</span></code> (if present)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">-e</span> <span class="pre">&lt;worktree&gt;/medical</span></code> (if present)</p></li>
+</ul>
+</li>
+<li><p>Verifies core Python imports (<code class="docutils literal notranslate"><span class="pre">pyvcad</span></code>, <code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code>).</p></li>
+<li><p>Runs <code class="docutils literal notranslate"><span class="pre">doxygen</span> <span class="pre">docs/Doxyfile</span></code> for each branch, requiring XML output.</p></li>
+<li><p>Runs Sphinx build for each branch with version metadata environment vars:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">OPENVCAD_DOCS_VERSION</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">OPENVCAD_VERSIONS_JSON</span></code></p></li>
+</ul>
+</li>
+<li><p>Copies built outputs into deploy layout:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">deploy/v2/</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">deploy/v3-dev/</span></code></p></li>
+</ul>
+</li>
+<li><p>Generates top-level landing page (<code class="docutils literal notranslate"><span class="pre">deploy/index.html</span></code>) with version cards.</p></li>
+<li><p>Publishes to local clone of <code class="docutils literal notranslate"><span class="pre">OpenVCAD-Docs</span></code>, commits, and pushes <code class="docutils literal notranslate"><span class="pre">main</span></code>.</p></li>
+<li><p>Generates a docs-specific <code class="docutils literal notranslate"><span class="pre">.gitattributes</span></code> that disables LFS for image files
+(the source repo uses LFS for <code class="docutils literal notranslate"><span class="pre">*.png</span></code> etc., but GitHub Pages needs raw blobs).</p></li>
+</ol>
+</section>
+<section id="usage">
+<h3>Usage<a class="headerlink" href="#usage" title="Link to this heading"></a></h3>
+<p>From repo root:</p>
+<ul class="simple">
+<li><p>Deploy and push:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">./build_scripts/deploy_docs.sh</span></code></p></li>
+</ul>
+</li>
+<li><p>Build only (no push):</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">./build_scripts/deploy_docs.sh</span> <span class="pre">--dry-run</span></code></p></li>
+</ul>
+</li>
+</ul>
+</section>
+</section>
+<section id="deployment-output-structure-openvcad-docs">
+<h2>Deployment Output Structure (<code class="docutils literal notranslate"><span class="pre">OpenVCAD-Docs</span></code>)<a class="headerlink" href="#deployment-output-structure-openvcad-docs" title="Link to this heading"></a></h2>
+<p>After deploy, the <code class="docutils literal notranslate"><span class="pre">OpenVCAD-Docs</span></code> repo contains:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">index.html</span></code> (version hub)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">v2/</span></code> (docs built from <code class="docutils literal notranslate"><span class="pre">main</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">v3-dev/</span></code> (docs built from <code class="docutils literal notranslate"><span class="pre">attribute-modeling</span></code>)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.nojekyll</span></code></p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">.gitattributes</span></code> (LFS tracking rules)</p></li>
+</ul>
+<p>GitHub Pages serves this content at:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">https://matterassembly.org/OpenVCAD-Docs/</span></code></p></li>
+</ul>
+</section>
+<section id="notes-and-troubleshooting">
+<h2>Notes and Troubleshooting<a class="headerlink" href="#notes-and-troubleshooting" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p>If C++ API appears empty, verify Doxygen XML generation:</p>
+<ul>
+<li><p><code class="docutils literal notranslate"><span class="pre">docs/doxygen_xml/index.xml</span></code> must exist for each branch build.</p></li>
+</ul>
+</li>
+<li><p>If Python API pages are sparse/empty, verify editable installs and imports.</p></li>
+<li><p>If images fail in tutorials, prefer local assets under <code class="docutils literal notranslate"><span class="pre">docs/source/_static/</span></code> rather than remote links.</p></li>
+<li><p>If branch switching fails due to local untracked files, clean or isolate before running multi-worktree/deploy operations.</p></li>
+</ul>
+</section>
+</section>
+
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Charles Wade and Robert MacCurdy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+
+
+
+<div class="version-picker" style="padding: 12px; margin-bottom: 12px;">
+  <label for="version-select" style="font-weight: bold; display: block; margin-bottom: 4px; font-size: 0.85em; color: #999;">
+    Version
+  </label>
+  <select id="version-select"
+          onchange="if(this.value) window.location.href=this.value;"
+          style="width: 100%; padding: 4px; border-radius: 4px; border: 1px solid #555; background: #333; color: #eee;">
+    
+      <option value="../v2/index.html"
+              selected>
+        v2
+      </option>
+    
+      <option value="../v3-dev/index.html"
+              >
+        v3-dev
+      </option>
+    
+  </select>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

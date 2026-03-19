@@ -1,0 +1,468 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyvcad_compilers Module &mdash; OpenVCAD 2.3 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=57236720"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="pyvcad_rendering Module" href="pyvcad_rendering.html" />
+    <link rel="prev" title="pyvcad Module" href="pyvcad.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenVCAD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/math-expressions.html">Math Expression Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="pyvcad.html">pyvcad Module</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">pyvcad_compilers Module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#pyvcad_compilers.CrossSectionSlicer"><code class="docutils literal notranslate"><span class="pre">CrossSectionSlicer</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.CrossSectionSlicer.__init__"><code class="docutils literal notranslate"><span class="pre">CrossSectionSlicer.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.CrossSectionSlicer.slice_geometry"><code class="docutils literal notranslate"><span class="pre">CrossSectionSlicer.slice_geometry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.CrossSectionSlicer.slice_material"><code class="docutils literal notranslate"><span class="pre">CrossSectionSlicer.slice_material()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pyvcad_compilers.DirectMaterialCompiler"><code class="docutils literal notranslate"><span class="pre">DirectMaterialCompiler</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.DirectMaterialCompiler.__init__"><code class="docutils literal notranslate"><span class="pre">DirectMaterialCompiler.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.DirectMaterialCompiler.compile"><code class="docutils literal notranslate"><span class="pre">DirectMaterialCompiler.compile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.DirectMaterialCompiler.setProgressCallback"><code class="docutils literal notranslate"><span class="pre">DirectMaterialCompiler.setProgressCallback()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pyvcad_compilers.GCVFExporter"><code class="docutils literal notranslate"><span class="pre">GCVFExporter</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.GCVFExporter.__init__"><code class="docutils literal notranslate"><span class="pre">GCVFExporter.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.GCVFExporter.compile"><code class="docutils literal notranslate"><span class="pre">GCVFExporter.compile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.GCVFExporter.setProgressCallback"><code class="docutils literal notranslate"><span class="pre">GCVFExporter.setProgressCallback()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pyvcad_compilers.GCVFExporterProgressPhase"><code class="docutils literal notranslate"><span class="pre">GCVFExporterProgressPhase</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.GCVFExporterProgressPhase.GENERATE_MESH"><code class="docutils literal notranslate"><span class="pre">GCVFExporterProgressPhase.GENERATE_MESH</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.GCVFExporterProgressPhase.GENERATE_PNG_STACK"><code class="docutils literal notranslate"><span class="pre">GCVFExporterProgressPhase.GENERATE_PNG_STACK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.GCVFExporterProgressPhase.GENERATE_ZBUFFER"><code class="docutils literal notranslate"><span class="pre">GCVFExporterProgressPhase.GENERATE_ZBUFFER</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.GCVFExporterProgressPhase.ZIP_FILES"><code class="docutils literal notranslate"><span class="pre">GCVFExporterProgressPhase.ZIP_FILES</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.GCVFExporterProgressPhase.__init__"><code class="docutils literal notranslate"><span class="pre">GCVFExporterProgressPhase.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.GCVFExporterProgressPhase.value"><code class="docutils literal notranslate"><span class="pre">GCVFExporterProgressPhase.value</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pyvcad_compilers.InpWriter"><code class="docutils literal notranslate"><span class="pre">InpWriter</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.InpWriter.__init__"><code class="docutils literal notranslate"><span class="pre">InpWriter.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.InpWriter.write"><code class="docutils literal notranslate"><span class="pre">InpWriter.write()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pyvcad_compilers.MeshCompiler"><code class="docutils literal notranslate"><span class="pre">MeshCompiler</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.MeshCompiler.__init__"><code class="docutils literal notranslate"><span class="pre">MeshCompiler.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.MeshCompiler.compile"><code class="docutils literal notranslate"><span class="pre">MeshCompiler.compile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.MeshCompiler.setProgressCallback"><code class="docutils literal notranslate"><span class="pre">MeshCompiler.setProgressCallback()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pyvcad_compilers.MyersonCompiler"><code class="docutils literal notranslate"><span class="pre">MyersonCompiler</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.MyersonCompiler.__init__"><code class="docutils literal notranslate"><span class="pre">MyersonCompiler.__init__()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.MyersonCompiler.compile"><code class="docutils literal notranslate"><span class="pre">MyersonCompiler.compile()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.MyersonCompiler.setProgressCallback"><code class="docutils literal notranslate"><span class="pre">MyersonCompiler.setProgressCallback()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#pyvcad_compilers.version"><code class="docutils literal notranslate"><span class="pre">version()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="pyvcad_rendering.html">pyvcad_rendering Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../cpp-api/index.html">C++ API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../gallery.html">Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../papers.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenVCAD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+      <li class="breadcrumb-item active">pyvcad_compilers Module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/python-api/pyvcad_compilers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-pyvcad_compilers">
+<span id="pyvcad-compilers-module"></span><h1>pyvcad_compilers Module<a class="headerlink" href="#module-pyvcad_compilers" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad_compilers.CrossSectionSlicer">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_compilers.</span></span><span class="sig-name descname"><span class="pre">CrossSectionSlicer</span></span><a class="headerlink" href="#pyvcad_compilers.CrossSectionSlicer" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pybind11_object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.CrossSectionSlicer.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.CrossSectionSlicer" title="pyvcad_compilers.pyvcad_compilers.CrossSectionSlicer"><span class="pre">pyvcad_compilers.pyvcad_compilers.CrossSectionSlicer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvcad.html#pyvcad.Node" title="pyvcad.pyvcad.Node"><span class="pre">pyvcad.pyvcad.Node</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvcad.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvcad.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvcad.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.CrossSectionSlicer.__init__" title="Link to this definition"></a></dt>
+<dd><p>Constructor. Creates a CrossSectionSlicer object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root</strong> (<a class="reference internal" href="pyvcad.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The root node of the tree.</p></li>
+<li><p><strong>min</strong> (<em>glm::vec3</em>) – The minimum point of the bounding box.</p></li>
+<li><p><strong>max</strong> (<em>glm::vec3</em>) – The maximum point of the bounding box.</p></li>
+<li><p><strong>voxel_size</strong> (<em>glm::vec3</em>) – The size of the voxel.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.CrossSectionSlicer.slice_geometry">
+<span class="sig-name descname"><span class="pre">slice_geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.CrossSectionSlicer" title="pyvcad_compilers.pyvcad_compilers.CrossSectionSlicer"><span class="pre">pyvcad_compilers.pyvcad_compilers.CrossSectionSlicer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stitching_tolerance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colinear_tolerance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-12</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvcad.html#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad_compilers.CrossSectionSlicer.slice_geometry" title="Link to this definition"></a></dt>
+<dd><p>Slices the geometry at a given z-height and iso value.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>z_height</strong> (<em>double</em>) – The z-height at which to slice.</p></li>
+<li><p><strong>stitching_tolerance</strong> (<em>double</em>) – (Optional) The tolerance for stitching. Defaults to 1e-12.</p></li>
+<li><p><strong>colinear_tolerance</strong> (<em>double</em>) – (Optional) The tolerance for colinear points. Defaults to 1e-12.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.CrossSectionSlicer.slice_material">
+<span class="sig-name descname"><span class="pre">slice_material</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.CrossSectionSlicer" title="pyvcad_compilers.pyvcad_compilers.CrossSectionSlicer"><span class="pre">pyvcad_compilers.pyvcad_compilers.CrossSectionSlicer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_chan</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ranges</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">stitching_tolerance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-12</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">colinear_tolerance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-12</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="pyvcad.html#pyvcad.Polygon2" title="pyvcad.pyvcad.Polygon2"><span class="pre">pyvcad.pyvcad.Polygon2</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad_compilers.CrossSectionSlicer.slice_material" title="Link to this definition"></a></dt>
+<dd><p>ranges (List[Tuple[float, float]]): A list of tuples containing the lower and upper bounds of the material concentration to slice for. i.e. the ranges [0 to 0.5] and [0.5 to 1.0].
+stitching_tolerance (double): (Optional) The tolerance for stitching. Defaults to 1e-12.
+colinear_tolerance (double): (Optional) The tolerance for colinear points. Defaults to 1e-12.Returns:
+List[Tuple[float, float, List[Polygon2]]]: A list of tuples containing the lower and upper bounds of the material concentration and a list of polygons that represent the cross section for the range.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad_compilers.DirectMaterialCompiler">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_compilers.</span></span><span class="sig-name descname"><span class="pre">DirectMaterialCompiler</span></span><a class="headerlink" href="#pyvcad_compilers.DirectMaterialCompiler" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pybind11_object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.DirectMaterialCompiler.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.DirectMaterialCompiler" title="pyvcad_compilers.pyvcad_compilers.DirectMaterialCompiler"><span class="pre">pyvcad_compilers.pyvcad_compilers.DirectMaterialCompiler</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvcad.html#pyvcad.Node" title="pyvcad.pyvcad.Node"><span class="pre">pyvcad.pyvcad.Node</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvcad.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_defs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvcad.html#pyvcad.MaterialDefs" title="pyvcad.pyvcad.MaterialDefs"><span class="pre">pyvcad.pyvcad.MaterialDefs</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">liquid_keep_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">liquid_keep_out_distance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.DirectMaterialCompiler.__init__" title="Link to this definition"></a></dt>
+<dd><p>liquid_keep_out (bool): If true, the liquid keep out region will be used. Defaults to false.
+liquid_keep_out_distance (double): The distance of the liquid keep out region.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.DirectMaterialCompiler.compile">
+<span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.DirectMaterialCompiler" title="pyvcad_compilers.pyvcad_compilers.DirectMaterialCompiler"><span class="pre">pyvcad_compilers.pyvcad_compilers.DirectMaterialCompiler</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.DirectMaterialCompiler.compile" title="Link to this definition"></a></dt>
+<dd><p>Compiles the material.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.DirectMaterialCompiler.setProgressCallback">
+<span class="sig-name descname"><span class="pre">setProgressCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.DirectMaterialCompiler" title="pyvcad_compilers.pyvcad_compilers.DirectMaterialCompiler"><span class="pre">pyvcad_compilers.pyvcad_compilers.DirectMaterialCompiler</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.DirectMaterialCompiler.setProgressCallback" title="Link to this definition"></a></dt>
+<dd><p>Sets the progress callback function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>progress_callback</strong> (<em>function</em>) – The progress callback function that takes a single float argument (0.0 to 1.0).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad_compilers.GCVFExporter">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_compilers.</span></span><span class="sig-name descname"><span class="pre">GCVFExporter</span></span><a class="headerlink" href="#pyvcad_compilers.GCVFExporter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pybind11_object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.GCVFExporter.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.GCVFExporter" title="pyvcad_compilers.pyvcad_compilers.GCVFExporter"><span class="pre">pyvcad_compilers.pyvcad_compilers.GCVFExporter</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvcad.html#pyvcad.Node" title="pyvcad.pyvcad.Node"><span class="pre">pyvcad.pyvcad.Node</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvcad.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_defs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvcad.html#pyvcad.MaterialDefs" title="pyvcad.pyvcad.MaterialDefs"><span class="pre">pyvcad.pyvcad.MaterialDefs</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">filename</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">liquid_keep_out</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">liquid_keep_out_distance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.GCVFExporter.__init__" title="Link to this definition"></a></dt>
+<dd><p>Constructor. Creates a GCVFExporter object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root</strong> (<a class="reference internal" href="pyvcad.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The root node of the tree.</p></li>
+<li><p><strong>voxel_size</strong> (<em>vec3</em>) – The size of the voxel.</p></li>
+<li><p><strong>material_defs</strong> (<a class="reference internal" href="pyvcad.html#pyvcad.MaterialDefs" title="pyvcad.MaterialDefs"><em>MaterialDefs</em></a>) – The materials definitions.</p></li>
+<li><p><strong>filename</strong> (<em>str</em>) – The output filename.</p></li>
+<li><p><strong>liquid_keep_out</strong> (<em>bool</em>) – If true, applies liquid keep out.</p></li>
+<li><p><strong>liquid_keep_out_distance</strong> (<em>double</em>) – The liquid keep out distance.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.GCVFExporter.compile">
+<span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.GCVFExporter" title="pyvcad_compilers.pyvcad_compilers.GCVFExporter"><span class="pre">pyvcad_compilers.pyvcad_compilers.GCVFExporter</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.GCVFExporter.compile" title="Link to this definition"></a></dt>
+<dd><p>Compiles the export using the GCVF exporter.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.GCVFExporter.setProgressCallback">
+<span class="sig-name descname"><span class="pre">setProgressCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.GCVFExporter" title="pyvcad_compilers.pyvcad_compilers.GCVFExporter"><span class="pre">pyvcad_compilers.pyvcad_compilers.GCVFExporter</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.GCVFExporter.setProgressCallback" title="Link to this definition"></a></dt>
+<dd><p>Sets the progress callback function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>progress_callback</strong> (<em>function</em>) – The progress callback that receives (phase, progress).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad_compilers.GCVFExporterProgressPhase">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_compilers.</span></span><span class="sig-name descname"><span class="pre">GCVFExporterProgressPhase</span></span><a class="headerlink" href="#pyvcad_compilers.GCVFExporterProgressPhase" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pybind11_object</span></code></p>
+<p>Members:</p>
+<p>GENERATE_PNG_STACK</p>
+<p>GENERATE_ZBUFFER</p>
+<p>GENERATE_MESH</p>
+<p>ZIP_FILES</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_compilers.GCVFExporterProgressPhase.GENERATE_MESH">
+<span class="sig-name descname"><span class="pre">GENERATE_MESH</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;GCVFExporterProgressPhase.GENERATE_MESH:</span> <span class="pre">2&gt;</span></span><a class="headerlink" href="#pyvcad_compilers.GCVFExporterProgressPhase.GENERATE_MESH" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_compilers.GCVFExporterProgressPhase.GENERATE_PNG_STACK">
+<span class="sig-name descname"><span class="pre">GENERATE_PNG_STACK</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;GCVFExporterProgressPhase.GENERATE_PNG_STACK:</span> <span class="pre">0&gt;</span></span><a class="headerlink" href="#pyvcad_compilers.GCVFExporterProgressPhase.GENERATE_PNG_STACK" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_compilers.GCVFExporterProgressPhase.GENERATE_ZBUFFER">
+<span class="sig-name descname"><span class="pre">GENERATE_ZBUFFER</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;GCVFExporterProgressPhase.GENERATE_ZBUFFER:</span> <span class="pre">1&gt;</span></span><a class="headerlink" href="#pyvcad_compilers.GCVFExporterProgressPhase.GENERATE_ZBUFFER" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_compilers.GCVFExporterProgressPhase.ZIP_FILES">
+<span class="sig-name descname"><span class="pre">ZIP_FILES</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">&lt;GCVFExporterProgressPhase.ZIP_FILES:</span> <span class="pre">3&gt;</span></span><a class="headerlink" href="#pyvcad_compilers.GCVFExporterProgressPhase.ZIP_FILES" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.GCVFExporterProgressPhase.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.GCVFExporterProgressPhase" title="pyvcad_compilers.pyvcad_compilers.GCVFExporterProgressPhase"><span class="pre">pyvcad_compilers.pyvcad_compilers.GCVFExporterProgressPhase</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.GCVFExporterProgressPhase.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">GCVFExporterProgressPhase.name</span> <span class="pre">-&gt;</span> <span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad_compilers.GCVFExporterProgressPhase.value">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">value</span></span><a class="headerlink" href="#pyvcad_compilers.GCVFExporterProgressPhase.value" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad_compilers.InpWriter">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_compilers.</span></span><span class="sig-name descname"><span class="pre">InpWriter</span></span><a class="headerlink" href="#pyvcad_compilers.InpWriter" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pybind11_object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.InpWriter.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.InpWriter" title="pyvcad_compilers.pyvcad_compilers.InpWriter"><span class="pre">pyvcad_compilers.pyvcad_compilers.InpWriter</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.InpWriter.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.InpWriter.write">
+<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.InpWriter" title="pyvcad_compilers.pyvcad_compilers.InpWriter"><span class="pre">pyvcad_compilers.pyvcad_compilers.InpWriter</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvcad.html#pyvcad.Node" title="pyvcad.pyvcad.Node"><span class="pre">pyvcad.pyvcad.Node</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">meta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvcad.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">config_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_volumetric_dither</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.InpWriter.write" title="Link to this definition"></a></dt>
+<dd><p>Writes the INP (ABAQUS Input) file to the specified path using linear brick elements.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad_compilers.MeshCompiler">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_compilers.</span></span><span class="sig-name descname"><span class="pre">MeshCompiler</span></span><a class="headerlink" href="#pyvcad_compilers.MeshCompiler" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pybind11_object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.MeshCompiler.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.MeshCompiler" title="pyvcad_compilers.pyvcad_compilers.MeshCompiler"><span class="pre">pyvcad_compilers.pyvcad_compilers.MeshCompiler</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvcad.html#pyvcad.Node" title="pyvcad.pyvcad.Node"><span class="pre">pyvcad.pyvcad.Node</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvcad.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_iso_slices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.MeshCompiler.__init__" title="Link to this definition"></a></dt>
+<dd><p>Constructor. Creates a MeshCompiler object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root</strong> (<a class="reference internal" href="pyvcad.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The root node of the tree.</p></li>
+<li><p><strong>voxel_size</strong> (<em>vec3</em>) – The size of the voxel.</p></li>
+<li><p><strong>output_directory</strong> (<em>str</em>) – The output directory.</p></li>
+<li><p><strong>file_prefix</strong> (<em>str</em>) – The file prefix.</p></li>
+<li><p><strong>num_iso_slices</strong> (<em>size_t</em>) – The number of iso slices.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.MeshCompiler.compile">
+<span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.MeshCompiler" title="pyvcad_compilers.pyvcad_compilers.MeshCompiler"><span class="pre">pyvcad_compilers.pyvcad_compilers.MeshCompiler</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.MeshCompiler.compile" title="Link to this definition"></a></dt>
+<dd><p>Compiles the mesh.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.MeshCompiler.setProgressCallback">
+<span class="sig-name descname"><span class="pre">setProgressCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.MeshCompiler" title="pyvcad_compilers.pyvcad_compilers.MeshCompiler"><span class="pre">pyvcad_compilers.pyvcad_compilers.MeshCompiler</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.MeshCompiler.setProgressCallback" title="Link to this definition"></a></dt>
+<dd><p>Sets the progress callback function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>progress_callback</strong> (<em>function</em>) – The progress callback function.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad_compilers.MyersonCompiler">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_compilers.</span></span><span class="sig-name descname"><span class="pre">MyersonCompiler</span></span><a class="headerlink" href="#pyvcad_compilers.MyersonCompiler" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">pybind11_object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.MyersonCompiler.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.MyersonCompiler" title="pyvcad_compilers.pyvcad_compilers.MyersonCompiler"><span class="pre">pyvcad_compilers.pyvcad_compilers.MyersonCompiler</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">layer_height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_dpi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_dpi</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">taper_angle_deg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extra_width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvcad.html#pyvcad.Node" title="pyvcad.pyvcad.Node"><span class="pre">pyvcad.pyvcad.Node</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_defs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="pyvcad.html#pyvcad.MaterialDefs" title="pyvcad.pyvcad.MaterialDefs"><span class="pre">pyvcad.pyvcad.MaterialDefs</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.MyersonCompiler.__init__" title="Link to this definition"></a></dt>
+<dd><p>Constructor. Creates a MyersonCompiler object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>layer_height</strong> (<em>float</em>) – Layer height in mm.</p></li>
+<li><p><strong>x_dpi</strong> (<em>int</em>) – X resolution in dots per inch.</p></li>
+<li><p><strong>y_dpi</strong> (<em>int</em>) – Y resolution in dots per inch.</p></li>
+<li><p><strong>taper_angle_deg</strong> (<em>float</em>) – Taper angle in degrees.</p></li>
+<li><p><strong>extra_width</strong> (<em>float</em>) – Extra width in mm.</p></li>
+<li><p><strong>output_path</strong> (<em>str</em>) – The output directory path.</p></li>
+<li><p><strong>root</strong> (<a class="reference internal" href="pyvcad.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The root node of the tree.</p></li>
+<li><p><strong>material_defs</strong> (<a class="reference internal" href="pyvcad.html#pyvcad.MaterialDefs" title="pyvcad.MaterialDefs"><em>MaterialDefs</em></a>) – The material definitions.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.MyersonCompiler.compile">
+<span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.MyersonCompiler" title="pyvcad_compilers.pyvcad_compilers.MyersonCompiler"><span class="pre">pyvcad_compilers.pyvcad_compilers.MyersonCompiler</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.MyersonCompiler.compile" title="Link to this definition"></a></dt>
+<dd><p>Compiles the Myerson inkjet output.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.MyersonCompiler.setProgressCallback">
+<span class="sig-name descname"><span class="pre">setProgressCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.MyersonCompiler" title="pyvcad_compilers.pyvcad_compilers.MyersonCompiler"><span class="pre">pyvcad_compilers.pyvcad_compilers.MyersonCompiler</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.MyersonCompiler.setProgressCallback" title="Link to this definition"></a></dt>
+<dd><p>Sets the progress callback function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>callback</strong> (<em>function</em>) – The progress callback function that takes a single float argument (0.0 to 1.0).</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_compilers.version">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_compilers.</span></span><span class="sig-name descname"><span class="pre">version</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#pyvcad_compilers.version" title="Link to this definition"></a></dt>
+<dd><p>Get the version of OpenVCAD</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="pyvcad.html" class="btn btn-neutral float-left" title="pyvcad Module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="pyvcad_rendering.html" class="btn btn-neutral float-right" title="pyvcad_rendering Module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Charles Wade and Robert MacCurdy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+
+
+
+<div class="version-picker" style="padding: 12px; margin-bottom: 12px;">
+  <label for="version-select" style="font-weight: bold; display: block; margin-bottom: 4px; font-size: 0.85em; color: #999;">
+    Version
+  </label>
+  <select id="version-select"
+          onchange="if(this.value) window.location.href=this.value;"
+          style="width: 100%; padding: 4px; border-radius: 4px; border: 1px solid #555; background: #333; color: #eee;">
+    
+      <option value="../v2/index.html"
+              selected>
+        v2
+      </option>
+    
+      <option value="../v3-dev/index.html"
+              >
+        v3-dev
+      </option>
+    
+  </select>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

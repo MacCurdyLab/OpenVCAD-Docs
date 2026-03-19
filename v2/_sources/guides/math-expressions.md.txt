@@ -1,0 +1,171 @@
+# Math Expression Documentation
+
+OpenVCAD uses math expression strings in several nodes, most notably the
+`FGrade` and `Function` nodes. These expressions define how material
+volume fractions or scalar fields vary across space.
+
+```{note}
+OpenVCAD uses the [ExprTk](https://github.com/ArashPartow/exprtk) library for
+parsing math strings. It follows syntax common on most graphing calculators and
+supports many advanced features. See the
+[ExprTk documentation](https://github.com/ArashPartow/exprtk) for the full
+specification.
+```
+
+## Coordinate Systems
+
+The following variables may be used in any math expression to grade based on
+spatial position. You can combine multiple coordinate systems in a single
+expression.
+
+| Name | Form | Variable Names |
+|------|------|----------------|
+| Cartesian | f(x, y, z) | `x`, `y`, `z` |
+| Cylindrical | f(rho, phic, z) | `rho`, `phic`, `z` |
+| Spherical | f(r, theta, phis) | `r`, `theta`, `phis` |
+| Signed Distance | f(d) | `d` |
+
+```{note}
+`phic` corresponds to phi in cylindrical coordinates and `phis` to phi in
+spherical coordinates.
+```
+
+```{note}
+`d` is the signed distance to the surface of the object. Zero is the surface,
+negative values are inside, and positive values are outside. This can be used
+to create conformal gradients.
+```
+
+## Arithmetic & Assignment Operators
+
+| Operator | Definition |
+|----------|------------|
+| `+` | Addition between x and y. (e.g., `x + y`) |
+| `-` | Subtraction between x and y. (e.g., `x - y`) |
+| `*` | Multiplication between x and y. (e.g., `x * y`) |
+| `/` | Division between x and y. (e.g., `x / y`) |
+| `%` | Modulus of x with respect to y. (e.g., `x % y`) |
+| `^` | x to the power of y. (e.g., `x ^ y`) |
+| `:=` | Assign the value of x to y. (e.g., `y := x`) |
+| `+=` | Increment x by the value of the expression on the right-hand side. |
+| `-=` | Decrement x by the value of the expression on the right-hand side. |
+| `*=` | Assign the multiplication of x by the value of the expression to x. |
+| `/=` | Assign the division of x by the value of the expression to x. |
+| `%=` | Assign x modulo the value of the expression on the right-hand side to x. |
+
+## Equalities & Inequalities
+
+| Operator | Definition |
+|----------|------------|
+| `==` or `=` | True only if x is strictly equal to y. (e.g., `x == y`) |
+| `<>` or `!=` | True only if x does not equal y. (e.g., `x != y`) |
+| `<` | True only if x is less than y. (e.g., `x < y`) |
+| `<=` | True only if x is less than or equal to y. (e.g., `x <= y`) |
+| `>` | True only if x is greater than y. (e.g., `x > y`) |
+| `>=` | True only if x is greater than or equal to y. (e.g., `x >= y`) |
+
+## Boolean Operations
+
+| Operator | Definition |
+|----------|------------|
+| `true` | True state or any value other than zero (typically 1). |
+| `false` | False state, value of exactly zero. |
+| `and` | Logical AND, True only if x and y are both true. (e.g., `x and y`) |
+| `or` | Logical OR, True if either x or y is true. (e.g., `x or y`) |
+| `not` | Logical NOT, negates the logical sense of the input. (e.g., `not x`) |
+| `xor` | Logical XOR, True only if the logical states of x and y differ. |
+| `nand` | Logical NAND, True only if either x or y is false. |
+| `nor` | Logical NOR, True only if both x and y are false. |
+| `mand` | Multi-input logical AND, True only if all inputs are true. |
+| `mor` | Multi-input logical OR, True if at least one input is true. |
+
+## General Purpose Functions
+
+| Function | Definition |
+|----------|------------|
+| `abs` | Absolute value of x. (e.g., `abs(x)`) |
+| `avg` | Average of all inputs. (e.g., `avg(x, y, z)`) |
+| `ceil` | Smallest integer greater than or equal to x. |
+| `floor` | Largest integer less than or equal to x. |
+| `sqrt` | Square root of x, where x >= 0. (e.g., `sqrt(x)`) |
+| `log` | Natural logarithm of x. (e.g., `log(x)`) |
+| `exp` | e to the power of x. (e.g., `exp(x)`) |
+| `pow` | x to the power of y. (e.g., `pow(x, y)`) |
+| `max` | Largest value of all inputs. (e.g., `max(x, y, z)`) |
+| `min` | Smallest value of all inputs. (e.g., `min(x, y, z)`) |
+| `clamp` | Clamp x between low and high. (e.g., `clamp(low, x, high)`) |
+
+## Trigonometry Functions
+
+| Function | Definition |
+|----------|------------|
+| `sin` | Sine of x. (e.g., `sin(x)`) |
+| `cos` | Cosine of x. (e.g., `cos(x)`) |
+| `tan` | Tangent of x. (e.g., `tan(x)`) |
+| `asin` | Arc sine of x, in radians. |
+| `acos` | Arc cosine of x, in radians. |
+| `atan` | Arc tangent of x, in radians. |
+| `deg2rad` | Convert x from degrees to radians. (e.g., `deg2rad(x)`) |
+| `rad2deg` | Convert x from radians to degrees. (e.g., `rad2deg(x)`) |
+
+## Constants
+
+| Constant | Value |
+|----------|-------|
+| `pi` | 3.14159... |
+| `e` | 2.71828... |
+
+## Examples
+
+### Linear gradient along X
+
+A bar that transitions from 100% red at `x = -50` to 100% blue at `x = 50`:
+
+```python
+root = pv.FGrade(
+    ["x/100 + 0.5", "-x/100 + 0.5"],
+    [materials.id("red"), materials.id("blue")],
+    False
+)
+```
+
+### Radial gradient
+
+A sphere that is one material at the center and another at the surface:
+
+```python
+root = pv.FGrade(
+    ["clamp(0, 1 - r/5, 1)", "clamp(0, r/5, 1)"],
+    [materials.id("red"), materials.id("blue")],
+    False
+)
+```
+
+### Angular gradient (cylindrical)
+
+A gradient that varies with angle around the Z-axis:
+
+```python
+root = pv.FGrade(
+    ["(phic + pi) / (2*pi)", "1 - (phic + pi) / (2*pi)"],
+    [materials.id("red"), materials.id("blue")],
+    False
+)
+```
+
+### Conformal gradient (signed distance)
+
+A gradient that follows the surface contour of the object:
+
+```python
+root = pv.FGrade(
+    ["clamp(0, -d/2 + 0.5, 1)", "clamp(0, d/2 + 0.5, 1)"],
+    [materials.id("red"), materials.id("blue")],
+    False
+)
+```
+
+```{important}
+All PDFs at any spatial location must sum to 1. If they don't, OpenVCAD will
+normalize them, but this may produce unexpected results.
+```

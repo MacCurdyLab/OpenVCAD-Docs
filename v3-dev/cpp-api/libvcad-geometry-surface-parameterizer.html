@@ -1,0 +1,324 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Geometry — surface parameterization &mdash; OpenVCAD 3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=110ea713"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Utilities" href="libvcad-utils.html" />
+    <link rel="prev" title="Geometry — 3D" href="libvcad-geometry-3d.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenVCAD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/math-expressions.html">Math Expression Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad_compilers/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad_rendering/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code> package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">C++ API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-core.html">Tree — core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-leaves.html">Tree — leaves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-attribute.html">Tree — attribute nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-composition.html">Tree — composition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-attributes.html">Attributes (v3 model)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-volumes.html">Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-2d.html">Geometry — 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-3d.html">Geometry — 3D</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Geometry — surface parameterization</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv421SurfaceParamerterizer"><code class="docutils literal notranslate"><span class="pre">SurfaceParamerterizer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N21SurfaceParamerterizer17get_point_on_meshEv"><code class="docutils literal notranslate"><span class="pre">get_point_on_mesh()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK21SurfaceParamerterizer8is_validEv"><code class="docutils literal notranslate"><span class="pre">is_valid()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N21SurfaceParamerterizer10lift_pointEN3glm4vec2E"><code class="docutils literal notranslate"><span class="pre">lift_point()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N21SurfaceParamerterizer13project_pointEN3glm4vec3E"><code class="docutils literal notranslate"><span class="pre">project_point()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N21SurfaceParamerterizer21SurfaceParamerterizerENSt6stringE"><code class="docutils literal notranslate"><span class="pre">SurfaceParamerterizer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK21SurfaceParamerterizer23barycentric_in_triangleERK10SC_Point_2RK10SC_Point_2RK10SC_Point_2RK10SC_Point_2RdRdRd"><code class="docutils literal notranslate"><span class="pre">barycentric_in_triangle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK21SurfaceParamerterizer25closest_point_on_triangleERK10SC_Point_3RK10SC_Point_3RK10SC_Point_3RK10SC_Point_3RdRdRd"><code class="docutils literal notranslate"><span class="pre">closest_point_on_triangle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N21SurfaceParamerterizer16compute_uv_bbox_Ev"><code class="docutils literal notranslate"><span class="pre">compute_uv_bbox_()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK21SurfaceParamerterizer9from_unitERK10SC_Point_2"><code class="docutils literal notranslate"><span class="pre">from_unit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK21SurfaceParamerterizer4liftERK7UvIndexR10SC_Point_3"><code class="docutils literal notranslate"><span class="pre">lift()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK21SurfaceParamerterizer6locateERK10SC_Point_2R7UvIndex"><code class="docutils literal notranslate"><span class="pre">locate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK21SurfaceParamerterizer7to_unitERK10SC_Point_2"><code class="docutils literal notranslate"><span class="pre">to_unit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N21SurfaceParamerterizer4eps_E"><code class="docutils literal notranslate"><span class="pre">eps_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N21SurfaceParamerterizer3sm_E"><code class="docutils literal notranslate"><span class="pre">sm_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N21SurfaceParamerterizer7uv_map_E"><code class="docutils literal notranslate"><span class="pre">uv_map_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N21SurfaceParamerterizer7uv_max_E"><code class="docutils literal notranslate"><span class="pre">uv_max_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N21SurfaceParamerterizer7uv_min_E"><code class="docutils literal notranslate"><span class="pre">uv_min_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N21SurfaceParamerterizer6valid_E"><code class="docutils literal notranslate"><span class="pre">valid_</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N21SurfaceParamerterizer7UvIndexE"><code class="docutils literal notranslate"><span class="pre">SurfaceParamerterizer::UvIndex</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-utils.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-analysis.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-compilers.html">libvcad_compilers — compiler classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-utilities.html">libvcad_compilers — utilities</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../papers.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenVCAD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">C++ API Reference</a></li>
+      <li class="breadcrumb-item active">Geometry — surface parameterization</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/cpp-api/libvcad-geometry-surface-parameterizer.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="geometry-surface-parameterization">
+<h1>Geometry — surface parameterization<a class="headerlink" href="#geometry-surface-parameterization" title="Link to this heading"></a></h1>
+<p><code class="docutils literal notranslate"><span class="pre">SurfaceParamerterizer</span></code> lives in its own page so Breathe does not emit
+duplicate CGAL typedef declarations that also appear in <code class="docutils literal notranslate"><span class="pre">primitives.h</span></code>.</p>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv421SurfaceParamerterizer">
+<span id="_CPPv321SurfaceParamerterizer"></span><span id="_CPPv221SurfaceParamerterizer"></span><span id="SurfaceParamerterizer"></span><span class="target" id="class_surface_paramerterizer"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SurfaceParamerterizer</span></span></span><a class="headerlink" href="#_CPPv421SurfaceParamerterizer" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;surface_paramerterizer.h&gt;</em></div>
+<p>Component mapping operations matching uniform 2D parametric plane domains evaluated against 3D base mesh topologies. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N21SurfaceParamerterizer17get_point_on_meshEv">
+<span id="_CPPv3N21SurfaceParamerterizer17get_point_on_meshEv"></span><span id="_CPPv2N21SurfaceParamerterizer17get_point_on_meshEv"></span><span id="SurfaceParamerterizer::get_point_on_mesh"></span><span class="target" id="class_surface_paramerterizer_1ab92a94d3ddc243d8454cc4b847c0dec5"></span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_point_on_mesh</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N21SurfaceParamerterizer17get_point_on_meshEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Fetch initial source point component geometry to debug projection limits. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Extracted vertex coordinate parameter. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK21SurfaceParamerterizer8is_validEv">
+<span id="_CPPv3NK21SurfaceParamerterizer8is_validEv"></span><span id="_CPPv2NK21SurfaceParamerterizer8is_validEv"></span><span id="SurfaceParamerterizer::is_validC"></span><span class="target" id="class_surface_paramerterizer_1acdc1d9270dc849a59d90f4c302676657"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">is_valid</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK21SurfaceParamerterizer8is_validEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Check if parameterization was successful. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N21SurfaceParamerterizer10lift_pointEN3glm4vec2E">
+<span id="_CPPv3N21SurfaceParamerterizer10lift_pointEN3glm4vec2E"></span><span id="_CPPv2N21SurfaceParamerterizer10lift_pointEN3glm4vec2E"></span><span id="SurfaceParamerterizer::lift_point__glm::vec2"></span><span class="target" id="class_surface_paramerterizer_1a78a7acd6de6879a8dfb8e98f8458de46"></span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">lift_point</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec2</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">uv_point</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N21SurfaceParamerterizer10lift_pointEN3glm4vec2E" title="Link to this definition"></a><br /></dt>
+<dd><p>Lifts a point from normalized UV space [0,1]^2 to 3D space on the surface. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>uv_point</strong> – The normalized UV point to lift (coordinates in [0,1]) </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The lifted 3D point on the surface, or glm::vec3(0,0,0) if outside </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N21SurfaceParamerterizer13project_pointEN3glm4vec3E">
+<span id="_CPPv3N21SurfaceParamerterizer13project_pointEN3glm4vec3E"></span><span id="_CPPv2N21SurfaceParamerterizer13project_pointEN3glm4vec3E"></span><span id="SurfaceParamerterizer::project_point__glm::vec3"></span><span class="target" id="class_surface_paramerterizer_1a060466d7cb6f0e540fe418596e5c9d49"></span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec2</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">project_point</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">xyz_point</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N21SurfaceParamerterizer13project_pointEN3glm4vec3E" title="Link to this definition"></a><br /></dt>
+<dd><p>Evaluates an arbitrary 3D position extracting associated parametric UV coordinate mappings evaluating closest surface offsets. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>xyz_point</strong> – Source 3D coordinates. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>Mapped offset coordinate components in projected space. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N21SurfaceParamerterizer21SurfaceParamerterizerENSt6stringE">
+<span id="_CPPv3N21SurfaceParamerterizer21SurfaceParamerterizerENSt6stringE"></span><span id="_CPPv2N21SurfaceParamerterizer21SurfaceParamerterizerENSt6stringE"></span><span id="SurfaceParamerterizer::SurfaceParamerterizer__ss"></span><span class="target" id="class_surface_paramerterizer_1a15c1913e7a8ff776132738b71d4b2498"></span><span class="sig-name descname"><span class="n"><span class="pre">SurfaceParamerterizer</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">surface_mesh_path</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N21SurfaceParamerterizer21SurfaceParamerterizerENSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd><p>Constructs a parameterization space loaded against an input base mesh representation. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>surface_mesh_path</strong> – File location mapping initial boundary geometries. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-functions">Private Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK21SurfaceParamerterizer23barycentric_in_triangleERK10SC_Point_2RK10SC_Point_2RK10SC_Point_2RK10SC_Point_2RdRdRd">
+<span id="_CPPv3NK21SurfaceParamerterizer23barycentric_in_triangleERK10SC_Point_2RK10SC_Point_2RK10SC_Point_2RK10SC_Point_2RdRdRd"></span><span id="_CPPv2NK21SurfaceParamerterizer23barycentric_in_triangleERK10SC_Point_2RK10SC_Point_2RK10SC_Point_2RK10SC_Point_2RdRdRd"></span><span id="SurfaceParamerterizer::barycentric_in_triangle__SC_Point_2CR.SC_Point_2CR.SC_Point_2CR.SC_Point_2CR.doubleR.doubleR.doubleRC"></span><span class="target" id="class_surface_paramerterizer_1a63b11ff796c86d8ccabdef92f95ce647"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">barycentric_in_triangle</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">SC_Point_2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">q</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">SC_Point_2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">a</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">SC_Point_2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">b</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">SC_Point_2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">c</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">l0</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">l1</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">l2</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK21SurfaceParamerterizer23barycentric_in_triangleERK10SC_Point_2RK10SC_Point_2RK10SC_Point_2RK10SC_Point_2RdRdRd" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK21SurfaceParamerterizer25closest_point_on_triangleERK10SC_Point_3RK10SC_Point_3RK10SC_Point_3RK10SC_Point_3RdRdRd">
+<span id="_CPPv3NK21SurfaceParamerterizer25closest_point_on_triangleERK10SC_Point_3RK10SC_Point_3RK10SC_Point_3RK10SC_Point_3RdRdRd"></span><span id="_CPPv2NK21SurfaceParamerterizer25closest_point_on_triangleERK10SC_Point_3RK10SC_Point_3RK10SC_Point_3RK10SC_Point_3RdRdRd"></span><span id="SurfaceParamerterizer::closest_point_on_triangle__SC_Point_3CR.SC_Point_3CR.SC_Point_3CR.SC_Point_3CR.doubleR.doubleR.doubleRC"></span><span class="target" id="class_surface_paramerterizer_1a7b81561e3155ecc633d5f6e5df8b672d"></span><span class="n"><span class="pre">SC_Point_3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">closest_point_on_triangle</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">SC_Point_3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">q</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">SC_Point_3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">a</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">SC_Point_3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">b</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">SC_Point_3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">c</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">l0</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">l1</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">l2</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK21SurfaceParamerterizer25closest_point_on_triangleERK10SC_Point_3RK10SC_Point_3RK10SC_Point_3RK10SC_Point_3RdRdRd" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N21SurfaceParamerterizer16compute_uv_bbox_Ev">
+<span id="_CPPv3N21SurfaceParamerterizer16compute_uv_bbox_Ev"></span><span id="_CPPv2N21SurfaceParamerterizer16compute_uv_bbox_Ev"></span><span id="SurfaceParamerterizer::compute_uv_bbox_"></span><span class="target" id="class_surface_paramerterizer_1a0b76ed4bd941a959c0ce314f6a0edd4a"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">compute_uv_bbox_</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N21SurfaceParamerterizer16compute_uv_bbox_Ev" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK21SurfaceParamerterizer9from_unitERK10SC_Point_2">
+<span id="_CPPv3NK21SurfaceParamerterizer9from_unitERK10SC_Point_2"></span><span id="_CPPv2NK21SurfaceParamerterizer9from_unitERK10SC_Point_2"></span><span id="SurfaceParamerterizer::from_unit__SC_Point_2CRC"></span><span class="target" id="class_surface_paramerterizer_1ae2421c39b69de46db129dca51184b64c"></span><span class="n"><span class="pre">SC_Point_2</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">from_unit</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">SC_Point_2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">p01</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK21SurfaceParamerterizer9from_unitERK10SC_Point_2" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK21SurfaceParamerterizer4liftERK7UvIndexR10SC_Point_3">
+<span id="_CPPv3NK21SurfaceParamerterizer4liftERK7UvIndexR10SC_Point_3"></span><span id="_CPPv2NK21SurfaceParamerterizer4liftERK7UvIndexR10SC_Point_3"></span><span id="SurfaceParamerterizer::lift__UvIndexCR.SC_Point_3RC"></span><span class="target" id="class_surface_paramerterizer_1af8ba6b36ff63ffa4c0fab60e5668ba21"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">lift</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N21SurfaceParamerterizer7UvIndexE" title="SurfaceParamerterizer::UvIndex"><span class="n"><span class="pre">UvIndex</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">idx</span></span>, <span class="n"><span class="pre">SC_Point_3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">out_p</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK21SurfaceParamerterizer4liftERK7UvIndexR10SC_Point_3" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK21SurfaceParamerterizer6locateERK10SC_Point_2R7UvIndex">
+<span id="_CPPv3NK21SurfaceParamerterizer6locateERK10SC_Point_2R7UvIndex"></span><span id="_CPPv2NK21SurfaceParamerterizer6locateERK10SC_Point_2R7UvIndex"></span><span id="SurfaceParamerterizer::locate__SC_Point_2CR.UvIndexRC"></span><span class="target" id="class_surface_paramerterizer_1ad186d8ea071d6aeaf05b85ed43724aa2"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">locate</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">SC_Point_2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">q_uv</span></span>, <a class="reference internal" href="#_CPPv4N21SurfaceParamerterizer7UvIndexE" title="SurfaceParamerterizer::UvIndex"><span class="n"><span class="pre">UvIndex</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">out_idx</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK21SurfaceParamerterizer6locateERK10SC_Point_2R7UvIndex" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK21SurfaceParamerterizer7to_unitERK10SC_Point_2">
+<span id="_CPPv3NK21SurfaceParamerterizer7to_unitERK10SC_Point_2"></span><span id="_CPPv2NK21SurfaceParamerterizer7to_unitERK10SC_Point_2"></span><span id="SurfaceParamerterizer::to_unit__SC_Point_2CRC"></span><span class="target" id="class_surface_paramerterizer_1ae4b3b1d9f1cc450ebdd1d78cd4416d85"></span><span class="n"><span class="pre">SC_Point_2</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">to_unit</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">SC_Point_2</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">p</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK21SurfaceParamerterizer7to_unitERK10SC_Point_2" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21SurfaceParamerterizer4eps_E">
+<span id="_CPPv3N21SurfaceParamerterizer4eps_E"></span><span id="_CPPv2N21SurfaceParamerterizer4eps_E"></span><span id="SurfaceParamerterizer::eps___double"></span><span class="target" id="class_surface_paramerterizer_1a5194a3667261b8639b82f04e0a9030c7"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">eps_</span></span></span><a class="headerlink" href="#_CPPv4N21SurfaceParamerterizer4eps_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21SurfaceParamerterizer3sm_E">
+<span id="_CPPv3N21SurfaceParamerterizer3sm_E"></span><span id="_CPPv2N21SurfaceParamerterizer3sm_E"></span><span id="SurfaceParamerterizer::sm___SC_SurfaceMesh"></span><span class="target" id="class_surface_paramerterizer_1ab4f988070ddde6ae62a5a2756f1a9953"></span><span class="n"><span class="pre">SC_SurfaceMesh</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sm_</span></span></span><a class="headerlink" href="#_CPPv4N21SurfaceParamerterizer3sm_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21SurfaceParamerterizer7uv_map_E">
+<span id="_CPPv3N21SurfaceParamerterizer7uv_map_E"></span><span id="_CPPv2N21SurfaceParamerterizer7uv_map_E"></span><span id="SurfaceParamerterizer::uv_map___UV_pmap"></span><span class="target" id="class_surface_paramerterizer_1ada718b0445a13d33567e117f7c257839"></span><span class="n"><span class="pre">UV_pmap</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">uv_map_</span></span></span><a class="headerlink" href="#_CPPv4N21SurfaceParamerterizer7uv_map_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21SurfaceParamerterizer7uv_max_E">
+<span id="_CPPv3N21SurfaceParamerterizer7uv_max_E"></span><span id="_CPPv2N21SurfaceParamerterizer7uv_max_E"></span><span id="SurfaceParamerterizer::uv_max___SC_Point_2"></span><span class="target" id="class_surface_paramerterizer_1ae1c2db09538d22c98f1d7cfccb3c6840"></span><span class="n"><span class="pre">SC_Point_2</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">uv_max_</span></span></span><a class="headerlink" href="#_CPPv4N21SurfaceParamerterizer7uv_max_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21SurfaceParamerterizer7uv_min_E">
+<span id="_CPPv3N21SurfaceParamerterizer7uv_min_E"></span><span id="_CPPv2N21SurfaceParamerterizer7uv_min_E"></span><span id="SurfaceParamerterizer::uv_min___SC_Point_2"></span><span class="target" id="class_surface_paramerterizer_1a918b97b01c175ef9428226795e9b0822"></span><span class="n"><span class="pre">SC_Point_2</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">uv_min_</span></span></span><a class="headerlink" href="#_CPPv4N21SurfaceParamerterizer7uv_min_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21SurfaceParamerterizer6valid_E">
+<span id="_CPPv3N21SurfaceParamerterizer6valid_E"></span><span id="_CPPv2N21SurfaceParamerterizer6valid_E"></span><span id="SurfaceParamerterizer::valid___b"></span><span class="target" id="class_surface_paramerterizer_1a66db13ffa7c10e9d77224517483e37e7"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">valid_</span></span></span><a class="headerlink" href="#_CPPv4N21SurfaceParamerterizer6valid_E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N21SurfaceParamerterizer7UvIndexE">
+<span id="_CPPv3N21SurfaceParamerterizer7UvIndexE"></span><span id="_CPPv2N21SurfaceParamerterizer7UvIndexE"></span><span id="SurfaceParamerterizer::UvIndex"></span><span class="target" id="struct_surface_paramerterizer_1_1_uv_index"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">UvIndex</span></span></span><a class="headerlink" href="#_CPPv4N21SurfaceParamerterizer7UvIndexE" title="Link to this definition"></a><br /></dt>
+<dd><div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21SurfaceParamerterizer7UvIndex1fE">
+<span id="_CPPv3N21SurfaceParamerterizer7UvIndex1fE"></span><span id="_CPPv2N21SurfaceParamerterizer7UvIndex1fE"></span><span id="SurfaceParamerterizer::UvIndex::f__face_descriptor"></span><span class="target" id="struct_surface_paramerterizer_1_1_uv_index_1ae836212b00f314422bee237a8b53e570"></span><span class="n"><span class="pre">face_descriptor</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">f</span></span></span><a class="headerlink" href="#_CPPv4N21SurfaceParamerterizer7UvIndex1fE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N21SurfaceParamerterizer7UvIndex1wE">
+<span id="_CPPv3N21SurfaceParamerterizer7UvIndex1wE"></span><span id="_CPPv2N21SurfaceParamerterizer7UvIndex1wE"></span><span id="SurfaceParamerterizer::UvIndex::w__std::array:double.3:"></span><span class="target" id="struct_surface_paramerterizer_1_1_uv_index_1a4f473670186d0ec212d3caf429eab62f"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">array</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">3</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">w</span></span></span><a class="headerlink" href="#_CPPv4N21SurfaceParamerterizer7UvIndex1wE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="libvcad-geometry-3d.html" class="btn btn-neutral float-left" title="Geometry — 3D" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="libvcad-utils.html" class="btn btn-neutral float-right" title="Utilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Charles Wade and Robert MacCurdy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

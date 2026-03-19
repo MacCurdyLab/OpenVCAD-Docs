@@ -1,0 +1,341 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Compilers &mdash; OpenVCAD 3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=110ea713"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Utilities" href="utilities.html" />
+    <link rel="prev" title="Overview" href="overview.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenVCAD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides/math-expressions.html">Math Expression Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1"><a class="reference internal" href="../pyvcad/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> package</a></li>
+<li class="toctree-l1 current"><a class="reference internal" href="index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code> module</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Compilers</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.CompilerBase"><code class="docutils literal notranslate"><span class="pre">CompilerBase</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad_compilers.CompilerBase.__init__"><code class="docutils literal notranslate"><span class="pre">CompilerBase.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad_compilers.CompilerBase.cancel"><code class="docutils literal notranslate"><span class="pre">CompilerBase.cancel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad_compilers.CompilerBase.compile"><code class="docutils literal notranslate"><span class="pre">CompilerBase.compile()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad_compilers.CompilerBase.set_progress_callback"><code class="docutils literal notranslate"><span class="pre">CompilerBase.set_progress_callback()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad_compilers.CompilerBase.supported_attributes"><code class="docutils literal notranslate"><span class="pre">CompilerBase.supported_attributes()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.MaterialInkjetCompiler"><code class="docutils literal notranslate"><span class="pre">MaterialInkjetCompiler</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad_compilers.MaterialInkjetCompiler.__init__"><code class="docutils literal notranslate"><span class="pre">MaterialInkjetCompiler.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad_compilers.MaterialInkjetCompiler.material_voxel_counts"><code class="docutils literal notranslate"><span class="pre">MaterialInkjetCompiler.material_voxel_counts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad_compilers.MaterialInkjetCompiler.resolution"><code class="docutils literal notranslate"><span class="pre">MaterialInkjetCompiler.resolution()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad_compilers.MaterialInkjetCompiler.set_fallback_material_id"><code class="docutils literal notranslate"><span class="pre">MaterialInkjetCompiler.set_fallback_material_id()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad_compilers.MaterialInkjetCompiler.set_strict_mode"><code class="docutils literal notranslate"><span class="pre">MaterialInkjetCompiler.set_strict_mode()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.ColorInkjetCompiler"><code class="docutils literal notranslate"><span class="pre">ColorInkjetCompiler</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad_compilers.ColorInkjetCompiler.__init__"><code class="docutils literal notranslate"><span class="pre">ColorInkjetCompiler.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad_compilers.ColorInkjetCompiler.resolution"><code class="docutils literal notranslate"><span class="pre">ColorInkjetCompiler.resolution()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad_compilers.ColorInkjetCompiler.set_fallback_color"><code class="docutils literal notranslate"><span class="pre">ColorInkjetCompiler.set_fallback_color()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad_compilers.ColorInkjetCompiler.set_strict_mode"><code class="docutils literal notranslate"><span class="pre">ColorInkjetCompiler.set_strict_mode()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad_compilers.SlicerProjectCompiler"><code class="docutils literal notranslate"><span class="pre">SlicerProjectCompiler</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad_compilers.SlicerProjectCompiler.__init__"><code class="docutils literal notranslate"><span class="pre">SlicerProjectCompiler.__init__()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pyvcad_rendering/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code> package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-api/index.html">C++ API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../papers.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenVCAD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code> module</a></li>
+      <li class="breadcrumb-item active">Compilers</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/python-api/pyvcad_compilers/compilers.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="compilers">
+<h1>Compilers<a class="headerlink" href="#compilers" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad_compilers.CompilerBase">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_compilers.</span></span><span class="sig-name descname"><span class="pre">CompilerBase</span></span><a class="headerlink" href="#pyvcad_compilers.CompilerBase" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.CompilerBase.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad_compilers.CompilerBase.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.CompilerBase.cancel">
+<span class="sig-name descname"><span class="pre">cancel</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.CompilerBase" title="pyvcad_compilers.pyvcad_compilers.CompilerBase"><span class="pre">pyvcad_compilers.pyvcad_compilers.CompilerBase</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.CompilerBase.cancel" title="Link to this definition"></a></dt>
+<dd><p>Cancels the compilation.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.CompilerBase.compile">
+<span class="sig-name descname"><span class="pre">compile</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.CompilerBase" title="pyvcad_compilers.pyvcad_compilers.CompilerBase"><span class="pre">pyvcad_compilers.pyvcad_compilers.CompilerBase</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.CompilerBase.compile" title="Link to this definition"></a></dt>
+<dd><p>Compiles the project.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.CompilerBase.set_progress_callback">
+<span class="sig-name descname"><span class="pre">set_progress_callback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.CompilerBase" title="pyvcad_compilers.pyvcad_compilers.CompilerBase"><span class="pre">pyvcad_compilers.pyvcad_compilers.CompilerBase</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.CompilerBase.set_progress_callback" title="Link to this definition"></a></dt>
+<dd><p>Sets the progress callback function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>progress_callback</strong> (<em>function</em>) – The progress callback function.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.CompilerBase.supported_attributes">
+<span class="sig-name descname"><span class="pre">supported_attributes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.CompilerBase" title="pyvcad_compilers.pyvcad_compilers.CompilerBase"><span class="pre">pyvcad_compilers.pyvcad_compilers.CompilerBase</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad_compilers.CompilerBase.supported_attributes" title="Link to this definition"></a></dt>
+<dd><p>Returns the list of attribute names this compiler supports.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad_compilers.MaterialInkjetCompiler">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_compilers.</span></span><span class="sig-name descname"><span class="pre">MaterialInkjetCompiler</span></span><a class="headerlink" href="#pyvcad_compilers.MaterialInkjetCompiler" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.MaterialInkjetCompiler.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.MaterialInkjetCompiler" title="pyvcad_compilers.pyvcad_compilers.MaterialInkjetCompiler"><span class="pre">pyvcad_compilers.pyvcad_compilers.MaterialInkjetCompiler</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../pyvcad/tree.html#pyvcad.Node" title="pyvcad.pyvcad.Node"><span class="pre">pyvcad.pyvcad.Node</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../pyvcad/geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_defs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../pyvcad/utilities.html#pyvcad.MaterialDefs" title="pyvcad.pyvcad.MaterialDefs"><span class="pre">pyvcad.pyvcad.MaterialDefs</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">liquid_keep_out_distance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.MaterialInkjetCompiler.__init__" title="Link to this definition"></a></dt>
+<dd><p>Constructor. Creates a MaterialInkjetCompiler object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root</strong> (<a class="reference internal" href="../pyvcad/tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The root node of the tree.</p></li>
+<li><p><strong>voxel_size</strong> (<a class="reference internal" href="../pyvcad/attributes.html#pyvcad.Attribute.ReturnType.vec3" title="pyvcad.Attribute.ReturnType.vec3"><em>vec3</em></a>) – The size of the voxel (can be asymmetric).</p></li>
+<li><p><strong>output_directory</strong> (<em>str</em>) – The output directory.</p></li>
+<li><p><strong>file_prefix</strong> (<em>str</em>) – The file prefix that will be prepended with the slice index.</p></li>
+<li><p><strong>material_defs</strong> (<a class="reference internal" href="../pyvcad/utilities.html#pyvcad.MaterialDefs" title="pyvcad.MaterialDefs"><em>MaterialDefs</em></a>) – The material definitions.</p></li>
+<li><p><strong>liquid_keep_out_distance</strong> (<em>float</em><em>, </em><em>optional</em>) – The liquid keep out distance. Defaults to 0.0.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.MaterialInkjetCompiler.material_voxel_counts">
+<span class="sig-name descname"><span class="pre">material_voxel_counts</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.MaterialInkjetCompiler" title="pyvcad_compilers.pyvcad_compilers.MaterialInkjetCompiler"><span class="pre">pyvcad_compilers.pyvcad_compilers.MaterialInkjetCompiler</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad_compilers.MaterialInkjetCompiler.material_voxel_counts" title="Link to this definition"></a></dt>
+<dd><p>Returns a dictionary mapping material IDs to voxel counts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.MaterialInkjetCompiler.resolution">
+<span class="sig-name descname"><span class="pre">resolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.MaterialInkjetCompiler" title="pyvcad_compilers.pyvcad_compilers.MaterialInkjetCompiler"><span class="pre">pyvcad_compilers.pyvcad_compilers.MaterialInkjetCompiler</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad_compilers.MaterialInkjetCompiler.resolution" title="Link to this definition"></a></dt>
+<dd><p>Returns the resolution of the compiled model as a tuple (x_resolution, y_resolution, z_resolution).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.MaterialInkjetCompiler.set_fallback_material_id">
+<span class="sig-name descname"><span class="pre">set_fallback_material_id</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.MaterialInkjetCompiler" title="pyvcad_compilers.pyvcad_compilers.MaterialInkjetCompiler"><span class="pre">pyvcad_compilers.pyvcad_compilers.MaterialInkjetCompiler</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.MaterialInkjetCompiler.set_fallback_material_id" title="Link to this definition"></a></dt>
+<dd><p>Set the fallback material ID for voxels where VOLUME_FRACTIONS is
+undefined. Only applies when strict mode is off. The default
+fallback is material ID 0 (void).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>material_id</strong> (<em>int</em>) – The fallback material ID.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.MaterialInkjetCompiler.set_strict_mode">
+<span class="sig-name descname"><span class="pre">set_strict_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.MaterialInkjetCompiler" title="pyvcad_compilers.pyvcad_compilers.MaterialInkjetCompiler"><span class="pre">pyvcad_compilers.pyvcad_compilers.MaterialInkjetCompiler</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.MaterialInkjetCompiler.set_strict_mode" title="Link to this definition"></a></dt>
+<dd><p>Enable or disable strict mode.</p>
+<p>When strict mode is on, the compiler raises RuntimeError if any
+inside voxel is missing the VOLUME_FRACTIONS attribute. When off
+(the default), the fallback material is used for undefined regions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>strict</strong> (<em>bool</em>) – True to enable strict mode.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad_compilers.ColorInkjetCompiler">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_compilers.</span></span><span class="sig-name descname"><span class="pre">ColorInkjetCompiler</span></span><a class="headerlink" href="#pyvcad_compilers.ColorInkjetCompiler" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.ColorInkjetCompiler.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.ColorInkjetCompiler" title="pyvcad_compilers.pyvcad_compilers.ColorInkjetCompiler"><span class="pre">pyvcad_compilers.pyvcad_compilers.ColorInkjetCompiler</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../pyvcad/tree.html#pyvcad.Node" title="pyvcad.pyvcad.Node"><span class="pre">pyvcad.pyvcad.Node</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../pyvcad/geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">file_prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">icc_profile</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.ColorInkjetCompiler.__init__" title="Link to this definition"></a></dt>
+<dd><p>Constructor. Creates a ColorInkjetCompiler object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root</strong> (<a class="reference internal" href="../pyvcad/tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The root node of the tree.</p></li>
+<li><p><strong>voxel_size</strong> (<a class="reference internal" href="../pyvcad/attributes.html#pyvcad.Attribute.ReturnType.vec3" title="pyvcad.Attribute.ReturnType.vec3"><em>vec3</em></a>) – The size of the voxel (can be asymmetric).</p></li>
+<li><p><strong>output_directory</strong> (<em>str</em>) – The output directory.</p></li>
+<li><p><strong>file_prefix</strong> (<em>str</em>) – The file prefix that will be prepended with the slice index.</p></li>
+<li><p><strong>icc_profile</strong> (<em>str</em><em>, </em><em>optional</em>) – The ICC profile name. Defaults to ‘default’.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.ColorInkjetCompiler.resolution">
+<span class="sig-name descname"><span class="pre">resolution</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.ColorInkjetCompiler" title="pyvcad_compilers.pyvcad_compilers.ColorInkjetCompiler"><span class="pre">pyvcad_compilers.pyvcad_compilers.ColorInkjetCompiler</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad_compilers.ColorInkjetCompiler.resolution" title="Link to this definition"></a></dt>
+<dd><p>Returns the resolution of the compiled model as a tuple (x_resolution, y_resolution, z_resolution).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.ColorInkjetCompiler.set_fallback_color">
+<span class="sig-name descname"><span class="pre">set_fallback_color</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.ColorInkjetCompiler" title="pyvcad_compilers.pyvcad_compilers.ColorInkjetCompiler"><span class="pre">pyvcad_compilers.pyvcad_compilers.ColorInkjetCompiler</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../pyvcad/geometry.html#pyvcad.Vec4" title="pyvcad.pyvcad.Vec4"><span class="pre">pyvcad.pyvcad.Vec4</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.ColorInkjetCompiler.set_fallback_color" title="Link to this definition"></a></dt>
+<dd><p>Set the fallback sRGBA color for voxels where COLOR_RGBA is
+undefined. Each component is in [0, 1]. Only applies when strict
+mode is off. The default fallback is fully transparent (0,0,0,0).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>color</strong> (<a class="reference internal" href="../pyvcad/geometry.html#pyvcad.Vec4" title="pyvcad.Vec4"><em>Vec4</em></a>) – The fallback sRGBA color.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.ColorInkjetCompiler.set_strict_mode">
+<span class="sig-name descname"><span class="pre">set_strict_mode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.ColorInkjetCompiler" title="pyvcad_compilers.pyvcad_compilers.ColorInkjetCompiler"><span class="pre">pyvcad_compilers.pyvcad_compilers.ColorInkjetCompiler</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">strict</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.ColorInkjetCompiler.set_strict_mode" title="Link to this definition"></a></dt>
+<dd><p>Enable or disable strict mode.</p>
+<p>When strict mode is on, the compiler raises RuntimeError if any
+inside voxel is missing the COLOR_RGBA attribute. When off (the
+default), the fallback color is used for undefined regions.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>strict</strong> (<em>bool</em>) – True to enable strict mode.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad_compilers.SlicerProjectCompiler">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_compilers.</span></span><span class="sig-name descname"><span class="pre">SlicerProjectCompiler</span></span><a class="headerlink" href="#pyvcad_compilers.SlicerProjectCompiler" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="pyvcad_compilers.SlicerProjectCompiler.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad_compilers.SlicerProjectCompiler" title="pyvcad_compilers.pyvcad_compilers.SlicerProjectCompiler"><span class="pre">pyvcad_compilers.pyvcad_compilers.SlicerProjectCompiler</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">root</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../pyvcad/tree.html#pyvcad.Node" title="pyvcad.pyvcad.Node"><span class="pre">pyvcad.pyvcad.Node</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="../pyvcad/geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_file_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">printer_profile_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">filament_profile_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_regions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ignored_attributes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad_compilers.SlicerProjectCompiler.__init__" title="Link to this definition"></a></dt>
+<dd><p>Constructor. Creates a SlicerProjectCompiler object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>root</strong> (<a class="reference internal" href="../pyvcad/tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The root node of the tree.</p></li>
+<li><p><strong>voxel_size</strong> (<a class="reference internal" href="../pyvcad/attributes.html#pyvcad.Attribute.ReturnType.vec3" title="pyvcad.Attribute.ReturnType.vec3"><em>vec3</em></a>) – The size of the voxel.</p></li>
+<li><p><strong>output_file_path</strong> (<em>str</em>) – The output file path for the slicer project.</p></li>
+<li><p><strong>printer_profile_path</strong> (<em>str</em>) – The file path to the printer profile to use for generating the slicer project.</p></li>
+<li><p><strong>filament_profile_path</strong> (<em>str</em>) – The file path to the filament profile to use for generating the slicer project.</p></li>
+<li><p><strong>num_regions</strong> (<em>int</em>) – The number of regions to divide each attribute range into when generating the slicer project. Defaults to 10.</p></li>
+<li><p><strong>ignored_attributes</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – A list of attribute names to ignore when computing meshes and XML settings. Defaults to empty list.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="overview.html" class="btn btn-neutral float-left" title="Overview" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="utilities.html" class="btn btn-neutral float-right" title="Utilities" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Charles Wade and Robert MacCurdy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

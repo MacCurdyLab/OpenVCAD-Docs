@@ -1,0 +1,933 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tree — core &mdash; OpenVCAD 3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=110ea713"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Tree — leaves" href="libvcad-tree-leaves.html" />
+    <link rel="prev" title="C++ API Reference" href="index.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenVCAD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/math-expressions.html">Math Expression Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad_compilers/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad_rendering/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code> package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">C++ API Reference</a><ul class="current">
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tree — core</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv44Node"><code class="docutils literal notranslate"><span class="pre">Node</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node10TreeSampleE"><code class="docutils literal notranslate"><span class="pre">TreeSample</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node14attribute_listEv"><code class="docutils literal notranslate"><span class="pre">attribute_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node12bounding_boxEv"><code class="docutils literal notranslate"><span class="pre">bounding_box()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node5cloneEv"><code class="docutils literal notranslate"><span class="pre">clone()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node8evaluateEddd"><code class="docutils literal notranslate"><span class="pre">evaluate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node13get_attributeERKNSt6stringE"><code class="docutils literal notranslate"><span class="pre">get_attribute()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node8gradientERKN3glm4vec3E"><code class="docutils literal notranslate"><span class="pre">gradient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node8gradientEddd"><code class="docutils literal notranslate"><span class="pre">gradient()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK4Node15gradientEpsilonEv"><code class="docutils literal notranslate"><span class="pre">gradientEpsilon()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node10is_in_bboxEddd"><code class="docutils literal notranslate"><span class="pre">is_in_bbox()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node16nodal_attributesEv"><code class="docutils literal notranslate"><span class="pre">nodal_attributes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node4NodeEv"><code class="docutils literal notranslate"><span class="pre">Node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node7prepareERKN3glm4vec3Ed"><code class="docutils literal notranslate"><span class="pre">prepare()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node6sampleEddd"><code class="docutils literal notranslate"><span class="pre">sample()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node13set_attributeERKNSt6stringERKNSt10shared_ptrI9AttributeEE"><code class="docutils literal notranslate"><span class="pre">set_attribute()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node18setGradientEpsilonEd"><code class="docutils literal notranslate"><span class="pre">setGradientEpsilon()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node4snapEN3glm4vec3E"><code class="docutils literal notranslate"><span class="pre">snap()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4NodeD0Ev"><code class="docutils literal notranslate"><span class="pre">~Node()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node16clone_attributesERKNSt10shared_ptrI4NodeEE"><code class="docutils literal notranslate"><span class="pre">clone_attributes()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node19node_attribute_listEv"><code class="docutils literal notranslate"><span class="pre">node_attribute_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node20prepare_bounding_boxEv"><code class="docutils literal notranslate"><span class="pre">prepare_bounding_box()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node12m_attributesE"><code class="docutils literal notranslate"><span class="pre">m_attributes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node23m_bounding_box_preparedE"><code class="docutils literal notranslate"><span class="pre">m_bounding_box_prepared</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node18m_gradient_epsilonE"><code class="docutils literal notranslate"><span class="pre">m_gradient_epsilon</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node5m_maxE"><code class="docutils literal notranslate"><span class="pre">m_max</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node5m_minE"><code class="docutils literal notranslate"><span class="pre">m_min</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Node18m_sample_bandwidthE"><code class="docutils literal notranslate"><span class="pre">m_sample_bandwidth</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv44Leaf"><code class="docutils literal notranslate"><span class="pre">Leaf</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Leaf4LeafEv"><code class="docutils literal notranslate"><span class="pre">Leaf()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N4Leaf7prepareERKN3glm4vec3Ed"><code class="docutils literal notranslate"><span class="pre">prepare()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv45Unary"><code class="docutils literal notranslate"><span class="pre">Unary</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5Unary14attribute_listEv"><code class="docutils literal notranslate"><span class="pre">attribute_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK5Unary5childEv"><code class="docutils literal notranslate"><span class="pre">child()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5Unary8evaluateEddd"><code class="docutils literal notranslate"><span class="pre">evaluate()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5Unary7prepareERKN3glm4vec3Ed"><code class="docutils literal notranslate"><span class="pre">prepare()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5Unary6sampleEddd"><code class="docutils literal notranslate"><span class="pre">sample()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5Unary8setChildENSt10shared_ptrI4NodeEE"><code class="docutils literal notranslate"><span class="pre">setChild()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5Unary5UnaryEv"><code class="docutils literal notranslate"><span class="pre">Unary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5Unary5UnaryERKNSt10shared_ptrI4NodeEE"><code class="docutils literal notranslate"><span class="pre">Unary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK5Unary11clone_childERKNSt10shared_ptrI5UnaryEE"><code class="docutils literal notranslate"><span class="pre">clone_child()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5Unary20prepare_bounding_boxEv"><code class="docutils literal notranslate"><span class="pre">prepare_bounding_box()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5Unary7m_childE"><code class="docutils literal notranslate"><span class="pre">m_child</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv46Binary"><code class="docutils literal notranslate"><span class="pre">Binary</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6Binary14attribute_listEv"><code class="docutils literal notranslate"><span class="pre">attribute_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6Binary6BinaryEv"><code class="docutils literal notranslate"><span class="pre">Binary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6Binary6BinaryERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI4NodeEE"><code class="docutils literal notranslate"><span class="pre">Binary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK6Binary9leftChildEv"><code class="docutils literal notranslate"><span class="pre">leftChild()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6Binary7prepareERKN3glm4vec3Ed"><code class="docutils literal notranslate"><span class="pre">prepare()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK6Binary10rightChildEv"><code class="docutils literal notranslate"><span class="pre">rightChild()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6Binary12setLeftChildENSt10shared_ptrI4NodeEE"><code class="docutils literal notranslate"><span class="pre">setLeftChild()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6Binary13setRightChildENSt10shared_ptrI4NodeEE"><code class="docutils literal notranslate"><span class="pre">setRightChild()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6Binary14clone_childrenERKNSt10shared_ptrI6BinaryEE"><code class="docutils literal notranslate"><span class="pre">clone_children()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6Binary12m_left_childE"><code class="docutils literal notranslate"><span class="pre">m_left_child</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N6Binary13m_right_childE"><code class="docutils literal notranslate"><span class="pre">m_right_child</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv45N_ary"><code class="docutils literal notranslate"><span class="pre">N_ary</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5N_ary8addChildENSt10shared_ptrI4NodeEE"><code class="docutils literal notranslate"><span class="pre">addChild()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5N_ary14attribute_listEv"><code class="docutils literal notranslate"><span class="pre">attribute_list()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK5N_ary5childE7uint8_t"><code class="docutils literal notranslate"><span class="pre">child()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5N_ary8childrenEv"><code class="docutils literal notranslate"><span class="pre">children()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5N_ary5N_aryEv"><code class="docutils literal notranslate"><span class="pre">N_ary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5N_ary5N_aryERKNSt6vectorINSt10shared_ptrI4NodeEEEE"><code class="docutils literal notranslate"><span class="pre">N_ary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4NK5N_ary11numChildrenEv"><code class="docutils literal notranslate"><span class="pre">numChildren()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5N_ary7prepareERKN3glm4vec3Ed"><code class="docutils literal notranslate"><span class="pre">prepare()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5N_ary14clone_childrenERKNSt10shared_ptrI5N_aryEE"><code class="docutils literal notranslate"><span class="pre">clone_children()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N5N_ary10m_childrenE"><code class="docutils literal notranslate"><span class="pre">m_children</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-leaves.html">Tree — leaves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-attribute.html">Tree — attribute nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-composition.html">Tree — composition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-attributes.html">Attributes (v3 model)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-volumes.html">Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-2d.html">Geometry — 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-3d.html">Geometry — 3D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-surface-parameterizer.html">Geometry — surface parameterization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-utils.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-analysis.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-compilers.html">libvcad_compilers — compiler classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-utilities.html">libvcad_compilers — utilities</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../papers.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenVCAD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">C++ API Reference</a></li>
+      <li class="breadcrumb-item active">Tree — core</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/cpp-api/libvcad-tree-core.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tree-core">
+<h1>Tree — core<a class="headerlink" href="#tree-core" title="Link to this heading"></a></h1>
+<p>Core node types: base class, leaves container, unary, binary, and n-ary nodes.</p>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv44Node">
+<span id="_CPPv34Node"></span><span id="_CPPv24Node"></span><span id="Node"></span><span class="target" id="class_node"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Node</span></span></span><a class="headerlink" href="#_CPPv44Node" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;node.h&gt;</em></div>
+<p>Base class for all nodes in the tree. </p>
+<p>All nodes must implement the following methods:<ul class="simple">
+<li><p><a class="reference internal" href="#class_node_1a57da12c2b74a8a2f58ca435fe81802d4"><span class="std std-ref">evaluate(double x, double y, double z)</span></a> - returns the distance to the surface at the given point</p></li>
+<li><p>material(double x, double y, double z) - returns the material at the given point</p></li>
+<li><p>material_list() - returns a list of all the materials used by the node and its children</p></li>
+<li><p><a class="reference internal" href="#class_node_1a7f28b6054c502f9eba58e7f08953e1ab"><span class="std std-ref">bounding_box()</span></a> - returns the bounding box of the node</p></li>
+<li><p>type() - returns the named type of the node Optional methods:</p></li>
+<li><p><a class="reference internal" href="#class_node_1ab19532f73048ad3e66f7c90baec39757"><span class="std std-ref">prepare()</span></a> - must be called before the tree is evaluated. This is useful for nodes that need to load data before evaluation (e.g. the mesh node loads the mesh data from disk).</p></li>
+</ul>
+</p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>You must call <a class="reference internal" href="#class_node_1ab19532f73048ad3e66f7c90baec39757"><span class="std std-ref">prepare()</span></a> on the root node (and thus the whole tree) before calling <a class="reference internal" href="#class_node_1a57da12c2b74a8a2f58ca435fe81802d4"><span class="std std-ref">evaluate()</span></a>, <a class="reference internal" href="#class_node_1a7cf02d2bc5277d27519d279667ec83eb"><span class="std std-ref">sample()</span></a>, <a class="reference internal" href="#class_node_1a7f28b6054c502f9eba58e7f08953e1ab"><span class="std std-ref">bounding_box()</span></a>, <a class="reference internal" href="#class_node_1aaa095fdee624c7044d3bb65fc06aed1b"><span class="std std-ref">is_in_bbox()</span></a>, <a class="reference internal" href="#class_node_1a17a1eab45355dbd60f2af401fc01b399"><span class="std std-ref">gradient()</span></a>, or <a class="reference internal" href="#class_node_1af7b0ea2559be7970a970ad19338be43e"><span class="std std-ref">snap()</span></a>. Behavior is undefined otherwise. </p>
+</div>
+<p>Subclassed by <a class="reference internal" href="#class_binary"><span class="std std-ref">Binary</span></a>, <a class="reference internal" href="#class_leaf"><span class="std std-ref">Leaf</span></a>, <a class="reference internal" href="#class_n__ary"><span class="std std-ref">N_ary</span></a>, <a class="reference internal" href="#class_unary"><span class="std std-ref">Unary</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-types">Public Types</p>
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node10TreeSampleE">
+<span id="_CPPv3N4Node10TreeSampleE"></span><span id="_CPPv2N4Node10TreeSampleE"></span><span id="Node::TreeSample"></span><span class="target" id="class_node_1acdad41aacfab32335b47aac52baebbb1"></span><span class="k"><span class="pre">typedef</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">optional</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">optional</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-attributes.html#_CPPv416AttributeSamples" title="AttributeSamples"><span class="n"><span class="pre">AttributeSamples</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">TreeSample</span></span></span><a class="headerlink" href="#_CPPv4N4Node10TreeSampleE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node14attribute_listEv">
+<span id="_CPPv3N4Node14attribute_listEv"></span><span id="_CPPv2N4Node14attribute_listEv"></span><span id="Node::attribute_list"></span><span class="target" id="class_node_1af47933f49610a01e3dc0c3ee0789bce6"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">attribute_list</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4Node14attribute_listEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns a list of the attribute names in use by this node and its children. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A list of the attribute names </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node12bounding_boxEv">
+<span id="_CPPv3N4Node12bounding_boxEv"></span><span id="_CPPv2N4Node12bounding_boxEv"></span><span id="Node::bounding_box"></span><span class="target" id="class_node_1a7f28b6054c502f9eba58e7f08953e1ab"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">pair</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">bounding_box</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4Node12bounding_boxEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the bounding box of the node. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This can be used to rapidly determine if a point is within the bounding box of the node if you check that the point is within the bounding box of the node before evaluating the node. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A pair of vectors representing the minimum and maximum corners of the bounding box. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node5cloneEv">
+<span id="_CPPv3N4Node5cloneEv"></span><span id="_CPPv2N4Node5cloneEv"></span><span id="Node::clone"></span><span class="target" id="class_node_1a44c7bbf62749c6bcf5dbc5c7ef06741f"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">clone</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N4Node5cloneEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Clones the node and returns a new instance of the node. </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This may be called before or after <a class="reference internal" href="#class_node_1ab19532f73048ad3e66f7c90baec39757"><span class="std std-ref">prepare()</span></a> is called, however it is always more efficient to call it after. This is because the <a class="reference internal" href="#class_node_1ab19532f73048ad3e66f7c90baec39757"><span class="std std-ref">prepare()</span></a> function must be called on all clones of the node separately. If you call <a class="reference internal" href="#class_node_1ab19532f73048ad3e66f7c90baec39757"><span class="std std-ref">prepare()</span></a> first and then clone the node, the <a class="reference internal" href="#class_node_1a44c7bbf62749c6bcf5dbc5c7ef06741f"><span class="std std-ref">clone()</span></a> operation will copy from memory instead of re-reading from disk. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A new instance of the node </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node8evaluateEddd">
+<span id="_CPPv3N4Node8evaluateEddd"></span><span id="_CPPv2N4Node8evaluateEddd"></span><span id="Node::evaluate__double.double.double"></span><span class="target" id="class_node_1a57da12c2b74a8a2f58ca435fe81802d4"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">optional</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">evaluate</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">z</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N4Node8evaluateEddd" title="Link to this definition"></a><br /></dt>
+<dd><p>Evaluates the node at the given point. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – The x coordinate of the point to evaluate. </p></li>
+<li><p><strong>y</strong> – The y coordinate of the point to evaluate. </p></li>
+<li><p><strong>z</strong> – The z coordinate of the point to evaluate. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>An optional. The distance to the surface at the given point if it is defined, or an empty optional if it is not (outside the domain). </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node13get_attributeERKNSt6stringE">
+<span id="_CPPv3N4Node13get_attributeERKNSt6stringE"></span><span id="_CPPv2N4Node13get_attributeERKNSt6stringE"></span><span id="Node::get_attribute__ssCR"></span><span class="target" id="class_node_1add912bc65f1f32e72423da6c42aa1753"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-attributes.html#_CPPv49Attribute" title="Attribute"><span class="n"><span class="pre">Attribute</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_attribute</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4Node13get_attributeERKNSt6stringE" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the attribute function for the given attribute name. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> – The name of the attribute to get. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The attribute function for the given attribute name. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node8gradientERKN3glm4vec3E">
+<span id="_CPPv3N4Node8gradientERKN3glm4vec3E"></span><span id="_CPPv2N4Node8gradientERKN3glm4vec3E"></span><span id="Node::gradient__glm::vec3CR"></span><span class="target" id="class_node_1adbcd253e4b56a619415cd45354181274"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gradient</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">p</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4Node8gradientERKN3glm4vec3E" title="Link to this definition"></a><br /></dt>
+<dd><p>Computes the gradient of the signed distance field using central differences. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>p</strong> – The point to evaluate. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The gradient vector at the given point. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node8gradientEddd">
+<span id="_CPPv3N4Node8gradientEddd"></span><span id="_CPPv2N4Node8gradientEddd"></span><span id="Node::gradient__double.double.double"></span><span class="target" id="class_node_1a17a1eab45355dbd60f2af401fc01b399"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gradient</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">z</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4Node8gradientEddd" title="Link to this definition"></a><br /></dt>
+<dd><p>Computes the gradient of the signed distance field using central differences. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – The x coordinate of the point. </p></li>
+<li><p><strong>y</strong> – The y coordinate of the point. </p></li>
+<li><p><strong>z</strong> – The z coordinate of the point. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The gradient vector at the given point. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK4Node15gradientEpsilonEv">
+<span id="_CPPv3NK4Node15gradientEpsilonEv"></span><span id="_CPPv2NK4Node15gradientEpsilonEv"></span><span id="Node::gradientEpsilonC"></span><span class="target" id="class_node_1aad360bfbdd7a56d6a5ac7e027f4fe557"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">gradientEpsilon</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK4Node15gradientEpsilonEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Gets the epsilon used for central difference gradient calculations. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The current gradient epsilon. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node10is_in_bboxEddd">
+<span id="_CPPv3N4Node10is_in_bboxEddd"></span><span id="_CPPv2N4Node10is_in_bboxEddd"></span><span id="Node::is_in_bbox__double.double.double"></span><span class="target" id="class_node_1aaa095fdee624c7044d3bb65fc06aed1b"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">is_in_bbox</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">z</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4Node10is_in_bboxEddd" title="Link to this definition"></a><br /></dt>
+<dd><p>Checks if a given point is within the prepared bounding box of the node. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – The x coordinate of the point. </p></li>
+<li><p><strong>y</strong> – The y coordinate of the point. </p></li>
+<li><p><strong>z</strong> – The z coordinate of the point. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the point is within the bounding box (expanded by sample bandwidth), false otherwise. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node16nodal_attributesEv">
+<span id="_CPPv3N4Node16nodal_attributesEv"></span><span id="_CPPv2N4Node16nodal_attributesEv"></span><span id="Node::nodal_attributes"></span><span class="target" id="class_node_1aa8611774c6e60ae7478bb5b6d7550779"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">unordered_map</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-attributes.html#_CPPv49Attribute" title="Attribute"><span class="n"><span class="pre">Attribute</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">nodal_attributes</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4Node16nodal_attributesEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns a map of the actual attributes in use by this node itself (not including children). </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node4NodeEv">
+<span id="_CPPv3N4Node4NodeEv"></span><span id="_CPPv2N4Node4NodeEv"></span><span id="Node::Node"></span><span class="target" id="class_node_1ad7a34779cad45d997bfd6d3d8043c75f"></span><span class="sig-name descname"><span class="n"><span class="pre">Node</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4Node4NodeEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Constructor. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node7prepareERKN3glm4vec3Ed">
+<span id="_CPPv3N4Node7prepareERKN3glm4vec3Ed"></span><span id="_CPPv2N4Node7prepareERKN3glm4vec3Ed"></span><span id="Node::prepare__glm::vec3CR.double"></span><span class="target" id="class_node_1ab19532f73048ad3e66f7c90baec39757"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">prepare</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">voxel_size</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bandwidth</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4Node7prepareERKN3glm4vec3Ed" title="Link to this definition"></a><br /></dt>
+<dd><p>Performs any single-run operations that need to be done before the tree is evaluated. </p>
+<p>Must be called once on the root node before calling <a class="reference internal" href="#class_node_1a57da12c2b74a8a2f58ca435fe81802d4"><span class="std std-ref">evaluate()</span></a>, <a class="reference internal" href="#class_node_1a7cf02d2bc5277d27519d279667ec83eb"><span class="std std-ref">sample()</span></a>, <a class="reference internal" href="#class_node_1a7f28b6054c502f9eba58e7f08953e1ab"><span class="std std-ref">bounding_box()</span></a>, <a class="reference internal" href="#class_node_1aaa095fdee624c7044d3bb65fc06aed1b"><span class="std std-ref">is_in_bbox()</span></a>, <a class="reference internal" href="#class_node_1a17a1eab45355dbd60f2af401fc01b399"><span class="std std-ref">gradient()</span></a>, or <a class="reference internal" href="#class_node_1af7b0ea2559be7970a970ad19338be43e"><span class="std std-ref">snap()</span></a>. This is useful for nodes that need to know the voxel size and bandwidth before evaluation (e.g. <a class="reference internal" href="libvcad-tree-leaves.html#class_mesh"><span class="std std-ref">Mesh</span></a> loads from disk; <a class="reference internal" href="libvcad-tree-composition.html#class_rotate"><span class="std std-ref">Rotate</span></a> sets rotation center). </p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>The default implementation expands the bounding box by the bandwidth in all directions. </p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>voxel_size</strong> – The size of a voxel we plan to sample with </p></li>
+<li><p><strong>bandwidth</strong> – The bandwidth of the tree we are sampling </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node6sampleEddd">
+<span id="_CPPv3N4Node6sampleEddd"></span><span id="_CPPv2N4Node6sampleEddd"></span><span id="Node::sample__double.double.double"></span><span class="target" id="class_node_1a7cf02d2bc5277d27519d279667ec83eb"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv4N4Node10TreeSampleE" title="Node::TreeSample"><span class="n"><span class="pre">TreeSample</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sample</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">z</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4Node6sampleEddd" title="Link to this definition"></a><br /></dt>
+<dd><p>Samples the node at the given point. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> – The x coordinate of the point. </p></li>
+<li><p><strong>y</strong> – The y coordinate of the point. </p></li>
+<li><p><strong>z</strong> – The z coordinate of the point. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>A <a class="reference internal" href="#class_node_1acdad41aacfab32335b47aac52baebbb1"><span class="std std-ref">TreeSample</span></a> containing the signed distance (if any) and attribute samples. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node13set_attributeERKNSt6stringERKNSt10shared_ptrI9AttributeEE">
+<span id="_CPPv3N4Node13set_attributeERKNSt6stringERKNSt10shared_ptrI9AttributeEE"></span><span id="_CPPv2N4Node13set_attributeERKNSt6stringERKNSt10shared_ptrI9AttributeEE"></span><span id="Node::set_attribute__ssCR.std::shared_ptr:Attribute:CR"></span><span class="target" id="class_node_1a8938eb0e288908a5147583aefaca26c1"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_attribute</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">name</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-attributes.html#_CPPv49Attribute" title="Attribute"><span class="n"><span class="pre">Attribute</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">attribute</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4Node13set_attributeERKNSt6stringERKNSt10shared_ptrI9AttributeEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets an attribute function for the node. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – The name of the attribute. </p></li>
+<li><p><strong>attribute</strong> – The attribute function to set. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Throws<span class="colon">:</span></dt>
+<dd class="field-even"><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">runtime_error</span></span></span> – if the attribute name is already in use by the node </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node18setGradientEpsilonEd">
+<span id="_CPPv3N4Node18setGradientEpsilonEd"></span><span id="_CPPv2N4Node18setGradientEpsilonEd"></span><span id="Node::setGradientEpsilon__double"></span><span class="target" id="class_node_1a5b878db065d291e3696f5d0c4cbfad96"></span><span class="k"><span class="pre">inline</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setGradientEpsilon</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">eps</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4Node18setGradientEpsilonEd" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the epsilon used for central difference gradient calculations. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>eps</strong> – The gradient epsilon. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node4snapEN3glm4vec3E">
+<span id="_CPPv3N4Node4snapEN3glm4vec3E"></span><span id="_CPPv2N4Node4snapEN3glm4vec3E"></span><span id="Node::snap__glm::vec3"></span><span class="target" id="class_node_1af7b0ea2559be7970a970ad19338be43e"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">snap</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">point</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4Node4snapEN3glm4vec3E" title="Link to this definition"></a><br /></dt>
+<dd><p>Snaps a given point to the nearest point on the surface. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>point</strong> – The point to snap </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The snapped point on the surface </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4NodeD0Ev">
+<span id="_CPPv3N4NodeD0Ev"></span><span id="_CPPv2N4NodeD0Ev"></span><span id="Node::~Node"></span><span class="target" id="class_node_1abce703f211f6a577085b4b8ad68cbb19"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">~Node</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N4NodeD0Ev" title="Link to this definition"></a><br /></dt>
+<dd><p>Virtual Destructor. </p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node16clone_attributesERKNSt10shared_ptrI4NodeEE">
+<span id="_CPPv3N4Node16clone_attributesERKNSt10shared_ptrI4NodeEE"></span><span id="_CPPv2N4Node16clone_attributesERKNSt10shared_ptrI4NodeEE"></span><span id="Node::clone_attributes__std::shared_ptr:Node:CR"></span><span class="target" id="class_node_1a3ab0a2b16f716b0d881dacaf33e6f91c"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">clone_attributes</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">node</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4Node16clone_attributesERKNSt10shared_ptrI4NodeEE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node19node_attribute_listEv">
+<span id="_CPPv3N4Node19node_attribute_listEv"></span><span id="_CPPv2N4Node19node_attribute_listEv"></span><span id="Node::node_attribute_list"></span><span class="target" id="class_node_1a5b289aa36694dacb3edc73579d65b418"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">node_attribute_list</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N4Node19node_attribute_listEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns a list of the attributes in use by this node itself (not including children). </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node20prepare_bounding_boxEv">
+<span id="_CPPv3N4Node20prepare_bounding_boxEv"></span><span id="_CPPv2N4Node20prepare_bounding_boxEv"></span><span id="Node::prepare_bounding_box"></span><span class="target" id="class_node_1a51446262ce651c1e0c49636d60fe715d"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">prepare_bounding_box</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0</span></span><a class="headerlink" href="#_CPPv4N4Node20prepare_bounding_boxEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-attributes">Protected Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node12m_attributesE">
+<span id="_CPPv3N4Node12m_attributesE"></span><span id="_CPPv2N4Node12m_attributesE"></span><span id="Node::m_attributes__std::shared_ptr:AttributeSet:"></span><span class="target" id="class_node_1a4f1721aebe6dd912f8dcde648ca69258"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-attributes.html#_CPPv412AttributeSet" title="AttributeSet"><span class="n"><span class="pre">AttributeSet</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_attributes</span></span></span><a class="headerlink" href="#_CPPv4N4Node12m_attributesE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node23m_bounding_box_preparedE">
+<span id="_CPPv3N4Node23m_bounding_box_preparedE"></span><span id="_CPPv2N4Node23m_bounding_box_preparedE"></span><span id="Node::m_bounding_box_prepared__b"></span><span class="target" id="class_node_1a7b81d262ff7d00730317e85001c746ca"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_bounding_box_prepared</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><a class="headerlink" href="#_CPPv4N4Node23m_bounding_box_preparedE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node18m_gradient_epsilonE">
+<span id="_CPPv3N4Node18m_gradient_epsilonE"></span><span id="_CPPv2N4Node18m_gradient_epsilonE"></span><span id="Node::m_gradient_epsilon__double"></span><span class="target" id="class_node_1ab51e33c8c95d93c74858c7293e5f9579"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_gradient_epsilon</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1e-4</span></span><a class="headerlink" href="#_CPPv4N4Node18m_gradient_epsilonE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node5m_maxE">
+<span id="_CPPv3N4Node5m_maxE"></span><span id="_CPPv2N4Node5m_maxE"></span><span id="Node::m_max__glm::vec3"></span><span class="target" id="class_node_1a85eb9e956680a5140198d27e16866b6c"></span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_max</span></span></span><a class="headerlink" href="#_CPPv4N4Node5m_maxE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node5m_minE">
+<span id="_CPPv3N4Node5m_minE"></span><span id="_CPPv2N4Node5m_minE"></span><span id="Node::m_min__glm::vec3"></span><span class="target" id="class_node_1a1318c59e250d5aac010b4a152e5507df"></span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_min</span></span></span><a class="headerlink" href="#_CPPv4N4Node5m_minE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N4Node18m_sample_bandwidthE">
+<span id="_CPPv3N4Node18m_sample_bandwidthE"></span><span id="_CPPv2N4Node18m_sample_bandwidthE"></span><span id="Node::m_sample_bandwidth__double"></span><span class="target" id="class_node_1a85d8dd772632db377a8d6b5e0ad4316c"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_sample_bandwidth</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1.0</span></span><a class="headerlink" href="#_CPPv4N4Node18m_sample_bandwidthE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv44Leaf">
+<span id="_CPPv34Leaf"></span><span id="_CPPv24Leaf"></span><span id="Leaf"></span><span class="target" id="class_leaf"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Leaf</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><a class="headerlink" href="#_CPPv44Leaf" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;leaf.h&gt;</em></div>
+<p>A leaf node that cannot have any children. </p>
+<p>Subclassed by <a class="reference internal" href="libvcad-tree-leaves.html#class_c_a_d"><span class="std std-ref">CAD</span></a>, <a class="reference internal" href="libvcad-tree-leaves.html#class_cone"><span class="std std-ref">Cone</span></a>, <a class="reference internal" href="libvcad-tree-leaves.html#class_cylinder"><span class="std std-ref">Cylinder</span></a>, <a class="reference internal" href="libvcad-tree-leaves.html#class_function"><span class="std std-ref">Function</span></a>, <a class="reference internal" href="libvcad-tree-leaves.html#class_graph_lattice"><span class="std std-ref">GraphLattice</span></a>, <a class="reference internal" href="libvcad-tree-composition.html#class_map"><span class="std std-ref">Map</span></a>, <a class="reference internal" href="libvcad-tree-leaves.html#class_mesh"><span class="std std-ref">Mesh</span></a>, <a class="reference internal" href="libvcad-tree-leaves.html#class_polygon_extrude"><span class="std std-ref">PolygonExtrude</span></a>, <a class="reference internal" href="libvcad-tree-leaves.html#class_rect_prism"><span class="std std-ref">RectPrism</span></a>, <a class="reference internal" href="libvcad-tree-leaves.html#class_signed_distance_field"><span class="std std-ref">SignedDistanceField</span></a>, <a class="reference internal" href="libvcad-tree-leaves.html#class_sphere"><span class="std std-ref">Sphere</span></a>, <a class="reference internal" href="libvcad-tree-leaves.html#class_strut"><span class="std std-ref">Strut</span></a>, <a class="reference internal" href="libvcad-tree-leaves.html#class_text"><span class="std std-ref">Text</span></a>, <a class="reference internal" href="libvcad-tree-leaves.html#class_torus"><span class="std std-ref">Torus</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4Leaf4LeafEv">
+<span id="_CPPv3N4Leaf4LeafEv"></span><span id="_CPPv2N4Leaf4LeafEv"></span><span id="Leaf::Leaf"></span><span class="target" id="class_leaf_1a59752c1cd4c82bfacb6e90928f5d251a"></span><span class="sig-name descname"><span class="n"><span class="pre">Leaf</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N4Leaf4LeafEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Default constructor. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N4Leaf7prepareERKN3glm4vec3Ed">
+<span id="_CPPv3N4Leaf7prepareERKN3glm4vec3Ed"></span><span id="_CPPv2N4Leaf7prepareERKN3glm4vec3Ed"></span><span id="Leaf::prepare__glm::vec3CR.double"></span><span class="target" id="class_leaf_1acca4316ceb7d1b62c8c8a6c97e6bbbed"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">prepare</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">voxel_size</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bandwidth</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N4Leaf7prepareERKN3glm4vec3Ed" title="Link to this definition"></a><br /></dt>
+<dd><p><div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#class_node_1ab19532f73048ad3e66f7c90baec39757"><span class="std std-ref">Node::prepare()</span></a></p>
+</div>
+</p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv45Unary">
+<span id="_CPPv35Unary"></span><span id="_CPPv25Unary"></span><span id="Unary"></span><span class="target" id="class_unary"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Unary</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><a class="headerlink" href="#_CPPv45Unary" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;unary.h&gt;</em></div>
+<p>A node with a single child. </p>
+<p>Subclassed by <a class="reference internal" href="libvcad-tree-attribute.html#class_attribute_modifier"><span class="std std-ref">AttributeModifier</span></a>, <a class="reference internal" href="libvcad-tree-attribute.html#class_convolve"><span class="std std-ref">Convolve</span></a>, <a class="reference internal" href="libvcad-tree-composition.html#class_identity"><span class="std std-ref">Identity</span></a>, <a class="reference internal" href="libvcad-tree-composition.html#class_offset"><span class="std std-ref">Offset</span></a>, <a class="reference internal" href="libvcad-tree-composition.html#class_rotate"><span class="std std-ref">Rotate</span></a>, <a class="reference internal" href="libvcad-tree-composition.html#class_scale"><span class="std std-ref">Scale</span></a>, <a class="reference internal" href="libvcad-tree-composition.html#class_shell"><span class="std std-ref">Shell</span></a>, <a class="reference internal" href="libvcad-tree-composition.html#class_tile"><span class="std std-ref">Tile</span></a>, <a class="reference internal" href="libvcad-tree-composition.html#class_translate"><span class="std std-ref">Translate</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5Unary14attribute_listEv">
+<span id="_CPPv3N5Unary14attribute_listEv"></span><span id="_CPPv2N5Unary14attribute_listEv"></span><span id="Unary::attribute_list"></span><span class="target" id="class_unary_1a15e6a7cac5a66e39079f827c637dc862"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">attribute_list</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N5Unary14attribute_listEv" title="Link to this definition"></a><br /></dt>
+<dd><p><div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#class_node_1af47933f49610a01e3dc0c3ee0789bce6"><span class="std std-ref">Node::attribute_list()</span></a></p>
+</div>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5Unary5childEv">
+<span id="_CPPv3NK5Unary5childEv"></span><span id="_CPPv2NK5Unary5childEv"></span><span id="Unary::childC"></span><span class="target" id="class_unary_1ab19dfbaf238dada4315c0ac64698b7e2"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">child</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5Unary5childEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the one and only child of this node. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The one and only child of this node. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5Unary8evaluateEddd">
+<span id="_CPPv3N5Unary8evaluateEddd"></span><span id="_CPPv2N5Unary8evaluateEddd"></span><span id="Unary::evaluate__double.double.double"></span><span class="target" id="class_unary_1a5fda733a7ad0f82f91726abad4ae3190"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">optional</span></span><span class="p"><span class="pre">&lt;</span></span><span class="kt"><span class="pre">double</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">evaluate</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">z</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N5Unary8evaluateEddd" title="Link to this definition"></a><br /></dt>
+<dd><p><div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#class_node_1a57da12c2b74a8a2f58ca435fe81802d4"><span class="std std-ref">Node::evaluate()</span></a></p>
+</div>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5Unary7prepareERKN3glm4vec3Ed">
+<span id="_CPPv3N5Unary7prepareERKN3glm4vec3Ed"></span><span id="_CPPv2N5Unary7prepareERKN3glm4vec3Ed"></span><span id="Unary::prepare__glm::vec3CR.double"></span><span class="target" id="class_unary_1a6d28d994c6ed91afdb70085819b685a5"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">prepare</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">voxel_size</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bandwidth</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N5Unary7prepareERKN3glm4vec3Ed" title="Link to this definition"></a><br /></dt>
+<dd><p><div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#class_node_1ab19532f73048ad3e66f7c90baec39757"><span class="std std-ref">Node::prepare()</span></a></p>
+</div>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5Unary6sampleEddd">
+<span id="_CPPv3N5Unary6sampleEddd"></span><span id="_CPPv2N5Unary6sampleEddd"></span><span id="Unary::sample__double.double.double"></span><span class="target" id="class_unary_1adb6a0b35150082f38807cad247b1b007"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">TreeSample</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">sample</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">z</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N5Unary6sampleEddd" title="Link to this definition"></a><br /></dt>
+<dd><p><div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#class_node_1a7cf02d2bc5277d27519d279667ec83eb"><span class="std std-ref">Node::sample()</span></a></p>
+</div>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5Unary8setChildENSt10shared_ptrI4NodeEE">
+<span id="_CPPv3N5Unary8setChildENSt10shared_ptrI4NodeEE"></span><span id="_CPPv2N5Unary8setChildENSt10shared_ptrI4NodeEE"></span><span id="Unary::setChild__std::shared_ptr:Node:"></span><span class="target" id="class_unary_1a4a29f88fcd6149ac6594326a8b1f71aa"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setChild</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">child</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5Unary8setChildENSt10shared_ptrI4NodeEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the one and only child of this node. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>child</strong> – The one and only child of this node. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5Unary5UnaryEv">
+<span id="_CPPv3N5Unary5UnaryEv"></span><span id="_CPPv2N5Unary5UnaryEv"></span><span id="Unary::Unary"></span><span class="target" id="class_unary_1aae3241f90dbd4ee9c2354552e40c9810"></span><span class="sig-name descname"><span class="n"><span class="pre">Unary</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N5Unary5UnaryEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Default constructor. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5Unary5UnaryERKNSt10shared_ptrI4NodeEE">
+<span id="_CPPv3N5Unary5UnaryERKNSt10shared_ptrI4NodeEE"></span><span id="_CPPv2N5Unary5UnaryERKNSt10shared_ptrI4NodeEE"></span><span id="Unary::Unary__std::shared_ptr:Node:CR"></span><span class="target" id="class_unary_1a45647ff1dbea7eafb97aeb1cece21f73"></span><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Unary</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">child</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5Unary5UnaryERKNSt10shared_ptrI4NodeEE" title="Link to this definition"></a><br /></dt>
+<dd><p>\breif Constructor to fill the single child. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>child</strong> – The one and only child of this node. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5Unary11clone_childERKNSt10shared_ptrI5UnaryEE">
+<span id="_CPPv3NK5Unary11clone_childERKNSt10shared_ptrI5UnaryEE"></span><span id="_CPPv2NK5Unary11clone_childERKNSt10shared_ptrI5UnaryEE"></span><span id="Unary::clone_child__std::shared_ptr:Unary:CRC"></span><span class="target" id="class_unary_1ae934c6e8e26c7679ae235304b394d917"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">clone_child</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv45Unary" title="Unary"><span class="n"><span class="pre">Unary</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">clone</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5Unary11clone_childERKNSt10shared_ptrI5UnaryEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Clones the child of this node. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>clone</strong> – The clone of this node. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5Unary20prepare_bounding_boxEv">
+<span id="_CPPv3N5Unary20prepare_bounding_boxEv"></span><span id="_CPPv2N5Unary20prepare_bounding_boxEv"></span><span id="Unary::prepare_bounding_box"></span><span class="target" id="class_unary_1a890794acdbec0b8917bbaee9bd576e0d"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">prepare_bounding_box</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N5Unary20prepare_bounding_boxEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-attributes">Protected Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5Unary7m_childE">
+<span id="_CPPv3N5Unary7m_childE"></span><span id="_CPPv2N5Unary7m_childE"></span><span id="Unary::m_child__std::shared_ptr:Node:"></span><span class="target" id="class_unary_1a04df458b8213c8d78640f279713946f1"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_child</span></span></span><a class="headerlink" href="#_CPPv4N5Unary7m_childE" title="Link to this definition"></a><br /></dt>
+<dd><p>The one and only child of this node. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv46Binary">
+<span id="_CPPv36Binary"></span><span id="_CPPv26Binary"></span><span id="Binary"></span><span class="target" id="class_binary"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Binary</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><a class="headerlink" href="#_CPPv46Binary" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;binary.h&gt;</em></div>
+<p>A binary node with exactly two children. </p>
+<p>The children are stored in m_left_child and m_right_child </p>
+<p>Subclassed by <a class="reference internal" href="libvcad-tree-composition.html#class_conformal_map"><span class="std std-ref">ConformalMap</span></a>, <a class="reference internal" href="libvcad-tree-composition.html#class_difference"><span class="std std-ref">Difference</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N6Binary14attribute_listEv">
+<span id="_CPPv3N6Binary14attribute_listEv"></span><span id="_CPPv2N6Binary14attribute_listEv"></span><span id="Binary::attribute_list"></span><span class="target" id="class_binary_1ad05e3db489722d897576f1600297d5ee"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">attribute_list</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N6Binary14attribute_listEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns a combined list of attributes from this node, its left child, and its right child. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A vector of unique attribute names. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N6Binary6BinaryEv">
+<span id="_CPPv3N6Binary6BinaryEv"></span><span id="_CPPv2N6Binary6BinaryEv"></span><span id="Binary::Binary"></span><span class="target" id="class_binary_1acf5e696a0bfe5bd2a5810cc2c7256f28"></span><span class="sig-name descname"><span class="n"><span class="pre">Binary</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N6Binary6BinaryEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Default constructor. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N6Binary6BinaryERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI4NodeEE">
+<span id="_CPPv3N6Binary6BinaryERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI4NodeEE"></span><span id="_CPPv2N6Binary6BinaryERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI4NodeEE"></span><span id="Binary::Binary__std::shared_ptr:Node:CR.std::shared_ptr:Node:CR"></span><span class="target" id="class_binary_1a8645928d559b4116893890ad4581ee20"></span><span class="sig-name descname"><span class="n"><span class="pre">Binary</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">left</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">right</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6Binary6BinaryERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI4NodeEE" title="Link to this definition"></a><br /></dt>
+<dd><p>\breif Constructor to fill the both children. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>left</strong> – The left child </p></li>
+<li><p><strong>right</strong> – The right child </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK6Binary9leftChildEv">
+<span id="_CPPv3NK6Binary9leftChildEv"></span><span id="_CPPv2NK6Binary9leftChildEv"></span><span id="Binary::leftChildC"></span><span class="target" id="class_binary_1ad2e06a17d430f7a934a601485508d4fe"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">leftChild</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK6Binary9leftChildEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the left child. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The left child </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N6Binary7prepareERKN3glm4vec3Ed">
+<span id="_CPPv3N6Binary7prepareERKN3glm4vec3Ed"></span><span id="_CPPv2N6Binary7prepareERKN3glm4vec3Ed"></span><span id="Binary::prepare__glm::vec3CR.double"></span><span class="target" id="class_binary_1a87948f0d335c13b8e9e4f4d67d14d42b"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">prepare</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">voxel_size</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bandwidth</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N6Binary7prepareERKN3glm4vec3Ed" title="Link to this definition"></a><br /></dt>
+<dd><p><div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#class_node_1ab19532f73048ad3e66f7c90baec39757"><span class="std std-ref">Node::prepare()</span></a></p>
+</div>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK6Binary10rightChildEv">
+<span id="_CPPv3NK6Binary10rightChildEv"></span><span id="_CPPv2NK6Binary10rightChildEv"></span><span id="Binary::rightChildC"></span><span class="target" id="class_binary_1ae84c2a4056b15ec9258d588b211a8562"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">rightChild</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK6Binary10rightChildEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the right child. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The right child </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N6Binary12setLeftChildENSt10shared_ptrI4NodeEE">
+<span id="_CPPv3N6Binary12setLeftChildENSt10shared_ptrI4NodeEE"></span><span id="_CPPv2N6Binary12setLeftChildENSt10shared_ptrI4NodeEE"></span><span id="Binary::setLeftChild__std::shared_ptr:Node:"></span><span class="target" id="class_binary_1a56e02a514a885d6c779f436de87ffe99"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setLeftChild</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">left</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6Binary12setLeftChildENSt10shared_ptrI4NodeEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the left child. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>left</strong> – The left child </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N6Binary13setRightChildENSt10shared_ptrI4NodeEE">
+<span id="_CPPv3N6Binary13setRightChildENSt10shared_ptrI4NodeEE"></span><span id="_CPPv2N6Binary13setRightChildENSt10shared_ptrI4NodeEE"></span><span id="Binary::setRightChild__std::shared_ptr:Node:"></span><span class="target" id="class_binary_1a030b07109d715ec53895f458ddb65608"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">setRightChild</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">right</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6Binary13setRightChildENSt10shared_ptrI4NodeEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Sets the right child. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>right</strong> – The right child </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N6Binary14clone_childrenERKNSt10shared_ptrI6BinaryEE">
+<span id="_CPPv3N6Binary14clone_childrenERKNSt10shared_ptrI6BinaryEE"></span><span id="_CPPv2N6Binary14clone_childrenERKNSt10shared_ptrI6BinaryEE"></span><span id="Binary::clone_children__std::shared_ptr:Binary:CR"></span><span class="target" id="class_binary_1a5b0312ba41eefcb1ff6588f833db1b29"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">clone_children</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv46Binary" title="Binary"><span class="n"><span class="pre">Binary</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">node</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N6Binary14clone_childrenERKNSt10shared_ptrI6BinaryEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Clones the children of the node. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node</strong> – The node to clone the children from </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-attributes">Protected Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N6Binary12m_left_childE">
+<span id="_CPPv3N6Binary12m_left_childE"></span><span id="_CPPv2N6Binary12m_left_childE"></span><span id="Binary::m_left_child__std::shared_ptr:Node:"></span><span class="target" id="class_binary_1ae6835ad781a1ada0a94ed3ee080ece41"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_left_child</span></span></span><a class="headerlink" href="#_CPPv4N6Binary12m_left_childE" title="Link to this definition"></a><br /></dt>
+<dd><p>The left child. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N6Binary13m_right_childE">
+<span id="_CPPv3N6Binary13m_right_childE"></span><span id="_CPPv2N6Binary13m_right_childE"></span><span id="Binary::m_right_child__std::shared_ptr:Node:"></span><span class="target" id="class_binary_1ad22444f30fec27b84829dbf30f0976bd"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_right_child</span></span></span><a class="headerlink" href="#_CPPv4N6Binary13m_right_childE" title="Link to this definition"></a><br /></dt>
+<dd><p>The right child. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv45N_ary">
+<span id="_CPPv35N_ary"></span><span id="_CPPv25N_ary"></span><span id="N_ary"></span><span class="target" id="class_n__ary"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">N_ary</span></span></span><span class="w"> </span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="k"><span class="pre">public</span></span><span class="w"> </span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><a class="headerlink" href="#_CPPv45N_ary" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;n_ary.h&gt;</em></div>
+<p>A node with an arbitrary number of children. </p>
+<p>Subclassed by <a class="reference internal" href="libvcad-tree-composition.html#class_b_box_intersection"><span class="std std-ref">BBoxIntersection</span></a>, <a class="reference internal" href="libvcad-tree-composition.html#class_b_box_union"><span class="std std-ref">BBoxUnion</span></a>, <a class="reference internal" href="libvcad-tree-composition.html#class_intersection"><span class="std std-ref">Intersection</span></a>, <a class="reference internal" href="libvcad-tree-composition.html#class_sum"><span class="std std-ref">Sum</span></a>, <a class="reference internal" href="libvcad-tree-composition.html#class_union"><span class="std std-ref">Union</span></a></p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5N_ary8addChildENSt10shared_ptrI4NodeEE">
+<span id="_CPPv3N5N_ary8addChildENSt10shared_ptrI4NodeEE"></span><span id="_CPPv2N5N_ary8addChildENSt10shared_ptrI4NodeEE"></span><span id="N_ary::addChild__std::shared_ptr:Node:"></span><span class="target" id="class_n__ary_1a814c3f9fb5b9c2c80bf61c54b7ad51d8"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">addChild</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">child</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5N_ary8addChildENSt10shared_ptrI4NodeEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Trys to add a child to the node, if the node is full then it returns false. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>child</strong> – The child to add to the node </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>True if the child was added, false otherwise </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5N_ary14attribute_listEv">
+<span id="_CPPv3N5N_ary14attribute_listEv"></span><span id="_CPPv2N5N_ary14attribute_listEv"></span><span id="N_ary::attribute_list"></span><span class="target" id="class_n__ary_1a02087a73a0c5747278dee4810d92f767"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">attribute_list</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N5N_ary14attribute_listEv" title="Link to this definition"></a><br /></dt>
+<dd><p><div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#class_node_1af47933f49610a01e3dc0c3ee0789bce6"><span class="std std-ref">Node::attribute_list()</span></a></p>
+</div>
+</p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5N_ary5childE7uint8_t">
+<span id="_CPPv3NK5N_ary5childE7uint8_t"></span><span id="_CPPv2NK5N_ary5childE7uint8_t"></span><span id="N_ary::child__uint8_tC"></span><span class="target" id="class_n__ary_1a731673d2f50987f178cd25d101f81037"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">child</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">index</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5N_ary5childE7uint8_t" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the child at the given index. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> – The index of the child to return. </p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The child at the given index. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5N_ary8childrenEv">
+<span id="_CPPv3N5N_ary8childrenEv"></span><span id="_CPPv2N5N_ary8childrenEv"></span><span id="N_ary::children"></span><span class="target" id="class_n__ary_1a7ff0528e14721eef713b49f7750233be"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="sig-name descname"><span class="n"><span class="pre">children</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5N_ary8childrenEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the children of the node. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The children of the node. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5N_ary5N_aryEv">
+<span id="_CPPv3N5N_ary5N_aryEv"></span><span id="_CPPv2N5N_ary5N_aryEv"></span><span id="N_ary::N_ary"></span><span class="target" id="class_n__ary_1af2ac80e9de9bffef6d04003ea79b7e70"></span><span class="sig-name descname"><span class="n"><span class="pre">N_ary</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">default</span></span><a class="headerlink" href="#_CPPv4N5N_ary5N_aryEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Default constructor. </p>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5N_ary5N_aryERKNSt6vectorINSt10shared_ptrI4NodeEEEE">
+<span id="_CPPv3N5N_ary5N_aryERKNSt6vectorINSt10shared_ptrI4NodeEEEE"></span><span id="_CPPv2N5N_ary5N_aryERKNSt6vectorINSt10shared_ptrI4NodeEEEE"></span><span id="N_ary::N_ary__std::vector:std::shared_ptr:Node::CR"></span><span class="target" id="class_n__ary_1a97df620629f8b538df2bb4e44f7850d1"></span><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">N_ary</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">children</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5N_ary5N_aryERKNSt6vectorINSt10shared_ptrI4NodeEEEE" title="Link to this definition"></a><br /></dt>
+<dd><p>\breif Constructor to fill the children. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>children</strong> – The children of the node. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4NK5N_ary11numChildrenEv">
+<span id="_CPPv3NK5N_ary11numChildrenEv"></span><span id="_CPPv2NK5N_ary11numChildrenEv"></span><span id="N_ary::numChildrenC"></span><span class="target" id="class_n__ary_1a34a666ee845c9eb5d1e33e5d6addb6b3"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">uint8_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">numChildren</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK5N_ary11numChildrenEv" title="Link to this definition"></a><br /></dt>
+<dd><p>Returns the number of children of the node. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The number of children of the node. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5N_ary7prepareERKN3glm4vec3Ed">
+<span id="_CPPv3N5N_ary7prepareERKN3glm4vec3Ed"></span><span id="_CPPv2N5N_ary7prepareERKN3glm4vec3Ed"></span><span id="N_ary::prepare__glm::vec3CR.double"></span><span class="target" id="class_n__ary_1aff42f8628cd558d115a815c0a5421ebc"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">prepare</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">voxel_size</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">bandwidth</span></span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N5N_ary7prepareERKN3glm4vec3Ed" title="Link to this definition"></a><br /></dt>
+<dd><p><div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="#class_node_1ab19532f73048ad3e66f7c90baec39757"><span class="std std-ref">Node::prepare()</span></a></p>
+</div>
+</p>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N5N_ary14clone_childrenERKNSt10shared_ptrI5N_aryEE">
+<span id="_CPPv3N5N_ary14clone_childrenERKNSt10shared_ptrI5N_aryEE"></span><span id="_CPPv2N5N_ary14clone_childrenERKNSt10shared_ptrI5N_aryEE"></span><span id="N_ary::clone_children__std::shared_ptr:N_ary:CR"></span><span class="target" id="class_n__ary_1ad0dbcff7167792c995bad3c046aac891"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">clone_children</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv45N_ary" title="N_ary"><span class="n"><span class="pre">N_ary</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">node</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5N_ary14clone_childrenERKNSt10shared_ptrI5N_aryEE" title="Link to this definition"></a><br /></dt>
+<dd><p>Clones the children of the node. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>node</strong> – The node to clone the children from </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-attributes">Protected Attributes</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N5N_ary10m_childrenE">
+<span id="_CPPv3N5N_ary10m_childrenE"></span><span id="_CPPv2N5N_ary10m_childrenE"></span><span id="N_ary::m_children__std::vector:std::shared_ptr:Node::"></span><span class="target" id="class_n__ary_1a16309e782bff8dc00aceb2f27be2e3ee"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_children</span></span></span><a class="headerlink" href="#_CPPv4N5N_ary10m_childrenE" title="Link to this definition"></a><br /></dt>
+<dd><p>The children of the node. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="index.html" class="btn btn-neutral float-left" title="C++ API Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="libvcad-tree-leaves.html" class="btn btn-neutral float-right" title="Tree — leaves" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Charles Wade and Robert MacCurdy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

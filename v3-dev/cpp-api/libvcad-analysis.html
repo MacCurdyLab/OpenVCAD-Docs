@@ -1,0 +1,230 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Analysis &mdash; OpenVCAD 3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../_static/documentation_options.js?v=110ea713"></script>
+      <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="libvcad_compilers — compiler classes" href="libvcad-compilers-compilers.html" />
+    <link rel="prev" title="Utilities" href="libvcad-utils.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../index.html" class="icon icon-home">
+            OpenVCAD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../guides/math-expressions.html">Math Expression Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> package</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad_compilers/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../python-api/pyvcad_rendering/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code> package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html">C++ API Reference</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-core.html">Tree — core</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-leaves.html">Tree — leaves</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-attribute.html">Tree — attribute nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-tree-composition.html">Tree — composition</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-attributes.html">Attributes (v3 model)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-volumes.html">Volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-2d.html">Geometry — 2D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-3d.html">Geometry — 3D</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-geometry-surface-parameterizer.html">Geometry — surface parameterization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-utils.html">Utilities</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Analysis</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv415SupportAnalyzer"><code class="docutils literal notranslate"><span class="pre">SupportAnalyzer</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15SupportAnalyzer7analyzeEv"><code class="docutils literal notranslate"><span class="pre">analyze()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15SupportAnalyzer15SupportAnalyzerERKNSt10shared_ptrI4NodeEERKN3glm4vec3E"><code class="docutils literal notranslate"><span class="pre">SupportAnalyzer()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15SupportAnalyzer13m_input_modelE"><code class="docutils literal notranslate"><span class="pre">m_input_model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N15SupportAnalyzer12m_voxel_sizeE"><code class="docutils literal notranslate"><span class="pre">m_voxel_size</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#_CPPv423SupportAnalyzerParallel"><code class="docutils literal notranslate"><span class="pre">SupportAnalyzerParallel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N23SupportAnalyzerParallel7analyzeEv"><code class="docutils literal notranslate"><span class="pre">analyze()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N23SupportAnalyzerParallel23SupportAnalyzerParallelERKNSt10shared_ptrI4NodeEERKN3glm4vec3E"><code class="docutils literal notranslate"><span class="pre">SupportAnalyzerParallel()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N23SupportAnalyzerParallel13m_input_modelE"><code class="docutils literal notranslate"><span class="pre">m_input_model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#_CPPv4N23SupportAnalyzerParallel12m_voxel_sizeE"><code class="docutils literal notranslate"><span class="pre">m_voxel_size</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-compilers.html">libvcad_compilers — compiler classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="libvcad-compilers-utilities.html">libvcad_compilers — utilities</a></li>
+</ul>
+</li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../papers.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">OpenVCAD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html">C++ API Reference</a></li>
+      <li class="breadcrumb-item active">Analysis</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../_sources/cpp-api/libvcad-analysis.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="analysis">
+<h1>Analysis<a class="headerlink" href="#analysis" title="Link to this heading"></a></h1>
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv415SupportAnalyzer">
+<span id="_CPPv315SupportAnalyzer"></span><span id="_CPPv215SupportAnalyzer"></span><span id="SupportAnalyzer"></span><span class="target" id="class_support_analyzer"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SupportAnalyzer</span></span></span><a class="headerlink" href="#_CPPv415SupportAnalyzer" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;support_analyzer.h&gt;</em></div>
+<p>Analyzes a given OpenVCAD design to determine where supports are needed. </p>
+<p>For now, this assumes generic Inkjet printing.</p>
+<p>This class is designed to analyze a 3D model represented by an OpenVCAD <a class="reference internal" href="libvcad-tree-core.html#class_node"><span class="std std-ref">Node</span></a> and determine the areas that require support structures for printing. The analysis is based on the geometry of the model and the specified voxel size. The class provides an analysis method that returns an OpenVCAD volume that represents where supports are needed. It is up to down stream process to actually generate the supports. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N15SupportAnalyzer7analyzeEv">
+<span id="_CPPv3N15SupportAnalyzer7analyzeEv"></span><span id="_CPPv2N15SupportAnalyzer7analyzeEv"></span><span id="SupportAnalyzer::analyze"></span><span class="target" id="class_support_analyzer_1ac8a201a4626470f171a652509cdb4d7f"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">analyze</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15SupportAnalyzer7analyzeEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N15SupportAnalyzer15SupportAnalyzerERKNSt10shared_ptrI4NodeEERKN3glm4vec3E">
+<span id="_CPPv3N15SupportAnalyzer15SupportAnalyzerERKNSt10shared_ptrI4NodeEERKN3glm4vec3E"></span><span id="_CPPv2N15SupportAnalyzer15SupportAnalyzerERKNSt10shared_ptrI4NodeEERKN3glm4vec3E"></span><span id="SupportAnalyzer::SupportAnalyzer__std::shared_ptr:Node:CR.glm::vec3CR"></span><span class="target" id="class_support_analyzer_1a97e4e3deae47d4c98a47670650ba69aa"></span><span class="sig-name descname"><span class="n"><span class="pre">SupportAnalyzer</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">input_model</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">voxel_size</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15SupportAnalyzer15SupportAnalyzerERKNSt10shared_ptrI4NodeEERKN3glm4vec3E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15SupportAnalyzer13m_input_modelE">
+<span id="_CPPv3N15SupportAnalyzer13m_input_modelE"></span><span id="_CPPv2N15SupportAnalyzer13m_input_modelE"></span><span id="SupportAnalyzer::m_input_model__std::shared_ptr:Node:"></span><span class="target" id="class_support_analyzer_1a736e5dc14e921b8d0b6181062f33bf76"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_input_model</span></span></span><a class="headerlink" href="#_CPPv4N15SupportAnalyzer13m_input_modelE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N15SupportAnalyzer12m_voxel_sizeE">
+<span id="_CPPv3N15SupportAnalyzer12m_voxel_sizeE"></span><span id="_CPPv2N15SupportAnalyzer12m_voxel_sizeE"></span><span id="SupportAnalyzer::m_voxel_size__glm::vec3"></span><span class="target" id="class_support_analyzer_1a693276c1c2418fd063b1a231e592326a"></span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_voxel_size</span></span></span><a class="headerlink" href="#_CPPv4N15SupportAnalyzer12m_voxel_sizeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+<dl class="cpp class">
+<dt class="sig sig-object cpp" id="_CPPv423SupportAnalyzerParallel">
+<span id="_CPPv323SupportAnalyzerParallel"></span><span id="_CPPv223SupportAnalyzerParallel"></span><span id="SupportAnalyzerParallel"></span><span class="target" id="class_support_analyzer_parallel"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SupportAnalyzerParallel</span></span></span><a class="headerlink" href="#_CPPv423SupportAnalyzerParallel" title="Link to this definition"></a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;support_analyzer_parallel.h&gt;</em></div>
+<p>Analyzes a given OpenVCAD design to determine where supports are needed. </p>
+<p>For now, this assumes generic Inkjet printing.</p>
+<p>This class is designed to analyze a 3D model represented by an OpenVCAD <a class="reference internal" href="libvcad-tree-core.html#class_node"><span class="std std-ref">Node</span></a> and determine the areas that require support structures for printing. The analysis is based on the geometry of the model and the specified voxel size. The class provides an analysis method that returns an OpenVCAD volume that represents where supports are needed. It is up to down stream process to actually generate the supports. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N23SupportAnalyzerParallel7analyzeEv">
+<span id="_CPPv3N23SupportAnalyzerParallel7analyzeEv"></span><span id="_CPPv2N23SupportAnalyzerParallel7analyzeEv"></span><span id="SupportAnalyzerParallel::analyze"></span><span class="target" id="class_support_analyzer_parallel_1a1bb5459074f8ae75a77f1572797fb343"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">analyze</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N23SupportAnalyzerParallel7analyzeEv" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N23SupportAnalyzerParallel23SupportAnalyzerParallelERKNSt10shared_ptrI4NodeEERKN3glm4vec3E">
+<span id="_CPPv3N23SupportAnalyzerParallel23SupportAnalyzerParallelERKNSt10shared_ptrI4NodeEERKN3glm4vec3E"></span><span id="_CPPv2N23SupportAnalyzerParallel23SupportAnalyzerParallelERKNSt10shared_ptrI4NodeEERKN3glm4vec3E"></span><span id="SupportAnalyzerParallel::SupportAnalyzerParallel__std::shared_ptr:Node:CR.glm::vec3CR"></span><span class="target" id="class_support_analyzer_parallel_1a0cead71c6554b4d7131ac1ac86873900"></span><span class="sig-name descname"><span class="n"><span class="pre">SupportAnalyzerParallel</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">input_model</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">voxel_size</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N23SupportAnalyzerParallel23SupportAnalyzerParallelERKNSt10shared_ptrI4NodeEERKN3glm4vec3E" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N23SupportAnalyzerParallel13m_input_modelE">
+<span id="_CPPv3N23SupportAnalyzerParallel13m_input_modelE"></span><span id="_CPPv2N23SupportAnalyzerParallel13m_input_modelE"></span><span id="SupportAnalyzerParallel::m_input_model__std::shared_ptr:Node:"></span><span class="target" id="class_support_analyzer_parallel_1ac02936cfce869e00e35c73c5a515e399"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_input_model</span></span></span><a class="headerlink" href="#_CPPv4N23SupportAnalyzerParallel13m_input_modelE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N23SupportAnalyzerParallel12m_voxel_sizeE">
+<span id="_CPPv3N23SupportAnalyzerParallel12m_voxel_sizeE"></span><span id="_CPPv2N23SupportAnalyzerParallel12m_voxel_sizeE"></span><span id="SupportAnalyzerParallel::m_voxel_size__glm::vec3"></span><span class="target" id="class_support_analyzer_parallel_1aef0161db09c68825ff6e82c84bd804d3"></span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_voxel_size</span></span></span><a class="headerlink" href="#_CPPv4N23SupportAnalyzerParallel12m_voxel_sizeE" title="Link to this definition"></a><br /></dt>
+<dd></dd></dl>
+
+</div>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="libvcad-utils.html" class="btn btn-neutral float-left" title="Utilities" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="libvcad-compilers-compilers.html" class="btn btn-neutral float-right" title="libvcad_compilers — compiler classes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Charles Wade and Robert MacCurdy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

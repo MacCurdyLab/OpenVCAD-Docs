@@ -1,0 +1,329 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tree — attribute nodes &mdash; OpenVCAD 3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=110ea713"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Tree — composition nodes" href="composition.html" />
+    <link rel="prev" title="Tree — leaf nodes" href="leaves.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenVCAD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides/math-expressions.html">Math Expression Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API Reference</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> package</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="utilities.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometry.html">Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="tree.html">Tree — base classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="leaves.html">Tree — leaf nodes</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">Tree — attribute nodes</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.AttributeModifier"><code class="docutils literal notranslate"><span class="pre">AttributeModifier</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.AttributeModifier.__init__"><code class="docutils literal notranslate"><span class="pre">AttributeModifier.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.ConvolveKernel"><code class="docutils literal notranslate"><span class="pre">ConvolveKernel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.ConvolveKernel.__init__"><code class="docutils literal notranslate"><span class="pre">ConvolveKernel.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.ConvolveKernel.get_radius_x"><code class="docutils literal notranslate"><span class="pre">ConvolveKernel.get_radius_x()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.ConvolveKernel.get_radius_y"><code class="docutils literal notranslate"><span class="pre">ConvolveKernel.get_radius_y()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.ConvolveKernel.get_radius_z"><code class="docutils literal notranslate"><span class="pre">ConvolveKernel.get_radius_z()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.BoxKernel"><code class="docutils literal notranslate"><span class="pre">BoxKernel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.BoxKernel.__init__"><code class="docutils literal notranslate"><span class="pre">BoxKernel.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.CustomKernel"><code class="docutils literal notranslate"><span class="pre">CustomKernel</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.CustomKernel.__init__"><code class="docutils literal notranslate"><span class="pre">CustomKernel.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#pyvcad.Convolve"><code class="docutils literal notranslate"><span class="pre">Convolve</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Convolve.__init__"><code class="docutils literal notranslate"><span class="pre">Convolve.__init__()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Convolve.cache_capacity"><code class="docutils literal notranslate"><span class="pre">Convolve.cache_capacity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Convolve.set_cache_capacity"><code class="docutils literal notranslate"><span class="pre">Convolve.set_cache_capacity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Convolve.set_use_cache"><code class="docutils literal notranslate"><span class="pre">Convolve.set_use_cache()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#pyvcad.Convolve.use_cache"><code class="docutils literal notranslate"><span class="pre">Convolve.use_cache()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="composition.html">Tree — composition nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="attributes.html">Attributes (v3)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="analysis.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="volumes.html">Volumes</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="../pyvcad_compilers/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code> module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../pyvcad_rendering/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code> package</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-api/index.html">C++ API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../papers.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenVCAD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> package</a></li>
+      <li class="breadcrumb-item active">Tree — attribute nodes</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="../../_sources/python-api/pyvcad/attribute_nodes.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="tree-attribute-nodes">
+<h1>Tree — attribute nodes<a class="headerlink" href="#tree-attribute-nodes" title="Link to this heading"></a></h1>
+<p>Unary nodes that modify or filter attributes on the tree (v3).</p>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.AttributeModifier">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">AttributeModifier</span></span><a class="headerlink" href="#pyvcad.AttributeModifier" title="Link to this definition"></a></dt>
+<dd><p>An attribute modifier node that applies a converter to its child’s attributes.</p>
+<p>Note: Setting or getting attributes directly on this node via <cite>set_attribute</cite> or <cite>get_attribute</cite> is not supported and will raise an error.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.AttributeModifier.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.AttributeModifier" title="pyvcad.pyvcad.AttributeModifier"><span class="pre">pyvcad.pyvcad.AttributeModifier</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">converter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="attributes.html#pyvcad.AttributeConverterBase" title="pyvcad.AttributeConverterBase"><span class="pre">AttributeConverterBase</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">child</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.pyvcad.Node"><span class="pre">pyvcad.pyvcad.Node</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.AttributeModifier.__init__" title="Link to this definition"></a></dt>
+<dd><p>Constructor. Creates an AttributeModifier with a converter and a child node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>converter</strong> (<a class="reference internal" href="attributes.html#pyvcad.AttributeConverterBase" title="pyvcad.AttributeConverterBase"><em>AttributeConverterBase</em></a>) – The attribute converter to apply.</p></li>
+<li><p><strong>child</strong> (<a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The child node to be modified.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.ConvolveKernel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">ConvolveKernel</span></span><a class="headerlink" href="#pyvcad.ConvolveKernel" title="Link to this definition"></a></dt>
+<dd><dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.ConvolveKernel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.ConvolveKernel.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.ConvolveKernel.get_radius_x">
+<span class="sig-name descname"><span class="pre">get_radius_x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.ConvolveKernel" title="pyvcad.pyvcad.ConvolveKernel"><span class="pre">pyvcad.pyvcad.ConvolveKernel</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#pyvcad.ConvolveKernel.get_radius_x" title="Link to this definition"></a></dt>
+<dd><p>Gets the X radius of the kernel.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.ConvolveKernel.get_radius_y">
+<span class="sig-name descname"><span class="pre">get_radius_y</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.ConvolveKernel" title="pyvcad.pyvcad.ConvolveKernel"><span class="pre">pyvcad.pyvcad.ConvolveKernel</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#pyvcad.ConvolveKernel.get_radius_y" title="Link to this definition"></a></dt>
+<dd><p>Gets the Y radius of the kernel.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.ConvolveKernel.get_radius_z">
+<span class="sig-name descname"><span class="pre">get_radius_z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.ConvolveKernel" title="pyvcad.pyvcad.ConvolveKernel"><span class="pre">pyvcad.pyvcad.ConvolveKernel</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#pyvcad.ConvolveKernel.get_radius_z" title="Link to this definition"></a></dt>
+<dd><p>Gets the Z radius of the kernel.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.BoxKernel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">BoxKernel</span></span><a class="headerlink" href="#pyvcad.BoxKernel" title="Link to this definition"></a></dt>
+<dd><p>A Box Kernel acts as a simple uniform average over a local radius volume.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>radius</strong> (<em>int</em>) – Uniform radius in all three axes. If set to 1, samples a 3x3x3 grid.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kernel</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">BoxKernel</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.BoxKernel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.BoxKernel.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.BoxKernel, radius: typing.SupportsInt) -&gt; None</p></li>
+<li><p>__init__(self: pyvcad.pyvcad.BoxKernel, rx: typing.SupportsInt, ry: typing.SupportsInt, rz: typing.SupportsInt) -&gt; None</p></li>
+</ol>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.CustomKernel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">CustomKernel</span></span><a class="headerlink" href="#pyvcad.CustomKernel" title="Link to this definition"></a></dt>
+<dd><p>A Custom Convolution Kernel created from an array of explicit weights.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>weights</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – A flattened list of 3D kernel weights.</p></li>
+<li><p><strong>rx</strong> (<em>int</em>) – The X radius. The array should have size (2*rx+1)*(2*ry+1)*(2*rz+1)</p></li>
+<li><p><strong>ry</strong> (<em>int</em>) – The Y radius.</p></li>
+<li><p><strong>rz</strong> (<em>int</em>) – The Z radius.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">target_size</span> <span class="o">=</span> <span class="mi">27</span> <span class="c1"># 3x3x3</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kernel</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CustomKernel</span><span class="p">([</span><span class="mf">1.0</span><span class="p">]</span><span class="o">*</span><span class="n">target_size</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CustomKernel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CustomKernel" title="pyvcad.pyvcad.CustomKernel"><span class="pre">pyvcad.pyvcad.CustomKernel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rx</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ry</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rz</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.CustomKernel.__init__" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Convolve">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Convolve</span></span><a class="headerlink" href="#pyvcad.Convolve" title="Link to this definition"></a></dt>
+<dd><p>A Unary node that applies a convolution kernel to the continuous attributes of its child node.</p>
+<p>This is highly useful for blending, blurring, or sharpening color or material distributions without affecting the raw signed distance field geometry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>child</strong> (<a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The node to process.</p></li>
+<li><p><strong>attributes</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Names of the attributes to target. Pass an empty list to target all.</p></li>
+<li><p><strong>kernel</strong> (<a class="reference internal" href="#pyvcad.ConvolveKernel" title="pyvcad.ConvolveKernel"><em>ConvolveKernel</em></a>) – The kernel to apply.</p></li>
+<li><p><strong>physical_radius</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – [rx, ry, rz] physical bounds (in mm) that the kernel spans.</p></li>
+<li><p><strong>enable_cache</strong> (<em>bool</em>) – Toggles the internal volumetric LRU cache. Defaults to true.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kernel</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">BoxKernel</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blur_node</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Convolve</span><span class="p">(</span><span class="n">my_shape</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Temperature&#39;</span><span class="p">],</span> <span class="n">kernel</span><span class="p">,</span> <span class="p">[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">])</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Convolve.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Convolve.__init__" title="Link to this definition"></a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Convolve, child: pyvcad.pyvcad.Node, attributes: collections.abc.Sequence[str], kernel: pyvcad.pyvcad.ConvolveKernel, physical_radius: collections.abc.Sequence[typing.SupportsFloat]) -&gt; None</p></li>
+<li><p>__init__(self: pyvcad.pyvcad.Convolve, child: pyvcad.pyvcad.Node, attributes: collections.abc.Sequence[str], kernel: pyvcad.pyvcad.ConvolveKernel, physical_radius: collections.abc.Sequence[typing.SupportsFloat], enable_cache: bool) -&gt; None</p></li>
+</ol>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Convolve.cache_capacity">
+<span class="sig-name descname"><span class="pre">cache_capacity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Convolve" title="pyvcad.pyvcad.Convolve"><span class="pre">pyvcad.pyvcad.Convolve</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#pyvcad.Convolve.cache_capacity" title="Link to this definition"></a></dt>
+<dd><p>Gets the current cache capacity limit</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Convolve.set_cache_capacity">
+<span class="sig-name descname"><span class="pre">set_cache_capacity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Convolve" title="pyvcad.pyvcad.Convolve"><span class="pre">pyvcad.pyvcad.Convolve</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Convolve.set_cache_capacity" title="Link to this definition"></a></dt>
+<dd><p>Sets the cache capacity limit</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Convolve.set_use_cache">
+<span class="sig-name descname"><span class="pre">set_use_cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Convolve" title="pyvcad.pyvcad.Convolve"><span class="pre">pyvcad.pyvcad.Convolve</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">enabled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Convolve.set_use_cache" title="Link to this definition"></a></dt>
+<dd><p>Toggle the internal cache.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Convolve.use_cache">
+<span class="sig-name descname"><span class="pre">use_cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Convolve" title="pyvcad.pyvcad.Convolve"><span class="pre">pyvcad.pyvcad.Convolve</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#pyvcad.Convolve.use_cache" title="Link to this definition"></a></dt>
+<dd><p>Check if the cache is active.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="leaves.html" class="btn btn-neutral float-left" title="Tree — leaf nodes" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="composition.html" class="btn btn-neutral float-right" title="Tree — composition nodes" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2025, Charles Wade and Robert MacCurdy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

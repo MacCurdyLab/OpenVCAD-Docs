@@ -1,0 +1,427 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>pyvcad_rendering.vtk_export &mdash; OpenVCAD 3.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=b86133f3" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=9edc463e" />
+      <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=110ea713"></script>
+      <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+      <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            OpenVCAD
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../guides/math-expressions.html">Math Expression Documentation</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Python API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../python-api/pyvcad.html">pyvcad Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../python-api/pyvcad_compilers.html">pyvcad_compilers Module</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../python-api/pyvcad_rendering.html">pyvcad_rendering Module</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">C++ API Reference</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../cpp-api/index.html">C++ API Reference</a></li>
+</ul>
+<p class="caption" role="heading"><span class="caption-text">Project</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../gallery.html">Gallery</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../papers.html">Publications</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">OpenVCAD</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">pyvcad_rendering.vtk_export</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for pyvcad_rendering.vtk_export</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkIOXML</span><span class="w"> </span><span class="kn">import</span> <span class="n">vtkXMLPolyDataWriter</span><span class="p">,</span> <span class="n">vtkXMLImageDataWriter</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.vtk_utils</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">compute_voxel_size_for_quality_profile</span><span class="p">,</span>
+    <span class="n">create_sdf_from_object</span><span class="p">,</span>
+    <span class="n">colors_for_points</span>
+<span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_attribute_type_from_sample</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">attr_name</span><span class="p">):</span>
+    <span class="n">min_box</span><span class="p">,</span> <span class="n">max_box</span> <span class="o">=</span> <span class="n">vcad_object</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">min_box</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">max_box</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>
+    
+    <span class="n">center_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">min_box</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">max_box</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+    <span class="n">center_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">min_box</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">max_box</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+    <span class="n">center_z</span> <span class="o">=</span> <span class="p">(</span><span class="n">min_box</span><span class="o">.</span><span class="n">z</span> <span class="o">+</span> <span class="n">max_box</span><span class="o">.</span><span class="n">z</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+    
+    <span class="n">candidates</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="p">(</span><span class="n">center_x</span><span class="p">,</span> <span class="n">center_y</span><span class="p">,</span> <span class="n">center_z</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">min_box</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">min_box</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">min_box</span><span class="o">.</span><span class="n">z</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">max_box</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">max_box</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">max_box</span><span class="o">.</span><span class="n">z</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">min_box</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">max_box</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">min_box</span><span class="o">.</span><span class="n">z</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">max_box</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">min_box</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">center_z</span><span class="p">)</span>
+    <span class="p">]</span>
+    
+    <span class="k">for</span> <span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">,</span> <span class="n">pz</span> <span class="ow">in</span> <span class="n">candidates</span><span class="p">:</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">vcad_object</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">px</span><span class="p">,</span> <span class="n">py</span><span class="p">,</span> <span class="n">pz</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">attrs</span> <span class="o">=</span> <span class="n">result</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">attrs</span><span class="o">.</span><span class="n">has_sample</span><span class="p">(</span><span class="n">attr_name</span><span class="p">):</span>
+                <span class="k">return</span> <span class="n">attrs</span><span class="o">.</span><span class="n">get_type</span><span class="p">(</span><span class="n">attr_name</span><span class="p">)</span>
+                
+    <span class="k">return</span> <span class="kc">None</span>
+
+<div class="viewcode-block" id="export_iso_surface_vtk">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering.html#pyvcad_rendering.export_iso_surface_vtk">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">export_iso_surface_vtk</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="s2">&quot;high&quot;</span><span class="p">,</span> <span class="n">use_blending</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Exports the colored iso-surface of a given OpenVCAD object to a .vtp file.</span>
+<span class="sd">    It computes the colors for all defined attributes and adds them as arrays in the PointData.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        vcad_object: The OpenVCAD node to export.</span>
+<span class="sd">        file_path (str): The destination file path (.vtp is recommended).</span>
+<span class="sd">        quality (str, optional): The sampling quality profile (&quot;low&quot;, &quot;medium&quot;, &quot;high&quot;, &quot;ultra&quot;). Defaults to &quot;high&quot;.</span>
+<span class="sd">        use_blending (bool, optional): Whether to use alpha blending. Defaults to True.</span>
+<span class="sd">        progress_callback (callable, optional): Callback for progress updates taking a float (0-100).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">materials</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span> <span class="ow">in</span> <span class="n">vcad_object</span><span class="o">.</span><span class="n">attribute_list</span><span class="p">():</span>
+        <span class="n">vf_attr</span> <span class="o">=</span> <span class="n">vcad_object</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">)</span>
+        <span class="n">materials</span> <span class="o">=</span> <span class="n">vf_attr</span><span class="o">.</span><span class="n">material_defs</span>
+        <span class="k">if</span> <span class="n">materials</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Volume fractions attribute requires material definitions to export.&quot;</span><span class="p">)</span>
+
+    <span class="n">voxel_size</span> <span class="o">=</span> <span class="n">compute_voxel_size_for_quality_profile</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">quality</span><span class="p">)</span>
+    <span class="n">tree_sampler</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">TreeSampler</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+    
+    <span class="c1"># Generate the SDF</span>
+    <span class="n">sdf_volume_data</span> <span class="o">=</span> <span class="n">create_sdf_from_object</span><span class="p">(</span>
+        <span class="n">vcad_object</span><span class="p">,</span> 
+        <span class="n">voxel_size</span><span class="p">,</span> 
+        <span class="n">tree_sampler</span><span class="p">,</span> 
+        <span class="n">progress_callback</span><span class="o">=</span><span class="k">lambda</span> <span class="n">p</span><span class="p">:</span> <span class="n">progress_callback</span><span class="p">(</span><span class="n">p</span> <span class="o">*</span> <span class="mf">0.33</span><span class="p">)</span> <span class="k">if</span> <span class="n">progress_callback</span> <span class="k">else</span> <span class="kc">None</span>
+    <span class="p">)</span>
+
+    <span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkFiltersCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">vtkContourFilter</span>
+    <span class="n">contour</span> <span class="o">=</span> <span class="n">vtkContourFilter</span><span class="p">()</span>
+    <span class="n">contour</span><span class="o">.</span><span class="n">SetInputData</span><span class="p">(</span><span class="n">sdf_volume_data</span><span class="p">)</span>
+    <span class="n">contour</span><span class="o">.</span><span class="n">SetValue</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+    
+    <span class="c1"># Pass along contouring progress</span>
+    <span class="k">if</span> <span class="n">progress_callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">contour_progress</span><span class="p">(</span><span class="n">caller</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+            <span class="n">p</span> <span class="o">=</span> <span class="n">caller</span><span class="o">.</span><span class="n">GetProgress</span><span class="p">()</span>
+            <span class="k">if</span> <span class="n">p</span> <span class="o">%</span> <span class="mf">0.05</span> <span class="o">&lt;</span> <span class="mf">0.001</span><span class="p">:</span>
+                <span class="n">progress_callback</span><span class="p">(</span><span class="mf">33.0</span> <span class="o">+</span> <span class="n">p</span> <span class="o">*</span> <span class="mf">33.0</span><span class="p">)</span>
+        <span class="n">contour</span><span class="o">.</span><span class="n">AddObserver</span><span class="p">(</span><span class="s2">&quot;ProgressEvent&quot;</span><span class="p">,</span> <span class="n">contour_progress</span><span class="p">)</span>
+        
+    <span class="n">contour</span><span class="o">.</span><span class="n">Update</span><span class="p">()</span>
+
+    <span class="n">poly_data</span> <span class="o">=</span> <span class="n">contour</span><span class="o">.</span><span class="n">GetOutput</span><span class="p">()</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="n">poly_data</span><span class="o">.</span><span class="n">GetPoints</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="n">points</span><span class="p">:</span>
+        <span class="n">attributes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="s2">&quot;Signed Distance&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">vcad_object</span><span class="o">.</span><span class="n">attribute_list</span><span class="p">()</span>
+        <span class="n">color_map</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">ColorMap</span><span class="o">.</span><span class="n">create_viridis</span><span class="p">()</span>
+        
+        <span class="n">num_attrs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">attributes</span><span class="p">)</span>
+        
+        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">attributes</span><span class="p">):</span>
+            <span class="c1"># Compute partial progress</span>
+            <span class="k">def</span><span class="w"> </span><span class="nf">attr_callback</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+                <span class="k">if</span> <span class="n">progress_callback</span><span class="p">:</span>
+                    <span class="n">base</span> <span class="o">=</span> <span class="mf">66.0</span> <span class="o">+</span> <span class="p">(</span><span class="n">i</span> <span class="o">/</span> <span class="n">num_attrs</span><span class="p">)</span> <span class="o">*</span> <span class="mf">33.0</span>
+                    <span class="n">frac</span> <span class="o">=</span> <span class="n">p</span> <span class="o">/</span> <span class="mf">100.0</span> <span class="o">*</span> <span class="p">(</span><span class="mf">33.0</span> <span class="o">/</span> <span class="n">num_attrs</span><span class="p">)</span>
+                    <span class="n">progress_callback</span><span class="p">(</span><span class="n">base</span> <span class="o">+</span> <span class="n">frac</span><span class="p">)</span>
+
+            <span class="c1"># Always extract the mapped color representation for visualization</span>
+            <span class="k">if</span> <span class="n">attr</span> <span class="o">!=</span> <span class="s2">&quot;Signed Distance&quot;</span><span class="p">:</span>
+                <span class="n">colors</span> <span class="o">=</span> <span class="n">colors_for_points</span><span class="p">(</span>
+                    <span class="n">vcad_object</span><span class="p">,</span> 
+                    <span class="n">materials</span><span class="p">,</span> 
+                    <span class="n">points</span><span class="p">,</span> 
+                    <span class="n">voxel_size</span><span class="p">,</span> 
+                    <span class="n">tree_sampler</span><span class="p">,</span> 
+                    <span class="n">attr</span><span class="p">,</span> 
+                    <span class="n">color_map</span><span class="p">,</span> 
+                    <span class="n">use_blending</span><span class="p">,</span> 
+                    <span class="n">attr_callback</span>
+                <span class="p">)</span>
+                <span class="n">colors</span><span class="o">.</span><span class="n">SetName</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Color_</span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="n">poly_data</span><span class="o">.</span><span class="n">GetPointData</span><span class="p">()</span><span class="o">.</span><span class="n">AddArray</span><span class="p">(</span><span class="n">colors</span><span class="p">)</span>
+            
+            <span class="c1"># Export raw numerical values if applicable</span>
+            <span class="k">if</span> <span class="n">attr</span> <span class="o">!=</span> <span class="s2">&quot;none&quot;</span><span class="p">:</span>
+                <span class="kn">import</span><span class="w"> </span><span class="nn">vtkmodules.util.numpy_support</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">vtk_np</span>
+                <span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkCommonCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">VTK_FLOAT</span>
+                <span class="n">pv_points</span> <span class="o">=</span> <span class="p">[</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">*</span><span class="n">points</span><span class="o">.</span><span class="n">GetPoint</span><span class="p">(</span><span class="n">idx</span><span class="p">))</span> <span class="k">for</span> <span class="n">idx</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">points</span><span class="o">.</span><span class="n">GetNumberOfPoints</span><span class="p">())]</span>
+                
+                <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s2">&quot;Signed Distance&quot;</span><span class="p">:</span>
+                    <span class="n">raw_data</span> <span class="o">=</span> <span class="n">tree_sampler</span><span class="o">.</span><span class="n">sample_points_to_float_array</span><span class="p">(</span><span class="n">pv_points</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                    <span class="n">num_components</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="n">attr_type</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">ReturnType</span><span class="o">.</span><span class="n">dbl</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">attr_type</span> <span class="o">=</span> <span class="n">_get_attribute_type_from_sample</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+                    <span class="k">if</span> <span class="n">attr_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                        <span class="k">continue</span>
+                    
+                    <span class="n">raw_data</span> <span class="o">=</span> <span class="kc">None</span>
+                    <span class="n">num_components</span> <span class="o">=</span> <span class="mi">1</span>
+                    
+                    <span class="k">if</span> <span class="n">attr_type</span> <span class="o">==</span> <span class="n">pv</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">ReturnType</span><span class="o">.</span><span class="n">dbl</span><span class="p">:</span>
+                        <span class="n">raw_data</span> <span class="o">=</span> <span class="n">tree_sampler</span><span class="o">.</span><span class="n">sample_points_to_float_array</span><span class="p">(</span><span class="n">pv_points</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                        <span class="n">num_components</span> <span class="o">=</span> <span class="mi">1</span>
+                    <span class="k">elif</span> <span class="n">attr_type</span> <span class="o">==</span> <span class="n">pv</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">ReturnType</span><span class="o">.</span><span class="n">vec3</span><span class="p">:</span>
+                        <span class="n">raw_data</span> <span class="o">=</span> <span class="n">tree_sampler</span><span class="o">.</span><span class="n">sample_points_to_vec3_array</span><span class="p">(</span><span class="n">pv_points</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                        <span class="n">num_components</span> <span class="o">=</span> <span class="mi">3</span>
+                    <span class="k">elif</span> <span class="n">attr_type</span> <span class="o">==</span> <span class="n">pv</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">ReturnType</span><span class="o">.</span><span class="n">vec4</span><span class="p">:</span>
+                        <span class="n">raw_data</span> <span class="o">=</span> <span class="n">tree_sampler</span><span class="o">.</span><span class="n">sample_points_to_vec4_array</span><span class="p">(</span><span class="n">pv_points</span><span class="p">,</span> <span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                        <span class="n">num_components</span> <span class="o">=</span> <span class="mi">4</span>
+                
+                <span class="k">if</span> <span class="n">raw_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+                    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">raw_data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+                        <span class="n">np_data</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">attr_type</span> <span class="o">==</span> <span class="n">pv</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">ReturnType</span><span class="o">.</span><span class="n">vec3</span><span class="p">:</span>
+                        <span class="n">np_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">v</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">z</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">raw_data</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+                    <span class="k">elif</span> <span class="n">attr_type</span> <span class="o">==</span> <span class="n">pv</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">ReturnType</span><span class="o">.</span><span class="n">vec4</span><span class="p">:</span>
+                        <span class="n">np_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">v</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">g</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">b</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">raw_data</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+                    <span class="k">else</span><span class="p">:</span>
+                        <span class="n">np_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">raw_data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+                        
+                    <span class="n">vtk_raw_array</span> <span class="o">=</span> <span class="n">vtk_np</span><span class="o">.</span><span class="n">numpy_to_vtk</span><span class="p">(</span><span class="n">num_array</span><span class="o">=</span><span class="n">np_data</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">array_type</span><span class="o">=</span><span class="n">VTK_FLOAT</span><span class="p">)</span>
+                    <span class="n">vtk_raw_array</span><span class="o">.</span><span class="n">SetNumberOfComponents</span><span class="p">(</span><span class="n">num_components</span><span class="p">)</span>
+                    <span class="n">vtk_raw_array</span><span class="o">.</span><span class="n">SetName</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+                    <span class="n">poly_data</span><span class="o">.</span><span class="n">GetPointData</span><span class="p">()</span><span class="o">.</span><span class="n">AddArray</span><span class="p">(</span><span class="n">vtk_raw_array</span><span class="p">)</span>
+
+    <span class="n">writer</span> <span class="o">=</span> <span class="n">vtkXMLPolyDataWriter</span><span class="p">()</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">SetFileName</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">SetInputData</span><span class="p">(</span><span class="n">poly_data</span><span class="p">)</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">Write</span><span class="p">()</span>
+    
+    <span class="k">if</span> <span class="n">progress_callback</span><span class="p">:</span>
+        <span class="n">progress_callback</span><span class="p">(</span><span class="mf">100.0</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="export_volume_vtk">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering.html#pyvcad_rendering.export_volume_vtk">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">export_volume_vtk</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="s2">&quot;high&quot;</span><span class="p">,</span> <span class="n">use_blending</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Exports the multi-material colored volume of a given OpenVCAD object to a .vti file.</span>
+<span class="sd">    It computes the colors for all defined attributes and adds them as arrays in the PointData.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        vcad_object: The OpenVCAD node to export.</span>
+<span class="sd">        file_path (str): The destination file path (.vti is recommended).</span>
+<span class="sd">        quality (str, optional): The sampling quality profile (&quot;low&quot;, &quot;medium&quot;, &quot;high&quot;, &quot;ultra&quot;). Defaults to &quot;high&quot;.</span>
+<span class="sd">        use_blending (bool, optional): Whether to use alpha blending. Defaults to True.</span>
+<span class="sd">        progress_callback (callable, optional): Callback for progress updates taking a float (0-100).</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">materials</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span> <span class="ow">in</span> <span class="n">vcad_object</span><span class="o">.</span><span class="n">attribute_list</span><span class="p">():</span>
+        <span class="n">vf_attr</span> <span class="o">=</span> <span class="n">vcad_object</span><span class="o">.</span><span class="n">get_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">)</span>
+        <span class="n">materials</span> <span class="o">=</span> <span class="n">vf_attr</span><span class="o">.</span><span class="n">material_defs</span>
+        <span class="k">if</span> <span class="n">materials</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Volume fractions attribute requires material definitions to export.&quot;</span><span class="p">)</span>
+
+    <span class="n">voxel_size</span> <span class="o">=</span> <span class="n">compute_voxel_size_for_quality_profile</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">quality</span><span class="p">)</span>
+    <span class="n">tree_sampler</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">TreeSampler</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+    
+    <span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkCommonDataModel</span><span class="w"> </span><span class="kn">import</span> <span class="n">vtkImageData</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">vtkmodules.util.numpy_support</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">vtk_np</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkCommonCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">VTK_UNSIGNED_CHAR</span>
+    <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+    <span class="n">attributes</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="s2">&quot;Signed Distance&quot;</span><span class="p">]</span> <span class="o">+</span> <span class="n">vcad_object</span><span class="o">.</span><span class="n">attribute_list</span><span class="p">()</span>
+    <span class="n">color_map</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">ColorMap</span><span class="o">.</span><span class="n">create_viridis</span><span class="p">()</span>
+    <span class="n">num_attrs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">attributes</span><span class="p">)</span>
+    
+    <span class="n">volume_data</span> <span class="o">=</span> <span class="n">vtkImageData</span><span class="p">()</span>
+    <span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span> <span class="o">=</span> <span class="n">tree_sampler</span><span class="o">.</span><span class="n">sample_dimensions</span><span class="p">()</span>
+    <span class="n">volume_data</span><span class="o">.</span><span class="n">SetDimensions</span><span class="p">(</span><span class="n">nx</span><span class="p">,</span> <span class="n">ny</span><span class="p">,</span> <span class="n">nz</span><span class="p">)</span>
+    <span class="n">volume_data</span><span class="o">.</span><span class="n">SetSpacing</span><span class="p">(</span><span class="n">voxel_size</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">.</span><span class="n">z</span><span class="p">)</span>
+
+    <span class="n">min_bbox</span><span class="p">,</span> <span class="n">max_bbox</span> <span class="o">=</span> <span class="n">vcad_object</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">()</span>
+    <span class="c1"># Expand by two voxels to match the TreeSampler&#39;s internal bounding box expansion</span>
+    <span class="n">volume_data</span><span class="o">.</span><span class="n">SetOrigin</span><span class="p">(</span>
+        <span class="n">min_bbox</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="p">(</span><span class="n">voxel_size</span><span class="o">.</span><span class="n">x</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">),</span>
+        <span class="n">min_bbox</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="p">(</span><span class="n">voxel_size</span><span class="o">.</span><span class="n">y</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">),</span>
+        <span class="n">min_bbox</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="p">(</span><span class="n">voxel_size</span><span class="o">.</span><span class="n">z</span> <span class="o">*</span> <span class="mf">2.0</span><span class="p">),</span>
+    <span class="p">)</span>
+
+    <span class="n">refs</span> <span class="o">=</span> <span class="p">[]</span>  <span class="c1"># Keep alive numpy arrays</span>
+    
+    <span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkCommonCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">VTK_FLOAT</span>
+    
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">attr</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">attributes</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">attr_callback</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+            <span class="k">if</span> <span class="n">progress_callback</span><span class="p">:</span>
+                <span class="n">base</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span> <span class="o">/</span> <span class="n">num_attrs</span><span class="p">)</span> <span class="o">*</span> <span class="mf">100.0</span>
+                <span class="n">frac</span> <span class="o">=</span> <span class="p">(</span><span class="n">p</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="mf">100.0</span> <span class="o">/</span> <span class="n">num_attrs</span><span class="p">)</span>
+                <span class="n">progress_callback</span><span class="p">(</span><span class="n">base</span> <span class="o">+</span> <span class="n">frac</span><span class="p">)</span>
+                
+        <span class="c1"># Always extract the mapped color representation for visualization</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="o">!=</span> <span class="s2">&quot;Signed Distance&quot;</span><span class="p">:</span>
+            <span class="n">color_data</span> <span class="o">=</span> <span class="n">tree_sampler</span><span class="o">.</span><span class="n">as_rgba_array</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="n">color_map</span><span class="p">,</span> <span class="n">use_blending</span><span class="p">,</span> <span class="n">attr_callback</span><span class="p">)</span>
+            <span class="n">vtk_color_array</span> <span class="o">=</span> <span class="n">vtk_np</span><span class="o">.</span><span class="n">numpy_to_vtk</span><span class="p">(</span>
+                <span class="n">num_array</span><span class="o">=</span><span class="n">color_data</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">array_type</span><span class="o">=</span><span class="n">VTK_UNSIGNED_CHAR</span>
+            <span class="p">)</span>
+            <span class="n">vtk_color_array</span><span class="o">.</span><span class="n">SetNumberOfComponents</span><span class="p">(</span><span class="mi">4</span><span class="p">)</span>
+            <span class="n">vtk_color_array</span><span class="o">.</span><span class="n">SetName</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Color_</span><span class="si">{</span><span class="n">attr</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+            <span class="n">volume_data</span><span class="o">.</span><span class="n">GetPointData</span><span class="p">()</span><span class="o">.</span><span class="n">AddArray</span><span class="p">(</span><span class="n">vtk_color_array</span><span class="p">)</span>
+            <span class="n">refs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">color_data</span><span class="p">)</span>
+        
+        <span class="c1"># Export raw numerical values if applicable</span>
+        <span class="k">if</span> <span class="n">attr</span> <span class="o">!=</span> <span class="s2">&quot;none&quot;</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">attr</span> <span class="o">==</span> <span class="s2">&quot;Signed Distance&quot;</span><span class="p">:</span>
+                <span class="n">raw_data</span> <span class="o">=</span> <span class="n">tree_sampler</span><span class="o">.</span><span class="n">as_signed_distance_array</span><span class="p">(</span><span class="kc">None</span><span class="p">)</span>
+                <span class="n">attr_type</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">ReturnType</span><span class="o">.</span><span class="n">dbl</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">attr_type</span> <span class="o">=</span> <span class="n">_get_attribute_type_from_sample</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">attr_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">continue</span>
+                
+                <span class="n">raw_data</span> <span class="o">=</span> <span class="kc">None</span>
+                <span class="k">if</span> <span class="n">attr_type</span> <span class="o">==</span> <span class="n">pv</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">ReturnType</span><span class="o">.</span><span class="n">dbl</span><span class="p">:</span>
+                    <span class="n">raw_data</span> <span class="o">=</span> <span class="n">tree_sampler</span><span class="o">.</span><span class="n">as_float_array</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">attr_type</span> <span class="o">==</span> <span class="n">pv</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">ReturnType</span><span class="o">.</span><span class="n">vec3</span><span class="p">:</span>
+                    <span class="n">raw_data</span> <span class="o">=</span> <span class="n">tree_sampler</span><span class="o">.</span><span class="n">as_vec3_array</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">attr_type</span> <span class="o">==</span> <span class="n">pv</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">ReturnType</span><span class="o">.</span><span class="n">vec4</span><span class="p">:</span>
+                    <span class="n">raw_data</span> <span class="o">=</span> <span class="n">tree_sampler</span><span class="o">.</span><span class="n">as_vec4_array</span><span class="p">(</span><span class="n">attr</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                
+            <span class="k">if</span> <span class="n">raw_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">raw_data</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+                    <span class="n">np_data</span> <span class="o">=</span> <span class="n">raw_data</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">attr_type</span> <span class="o">==</span> <span class="n">pv</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">ReturnType</span><span class="o">.</span><span class="n">vec3</span><span class="p">:</span>
+                    <span class="n">np_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">v</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">z</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">raw_data</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+                <span class="k">elif</span> <span class="n">attr_type</span> <span class="o">==</span> <span class="n">pv</span><span class="o">.</span><span class="n">Attribute</span><span class="o">.</span><span class="n">ReturnType</span><span class="o">.</span><span class="n">vec4</span><span class="p">:</span>
+                    <span class="n">np_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="n">v</span><span class="o">.</span><span class="n">r</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">g</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">b</span><span class="p">,</span> <span class="n">v</span><span class="o">.</span><span class="n">a</span><span class="p">]</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">raw_data</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">np_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">raw_data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">)</span>
+                    
+                <span class="n">vtk_raw_array</span> <span class="o">=</span> <span class="n">vtk_np</span><span class="o">.</span><span class="n">numpy_to_vtk</span><span class="p">(</span><span class="n">num_array</span><span class="o">=</span><span class="n">np_data</span><span class="p">,</span> <span class="n">deep</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">array_type</span><span class="o">=</span><span class="n">VTK_FLOAT</span><span class="p">)</span>
+                <span class="c1"># Number of components is automatically determined by the shape of the numpy array</span>
+                <span class="n">vtk_raw_array</span><span class="o">.</span><span class="n">SetName</span><span class="p">(</span><span class="n">attr</span><span class="p">)</span>
+                <span class="n">volume_data</span><span class="o">.</span><span class="n">GetPointData</span><span class="p">()</span><span class="o">.</span><span class="n">AddArray</span><span class="p">(</span><span class="n">vtk_raw_array</span><span class="p">)</span>
+                <span class="n">refs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">np_data</span><span class="p">)</span>
+        
+    <span class="c1"># Prevent garbage collection while vtk operates on them</span>
+    <span class="nb">setattr</span><span class="p">(</span><span class="n">volume_data</span><span class="p">,</span> <span class="s2">&quot;_np_refs&quot;</span><span class="p">,</span> <span class="n">refs</span><span class="p">)</span>
+
+    <span class="n">writer</span> <span class="o">=</span> <span class="n">vtkXMLImageDataWriter</span><span class="p">()</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">SetFileName</span><span class="p">(</span><span class="n">file_path</span><span class="p">)</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">SetInputData</span><span class="p">(</span><span class="n">volume_data</span><span class="p">)</span>
+    <span class="n">writer</span><span class="o">.</span><span class="n">Write</span><span class="p">()</span>
+
+    <span class="k">if</span> <span class="n">progress_callback</span><span class="p">:</span>
+        <span class="n">progress_callback</span><span class="p">(</span><span class="mf">100.0</span><span class="p">)</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, Charles Wade and Robert MacCurdy.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  
+
+
+
+
+<div class="version-picker" style="padding: 12px; margin-bottom: 12px;">
+  <label for="version-select" style="font-weight: bold; display: block; margin-bottom: 4px; font-size: 0.85em; color: #999;">
+    Version
+  </label>
+  <select id="version-select"
+          onchange="if(this.value) window.location.href=this.value;"
+          style="width: 100%; padding: 4px; border-radius: 4px; border: 1px solid #555; background: #333; color: #eee;">
+    
+      <option value="../v2/index.html"
+              >
+        v2
+      </option>
+    
+      <option value="../v3-dev/index.html"
+              selected>
+        v3-dev
+      </option>
+    
+  </select>
+</div>
+<script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,5 +1,6 @@
 
 
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="../">
 <head>
@@ -10,6 +11,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+      <link rel="stylesheet" type="text/css" href="../_static/openvcad_theme.css?v=a969b26e" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
@@ -102,9 +104,10 @@
   </ul>
   <hr/>
 </div>
-          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
-           <div itemprop="articleBody">
-             
+          <div class="openvcad-doc-columns">
+            <div role="main" class="document openvcad-doc-main" itemscope="itemscope" itemtype="http://schema.org/Article">
+                <div itemprop="articleBody">
+                  
   <section id="openvcad-gradient-reference-guide">
 <h1>OpenVCAD: Gradient Reference Guide<a class="headerlink" href="#openvcad-gradient-reference-guide" title="Link to this heading"></a></h1>
 <p>This guide is a practical reference for defining <strong>spatial gradients</strong> in OpenVCAD. Gradients are the core mechanism for creating functionally graded designs — parts whose material properties, colors, or compositions change continuously through space.</p>
@@ -200,9 +203,6 @@
 <li><p><strong>Modulus</strong> (linear): maps x in [-20, +20] to [1, 10] MPa</p></li>
 <li><p><strong>Density</strong> (power law with n=3): same range, but the value stays low for most of the span and rises sharply near the end</p></li>
 </ul>
-<table>
-<tr>
-<td width="55%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
@@ -233,17 +233,20 @@
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="45%">
-<p><strong>Plot:</strong></p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Plot</p>
 <img src="images/01_linear_plot.png" alt="Linear vs Power Law" width="100%">
-<p><strong>Render (modulus):</strong></p>
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus)</p>
 <img src="images/01_linear_gradients_modulus.webp" alt="Linear Modulus" width="100%">
-<p><strong>Render (density):</strong></p>
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (density)</p>
 <img src="images/01_linear_gradients_density.webp" alt="Power Law Density" width="100%">
-</td>
-</tr>
-</table>
+</div>
+</div>
 </section>
 <hr class="docutils" />
 <section id="lesson-2-non-linear-gradients">
@@ -274,9 +277,6 @@
 <p>The <strong>sigmoid</strong> creates a smooth step transition — useful for transitioning between two material regions without a hard boundary. The steepness parameter <code class="docutils literal notranslate"><span class="pre">k</span></code> controls how sharp the transition is.</p>
 <p>The <strong>Gaussian</strong> creates a bell-curve peak centered at the origin — useful for localized reinforcement or heating profiles.</p>
 <p>The <strong>exponential decay</strong> starts high and drops off — useful for modeling diffusion or attenuation from a surface.</p>
-<table>
-<tr>
-<td width="55%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
@@ -308,19 +308,24 @@
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="45%">
-<p><strong>Plot:</strong></p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Plot</p>
 <img src="images/02_nonlinear_plot.png" alt="Non-Linear Gradients" width="100%">
-<p><strong>Render (modulus — sigmoid):</strong></p>
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus — sigmoid)</p>
 <img src="images/02_nonlinear_gradients_modulus.webp" alt="Sigmoid Modulus" width="100%">
-<p><strong>Render (temperature — Gaussian):</strong></p>
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (temperature — Gaussian)</p>
 <img src="images/02_nonlinear_gradients_temperature.webp" alt="Gaussian Temperature" width="100%">
-<p><strong>Render (density — exponential):</strong></p>
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (density — exponential)</p>
 <img src="images/02_nonlinear_gradients_density.webp" alt="Exponential Density" width="100%">
-</td>
-</tr>
-</table>
+</div>
+</div>
 </section>
 <hr class="docutils" />
 <section id="lesson-3-periodic-gradients">
@@ -331,9 +336,6 @@
 <li><p><strong>Sinusoidal modulus</strong>: oscillates along X with a base value and amplitude</p></li>
 <li><p><strong>Color bands</strong>: uses phase-shifted sine waves on the red and blue channels to create alternating stripes</p></li>
 </ul>
-<table>
-<tr>
-<td width="55%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
@@ -364,17 +366,20 @@
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="45%">
-<p><strong>Plot:</strong></p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Plot</p>
 <img src="images/03_periodic_plot.png" alt="Periodic Gradients" width="100%">
-<p><strong>Render (modulus):</strong></p>
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus)</p>
 <img src="images/03_periodic_gradients_modulus.webp" alt="Sinusoidal Modulus" width="100%">
-<p><strong>Render (color):</strong></p>
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (color)</p>
 <img src="images/03_periodic_gradients_color_rgba.webp" alt="Periodic Color Bands" width="100%">
-</td>
-</tr>
-</table>
+</div>
+</div>
 </section>
 <hr class="docutils" />
 <section id="lesson-4-multi-axis-gradients">
@@ -386,9 +391,6 @@
 <li><p><strong>Radial modulus</strong>: <code class="docutils literal notranslate"><span class="pre">sqrt(x^2</span> <span class="pre">+</span> <span class="pre">y^2)</span></code> normalized, producing a bull’s-eye pattern from center to edges</p></li>
 <li><p><strong>Radial volume fractions</strong>: two-material blend that transitions from one material at the center to another at the edges</p></li>
 </ul>
-<table>
-<tr>
-<td width="55%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
@@ -425,19 +427,24 @@
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="45%">
-<p><strong>Plot (2D heatmaps):</strong></p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Plot (2D heatmaps)</p>
 <img src="images/04_multiaxis_plot.png" alt="Multi-Axis Gradients" width="100%">
-<p><strong>Render (color — diagonal):</strong></p>
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (color — diagonal)</p>
 <img src="images/04_multiaxis_gradients_color_rgba.webp" alt="Diagonal Color" width="100%">
-<p><strong>Render (modulus — radial):</strong></p>
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus — radial)</p>
 <img src="images/04_multiaxis_gradients_modulus.webp" alt="Radial Modulus" width="100%">
-<p><strong>Render (volume fractions — radial):</strong></p>
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (volume fractions — radial)</p>
 <img src="images/04_multiaxis_gradients_volume_fractions.webp" alt="Radial Volume Fractions" width="100%">
-</td>
-</tr>
-</table>
+</div>
+</div>
 </section>
 <hr class="docutils" />
 <section id="lesson-5-signed-distance-gradients">
@@ -458,9 +465,6 @@
 <blockquote>
 <div><p><strong>Note:</strong> The renders below show a clipped cross-section to reveal the internal gradient.</p>
 </div></blockquote>
-<table>
-<tr>
-<td width="55%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
@@ -497,19 +501,24 @@
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="45%">
-<p><strong>Plot:</strong></p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Plot</p>
 <img src="images/05_signed_distance_plot.png" alt="Signed Distance Gradients" width="100%">
-<p><strong>Render (modulus — clipped):</strong></p>
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus — clipped)</p>
 <img src="images/05_signed_distance_gradients_modulus.webp" alt="Skin Modulus" width="100%">
-<p><strong>Render (color — clipped):</strong></p>
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (color — clipped)</p>
 <img src="images/05_signed_distance_gradients_color_rgba.webp" alt="Shell Color" width="100%">
-<p><strong>Render (volume fractions — clipped):</strong></p>
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (volume fractions — clipped)</p>
 <img src="images/05_signed_distance_gradients_volume_fractions.webp" alt="Skin Volume Fractions" width="100%">
-</td>
-</tr>
-</table>
+</div>
+</div>
 </section>
 <hr class="docutils" />
 <section id="lesson-6-cylindrical-coordinate-gradients">
@@ -529,9 +538,6 @@
 <blockquote>
 <div><p><strong>Note:</strong> The modulus and volume fraction renders below show a clipped cross-section to reveal the internal radial gradient.</p>
 </div></blockquote>
-<table>
-<tr>
-<td width="55%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
@@ -567,19 +573,24 @@
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="45%">
-<p><strong>Plot:</strong></p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Plot</p>
 <img src="images/06_cylindrical_plot.png" alt="Cylindrical Gradients" width="100%">
-<p><strong>Render (modulus — clipped):</strong></p>
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus — clipped)</p>
 <img src="images/06_cylindrical_gradients_modulus.webp" alt="Radial Modulus" width="100%">
-<p><strong>Render (color — angular):</strong></p>
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (color — angular)</p>
 <img src="images/06_cylindrical_gradients_color_rgba.webp" alt="Angular Color" width="100%">
-<p><strong>Render (volume fractions — clipped):</strong></p>
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (volume fractions — clipped)</p>
 <img src="images/06_cylindrical_gradients_volume_fractions.webp" alt="Radial Volume Fractions" width="100%">
-</td>
-</tr>
-</table>
+</div>
+</div>
 </section>
 <hr class="docutils" />
 <section id="lesson-7-spherical-coordinate-gradients">
@@ -599,9 +610,6 @@
 <blockquote>
 <div><p><strong>Note:</strong> The modulus and volume fraction renders below show a clipped cross-section to reveal the internal radial gradient.</p>
 </div></blockquote>
-<table>
-<tr>
-<td width="55%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
@@ -636,19 +644,24 @@
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="45%">
-<p><strong>Plot:</strong></p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Plot</p>
 <img src="images/07_spherical_plot.png" alt="Spherical Gradients" width="100%">
-<p><strong>Render (modulus — clipped):</strong></p>
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus — clipped)</p>
 <img src="images/07_spherical_gradients_modulus.webp" alt="Radial Modulus" width="100%">
-<p><strong>Render (color — polar):</strong></p>
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (color — polar)</p>
 <img src="images/07_spherical_gradients_color_rgba.webp" alt="Polar Color" width="100%">
-<p><strong>Render (volume fractions — clipped):</strong></p>
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (volume fractions — clipped)</p>
 <img src="images/07_spherical_gradients_volume_fractions.webp" alt="Radial Volume Fractions" width="100%">
-</td>
-</tr>
-</table>
+</div>
+</div>
 </section>
 <hr class="docutils" />
 <section id="summary-gradient-toolbox">
@@ -708,7 +721,32 @@
 </section>
 
 
-           </div>
+                </div>
+            </div>
+            <aside class="openvcad-localtoc" aria-label="On this page">
+              <div class="openvcad-localtoc-sticky">
+                <p class="openvcad-localtoc-title">On this page</p>
+                <nav class="openvcad-localtoc-nav"><ul>
+<li><a class="reference internal" href="#">OpenVCAD: Gradient Reference Guide</a><ul>
+<li><a class="reference internal" href="#prerequisites">Prerequisites</a></li>
+<li><a class="reference internal" href="#setup">Setup</a></li>
+<li><a class="reference internal" href="#running-the-examples">Running the Examples</a></li>
+<li><a class="reference internal" href="#building-parametric-expressions-with-python-f-strings">Building Parametric Expressions with Python f-Strings</a></li>
+<li><a class="reference internal" href="#coordinate-systems-at-a-glance">Coordinate Systems at a Glance</a></li>
+<li><a class="reference internal" href="#lesson-1-linear-gradients">Lesson 1: Linear Gradients</a></li>
+<li><a class="reference internal" href="#lesson-2-non-linear-gradients">Lesson 2: Non-Linear Gradients</a></li>
+<li><a class="reference internal" href="#lesson-3-periodic-gradients">Lesson 3: Periodic Gradients</a></li>
+<li><a class="reference internal" href="#lesson-4-multi-axis-gradients">Lesson 4: Multi-Axis Gradients</a></li>
+<li><a class="reference internal" href="#lesson-5-signed-distance-gradients">Lesson 5: Signed-Distance Gradients</a></li>
+<li><a class="reference internal" href="#lesson-6-cylindrical-coordinate-gradients">Lesson 6: Cylindrical Coordinate Gradients</a></li>
+<li><a class="reference internal" href="#lesson-7-spherical-coordinate-gradients">Lesson 7: Spherical Coordinate Gradients</a></li>
+<li><a class="reference internal" href="#summary-gradient-toolbox">Summary: Gradient Toolbox</a></li>
+</ul>
+</li>
+</ul>
+</nav>
+              </div>
+            </aside>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="getting-started.html" class="btn btn-neutral float-left" title="OpenVCAD: Getting Started (Attribute Modeling)" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>

@@ -1,9 +1,65 @@
 Attributes
 ==========
 
-Attribute types, samples, converters, and the ``DefaultAttributes`` submodule.
+In **attribute modeling**, attributes are named spatial fields attached to nodes in your ``Node`` tree. They describe quantities that vary through the interior of a part—modulus, color, material volume fractions, and more—using the same sampling idea as implicit geometry: at each point, the engine evaluates whether you are inside the solid and, when you are, evaluates the attached fields at that location.
 
-.. currentmodule:: pyvcad
+Conceptually, each attribute implements a **sample** at ``(x, y, z)`` together with the signed distance ``d`` to the surface. Expression strings (see the math expressions guide) can use coordinates and ``d``; results are aggregated under string names so renderers and compilers can pick them up consistently.
+
+**Interface you use in Python**
+
+* Attach fields to geometry with ``node.set_attribute(name, attribute)``.
+* Use **canonical names** from ``DefaultAttributes`` (e.g. ``MODULUS``, ``COLOR_RGBA``, ``VOLUME_FRACTIONS``) so downstream tools know which field to read.
+* **``FloatAttribute``** — one scalar per point (physical scalars, temperatures, etc.).
+* **``Vec4Attribute``** — four components per point (typical use: linear RGBA in ``[0, 1]``).
+* **``VolumeFractionsAttribute``** — maps material IDs to fractions at each point; fractions should sum to 1 where mixtures apply.
+
+Attributes are only evaluated where the geometry exists (inside or on the surface), so expensive expressions are not run in empty space.
+
+Examples
+--------
+
+The patterns below mirror the getting-started guide (lessons 4–6); they show the minimal attach-and-name workflow.
+
+**Scalar field (constant or expression)**
+
+.. code-block:: python
+
+   import pyvcad as pv
+
+   cube = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(10, 10, 10))
+   cube.set_attribute(pv.DefaultAttributes.MODULUS, pv.FloatAttribute(5.0))
+
+   cube = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(10, 10, 50))
+   cube.set_attribute(
+       pv.DefaultAttributes.MODULUS,
+       pv.FloatAttribute("0.18 * z + 5.5"),
+   )
+
+**RGBA color field**
+
+.. code-block:: python
+
+   cube = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(50, 10, 10))
+   color = pv.Vec4Attribute("x/50 + 0.5", "-x/50 + 0.5", "x/50 + 0.5", "1.0")
+   cube.set_attribute(pv.DefaultAttributes.COLOR_RGBA, color)
+
+**Volume fractions (multi-material)**
+
+.. code-block:: python
+
+   materials = pv.default_materials
+   cube = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(50, 10, 10))
+   cube.set_attribute(
+       pv.DefaultAttributes.VOLUME_FRACTIONS,
+       pv.VolumeFractionsAttribute(
+           [
+               ("x/50 + 0.5", materials.id("blue")),
+               ("-x/50 + 0.5", materials.id("red")),
+           ]
+       ),
+   )
+
+See :ref:`guide-getting-started` for full lessons, hierarchy/priority rules, and expression details.
 
 Core types
 ----------

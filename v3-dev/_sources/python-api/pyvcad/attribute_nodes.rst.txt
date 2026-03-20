@@ -1,7 +1,12 @@
 Tree — attribute nodes
 ======================
 
-Unary nodes that modify or filter attributes on the tree.
+**Attribute nodes** are :class:`Unary` scene nodes: each wraps a **child** subtree and changes how **continuous attributes** are produced or post-processed for that geometry. They are not the same thing as attaching an :class:`Attribute` with :meth:`Node.set_attribute`—that API defines field values on a node (see :doc:`attributes`). Attribute nodes instead implement **attribute-side operators** in the tree: converters, lookup tables, or spatial filters that sit between evaluation and the rest of the pipeline.
+
+:class:`AttributeModifier` applies an **attribute converter** (for example, mapping one named field into another, such as HU to RGBA via a lookup table). :class:`Convolve` applies a **convolution kernel** over attribute samples in a neighborhood so you can smooth, blend, or emphasize material or color distributions **without** altering the signed-distance geometry of the child.
+
+Unary attribute nodes
+---------------------
 
 .. currentmodule:: pyvcad
 
@@ -9,6 +14,16 @@ Unary nodes that modify or filter attributes on the tree.
    :members:
    :undoc-members:
    :special-members: __init__
+
+.. autoclass:: Convolve
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+Convolution kernels
+-------------------
+
+Kernels describe the spatial stencil :class:`Convolve` uses (uniform box averaging or explicit per-voxel weights).
 
 .. autoclass:: ConvolveKernel
    :members:
@@ -21,11 +36,6 @@ Unary nodes that modify or filter attributes on the tree.
    :special-members: __init__
 
 .. autoclass:: CustomKernel
-   :members:
-   :undoc-members:
-   :special-members: __init__
-
-.. autoclass:: Convolve
    :members:
    :undoc-members:
    :special-members: __init__

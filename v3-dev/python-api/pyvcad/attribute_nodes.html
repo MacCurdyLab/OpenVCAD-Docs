@@ -387,7 +387,10 @@
                   
   <section id="tree-attribute-nodes">
 <h1>Tree — attribute nodes<a class="headerlink" href="#tree-attribute-nodes" title="Link to this heading">#</a></h1>
-<p>Unary nodes that modify or filter attributes on the tree.</p>
+<p><strong>Attribute nodes</strong> are <code class="xref py py-class docutils literal notranslate"><span class="pre">Unary</span></code> scene nodes: each wraps a <strong>child</strong> subtree and changes how <strong>continuous attributes</strong> are produced or post-processed for that geometry. They are not the same thing as attaching an <code class="xref py py-class docutils literal notranslate"><span class="pre">Attribute</span></code> with <code class="xref py py-meth docutils literal notranslate"><span class="pre">Node.set_attribute()</span></code>—that API defines field values on a node (see <a class="reference internal" href="attributes.html"><span class="doc">Attributes</span></a>). Attribute nodes instead implement <strong>attribute-side operators</strong> in the tree: converters, lookup tables, or spatial filters that sit between evaluation and the rest of the pipeline.</p>
+<p><code class="xref py py-class docutils literal notranslate"><span class="pre">AttributeModifier</span></code> applies an <strong>attribute converter</strong> (for example, mapping one named field into another, such as HU to RGBA via a lookup table). <code class="xref py py-class docutils literal notranslate"><span class="pre">Convolve</span></code> applies a <strong>convolution kernel</strong> over attribute samples in a neighborhood so you can smooth, blend, or emphasize material or color distributions <strong>without</strong> altering the signed-distance geometry of the child.</p>
+<section id="unary-attribute-nodes">
+<h2>Unary attribute nodes<a class="headerlink" href="#unary-attribute-nodes" title="Link to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyvcad.AttributeModifier">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">AttributeModifier</span></span><a class="headerlink" href="#pyvcad.AttributeModifier" title="Link to this definition">#</a></dt>
@@ -395,12 +398,12 @@
 <p>Note: Setting or getting attributes directly on this node via <cite>set_attribute</cite> or <cite>get_attribute</cite> is not supported and will raise an error.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyvcad.AttributeModifier.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.AttributeModifier" title="pyvcad.pyvcad.AttributeModifier"><span class="pre">pyvcad.pyvcad.AttributeModifier</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">converter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="attributes.html#pyvcad.AttributeConverterBase" title="pyvcad.AttributeConverterBase"><span class="pre">AttributeConverterBase</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">child</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.pyvcad.Node"><span class="pre">pyvcad.pyvcad.Node</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.AttributeModifier.__init__" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.AttributeModifier" title="pyvcad.pyvcad.AttributeModifier"><span class="pre">pyvcad.pyvcad.AttributeModifier</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">converter</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">AttributeConverterBase</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">child</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.pyvcad.Node"><span class="pre">pyvcad.pyvcad.Node</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.AttributeModifier.__init__" title="Link to this definition">#</a></dt>
 <dd><p>Constructor. Creates an AttributeModifier with a converter and a child node.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>converter</strong> (<a class="reference internal" href="attributes.html#pyvcad.AttributeConverterBase" title="pyvcad.AttributeConverterBase"><em>AttributeConverterBase</em></a>) – The attribute converter to apply.</p></li>
+<li><p><strong>converter</strong> (<em>AttributeConverterBase</em>) – The attribute converter to apply.</p></li>
 <li><p><strong>child</strong> (<a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The child node to be modified.</p></li>
 </ul>
 </dd>
@@ -409,6 +412,68 @@
 
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Convolve">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Convolve</span></span><a class="headerlink" href="#pyvcad.Convolve" title="Link to this definition">#</a></dt>
+<dd><p>A Unary node that applies a convolution kernel to the continuous attributes of its child node.</p>
+<p>This is highly useful for blending, blurring, or sharpening color or material distributions without affecting the raw signed distance field geometry.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>child</strong> (<a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The node to process.</p></li>
+<li><p><strong>attributes</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Names of the attributes to target. Pass an empty list to target all.</p></li>
+<li><p><strong>kernel</strong> (<a class="reference internal" href="#pyvcad.ConvolveKernel" title="pyvcad.ConvolveKernel"><em>ConvolveKernel</em></a>) – The kernel to apply.</p></li>
+<li><p><strong>physical_radius</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – [rx, ry, rz] physical bounds (in mm) that the kernel spans.</p></li>
+<li><p><strong>enable_cache</strong> (<em>bool</em>) – Toggles the internal volumetric LRU cache. Defaults to true.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">kernel</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">BoxKernel</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">blur_node</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Convolve</span><span class="p">(</span><span class="n">my_shape</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Temperature&#39;</span><span class="p">],</span> <span class="n">kernel</span><span class="p">,</span> <span class="p">[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">])</span>
+</pre></div>
+</div>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Convolve.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Convolve.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Convolve, child: pyvcad.pyvcad.Node, attributes: collections.abc.Sequence[str], kernel: pyvcad.pyvcad.ConvolveKernel, physical_radius: collections.abc.Sequence[typing.SupportsFloat]) -&gt; None</p></li>
+<li><p>__init__(self: pyvcad.pyvcad.Convolve, child: pyvcad.pyvcad.Node, attributes: collections.abc.Sequence[str], kernel: pyvcad.pyvcad.ConvolveKernel, physical_radius: collections.abc.Sequence[typing.SupportsFloat], enable_cache: bool) -&gt; None</p></li>
+</ol>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Convolve.cache_capacity">
+<span class="sig-name descname"><span class="pre">cache_capacity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Convolve" title="pyvcad.pyvcad.Convolve"><span class="pre">pyvcad.pyvcad.Convolve</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#pyvcad.Convolve.cache_capacity" title="Link to this definition">#</a></dt>
+<dd><p>Gets the current cache capacity limit</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Convolve.set_cache_capacity">
+<span class="sig-name descname"><span class="pre">set_cache_capacity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Convolve" title="pyvcad.pyvcad.Convolve"><span class="pre">pyvcad.pyvcad.Convolve</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Convolve.set_cache_capacity" title="Link to this definition">#</a></dt>
+<dd><p>Sets the cache capacity limit</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Convolve.set_use_cache">
+<span class="sig-name descname"><span class="pre">set_use_cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Convolve" title="pyvcad.pyvcad.Convolve"><span class="pre">pyvcad.pyvcad.Convolve</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">enabled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Convolve.set_use_cache" title="Link to this definition">#</a></dt>
+<dd><p>Toggle the internal cache.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Convolve.use_cache">
+<span class="sig-name descname"><span class="pre">use_cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Convolve" title="pyvcad.pyvcad.Convolve"><span class="pre">pyvcad.pyvcad.Convolve</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#pyvcad.Convolve.use_cache" title="Link to this definition">#</a></dt>
+<dd><p>Check if the cache is active.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="convolution-kernels">
+<h2>Convolution kernels<a class="headerlink" href="#convolution-kernels" title="Link to this heading">#</a></h2>
+<p>Kernels describe the spatial stencil <a class="reference internal" href="#pyvcad.Convolve" title="pyvcad.Convolve"><code class="xref py py-class docutils literal notranslate"><span class="pre">Convolve</span></code></a> uses (uniform box averaging or explicit per-voxel weights).</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyvcad.ConvolveKernel">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">ConvolveKernel</span></span><a class="headerlink" href="#pyvcad.ConvolveKernel" title="Link to this definition">#</a></dt>
@@ -490,64 +555,7 @@
 
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="pyvcad.Convolve">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Convolve</span></span><a class="headerlink" href="#pyvcad.Convolve" title="Link to this definition">#</a></dt>
-<dd><p>A Unary node that applies a convolution kernel to the continuous attributes of its child node.</p>
-<p>This is highly useful for blending, blurring, or sharpening color or material distributions without affecting the raw signed distance field geometry.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>child</strong> (<a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The node to process.</p></li>
-<li><p><strong>attributes</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Names of the attributes to target. Pass an empty list to target all.</p></li>
-<li><p><strong>kernel</strong> (<a class="reference internal" href="#pyvcad.ConvolveKernel" title="pyvcad.ConvolveKernel"><em>ConvolveKernel</em></a>) – The kernel to apply.</p></li>
-<li><p><strong>physical_radius</strong> (<em>list</em><em>[</em><em>float</em><em>]</em>) – [rx, ry, rz] physical bounds (in mm) that the kernel spans.</p></li>
-<li><p><strong>enable_cache</strong> (<em>bool</em>) – Toggles the internal volumetric LRU cache. Defaults to true.</p></li>
-</ul>
-</dd>
-</dl>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">libvcad</span><span class="w"> </span><span class="kn">import</span> <span class="n">pyvcad</span> <span class="k">as</span> <span class="n">pv</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">kernel</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">BoxKernel</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
-<span class="gp">&gt;&gt;&gt; </span><span class="n">blur_node</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Convolve</span><span class="p">(</span><span class="n">my_shape</span><span class="p">,</span> <span class="p">[</span><span class="s1">&#39;Temperature&#39;</span><span class="p">],</span> <span class="n">kernel</span><span class="p">,</span> <span class="p">[</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">])</span>
-</pre></div>
-</div>
-<dl class="py method">
-<dt class="sig sig-object py" id="pyvcad.Convolve.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Convolve.__init__" title="Link to this definition">#</a></dt>
-<dd><p>Overloaded function.</p>
-<ol class="arabic simple">
-<li><p>__init__(self: pyvcad.pyvcad.Convolve, child: pyvcad.pyvcad.Node, attributes: collections.abc.Sequence[str], kernel: pyvcad.pyvcad.ConvolveKernel, physical_radius: collections.abc.Sequence[typing.SupportsFloat]) -&gt; None</p></li>
-<li><p>__init__(self: pyvcad.pyvcad.Convolve, child: pyvcad.pyvcad.Node, attributes: collections.abc.Sequence[str], kernel: pyvcad.pyvcad.ConvolveKernel, physical_radius: collections.abc.Sequence[typing.SupportsFloat], enable_cache: bool) -&gt; None</p></li>
-</ol>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyvcad.Convolve.cache_capacity">
-<span class="sig-name descname"><span class="pre">cache_capacity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Convolve" title="pyvcad.pyvcad.Convolve"><span class="pre">pyvcad.pyvcad.Convolve</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#pyvcad.Convolve.cache_capacity" title="Link to this definition">#</a></dt>
-<dd><p>Gets the current cache capacity limit</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyvcad.Convolve.set_cache_capacity">
-<span class="sig-name descname"><span class="pre">set_cache_capacity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Convolve" title="pyvcad.pyvcad.Convolve"><span class="pre">pyvcad.pyvcad.Convolve</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">capacity</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Convolve.set_cache_capacity" title="Link to this definition">#</a></dt>
-<dd><p>Sets the cache capacity limit</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyvcad.Convolve.set_use_cache">
-<span class="sig-name descname"><span class="pre">set_use_cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Convolve" title="pyvcad.pyvcad.Convolve"><span class="pre">pyvcad.pyvcad.Convolve</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">enabled</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Convolve.set_use_cache" title="Link to this definition">#</a></dt>
-<dd><p>Toggle the internal cache.</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyvcad.Convolve.use_cache">
-<span class="sig-name descname"><span class="pre">use_cache</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Convolve" title="pyvcad.pyvcad.Convolve"><span class="pre">pyvcad.pyvcad.Convolve</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#pyvcad.Convolve.use_cache" title="Link to this definition">#</a></dt>
-<dd><p>Check if the cache is active.</p>
-</dd></dl>
-
-</dd></dl>
-
+</section>
 </section>
 
 
@@ -597,31 +605,37 @@
   </div>
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.AttributeModifier"><code class="docutils literal notranslate"><span class="pre">AttributeModifier</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.AttributeModifier.__init__"><code class="docutils literal notranslate"><span class="pre">AttributeModifier.__init__()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unary-attribute-nodes">Unary attribute nodes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.AttributeModifier"><code class="docutils literal notranslate"><span class="pre">AttributeModifier</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.AttributeModifier.__init__"><code class="docutils literal notranslate"><span class="pre">AttributeModifier.__init__()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.ConvolveKernel"><code class="docutils literal notranslate"><span class="pre">ConvolveKernel</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.ConvolveKernel.__init__"><code class="docutils literal notranslate"><span class="pre">ConvolveKernel.__init__()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.ConvolveKernel.get_radius_x"><code class="docutils literal notranslate"><span class="pre">ConvolveKernel.get_radius_x()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.ConvolveKernel.get_radius_y"><code class="docutils literal notranslate"><span class="pre">ConvolveKernel.get_radius_y()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.ConvolveKernel.get_radius_z"><code class="docutils literal notranslate"><span class="pre">ConvolveKernel.get_radius_z()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Convolve"><code class="docutils literal notranslate"><span class="pre">Convolve</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Convolve.__init__"><code class="docutils literal notranslate"><span class="pre">Convolve.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Convolve.cache_capacity"><code class="docutils literal notranslate"><span class="pre">Convolve.cache_capacity()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Convolve.set_cache_capacity"><code class="docutils literal notranslate"><span class="pre">Convolve.set_cache_capacity()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Convolve.set_use_cache"><code class="docutils literal notranslate"><span class="pre">Convolve.set_use_cache()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Convolve.use_cache"><code class="docutils literal notranslate"><span class="pre">Convolve.use_cache()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.BoxKernel"><code class="docutils literal notranslate"><span class="pre">BoxKernel</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.BoxKernel.__init__"><code class="docutils literal notranslate"><span class="pre">BoxKernel.__init__()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CustomKernel"><code class="docutils literal notranslate"><span class="pre">CustomKernel</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CustomKernel.__init__"><code class="docutils literal notranslate"><span class="pre">CustomKernel.__init__()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#convolution-kernels">Convolution kernels</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.ConvolveKernel"><code class="docutils literal notranslate"><span class="pre">ConvolveKernel</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.ConvolveKernel.__init__"><code class="docutils literal notranslate"><span class="pre">ConvolveKernel.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.ConvolveKernel.get_radius_x"><code class="docutils literal notranslate"><span class="pre">ConvolveKernel.get_radius_x()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.ConvolveKernel.get_radius_y"><code class="docutils literal notranslate"><span class="pre">ConvolveKernel.get_radius_y()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.ConvolveKernel.get_radius_z"><code class="docutils literal notranslate"><span class="pre">ConvolveKernel.get_radius_z()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Convolve"><code class="docutils literal notranslate"><span class="pre">Convolve</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Convolve.__init__"><code class="docutils literal notranslate"><span class="pre">Convolve.__init__()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Convolve.cache_capacity"><code class="docutils literal notranslate"><span class="pre">Convolve.cache_capacity()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Convolve.set_cache_capacity"><code class="docutils literal notranslate"><span class="pre">Convolve.set_cache_capacity()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Convolve.set_use_cache"><code class="docutils literal notranslate"><span class="pre">Convolve.set_use_cache()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Convolve.use_cache"><code class="docutils literal notranslate"><span class="pre">Convolve.use_cache()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.BoxKernel"><code class="docutils literal notranslate"><span class="pre">BoxKernel</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.BoxKernel.__init__"><code class="docutils literal notranslate"><span class="pre">BoxKernel.__init__()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CustomKernel"><code class="docutils literal notranslate"><span class="pre">CustomKernel</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CustomKernel.__init__"><code class="docutils literal notranslate"><span class="pre">CustomKernel.__init__()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 </ul>

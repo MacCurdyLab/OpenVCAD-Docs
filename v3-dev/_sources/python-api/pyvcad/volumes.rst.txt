@@ -1,9 +1,43 @@
 Volumes
 =======
 
-VDB-backed volume types, DICOM loading, and the ``vdb_loader`` helper submodule.
+**Volume adapters** connect discrete 3D grids (simulation output, CT/MRI, or other VDB-backed data) to OpenVCAD’s continuous sampling model. Instead of baking data into dense meshes, you keep a sparse **OpenVDB** grid and query it at any world-space point. Sampling uses trilinear interpolation between voxel centers, so fields stay smooth for rendering, slicing, and compilers.
 
-.. currentmodule:: pyvcad
+Typical uses include mapping Hounsfield units or bone density to material properties, reusing FEA or fluid fields on printable geometry, and importing artist-authored VDBs from external tools.
+
+**Interface you use in Python**
+
+* **Typed volumes** — ``FloatVolume``, ``Vec2sVolume``, ``Vec3sVolume``, and ``Vec4sVolume`` wrap scalar or vector VDB grids. Call ``sample(x, y, z)`` for a value, ``bounding_box()`` for world-space bounds, and ``clone()`` when you need a thread-safe copy for concurrent evaluation.
+* **VDB files** — Use ``pyvcad.vdb_loader`` (``load_float_volume``, ``load_vec3s_volume``, ``load_vec4s_volume``) to open a named grid from a ``.vdb`` file, optionally centered on the origin.
+* **DICOM stacks** — ``DICOMLoader`` reads a directory of slices, applies real-world spacing and rescale metadata where available, and builds a scalar ``FloatVolume`` (commonly HU). Call ``as_volume()`` when you are ready to sample.
+* **Attributes** — A ``FloatVolume`` is a continuous field; pass it to ``FloatAttribute(volume)`` (or ``set_volume`` on an existing ``FloatAttribute``) and attach that attribute to geometry with ``set_attribute``, same as expression-driven fields. Evaluation runs where your solid exists, using the volume’s values inside the part.
+
+Examples
+--------
+
+The patterns below mirror the getting-started discussion of **sampled** scalar fields: load data, wrap in ``FloatAttribute``, attach to a primitive or mesh.
+
+**VDB scalar grid**
+
+.. code-block:: python
+
+   import pyvcad as pv
+
+   vol = pv.vdb_loader.load_float_volume("model.vdb", "density")
+   bbox_min, bbox_max = vol.bounding_box()
+   solid = pv.RectPrism.FromMinAndMax(bbox_min, bbox_max)
+   solid.set_attribute(pv.DefaultAttributes.DENSITY, pv.FloatAttribute(vol))
+
+**DICOM series → float volume**
+
+.. code-block:: python
+
+   import pyvcad as pv
+
+   loader = pv.DICOMLoader("path/to/dicom_series")
+   vol = loader.as_volume()
+   solid = pv.RectPrism.FromMinAndMax(*vol.bounding_box())
+   solid.set_attribute(pv.DefaultAttributes.HU, pv.FloatAttribute(vol))
 
 Volume types
 ------------

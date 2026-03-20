@@ -1,0 +1,121 @@
+# OpenVCAD Math Expression Reference
+
+This document covers the operators, functions, and coordinate variables available in OpenVCAD math expression strings. These expressions are used by `FloatAttribute`, `Vec4Attribute`, and `VolumeFractionsAttribute` to define spatially varying fields.
+
+> OpenVCAD uses the [Exprtk library](https://github.com/ArashPartow/exprtk) for parsing math strings. The syntax follows conventions common on most graphing calculators, but Exprtk supports many advanced features. See [their documentation](https://github.com/ArashPartow/exprtk) for the full specification.
+
+---
+
+## Coordinate Systems
+
+The following variables are available in any math expression. You can freely mix variables from different coordinate systems in a single expression.
+
+| **Coordinate System** | **Form** | **Variable Names** |
+| --- | --- | --- |
+| Cartesian | f(x, y, z) | `x`, `y`, `z` |
+| Cylindrical | f(rho, phi, z) | `rho`, `phic`, `z` |
+| Spherical | f(r, theta, phi) | `r`, `theta`, `phis` |
+| Signed Distance | f(d) | `d` |
+
+> **Note:** `phic` is the azimuthal angle in the cylindrical system; `phis` is the polar angle in the spherical system. Both are in radians.
+
+> **Note:** `d` is the signed distance to the surface of the object. Zero is the surface, negative values are inside, and positive values are outside. This can be used to create conformal (surface-following) gradients.
+
+### Cylindrical Coordinate Definitions
+- `rho` = sqrt(x^2 + y^2) — radial distance from the Z axis
+- `phic` = atan2(y, x) — azimuthal angle in the XY plane (radians, range -pi to +pi)
+- `z` = z — same as the Cartesian Z coordinate
+
+### Spherical Coordinate Definitions
+- `r` = sqrt(x^2 + y^2 + z^2) — radial distance from the origin
+- `theta` = atan2(y, x) — azimuthal angle in the XY plane (radians, range -pi to +pi)
+- `phis` = acos(z / r) — polar angle from the +Z axis (radians, range 0 to pi)
+
+---
+
+## Operators
+
+### Arithmetic & Assignment
+
+| Operator | Definition |
+| --- | --- |
+| `+` | Addition. (`x + y`) |
+| `-` | Subtraction. (`x - y`) |
+| `*` | Multiplication. (`x * y`) |
+| `/` | Division. (`x / y`) |
+| `%` | Modulus. (`x % y`) |
+| `^` | Exponentiation. (`x ^ y`) |
+| `:=` | Assignment. (`y := x`) |
+| `+=` | Increment-assign. (`x += expr`) |
+| `-=` | Decrement-assign. (`x -= expr`) |
+| `*=` | Multiply-assign. (`x *= expr`) |
+| `/=` | Divide-assign. (`x /= expr`) |
+| `%=` | Modulo-assign. (`x %= expr`) |
+
+### Equalities & Inequalities
+
+| Operator | Definition |
+| --- | --- |
+| `==` or `=` | Equal to. (`x == y`) |
+| `<>` or `!=` | Not equal to. (`x != y`) |
+| `<` | Less than. (`x < y`) |
+| `<=` | Less than or equal. (`x <= y`) |
+| `>` | Greater than. (`x > y`) |
+| `>=` | Greater than or equal. (`x >= y`) |
+
+### Boolean Operations
+
+| Operator | Definition |
+| --- | --- |
+| `true` | True state (any non-zero value). |
+| `false` | False state (exactly zero). |
+| `and` | Logical AND. (`x and y`) |
+| `or` | Logical OR. (`x or y`) |
+| `not` | Logical NOT. (`not x`) |
+| `xor` | Logical XOR. |
+| `nand` | Logical NAND. |
+| `nor` | Logical NOR. |
+| `mand` | Multi-input AND. |
+| `mor` | Multi-input OR. |
+
+---
+
+## Functions
+
+### General Purpose
+
+| Function | Definition |
+| --- | --- |
+| `abs(x)` | Absolute value of x. |
+| `avg(x, y, ...)` | Average of all inputs. |
+| `ceil(x)` | Smallest integer >= x. |
+| `floor(x)` | Largest integer <= x. |
+| `sqrt(x)` | Square root (x >= 0). |
+| `log(x)` | Natural logarithm. |
+| `exp(x)` | e raised to x. |
+| `pow(x, y)` | x to the power y. |
+| `max(x, y, ...)` | Largest of all inputs. |
+| `min(x, y, ...)` | Smallest of all inputs. |
+| `clamp(lo, x, hi)` | Clamp x between lo and hi. |
+
+### Trigonometry
+
+| Function | Definition |
+| --- | --- |
+| `sin(x)` | Sine of x (radians). |
+| `cos(x)` | Cosine of x (radians). |
+| `tan(x)` | Tangent of x (radians). |
+| `asin(x)` | Arc sine (returns radians). |
+| `acos(x)` | Arc cosine (returns radians). |
+| `atan(x)` | Arc tangent (returns radians). |
+| `deg2rad(x)` | Convert degrees to radians. |
+| `rad2deg(x)` | Convert radians to degrees. |
+
+---
+
+## Tips
+
+- **Parentheses** work as expected for grouping: `(x + y) * z`.
+- **Constants**: Use numeric literals directly: `3.14159`, `2.71828`. Exprtk also provides `pi` as a built-in constant.
+- **Mixing coordinate systems**: An expression like `rho * sin(phis) + z` is perfectly valid — it uses cylindrical `rho`, spherical `phis`, and Cartesian `z` simultaneously.
+- **Clamping outputs**: Use `clamp(0, expr, 1)` to keep values in [0, 1], which is especially important for color channels and volume fractions.

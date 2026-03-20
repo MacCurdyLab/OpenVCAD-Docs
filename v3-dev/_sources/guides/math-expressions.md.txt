@@ -1,171 +1,178 @@
-# Math Expression Documentation
+# Math expressions in OpenVCAD
 
-OpenVCAD uses math expression strings in several nodes, most notably the
-`FGrade` and `Function` nodes. These expressions define how material
-volume fractions or scalar fields vary across space.
+OpenVCAD compiles **math expression strings** at runtime with the [ExprTk](https://github.com/ArashPartow/exprtk) library. The same syntax is used wherever you pass an expression string—for example `FloatAttribute`, `Vec4Attribute`, and `VolumeFractionsAttribute` in the attribute-modeling workflow, and other nodes that accept spatial formulas.
 
 ```{note}
-OpenVCAD uses the [ExprTk](https://github.com/ArashPartow/exprtk) library for
-parsing math strings. It follows syntax common on most graphing calculators and
-supports many advanced features. See the
-[ExprTk documentation](https://github.com/ArashPartow/exprtk) for the full
-specification.
+Syntax matches most graphing-calculator conventions, with many advanced features available. See the
+[ExprTk documentation](https://github.com/ArashPartow/exprtk) for the full language specification.
 ```
 
-## Coordinate Systems
+## Coordinate systems
 
-The following variables may be used in any math expression to grade based on
-spatial position. You can combine multiple coordinate systems in a single
-expression.
+The following variables may be used in any math expression. You can combine multiple coordinate systems in a single expression.
 
-| Name | Form | Variable Names |
+| Name | Form | Variable names |
 |------|------|----------------|
 | Cartesian | f(x, y, z) | `x`, `y`, `z` |
 | Cylindrical | f(rho, phic, z) | `rho`, `phic`, `z` |
 | Spherical | f(r, theta, phis) | `r`, `theta`, `phis` |
-| Signed Distance | f(d) | `d` |
+| Signed distance | f(d) | `d` |
 
 ```{note}
-`phic` corresponds to phi in cylindrical coordinates and `phis` to phi in
-spherical coordinates.
+`phic` is the azimuthal angle in cylindrical coordinates; `phis` is the polar angle in spherical coordinates. Both use radians.
 ```
 
 ```{note}
-`d` is the signed distance to the surface of the object. Zero is the surface,
-negative values are inside, and positive values are outside. This can be used
-to create conformal gradients.
+`d` is the signed distance to the object surface: zero on the surface, negative inside, positive outside. This supports conformal (surface-following) gradients.
 ```
 
-## Arithmetic & Assignment Operators
+### Cylindrical definitions
+
+- `rho` = sqrt(x^2 + y^2) — distance from the Z axis  
+- `phic` = atan2(y, x) — azimuth in the XY plane (radians, about -π to +π)  
+- `z` — same as Cartesian `z`
+
+### Spherical definitions
+
+- `r` = sqrt(x^2 + y^2 + z^2) — distance from the origin  
+- `theta` = atan2(y, x) — azimuth in the XY plane (radians)  
+- `phis` = acos(z / r) — polar angle from +Z (radians, 0 to π)
+
+## Arithmetic and assignment operators
 
 | Operator | Definition |
 |----------|------------|
-| `+` | Addition between x and y. (e.g., `x + y`) |
-| `-` | Subtraction between x and y. (e.g., `x - y`) |
-| `*` | Multiplication between x and y. (e.g., `x * y`) |
-| `/` | Division between x and y. (e.g., `x / y`) |
-| `%` | Modulus of x with respect to y. (e.g., `x % y`) |
-| `^` | x to the power of y. (e.g., `x ^ y`) |
-| `:=` | Assign the value of x to y. (e.g., `y := x`) |
-| `+=` | Increment x by the value of the expression on the right-hand side. |
-| `-=` | Decrement x by the value of the expression on the right-hand side. |
-| `*=` | Assign the multiplication of x by the value of the expression to x. |
-| `/=` | Assign the division of x by the value of the expression to x. |
-| `%=` | Assign x modulo the value of the expression on the right-hand side to x. |
+| `+` | Addition (`x + y`) |
+| `-` | Subtraction (`x - y`) |
+| `*` | Multiplication (`x * y`) |
+| `/` | Division (`x / y`) |
+| `%` | Modulus (`x % y`) |
+| `^` | Exponentiation (`x ^ y`) |
+| `:=` | Assignment (`y := x`) |
+| `+=`, `-=`, `*=`, `/=`, `%=` | Compound assignment |
 
-## Equalities & Inequalities
+## Equalities and inequalities
 
 | Operator | Definition |
 |----------|------------|
-| `==` or `=` | True only if x is strictly equal to y. (e.g., `x == y`) |
-| `<>` or `!=` | True only if x does not equal y. (e.g., `x != y`) |
-| `<` | True only if x is less than y. (e.g., `x < y`) |
-| `<=` | True only if x is less than or equal to y. (e.g., `x <= y`) |
-| `>` | True only if x is greater than y. (e.g., `x > y`) |
-| `>=` | True only if x is greater than or equal to y. (e.g., `x >= y`) |
+| `==` or `=` | Equal (`x == y`) |
+| `<>` or `!=` | Not equal |
+| `<`, `<=`, `>`, `>=` | Inequality comparisons |
 
-## Boolean Operations
+## Boolean operations
 
 | Operator | Definition |
 |----------|------------|
-| `true` | True state or any value other than zero (typically 1). |
-| `false` | False state, value of exactly zero. |
-| `and` | Logical AND, True only if x and y are both true. (e.g., `x and y`) |
-| `or` | Logical OR, True if either x or y is true. (e.g., `x or y`) |
-| `not` | Logical NOT, negates the logical sense of the input. (e.g., `not x`) |
-| `xor` | Logical XOR, True only if the logical states of x and y differ. |
-| `nand` | Logical NAND, True only if either x or y is false. |
-| `nor` | Logical NOR, True only if both x and y are false. |
-| `mand` | Multi-input logical AND, True only if all inputs are true. |
-| `mor` | Multi-input logical OR, True if at least one input is true. |
+| `true` / `false` | Boolean literals |
+| `and`, `or`, `not` | Logical operators |
+| `xor`, `nand`, `nor`, `mand`, `mor` | Extended logical ops |
 
-## General Purpose Functions
+## General-purpose functions
 
 | Function | Definition |
 |----------|------------|
-| `abs` | Absolute value of x. (e.g., `abs(x)`) |
-| `avg` | Average of all inputs. (e.g., `avg(x, y, z)`) |
-| `ceil` | Smallest integer greater than or equal to x. |
-| `floor` | Largest integer less than or equal to x. |
-| `sqrt` | Square root of x, where x >= 0. (e.g., `sqrt(x)`) |
-| `log` | Natural logarithm of x. (e.g., `log(x)`) |
-| `exp` | e to the power of x. (e.g., `exp(x)`) |
-| `pow` | x to the power of y. (e.g., `pow(x, y)`) |
-| `max` | Largest value of all inputs. (e.g., `max(x, y, z)`) |
-| `min` | Smallest value of all inputs. (e.g., `min(x, y, z)`) |
-| `clamp` | Clamp x between low and high. (e.g., `clamp(low, x, high)`) |
+| `abs(x)` | Absolute value |
+| `avg(x, y, ...)` | Mean of arguments |
+| `ceil(x)`, `floor(x)` | Rounding |
+| `sqrt(x)` | Square root (x ≥ 0) |
+| `log(x)`, `exp(x)` | Log and exponential |
+| `pow(x, y)` | Power |
+| `max(...)`, `min(...)` | Extrema |
+| `clamp(lo, x, hi)` | Clamp x to \[lo, hi\] |
 
-## Trigonometry Functions
+## Trigonometry
+
+Arguments are in radians unless you convert with `deg2rad` / `rad2deg`.
 
 | Function | Definition |
 |----------|------------|
-| `sin` | Sine of x. (e.g., `sin(x)`) |
-| `cos` | Cosine of x. (e.g., `cos(x)`) |
-| `tan` | Tangent of x. (e.g., `tan(x)`) |
-| `asin` | Arc sine of x, in radians. |
-| `acos` | Arc cosine of x, in radians. |
-| `atan` | Arc tangent of x, in radians. |
-| `deg2rad` | Convert x from degrees to radians. (e.g., `deg2rad(x)`) |
-| `rad2deg` | Convert x from radians to degrees. (e.g., `rad2deg(x)`) |
+| `sin`, `cos`, `tan` | Basic trig |
+| `asin`, `acos`, `atan` | Inverses |
+| `deg2rad(x)`, `rad2deg(x)` | Unit conversion |
 
 ## Constants
 
-| Constant | Value |
-|----------|-------|
-| `pi` | 3.14159... |
-| `e` | 2.71828... |
+| Name | Role |
+|------|------|
+| `pi` | Built-in |
+| `e` | Built-in |
 
-## Examples
+You can also use numeric literals (e.g. `3.14159`).
 
-### Linear gradient along X
+## Examples (attribute modeling)
 
-A bar that transitions from 100% red at `x = -50` to 100% blue at `x = 50`:
+Expressions below are attached with `set_attribute` on geometry nodes. Select **Object → Selected Attribute** in the renderer to inspect each field.
+
+### Linear blend along X (volume fractions)
 
 ```python
-root = pv.FGrade(
-    ["x/100 + 0.5", "-x/100 + 0.5"],
-    [materials.id("red"), materials.id("blue")],
-    False
+import pyvcad as pv
+
+materials = pv.default_materials
+bar = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(100, 10, 10))
+bar.set_attribute(
+    pv.DefaultAttributes.VOLUME_FRACTIONS,
+    pv.VolumeFractionsAttribute([
+        ("x/100 + 0.5", materials.id("red")),
+        ("-x/100 + 0.5", materials.id("blue")),
+    ]),
 )
+root = bar
 ```
 
-### Radial gradient
-
-A sphere that is one material at the center and another at the surface:
+### Radial blend (spherical `r`)
 
 ```python
-root = pv.FGrade(
-    ["clamp(0, 1 - r/5, 1)", "clamp(0, r/5, 1)"],
-    [materials.id("red"), materials.id("blue")],
-    False
+materials = pv.default_materials
+sphere = pv.Sphere(pv.Vec3(0, 0, 0), 5.0)
+sphere.set_attribute(
+    pv.DefaultAttributes.VOLUME_FRACTIONS,
+    pv.VolumeFractionsAttribute([
+        ("clamp(0, 1 - r/5, 1)", materials.id("red")),
+        ("clamp(0, r/5, 1)", materials.id("blue")),
+    ]),
 )
+root = sphere
 ```
 
-### Angular gradient (cylindrical)
+### Angular sweep (cylindrical `phic`)
 
-A gradient that varies with angle around the Z-axis:
+`pi` is available inside expression strings (ExprTk built-in).
 
 ```python
-root = pv.FGrade(
-    ["(phic + pi) / (2*pi)", "1 - (phic + pi) / (2*pi)"],
-    [materials.id("red"), materials.id("blue")],
-    False
+materials = pv.default_materials
+cyl = pv.Cylinder(pv.Vec3(0, 0, 0), 5.0, 10.0)
+cyl.set_attribute(
+    pv.DefaultAttributes.VOLUME_FRACTIONS,
+    pv.VolumeFractionsAttribute([
+        ("(phic + pi) / (2*pi)", materials.id("red")),
+        ("1 - (phic + pi) / (2*pi)", materials.id("blue")),
+    ]),
 )
+root = cyl
 ```
 
-### Conformal gradient (signed distance)
-
-A gradient that follows the surface contour of the object:
+### Surface-following split (signed distance `d`)
 
 ```python
-root = pv.FGrade(
-    ["clamp(0, -d/2 + 0.5, 1)", "clamp(0, d/2 + 0.5, 1)"],
-    [materials.id("red"), materials.id("blue")],
-    False
+materials = pv.default_materials
+sphere = pv.Sphere(pv.Vec3(0, 0, 0), 5.0)
+sphere.set_attribute(
+    pv.DefaultAttributes.VOLUME_FRACTIONS,
+    pv.VolumeFractionsAttribute([
+        ("clamp(0, -d/2 + 0.5, 1)", materials.id("red")),
+        ("clamp(0, d/2 + 0.5, 1)", materials.id("blue")),
+    ]),
 )
+root = sphere
 ```
 
 ```{important}
-All PDFs at any spatial location must sum to 1. If they don't, OpenVCAD will
-normalize them, but this may produce unexpected results.
+For `VolumeFractionsAttribute`, expressions at each point should sum to 1.0. If they do not, results may be normalized in ways that are hard to predict—keep PDFs explicitly normalized when possible.
 ```
+
+## Tips
+
+- **Grouping** uses parentheses: `(x + y) * z`.
+- **Mixing coordinates** is valid, e.g. `rho * sin(phis) + z`.
+- **Colors and fractions** often need **clamp**: `clamp(0, expr, 1)` for channels that must stay in \[0, 1\].

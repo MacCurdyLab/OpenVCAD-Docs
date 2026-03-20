@@ -7,7 +7,7 @@
   <meta charset="utf-8" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Math Expression Documentation &mdash; OpenVCAD 3.0 documentation</title>
+  <title>Math expressions in OpenVCAD &mdash; OpenVCAD 3.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
@@ -23,7 +23,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="pyvcad package" href="../python-api/pyvcad/index.html" />
-    <link rel="prev" title="OpenVCAD Math Expression Reference" href="expression_reference.html" /> 
+    <link rel="prev" title="Functional Grading Guide" href="gradients.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -48,24 +48,28 @@
               <p class="caption" role="heading"><span class="caption-text">User Guide</span></p>
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="getting-started.html">OpenVCAD: Getting Started (Attribute Modeling)</a></li>
-<li class="toctree-l1"><a class="reference internal" href="gradients.html">OpenVCAD: Gradient Reference Guide</a></li>
-<li class="toctree-l1"><a class="reference internal" href="expression_reference.html">OpenVCAD Math Expression Reference</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Math Expression Documentation</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="#coordinate-systems">Coordinate Systems</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#arithmetic-assignment-operators">Arithmetic &amp; Assignment Operators</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#equalities-inequalities">Equalities &amp; Inequalities</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#boolean-operations">Boolean Operations</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#general-purpose-functions">General Purpose Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#trigonometry-functions">Trigonometry Functions</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#constants">Constants</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#examples">Examples</a><ul>
-<li class="toctree-l3"><a class="reference internal" href="#linear-gradient-along-x">Linear gradient along X</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#radial-gradient">Radial gradient</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#angular-gradient-cylindrical">Angular gradient (cylindrical)</a></li>
-<li class="toctree-l3"><a class="reference internal" href="#conformal-gradient-signed-distance">Conformal gradient (signed distance)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gradients.html">Functional Grading Guide</a></li>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Math expressions in OpenVCAD</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="#coordinate-systems">Coordinate systems</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#cylindrical-definitions">Cylindrical definitions</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#spherical-definitions">Spherical definitions</a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="#arithmetic-and-assignment-operators">Arithmetic and assignment operators</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#equalities-and-inequalities">Equalities and inequalities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#boolean-operations">Boolean operations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#general-purpose-functions">General-purpose functions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#trigonometry">Trigonometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#constants">Constants</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#examples-attribute-modeling">Examples (attribute modeling)</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="#linear-blend-along-x-volume-fractions">Linear blend along X (volume fractions)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#radial-blend-spherical-r">Radial blend (spherical <code class="docutils literal notranslate"><span class="pre">r</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#angular-sweep-cylindrical-phic">Angular sweep (cylindrical <code class="docutils literal notranslate"><span class="pre">phic</span></code>)</a></li>
+<li class="toctree-l3"><a class="reference internal" href="#surface-following-split-signed-distance-d">Surface-following split (signed distance <code class="docutils literal notranslate"><span class="pre">d</span></code>)</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="#tips">Tips</a></li>
 </ul>
 </li>
 </ul>
@@ -98,7 +102,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="../index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Math Expression Documentation</li>
+      <li class="breadcrumb-item active">Math expressions in OpenVCAD</li>
       <li class="wy-breadcrumbs-aside">
             <a href="../_sources/guides/math-expressions.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -109,29 +113,22 @@
             <div role="main" class="document openvcad-doc-main" itemscope="itemscope" itemtype="http://schema.org/Article">
                 <div itemprop="articleBody">
                   
-  <section id="math-expression-documentation">
-<h1>Math Expression Documentation<a class="headerlink" href="#math-expression-documentation" title="Link to this heading"></a></h1>
-<p>OpenVCAD uses math expression strings in several nodes, most notably the
-<code class="docutils literal notranslate"><span class="pre">FGrade</span></code> and <code class="docutils literal notranslate"><span class="pre">Function</span></code> nodes. These expressions define how material
-volume fractions or scalar fields vary across space.</p>
+  <section id="math-expressions-in-openvcad">
+<h1>Math expressions in OpenVCAD<a class="headerlink" href="#math-expressions-in-openvcad" title="Link to this heading"></a></h1>
+<p>OpenVCAD compiles <strong>math expression strings</strong> at runtime with the <a class="reference external" href="https://github.com/ArashPartow/exprtk">ExprTk</a> library. The same syntax is used wherever you pass an expression string—for example <code class="docutils literal notranslate"><span class="pre">FloatAttribute</span></code>, <code class="docutils literal notranslate"><span class="pre">Vec4Attribute</span></code>, and <code class="docutils literal notranslate"><span class="pre">VolumeFractionsAttribute</span></code> in the attribute-modeling workflow, and other nodes that accept spatial formulas.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>OpenVCAD uses the <a class="reference external" href="https://github.com/ArashPartow/exprtk">ExprTk</a> library for
-parsing math strings. It follows syntax common on most graphing calculators and
-supports many advanced features. See the
-<a class="reference external" href="https://github.com/ArashPartow/exprtk">ExprTk documentation</a> for the full
-specification.</p>
+<p>Syntax matches most graphing-calculator conventions, with many advanced features available. See the
+<a class="reference external" href="https://github.com/ArashPartow/exprtk">ExprTk documentation</a> for the full language specification.</p>
 </div>
 <section id="coordinate-systems">
-<h2>Coordinate Systems<a class="headerlink" href="#coordinate-systems" title="Link to this heading"></a></h2>
-<p>The following variables may be used in any math expression to grade based on
-spatial position. You can combine multiple coordinate systems in a single
-expression.</p>
+<h2>Coordinate systems<a class="headerlink" href="#coordinate-systems" title="Link to this heading"></a></h2>
+<p>The following variables may be used in any math expression. You can combine multiple coordinate systems in a single expression.</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Name</p></th>
 <th class="head"><p>Form</p></th>
-<th class="head"><p>Variable Names</p></th>
+<th class="head"><p>Variable names</p></th>
 </tr>
 </thead>
 <tbody>
@@ -147,7 +144,7 @@ expression.</p>
 <td><p>f(r, theta, phis)</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">r</span></code>, <code class="docutils literal notranslate"><span class="pre">theta</span></code>, <code class="docutils literal notranslate"><span class="pre">phis</span></code></p></td>
 </tr>
-<tr class="row-odd"><td><p>Signed Distance</p></td>
+<tr class="row-odd"><td><p>Signed distance</p></td>
 <td><p>f(d)</p></td>
 <td><p><code class="docutils literal notranslate"><span class="pre">d</span></code></p></td>
 </tr>
@@ -155,18 +152,31 @@ expression.</p>
 </table>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><code class="docutils literal notranslate"><span class="pre">phic</span></code> corresponds to phi in cylindrical coordinates and <code class="docutils literal notranslate"><span class="pre">phis</span></code> to phi in
-spherical coordinates.</p>
+<p><code class="docutils literal notranslate"><span class="pre">phic</span></code> is the azimuthal angle in cylindrical coordinates; <code class="docutils literal notranslate"><span class="pre">phis</span></code> is the polar angle in spherical coordinates. Both use radians.</p>
 </div>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p><code class="docutils literal notranslate"><span class="pre">d</span></code> is the signed distance to the surface of the object. Zero is the surface,
-negative values are inside, and positive values are outside. This can be used
-to create conformal gradients.</p>
+<p><code class="docutils literal notranslate"><span class="pre">d</span></code> is the signed distance to the object surface: zero on the surface, negative inside, positive outside. This supports conformal (surface-following) gradients.</p>
 </div>
+<section id="cylindrical-definitions">
+<h3>Cylindrical definitions<a class="headerlink" href="#cylindrical-definitions" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">rho</span></code> = sqrt(x^2 + y^2) — distance from the Z axis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">phic</span></code> = atan2(y, x) — azimuth in the XY plane (radians, about -π to +π)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">z</span></code> — same as Cartesian <code class="docutils literal notranslate"><span class="pre">z</span></code></p></li>
+</ul>
 </section>
-<section id="arithmetic-assignment-operators">
-<h2>Arithmetic &amp; Assignment Operators<a class="headerlink" href="#arithmetic-assignment-operators" title="Link to this heading"></a></h2>
+<section id="spherical-definitions">
+<h3>Spherical definitions<a class="headerlink" href="#spherical-definitions" title="Link to this heading"></a></h3>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">r</span></code> = sqrt(x^2 + y^2 + z^2) — distance from the origin</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">theta</span></code> = atan2(y, x) — azimuth in the XY plane (radians)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">phis</span></code> = acos(z / r) — polar angle from +Z (radians, 0 to π)</p></li>
+</ul>
+</section>
+</section>
+<section id="arithmetic-and-assignment-operators">
+<h2>Arithmetic and assignment operators<a class="headerlink" href="#arithmetic-and-assignment-operators" title="Link to this heading"></a></h2>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Operator</p></th>
@@ -175,46 +185,34 @@ to create conformal gradients.</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">+</span></code></p></td>
-<td><p>Addition between x and y. (e.g., <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">+</span> <span class="pre">y</span></code>)</p></td>
+<td><p>Addition (<code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">+</span> <span class="pre">y</span></code>)</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">-</span></code></p></td>
-<td><p>Subtraction between x and y. (e.g., <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">-</span> <span class="pre">y</span></code>)</p></td>
+<td><p>Subtraction (<code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">-</span> <span class="pre">y</span></code>)</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">*</span></code></p></td>
-<td><p>Multiplication between x and y. (e.g., <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">*</span> <span class="pre">y</span></code>)</p></td>
+<td><p>Multiplication (<code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">*</span> <span class="pre">y</span></code>)</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">/</span></code></p></td>
-<td><p>Division between x and y. (e.g., <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">/</span> <span class="pre">y</span></code>)</p></td>
+<td><p>Division (<code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">/</span> <span class="pre">y</span></code>)</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">%</span></code></p></td>
-<td><p>Modulus of x with respect to y. (e.g., <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">%</span> <span class="pre">y</span></code>)</p></td>
+<td><p>Modulus (<code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">%</span> <span class="pre">y</span></code>)</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">^</span></code></p></td>
-<td><p>x to the power of y. (e.g., <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">^</span> <span class="pre">y</span></code>)</p></td>
+<td><p>Exponentiation (<code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">^</span> <span class="pre">y</span></code>)</p></td>
 </tr>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">:=</span></code></p></td>
-<td><p>Assign the value of x to y. (e.g., <code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">:=</span> <span class="pre">x</span></code>)</p></td>
+<td><p>Assignment (<code class="docutils literal notranslate"><span class="pre">y</span> <span class="pre">:=</span> <span class="pre">x</span></code>)</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">+=</span></code></p></td>
-<td><p>Increment x by the value of the expression on the right-hand side.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">-=</span></code></p></td>
-<td><p>Decrement x by the value of the expression on the right-hand side.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">*=</span></code></p></td>
-<td><p>Assign the multiplication of x by the value of the expression to x.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">/=</span></code></p></td>
-<td><p>Assign the division of x by the value of the expression to x.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">%=</span></code></p></td>
-<td><p>Assign x modulo the value of the expression on the right-hand side to x.</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">+=</span></code>, <code class="docutils literal notranslate"><span class="pre">-=</span></code>, <code class="docutils literal notranslate"><span class="pre">*=</span></code>, <code class="docutils literal notranslate"><span class="pre">/=</span></code>, <code class="docutils literal notranslate"><span class="pre">%=</span></code></p></td>
+<td><p>Compound assignment</p></td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="equalities-inequalities">
-<h2>Equalities &amp; Inequalities<a class="headerlink" href="#equalities-inequalities" title="Link to this heading"></a></h2>
+<section id="equalities-and-inequalities">
+<h2>Equalities and inequalities<a class="headerlink" href="#equalities-and-inequalities" title="Link to this heading"></a></h2>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Operator</p></th>
@@ -223,28 +221,19 @@ to create conformal gradients.</p>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">==</span></code> or <code class="docutils literal notranslate"><span class="pre">=</span></code></p></td>
-<td><p>True only if x is strictly equal to y. (e.g., <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">==</span> <span class="pre">y</span></code>)</p></td>
+<td><p>Equal (<code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">==</span> <span class="pre">y</span></code>)</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;&gt;</span></code> or <code class="docutils literal notranslate"><span class="pre">!=</span></code></p></td>
-<td><p>True only if x does not equal y. (e.g., <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">!=</span> <span class="pre">y</span></code>)</p></td>
+<td><p>Not equal</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;</span></code></p></td>
-<td><p>True only if x is less than y. (e.g., <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">&lt;</span> <span class="pre">y</span></code>)</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;=</span></code></p></td>
-<td><p>True only if x is less than or equal to y. (e.g., <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">&lt;=</span> <span class="pre">y</span></code>)</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&gt;</span></code></p></td>
-<td><p>True only if x is greater than y. (e.g., <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">&gt;</span> <span class="pre">y</span></code>)</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">&gt;=</span></code></p></td>
-<td><p>True only if x is greater than or equal to y. (e.g., <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">&gt;=</span> <span class="pre">y</span></code>)</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&lt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&lt;=</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;</span></code>, <code class="docutils literal notranslate"><span class="pre">&gt;=</span></code></p></td>
+<td><p>Inequality comparisons</p></td>
 </tr>
 </tbody>
 </table>
 </section>
 <section id="boolean-operations">
-<h2>Boolean Operations<a class="headerlink" href="#boolean-operations" title="Link to this heading"></a></h2>
+<h2>Boolean operations<a class="headerlink" href="#boolean-operations" title="Link to this heading"></a></h2>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Operator</p></th>
@@ -252,41 +241,20 @@ to create conformal gradients.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">true</span></code></p></td>
-<td><p>True state or any value other than zero (typically 1).</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">true</span></code> / <code class="docutils literal notranslate"><span class="pre">false</span></code></p></td>
+<td><p>Boolean literals</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">false</span></code></p></td>
-<td><p>False state, value of exactly zero.</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">and</span></code>, <code class="docutils literal notranslate"><span class="pre">or</span></code>, <code class="docutils literal notranslate"><span class="pre">not</span></code></p></td>
+<td><p>Logical operators</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">and</span></code></p></td>
-<td><p>Logical AND, True only if x and y are both true. (e.g., <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">and</span> <span class="pre">y</span></code>)</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">or</span></code></p></td>
-<td><p>Logical OR, True if either x or y is true. (e.g., <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">or</span> <span class="pre">y</span></code>)</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">not</span></code></p></td>
-<td><p>Logical NOT, negates the logical sense of the input. (e.g., <code class="docutils literal notranslate"><span class="pre">not</span> <span class="pre">x</span></code>)</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">xor</span></code></p></td>
-<td><p>Logical XOR, True only if the logical states of x and y differ.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">nand</span></code></p></td>
-<td><p>Logical NAND, True only if either x or y is false.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">nor</span></code></p></td>
-<td><p>Logical NOR, True only if both x and y are false.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">mand</span></code></p></td>
-<td><p>Multi-input logical AND, True only if all inputs are true.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">mor</span></code></p></td>
-<td><p>Multi-input logical OR, True if at least one input is true.</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">xor</span></code>, <code class="docutils literal notranslate"><span class="pre">nand</span></code>, <code class="docutils literal notranslate"><span class="pre">nor</span></code>, <code class="docutils literal notranslate"><span class="pre">mand</span></code>, <code class="docutils literal notranslate"><span class="pre">mor</span></code></p></td>
+<td><p>Extended logical ops</p></td>
 </tr>
 </tbody>
 </table>
 </section>
 <section id="general-purpose-functions">
-<h2>General Purpose Functions<a class="headerlink" href="#general-purpose-functions" title="Link to this heading"></a></h2>
+<h2>General-purpose functions<a class="headerlink" href="#general-purpose-functions" title="Link to this heading"></a></h2>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Function</p></th>
@@ -294,44 +262,36 @@ to create conformal gradients.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">abs</span></code></p></td>
-<td><p>Absolute value of x. (e.g., <code class="docutils literal notranslate"><span class="pre">abs(x)</span></code>)</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">abs(x)</span></code></p></td>
+<td><p>Absolute value</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">avg</span></code></p></td>
-<td><p>Average of all inputs. (e.g., <code class="docutils literal notranslate"><span class="pre">avg(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code>)</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">avg(x,</span> <span class="pre">y,</span> <span class="pre">...)</span></code></p></td>
+<td><p>Mean of arguments</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ceil</span></code></p></td>
-<td><p>Smallest integer greater than or equal to x.</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ceil(x)</span></code>, <code class="docutils literal notranslate"><span class="pre">floor(x)</span></code></p></td>
+<td><p>Rounding</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">floor</span></code></p></td>
-<td><p>Largest integer less than or equal to x.</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">sqrt(x)</span></code></p></td>
+<td><p>Square root (x ≥ 0)</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sqrt</span></code></p></td>
-<td><p>Square root of x, where x &gt;= 0. (e.g., <code class="docutils literal notranslate"><span class="pre">sqrt(x)</span></code>)</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">log(x)</span></code>, <code class="docutils literal notranslate"><span class="pre">exp(x)</span></code></p></td>
+<td><p>Log and exponential</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">log</span></code></p></td>
-<td><p>Natural logarithm of x. (e.g., <code class="docutils literal notranslate"><span class="pre">log(x)</span></code>)</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pow(x,</span> <span class="pre">y)</span></code></p></td>
+<td><p>Power</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">exp</span></code></p></td>
-<td><p>e to the power of x. (e.g., <code class="docutils literal notranslate"><span class="pre">exp(x)</span></code>)</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">max(...)</span></code>, <code class="docutils literal notranslate"><span class="pre">min(...)</span></code></p></td>
+<td><p>Extrema</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pow</span></code></p></td>
-<td><p>x to the power of y. (e.g., <code class="docutils literal notranslate"><span class="pre">pow(x,</span> <span class="pre">y)</span></code>)</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">max</span></code></p></td>
-<td><p>Largest value of all inputs. (e.g., <code class="docutils literal notranslate"><span class="pre">max(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code>)</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">min</span></code></p></td>
-<td><p>Smallest value of all inputs. (e.g., <code class="docutils literal notranslate"><span class="pre">min(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code>)</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">clamp</span></code></p></td>
-<td><p>Clamp x between low and high. (e.g., <code class="docutils literal notranslate"><span class="pre">clamp(low,</span> <span class="pre">x,</span> <span class="pre">high)</span></code>)</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">clamp(lo,</span> <span class="pre">x,</span> <span class="pre">hi)</span></code></p></td>
+<td><p>Clamp x to [lo, hi]</p></td>
 </tr>
 </tbody>
 </table>
 </section>
-<section id="trigonometry-functions">
-<h2>Trigonometry Functions<a class="headerlink" href="#trigonometry-functions" title="Link to this heading"></a></h2>
+<section id="trigonometry">
+<h2>Trigonometry<a class="headerlink" href="#trigonometry" title="Link to this heading"></a></h2>
+<p>Arguments are in radians unless you convert with <code class="docutils literal notranslate"><span class="pre">deg2rad</span></code> / <code class="docutils literal notranslate"><span class="pre">rad2deg</span></code>.</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Function</p></th>
@@ -339,29 +299,14 @@ to create conformal gradients.</p>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sin</span></code></p></td>
-<td><p>Sine of x. (e.g., <code class="docutils literal notranslate"><span class="pre">sin(x)</span></code>)</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">sin</span></code>, <code class="docutils literal notranslate"><span class="pre">cos</span></code>, <code class="docutils literal notranslate"><span class="pre">tan</span></code></p></td>
+<td><p>Basic trig</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">cos</span></code></p></td>
-<td><p>Cosine of x. (e.g., <code class="docutils literal notranslate"><span class="pre">cos(x)</span></code>)</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">asin</span></code>, <code class="docutils literal notranslate"><span class="pre">acos</span></code>, <code class="docutils literal notranslate"><span class="pre">atan</span></code></p></td>
+<td><p>Inverses</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">tan</span></code></p></td>
-<td><p>Tangent of x. (e.g., <code class="docutils literal notranslate"><span class="pre">tan(x)</span></code>)</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">asin</span></code></p></td>
-<td><p>Arc sine of x, in radians.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">acos</span></code></p></td>
-<td><p>Arc cosine of x, in radians.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">atan</span></code></p></td>
-<td><p>Arc tangent of x, in radians.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">deg2rad</span></code></p></td>
-<td><p>Convert x from degrees to radians. (e.g., <code class="docutils literal notranslate"><span class="pre">deg2rad(x)</span></code>)</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">rad2deg</span></code></p></td>
-<td><p>Convert x from radians to degrees. (e.g., <code class="docutils literal notranslate"><span class="pre">rad2deg(x)</span></code>)</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">deg2rad(x)</span></code>, <code class="docutils literal notranslate"><span class="pre">rad2deg(x)</span></code></p></td>
+<td><p>Unit conversion</p></td>
 </tr>
 </tbody>
 </table>
@@ -370,71 +315,99 @@ to create conformal gradients.</p>
 <h2>Constants<a class="headerlink" href="#constants" title="Link to this heading"></a></h2>
 <table class="docutils align-default">
 <thead>
-<tr class="row-odd"><th class="head"><p>Constant</p></th>
-<th class="head"><p>Value</p></th>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Role</p></th>
 </tr>
 </thead>
 <tbody>
 <tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pi</span></code></p></td>
-<td><p>3.14159…</p></td>
+<td><p>Built-in</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">e</span></code></p></td>
-<td><p>2.71828…</p></td>
+<td><p>Built-in</p></td>
 </tr>
 </tbody>
 </table>
+<p>You can also use numeric literals (e.g. <code class="docutils literal notranslate"><span class="pre">3.14159</span></code>).</p>
 </section>
-<section id="examples">
-<h2>Examples<a class="headerlink" href="#examples" title="Link to this heading"></a></h2>
-<section id="linear-gradient-along-x">
-<h3>Linear gradient along X<a class="headerlink" href="#linear-gradient-along-x" title="Link to this heading"></a></h3>
-<p>A bar that transitions from 100% red at <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">-50</span></code> to 100% blue at <code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">=</span> <span class="pre">50</span></code>:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FGrade</span><span class="p">(</span>
-    <span class="p">[</span><span class="s2">&quot;x/100 + 0.5&quot;</span><span class="p">,</span> <span class="s2">&quot;-x/100 + 0.5&quot;</span><span class="p">],</span>
-    <span class="p">[</span><span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">),</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">)],</span>
-    <span class="kc">False</span>
+<section id="examples-attribute-modeling">
+<h2>Examples (attribute modeling)<a class="headerlink" href="#examples-attribute-modeling" title="Link to this heading"></a></h2>
+<p>Expressions below are attached with <code class="docutils literal notranslate"><span class="pre">set_attribute</span></code> on geometry nodes. Select <strong>Object → Selected Attribute</strong> in the renderer to inspect each field.</p>
+<section id="linear-blend-along-x-volume-fractions">
+<h3>Linear blend along X (volume fractions)<a class="headerlink" href="#linear-blend-along-x-volume-fractions" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+<span class="n">bar</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">bar</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([</span>
+        <span class="p">(</span><span class="s2">&quot;x/100 + 0.5&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;-x/100 + 0.5&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">)),</span>
+    <span class="p">]),</span>
 <span class="p">)</span>
+<span class="n">root</span> <span class="o">=</span> <span class="n">bar</span>
 </pre></div>
 </div>
 </section>
-<section id="radial-gradient">
-<h3>Radial gradient<a class="headerlink" href="#radial-gradient" title="Link to this heading"></a></h3>
-<p>A sphere that is one material at the center and another at the surface:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FGrade</span><span class="p">(</span>
-    <span class="p">[</span><span class="s2">&quot;clamp(0, 1 - r/5, 1)&quot;</span><span class="p">,</span> <span class="s2">&quot;clamp(0, r/5, 1)&quot;</span><span class="p">],</span>
-    <span class="p">[</span><span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">),</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">)],</span>
-    <span class="kc">False</span>
+<section id="radial-blend-spherical-r">
+<h3>Radial blend (spherical <code class="docutils literal notranslate"><span class="pre">r</span></code>)<a class="headerlink" href="#radial-blend-spherical-r" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+<span class="n">sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">5.0</span><span class="p">)</span>
+<span class="n">sphere</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([</span>
+        <span class="p">(</span><span class="s2">&quot;clamp(0, 1 - r/5, 1)&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;clamp(0, r/5, 1)&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">)),</span>
+    <span class="p">]),</span>
 <span class="p">)</span>
+<span class="n">root</span> <span class="o">=</span> <span class="n">sphere</span>
 </pre></div>
 </div>
 </section>
-<section id="angular-gradient-cylindrical">
-<h3>Angular gradient (cylindrical)<a class="headerlink" href="#angular-gradient-cylindrical" title="Link to this heading"></a></h3>
-<p>A gradient that varies with angle around the Z-axis:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FGrade</span><span class="p">(</span>
-    <span class="p">[</span><span class="s2">&quot;(phic + pi) / (2*pi)&quot;</span><span class="p">,</span> <span class="s2">&quot;1 - (phic + pi) / (2*pi)&quot;</span><span class="p">],</span>
-    <span class="p">[</span><span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">),</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">)],</span>
-    <span class="kc">False</span>
+<section id="angular-sweep-cylindrical-phic">
+<h3>Angular sweep (cylindrical <code class="docutils literal notranslate"><span class="pre">phic</span></code>)<a class="headerlink" href="#angular-sweep-cylindrical-phic" title="Link to this heading"></a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">pi</span></code> is available inside expression strings (ExprTk built-in).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+<span class="n">cyl</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Cylinder</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
+<span class="n">cyl</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([</span>
+        <span class="p">(</span><span class="s2">&quot;(phic + pi) / (2*pi)&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;1 - (phic + pi) / (2*pi)&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">)),</span>
+    <span class="p">]),</span>
 <span class="p">)</span>
+<span class="n">root</span> <span class="o">=</span> <span class="n">cyl</span>
 </pre></div>
 </div>
 </section>
-<section id="conformal-gradient-signed-distance">
-<h3>Conformal gradient (signed distance)<a class="headerlink" href="#conformal-gradient-signed-distance" title="Link to this heading"></a></h3>
-<p>A gradient that follows the surface contour of the object:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FGrade</span><span class="p">(</span>
-    <span class="p">[</span><span class="s2">&quot;clamp(0, -d/2 + 0.5, 1)&quot;</span><span class="p">,</span> <span class="s2">&quot;clamp(0, d/2 + 0.5, 1)&quot;</span><span class="p">],</span>
-    <span class="p">[</span><span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">),</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">)],</span>
-    <span class="kc">False</span>
+<section id="surface-following-split-signed-distance-d">
+<h3>Surface-following split (signed distance <code class="docutils literal notranslate"><span class="pre">d</span></code>)<a class="headerlink" href="#surface-following-split-signed-distance-d" title="Link to this heading"></a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+<span class="n">sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">5.0</span><span class="p">)</span>
+<span class="n">sphere</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([</span>
+        <span class="p">(</span><span class="s2">&quot;clamp(0, -d/2 + 0.5, 1)&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;clamp(0, d/2 + 0.5, 1)&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">)),</span>
+    <span class="p">]),</span>
 <span class="p">)</span>
+<span class="n">root</span> <span class="o">=</span> <span class="n">sphere</span>
 </pre></div>
 </div>
 <div class="admonition important">
 <p class="admonition-title">Important</p>
-<p>All PDFs at any spatial location must sum to 1. If they don’t, OpenVCAD will
-normalize them, but this may produce unexpected results.</p>
+<p>For <code class="docutils literal notranslate"><span class="pre">VolumeFractionsAttribute</span></code>, expressions at each point should sum to 1.0. If they do not, results may be normalized in ways that are hard to predict—keep PDFs explicitly normalized when possible.</p>
 </div>
 </section>
+</section>
+<section id="tips">
+<h2>Tips<a class="headerlink" href="#tips" title="Link to this heading"></a></h2>
+<ul class="simple">
+<li><p><strong>Grouping</strong> uses parentheses: <code class="docutils literal notranslate"><span class="pre">(x</span> <span class="pre">+</span> <span class="pre">y)</span> <span class="pre">*</span> <span class="pre">z</span></code>.</p></li>
+<li><p><strong>Mixing coordinates</strong> is valid, e.g. <code class="docutils literal notranslate"><span class="pre">rho</span> <span class="pre">*</span> <span class="pre">sin(phis)</span> <span class="pre">+</span> <span class="pre">z</span></code>.</p></li>
+<li><p><strong>Colors and fractions</strong> often need <strong>clamp</strong>: <code class="docutils literal notranslate"><span class="pre">clamp(0,</span> <span class="pre">expr,</span> <span class="pre">1)</span></code> for channels that must stay in [0, 1].</p></li>
+</ul>
 </section>
 </section>
 
@@ -445,21 +418,26 @@ normalize them, but this may produce unexpected results.</p>
               <div class="openvcad-localtoc-sticky">
                 <p class="openvcad-localtoc-title">On this page</p>
                 <nav class="openvcad-localtoc-nav"><ul>
-<li><a class="reference internal" href="#">Math Expression Documentation</a><ul>
-<li><a class="reference internal" href="#coordinate-systems">Coordinate Systems</a></li>
-<li><a class="reference internal" href="#arithmetic-assignment-operators">Arithmetic &amp; Assignment Operators</a></li>
-<li><a class="reference internal" href="#equalities-inequalities">Equalities &amp; Inequalities</a></li>
-<li><a class="reference internal" href="#boolean-operations">Boolean Operations</a></li>
-<li><a class="reference internal" href="#general-purpose-functions">General Purpose Functions</a></li>
-<li><a class="reference internal" href="#trigonometry-functions">Trigonometry Functions</a></li>
-<li><a class="reference internal" href="#constants">Constants</a></li>
-<li><a class="reference internal" href="#examples">Examples</a><ul>
-<li><a class="reference internal" href="#linear-gradient-along-x">Linear gradient along X</a></li>
-<li><a class="reference internal" href="#radial-gradient">Radial gradient</a></li>
-<li><a class="reference internal" href="#angular-gradient-cylindrical">Angular gradient (cylindrical)</a></li>
-<li><a class="reference internal" href="#conformal-gradient-signed-distance">Conformal gradient (signed distance)</a></li>
+<li><a class="reference internal" href="#">Math expressions in OpenVCAD</a><ul>
+<li><a class="reference internal" href="#coordinate-systems">Coordinate systems</a><ul>
+<li><a class="reference internal" href="#cylindrical-definitions">Cylindrical definitions</a></li>
+<li><a class="reference internal" href="#spherical-definitions">Spherical definitions</a></li>
 </ul>
 </li>
+<li><a class="reference internal" href="#arithmetic-and-assignment-operators">Arithmetic and assignment operators</a></li>
+<li><a class="reference internal" href="#equalities-and-inequalities">Equalities and inequalities</a></li>
+<li><a class="reference internal" href="#boolean-operations">Boolean operations</a></li>
+<li><a class="reference internal" href="#general-purpose-functions">General-purpose functions</a></li>
+<li><a class="reference internal" href="#trigonometry">Trigonometry</a></li>
+<li><a class="reference internal" href="#constants">Constants</a></li>
+<li><a class="reference internal" href="#examples-attribute-modeling">Examples (attribute modeling)</a><ul>
+<li><a class="reference internal" href="#linear-blend-along-x-volume-fractions">Linear blend along X (volume fractions)</a></li>
+<li><a class="reference internal" href="#radial-blend-spherical-r">Radial blend (spherical <code class="docutils literal notranslate"><span class="pre">r</span></code>)</a></li>
+<li><a class="reference internal" href="#angular-sweep-cylindrical-phic">Angular sweep (cylindrical <code class="docutils literal notranslate"><span class="pre">phic</span></code>)</a></li>
+<li><a class="reference internal" href="#surface-following-split-signed-distance-d">Surface-following split (signed distance <code class="docutils literal notranslate"><span class="pre">d</span></code>)</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#tips">Tips</a></li>
 </ul>
 </li>
 </ul>
@@ -468,7 +446,7 @@ normalize them, but this may produce unexpected results.</p>
             </aside>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="expression_reference.html" class="btn btn-neutral float-left" title="OpenVCAD Math Expression Reference" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="gradients.html" class="btn btn-neutral float-left" title="Functional Grading Guide" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="../python-api/pyvcad/index.html" class="btn btn-neutral float-right" title="pyvcad package" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

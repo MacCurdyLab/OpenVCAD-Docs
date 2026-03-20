@@ -44,10 +44,6 @@ Let's start by creating a simple geometric primitive. In OpenVCAD, models are bu
 
 The `pv.Vec3` class you see below is a thin Python binding around a 3D vector type (`glm::vec3`). You can construct it from three floats (`Vec3(x, y, z)`). In these basic examples, we treat the numeric values as **arbitrary units**; in a real workflow you can decide whether they correspond to millimeters, centimeters, or any other length unit that matches your printer or simulation.
 
-<table>
-<tr>
-<td width="60%">
-
 ```python
 import pyvcad as pv
 import pyvcad_rendering as viz
@@ -62,14 +58,12 @@ root = cube
 viz.Render(root)
 ```
 
-</td>
-<td width="40%">
-
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render</p>
 <img src="images/01_hello_world.webp" alt="Hello World" width="100%">
-
-</td>
-</tr>
-</table>
+</div>
+</div>
 
 ## Lesson 2: Constructive Solid Geometry (CSG)
 
@@ -82,10 +76,6 @@ CSG nodes like `pv.Union`, `pv.Intersection`, and `pv.Difference` are **composit
 ### Union
 The Union operation merges multiple shapes into one continuous volume.
 
-<table>
-<tr>
-<td width="60%">
-
 ```python
 left_sphere = pv.Sphere(pv.Vec3(-3, 0, 0), 5.0)
 right_sphere = pv.Sphere(pv.Vec3(3, 0, 0), 5.0)
@@ -95,21 +85,15 @@ root = pv.Union(left_sphere, right_sphere)
 viz.Render(root)
 ```
 
-</td>
-<td width="40%">
-
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render</p>
 <img src="images/02_csg_union.webp" alt="Union" width="100%">
-
-</td>
-</tr>
-</table>
+</div>
+</div>
 
 ### Intersection
 The Intersection operation keeps only the overlapping regions of the supplied shapes.
-
-<table>
-<tr>
-<td width="60%">
 
 ```python
 left_sphere = pv.Sphere(pv.Vec3(-3, 0, 0), 5.0)
@@ -120,21 +104,15 @@ root = pv.Intersection(left_sphere, right_sphere)
 viz.Render(root)
 ```
 
-</td>
-<td width="40%">
-
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render</p>
 <img src="images/03_csg_intersection.webp" alt="Intersection" width="100%">
-
-</td>
-</tr>
-</table>
+</div>
+</div>
 
 ### Difference
 The Difference operation subtracts the right shape from the left shape.
-
-<table>
-<tr>
-<td width="60%">
 
 ```python
 left_sphere = pv.Sphere(pv.Vec3(-3, 0, 0), 5.0)
@@ -145,23 +123,17 @@ root = pv.Difference(left_sphere, right_sphere)
 viz.Render(root)
 ```
 
-</td>
-<td width="40%">
-
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render</p>
 <img src="images/04_csg_difference.webp" alt="Difference" width="100%">
-
-</td>
-</tr>
-</table>
+</div>
+</div>
 
 ### Bringing CSG Together
 > Note: this design is based on the object [here](https://en.wikipedia.org/wiki/Constructive_solid_geometry)
 
 By combining these operations in a nested tree, we can build complex objects.
-
-<table>
-<tr>
-<td width="60%">
 
 ```python
 base_cylinder = pv.Cylinder(pv.Vec3(0,0,0), 2.0, 9.0)
@@ -182,14 +154,12 @@ root = pv.Difference(
 viz.Render(root)
 ```
 
-</td>
-<td width="40%">
-
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render</p>
 <img src="images/05_csg.webp" alt="CSG Mug" width="100%">
-
-</td>
-</tr>
-</table>
+</div>
+</div>
 
 
 ## Lesson 3: Transformations
@@ -198,10 +168,6 @@ You can move, rotate, and scale nodes. In OpenVCAD, transformations act as conta
 ### translation
 Translations are represented by the `pv.Translate` node, which is a unary node that stores a 3D offset and applies the **inverse** offset when evaluating the child. Conceptually, it moves the entire subtree in Cartesian space without changing the signed-distance definition of its child.
 
-<table>
-<tr>
-<td width="60%">
-
 ```python
 cube = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(10, 10, 10))
 translated_cube = pv.Translate(15.0, 0.0, 0.0, cube)
@@ -209,23 +175,17 @@ root = pv.Union(cube, translated_cube)
 viz.Render(root)
 ```
 
-</td>
-<td width="40%">
-
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render</p>
 <img src="images/06_transform_translate.webp" alt="Translate" width="100%">
-
-</td>
-</tr>
-</table>
+</div>
+</div>
 
 ### Rotation
 Rotations use angles (in degrees) for Pitch, Yaw, and Roll.
 
 The `pv.Rotate` node is also unary and internally stores Euler angles. The rotation is applied in the order **roll → yaw → pitch**. This is important if you start composing large rotations or using non-axis-aligned orientations, because changing the order of Euler rotations will change the final orientation of your geometry.
-
-<table>
-<tr>
-<td width="60%">
 
 ```python
 cube = pv.RectPrism(pv.Vec3(10, 0, 0), pv.Vec3(10, 10, 10))
@@ -234,23 +194,17 @@ root = pv.Union(cube, rotated_cube)
 viz.Render(root)
 ```
 
-</td>
-<td width="40%">
-
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render</p>
 <img src="images/07_transform_rotate.webp" alt="Rotate" width="100%">
-
-</td>
-</tr>
-</table>
+</div>
+</div>
 
 ### Scale
 Scaling multiplies the object size across x, y, and z dimensions.
 
 The `pv.Scale` node keeps track of a scale factor per axis. During evaluation, it scales incoming query points by the inverse factor so the child sees its original local coordinate space. This allows you to resize complex subtrees without having to manually adjust attribute expressions or child geometry definitions.
-
-<table>
-<tr>
-<td width="60%">
 
 ```python
 cube = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(10, 10, 10))
@@ -260,14 +214,12 @@ root = pv.Union(cube, moved_scaled)
 viz.Render(root)
 ```
 
-</td>
-<td width="40%">
-
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render</p>
 <img src="images/08_transform_scale.webp" alt="Scale" width="100%">
-
-</td>
-</tr>
-</table>
+</div>
+</div>
 
 ## Lesson 4: Attributes
 Attributes define continuous field properties over a volume (like modulus or temperature). Let's define a simple constant value attribute:
@@ -281,10 +233,6 @@ Attributes define continuous field properties over a volume (like modulus or tem
 
 All of these ultimately provide the same interface to the rest of the system: a function that, given a spatial point (and signed distance), returns a float.
 
-<table>
-<tr>
-<td width="60%">
-
 ```python
 cube = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(10, 10, 10))
 
@@ -297,20 +245,14 @@ root = cube
 viz.Render(root, materials)
 ```
 
-</td>
-<td width="40%">
-
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus)</p>
 <img src="images/09_static_float_modulus.webp" alt="Static Float" width="100%">
-
-</td>
-</tr>
-</table>
+</div>
+</div>
 
 We can also define spatially varying attributes using math expressions. The variables `x`, `y` and `z` correspond to physical coordinates.
-
-<table>
-<tr>
-<td width="60%">
 
 ```python
 cube = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(10, 10, 50))
@@ -324,23 +266,17 @@ root = cube
 viz.Render(root, materials)
 ```
 
-</td>
-<td width="40%">
-
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus)</p>
 <img src="images/10_gradient_float_modulus.webp" alt="Gradient Float" width="100%">
-
-</td>
-</tr>
-</table>
+</div>
+</div>
 
 ## Lesson 5: Colors
 OpenVCAD uses `Vec4Attribute` to assign continuous color gradients across an object using math expressions. Values represent R, G, B, and Alpha bounded from 0 to 1.
 
 `pv.Vec4Attribute` is the vector-valued analog of `FloatAttribute`. Each component can be provided either as its own expression string, as a native Python function, or as a constant scalar. When used for color, keep each channel in \[0, 1\] so that renderers and downstream compilers can interpret the values consistently as linear RGBA.
-
-<table>
-<tr>
-<td width="60%">
 
 ```python
 cube = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(50, 10, 10))
@@ -359,24 +295,18 @@ root = cube
 viz.Render(root, materials)
 ```
 
-</td>
-<td width="40%">
-
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (color)</p>
 <img src="images/11_color_gradient_color_rgba.webp" alt="Color Gradient" width="100%">
-
-</td>
-</tr>
-</table>
+</div>
+</div>
 
 
 ## Lesson 6: Volume Fractions
 Volume fractions define complex mixtures of multiple base materials simultaneously across an object—a critical feature for 3D multi-material printing. At any given point in space, the sum of all fractions must equal 1.0.
 
 The `pv.VolumeFractionsAttribute` class takes a list of `(expression_string, material_id)` tuples. Material IDs come from your `MaterialDefs` object (e.g. `materials.id("blue")`). Each expression defines one scalar field per material; at any spatial point the attribute evaluates all of them and returns a mapping from material ID to fraction value.
-
-<table>
-<tr>
-<td width="60%">
 
 ```python
 import pyvcad as pv
@@ -398,14 +328,12 @@ root = cube
 viz.Render(root, materials)
 ```
 
-</td>
-<td width="40%">
-
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (volume fractions)</p>
 <img src="images/12_volume_fractions_volume_fractions.webp" alt="Volume Fractions" width="100%">
-
-</td>
-</tr>
-</table>
+</div>
+</div>
 
 Here `pv.default_materials` returns a `MaterialDefs` object loaded from a JSON configuration bundled with the library. It knows, for each material, a stable ID, a name, and a representative RGBA color. When visualizing volume fractions in the renderer, those palette colors help you see how the mixture changes through the part. You can also construct your own `MaterialDefs` from a custom config file if you need printer-specific material sets. You can find the default config files in `configs/`
 
@@ -417,10 +345,6 @@ Attributes are assigned to structural nodes in your CSG tree. Node rules determi
 3. **CSG Handling**: When two shapes are Unioned/Intersected without a parent override, they retain their distinct internal attributes.
 
 These rules mirror how the underlying attribute system walks the `Node` tree: attributes are collected from the root down to the current leaf, and conflicts are resolved based on where in the tree a given attribute is attached. For binary CSG nodes like `Union`, if both children define the same attribute and no parent override is present, the **first child**'s attribute wins in the overlapping region, which is why the left cube "owns" the mixed zone in the example below.
-
-<table>
-<tr>
-<td width="50%">
 
 ```python
 left_cube = pv.RectPrism(pv.Vec3(-2.5, 0, 0), pv.Vec3(10, 10, 10))
@@ -437,28 +361,22 @@ root = pv.Union(left_cube, right_cube)
 viz.Render(root, pv.default_materials)
 ```
 
-</td>
-<td width="50%">
-
-**Leaf Level Handling:**
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Leaf level handling</p>
 <img src="images/14_leaf_attribute_conflict_color_rgba.webp" alt="Leaf Handling" width="100%">
-<br><br>
-**Parent Level Override:**
-If we attached an attribute to the `root` Union node, it would apply across both boxes natively, dropping the individual red and blue assignments.
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Parent level override</p>
+<p>If we attached an attribute to the <code>root</code> Union node, it would apply across both boxes natively, dropping the individual red and blue assignments.</p>
 <img src="images/15_parent_attribute_override_color_rgba.webp" alt="Parent Override" width="100%">
-
-</td>
-</tr>
-</table>
+</div>
+</div>
 
 ## Lesson 8: Coordinate Spaces
 All attributes operate in the *local* space of the node they are assigned to. That means if you move/rotate a node containing an attribute, the attribute will translate/rotate with the geometry!
 
 Formally, transform nodes like `Translate`, `Rotate`, and `Scale` are unary nodes that apply a change of variables to both geometry and attributes: when the system evaluates a point in world space, it is first mapped back into the child's local coordinates before sampling the signed-distance field and any attached attributes. 
-
-<table>
-<tr>
-<td width="60%">
 
 ```python
 # A rectangular prism, long along X
@@ -477,20 +395,14 @@ root = pv.Rotate(0.0, 0.0, 90.0, prism)
 viz.Render(root, pv.default_materials)
 ```
 
-</td>
-<td width="40%">
-
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (gradient rotates with geometry)</p>
 <img src="images/16_identity_before_color_rgba.webp" alt="Identity Before" width="100%">
-
-</td>
-</tr>
-</table>
+</div>
+</div>
 
 To apply a *global* static gradient regardless of rotation, apply the attribute AFTER the rotation using an `Identity` node:
-
-<table>
-<tr>
-<td width="60%">
 
 ```python
 # Start with an attribute-less rectangular prism
@@ -508,36 +420,62 @@ root.set_attribute(pv.DefaultAttributes.COLOR_RGBA, color_gradient)
 viz.Render(root, pv.default_materials)
 ```
 
-</td>
-<td width="40%">
-
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (world-aligned gradient via Identity)</p>
 <img src="images/17_identity_after_color_rgba.webp" alt="Identity After" width="100%">
-
-</td>
-</tr>
-</table>
+</div>
+</div>
 
 ## Lesson 9: Bringing It All Together
 A single object can carry multiple attributes simultaneously. In the render window, use the dropdown in the top-right corner to select which attribute to visualize.
 
 Internally, those entries correspond to names defined in `pv.DefaultAttributes` (e.g. `MODULUS`, `COLOR_RGBA`, `VOLUME_FRACTIONS`). At any given sample point, the engine evaluates all attached attributes in one pass and then the renderer simply chooses which field to map to colors.
 
-<table align="center" width="100%">
-<tr>
-  <td align="center">
-    <b>Modulus (Float)</b><br>
-    <img src="images/18_multiple_attributes_modulus.webp" alt="Multiple Attributes - Modulus" width="100%">
-  </td>
-  <td align="center">
-    <b>Color (Vec4)</b><br>
-    <img src="images/18_multiple_attributes_color_rgba.webp" alt="Multiple Attributes - Color" width="100%">
-  </td>
-  <td align="center">
-    <b>Volume Fractions</b><br>
-    <img src="images/18_multiple_attributes_volume_fractions.webp" alt="Multiple Attributes - Volume Fractions" width="100%">
-  </td>
-</tr>
-</table>
+```python
+import pyvcad as pv
+import pyvcad_rendering as viz
+
+materials = pv.default_materials
+cube = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(20, 20, 20))
+
+modulus = pv.FloatAttribute("z + 10")
+cube.set_attribute(pv.DefaultAttributes.MODULUS, modulus)
+
+color = pv.Vec4Attribute(
+    "x/20 + 0.5",
+    "1.0 - (x/20 + 0.5)",
+    "x/20 + 0.5",
+    "1.0"
+)
+cube.set_attribute(pv.DefaultAttributes.COLOR_RGBA, color)
+
+fractions = pv.VolumeFractionsAttribute(
+    [
+        ("-y/20 + 0.5", materials.id("gray")),
+        ("y/20 + 0.5", materials.id("green"))
+    ]
+)
+cube.set_attribute(pv.DefaultAttributes.VOLUME_FRACTIONS, fractions)
+
+root = cube
+viz.Render(root, materials)
+```
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Modulus (float)</p>
+<img src="images/18_multiple_attributes_modulus.webp" alt="Multiple Attributes - Modulus" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Color (Vec4)</p>
+<img src="images/18_multiple_attributes_color_rgba.webp" alt="Multiple Attributes - Color" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Volume fractions</p>
+<img src="images/18_multiple_attributes_volume_fractions.webp" alt="Multiple Attributes - Volume Fractions" width="100%">
+</div>
+</div>
 
 ---
 

@@ -11,7 +11,7 @@
       <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=b86133f3" />
       <link rel="stylesheet" type="text/css" href="../_static/css/theme.css?v=9edc463e" />
       <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
-      <link rel="stylesheet" type="text/css" href="../_static/openvcad_theme.css?v=a969b26e" />
+      <link rel="stylesheet" type="text/css" href="../_static/openvcad_theme.css?v=9113a704" />
 
   
       <script src="../_static/jquery.js?v=5d32c60e"></script>
@@ -165,9 +165,6 @@
 <h2>Lesson 1: Hello World<a class="headerlink" href="#lesson-1-hello-world" title="Link to this heading"></a></h2>
 <p>Let’s start by creating a simple geometric primitive. In OpenVCAD, models are built using <code class="docutils literal notranslate"><span class="pre">Node</span></code> trees, where the leaves are primary shapes like spheres, cones, or prisms.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">pv.Vec3</span></code> class you see below is a thin Python binding around a 3D vector type (<code class="docutils literal notranslate"><span class="pre">glm::vec3</span></code>). You can construct it from three floats (<code class="docutils literal notranslate"><span class="pre">Vec3(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code>). In these basic examples, we treat the numeric values as <strong>arbitrary units</strong>; in a real workflow you can decide whether they correspond to millimeters, centimeters, or any other length unit that matches your printer or simulation.</p>
-<table>
-<tr>
-<td width="60%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
 
@@ -181,12 +178,12 @@
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="40%">
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render</p>
 <img src="images/01_hello_world.webp" alt="Hello World" width="100%">
-</td>
-</tr>
-</table>
+</div>
+</div>
 </section>
 <section id="lesson-2-constructive-solid-geometry-csg">
 <h2>Lesson 2: Constructive Solid Geometry (CSG)<a class="headerlink" href="#lesson-2-constructive-solid-geometry-csg" title="Link to this heading"></a></h2>
@@ -198,9 +195,6 @@
 <section id="union">
 <h3>Union<a class="headerlink" href="#union" title="Link to this heading"></a></h3>
 <p>The Union operation merges multiple shapes into one continuous volume.</p>
-<table>
-<tr>
-<td width="60%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">left_sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">5.0</span><span class="p">)</span>
 <span class="n">right_sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">5.0</span><span class="p">)</span>
 
@@ -209,19 +203,16 @@
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="40%">
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render</p>
 <img src="images/02_csg_union.webp" alt="Union" width="100%">
-</td>
-</tr>
-</table>
+</div>
+</div>
 </section>
 <section id="intersection">
 <h3>Intersection<a class="headerlink" href="#intersection" title="Link to this heading"></a></h3>
 <p>The Intersection operation keeps only the overlapping regions of the supplied shapes.</p>
-<table>
-<tr>
-<td width="60%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">left_sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">5.0</span><span class="p">)</span>
 <span class="n">right_sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">5.0</span><span class="p">)</span>
 
@@ -230,19 +221,16 @@
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="40%">
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render</p>
 <img src="images/03_csg_intersection.webp" alt="Intersection" width="100%">
-</td>
-</tr>
-</table>
+</div>
+</div>
 </section>
 <section id="difference">
 <h3>Difference<a class="headerlink" href="#difference" title="Link to this heading"></a></h3>
 <p>The Difference operation subtracts the right shape from the left shape.</p>
-<table>
-<tr>
-<td width="60%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">left_sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">5.0</span><span class="p">)</span>
 <span class="n">right_sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">5.0</span><span class="p">)</span>
 
@@ -251,12 +239,12 @@
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="40%">
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render</p>
 <img src="images/04_csg_difference.webp" alt="Difference" width="100%">
-</td>
-</tr>
-</table>
+</div>
+</div>
 </section>
 <section id="bringing-csg-together">
 <h3>Bringing CSG Together<a class="headerlink" href="#bringing-csg-together" title="Link to this heading"></a></h3>
@@ -264,9 +252,6 @@
 <div><p>Note: this design is based on the object <a class="reference external" href="https://en.wikipedia.org/wiki/Constructive_solid_geometry">here</a></p>
 </div></blockquote>
 <p>By combining these operations in a nested tree, we can build complex objects.</p>
-<table>
-<tr>
-<td width="60%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">base_cylinder</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Cylinder</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">,</span><span class="mi">0</span><span class="p">),</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">)</span>
 
 <span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Difference</span><span class="p">(</span>
@@ -285,12 +270,12 @@
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="40%">
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render</p>
 <img src="images/05_csg.webp" alt="CSG Mug" width="100%">
-</td>
-</tr>
-</table>
+</div>
+</div>
 </section>
 </section>
 <section id="lesson-3-transformations">
@@ -299,49 +284,40 @@
 <section id="translation">
 <h3>translation<a class="headerlink" href="#translation" title="Link to this heading"></a></h3>
 <p>Translations are represented by the <code class="docutils literal notranslate"><span class="pre">pv.Translate</span></code> node, which is a unary node that stores a 3D offset and applies the <strong>inverse</strong> offset when evaluating the child. Conceptually, it moves the entire subtree in Cartesian space without changing the signed-distance definition of its child.</p>
-<table>
-<tr>
-<td width="60%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cube</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 <span class="n">translated_cube</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Translate</span><span class="p">(</span><span class="mf">15.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">cube</span><span class="p">)</span>
 <span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">(</span><span class="n">cube</span><span class="p">,</span> <span class="n">translated_cube</span><span class="p">)</span>
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="40%">
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render</p>
 <img src="images/06_transform_translate.webp" alt="Translate" width="100%">
-</td>
-</tr>
-</table>
+</div>
+</div>
 </section>
 <section id="rotation">
 <h3>Rotation<a class="headerlink" href="#rotation" title="Link to this heading"></a></h3>
 <p>Rotations use angles (in degrees) for Pitch, Yaw, and Roll.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">pv.Rotate</span></code> node is also unary and internally stores Euler angles. The rotation is applied in the order <strong>roll → yaw → pitch</strong>. This is important if you start composing large rotations or using non-axis-aligned orientations, because changing the order of Euler rotations will change the final orientation of your geometry.</p>
-<table>
-<tr>
-<td width="60%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cube</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 <span class="n">rotated_cube</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Rotate</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">45.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">cube</span><span class="p">)</span>
 <span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">(</span><span class="n">cube</span><span class="p">,</span> <span class="n">rotated_cube</span><span class="p">)</span>
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="40%">
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render</p>
 <img src="images/07_transform_rotate.webp" alt="Rotate" width="100%">
-</td>
-</tr>
-</table>
+</div>
+</div>
 </section>
 <section id="scale">
 <h3>Scale<a class="headerlink" href="#scale" title="Link to this heading"></a></h3>
 <p>Scaling multiplies the object size across x, y, and z dimensions.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">pv.Scale</span></code> node keeps track of a scale factor per axis. During evaluation, it scales incoming query points by the inverse factor so the child sees its original local coordinate space. This allows you to resize complex subtrees without having to manually adjust attribute expressions or child geometry definitions.</p>
-<table>
-<tr>
-<td width="60%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cube</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 <span class="n">scaled_cube</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Scale</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">cube</span><span class="p">)</span>
 <span class="n">moved_scaled</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Translate</span><span class="p">(</span><span class="mf">20.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">scaled_cube</span><span class="p">)</span>
@@ -349,12 +325,12 @@
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="40%">
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render</p>
 <img src="images/08_transform_scale.webp" alt="Scale" width="100%">
-</td>
-</tr>
-</table>
+</div>
+</div>
 </section>
 </section>
 <section id="lesson-4-attributes">
@@ -368,9 +344,6 @@
 <li><p><strong>Sampled volume</strong>: <code class="docutils literal notranslate"><span class="pre">FloatAttribute(vdb_volume)</span></code> samples from a VDB volume in the core library.</p></li>
 </ul>
 <p>All of these ultimately provide the same interface to the rest of the system: a function that, given a spatial point (and signed distance), returns a float.</p>
-<table>
-<tr>
-<td width="60%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cube</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 
 <span class="c1"># Define a static float attribute (e.g. modulus in MPa)</span>
@@ -382,16 +355,13 @@
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="40%">
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus)</p>
 <img src="images/09_static_float_modulus.webp" alt="Static Float" width="100%">
-</td>
-</tr>
-</table>
+</div>
+</div>
 <p>We can also define spatially varying attributes using math expressions. The variables <code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code> and <code class="docutils literal notranslate"><span class="pre">z</span></code> correspond to physical coordinates.</p>
-<table>
-<tr>
-<td width="60%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cube</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
 
 <span class="c1"># A gradient modulus that increases linearly along Z. Cube spans z from -25 to +25.</span>
@@ -403,20 +373,17 @@
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="40%">
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus)</p>
 <img src="images/10_gradient_float_modulus.webp" alt="Gradient Float" width="100%">
-</td>
-</tr>
-</table>
+</div>
+</div>
 </section>
 <section id="lesson-5-colors">
 <h2>Lesson 5: Colors<a class="headerlink" href="#lesson-5-colors" title="Link to this heading"></a></h2>
 <p>OpenVCAD uses <code class="docutils literal notranslate"><span class="pre">Vec4Attribute</span></code> to assign continuous color gradients across an object using math expressions. Values represent R, G, B, and Alpha bounded from 0 to 1.</p>
 <p><code class="docutils literal notranslate"><span class="pre">pv.Vec4Attribute</span></code> is the vector-valued analog of <code class="docutils literal notranslate"><span class="pre">FloatAttribute</span></code>. Each component can be provided either as its own expression string, as a native Python function, or as a constant scalar. When used for color, keep each channel in [0, 1] so that renderers and downstream compilers can interpret the values consistently as linear RGBA.</p>
-<table>
-<tr>
-<td width="60%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cube</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 
 <span class="c1"># Green (left) to magenta (right) along X</span>
@@ -433,20 +400,17 @@
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="40%">
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (color)</p>
 <img src="images/11_color_gradient_color_rgba.webp" alt="Color Gradient" width="100%">
-</td>
-</tr>
-</table>
+</div>
+</div>
 </section>
 <section id="lesson-6-volume-fractions">
 <h2>Lesson 6: Volume Fractions<a class="headerlink" href="#lesson-6-volume-fractions" title="Link to this heading"></a></h2>
 <p>Volume fractions define complex mixtures of multiple base materials simultaneously across an object—a critical feature for 3D multi-material printing. At any given point in space, the sum of all fractions must equal 1.0.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">pv.VolumeFractionsAttribute</span></code> class takes a list of <code class="docutils literal notranslate"><span class="pre">(expression_string,</span> <span class="pre">material_id)</span></code> tuples. Material IDs come from your <code class="docutils literal notranslate"><span class="pre">MaterialDefs</span></code> object (e.g. <code class="docutils literal notranslate"><span class="pre">materials.id(&quot;blue&quot;)</span></code>). Each expression defines one scalar field per material; at any spatial point the attribute evaluates all of them and returns a mapping from material ID to fraction value.</p>
-<table>
-<tr>
-<td width="60%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
 
@@ -466,12 +430,12 @@
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="40%">
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (volume fractions)</p>
 <img src="images/12_volume_fractions_volume_fractions.webp" alt="Volume Fractions" width="100%">
-</td>
-</tr>
-</table>
+</div>
+</div>
 <p>Here <code class="docutils literal notranslate"><span class="pre">pv.default_materials</span></code> returns a <code class="docutils literal notranslate"><span class="pre">MaterialDefs</span></code> object loaded from a JSON configuration bundled with the library. It knows, for each material, a stable ID, a name, and a representative RGBA color. When visualizing volume fractions in the renderer, those palette colors help you see how the mixture changes through the part. You can also construct your own <code class="docutils literal notranslate"><span class="pre">MaterialDefs</span></code> from a custom config file if you need printer-specific material sets. You can find the default config files in <code class="docutils literal notranslate"><span class="pre">configs/</span></code></p>
 </section>
 <section id="lesson-7-the-node-hierarchy-and-attribute-priority">
@@ -483,9 +447,6 @@
 <li><p><strong>CSG Handling</strong>: When two shapes are Unioned/Intersected without a parent override, they retain their distinct internal attributes.</p></li>
 </ol>
 <p>These rules mirror how the underlying attribute system walks the <code class="docutils literal notranslate"><span class="pre">Node</span></code> tree: attributes are collected from the root down to the current leaf, and conflicts are resolved based on where in the tree a given attribute is attached. For binary CSG nodes like <code class="docutils literal notranslate"><span class="pre">Union</span></code>, if both children define the same attribute and no parent override is present, the <strong>first child</strong>’s attribute wins in the overlapping region, which is why the left cube “owns” the mixed zone in the example below.</p>
-<table>
-<tr>
-<td width="50%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">left_cube</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mf">2.5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
 <span class="n">red_attr</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec4Attribute</span><span class="p">(</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">)</span>
 <span class="n">left_cube</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
@@ -500,25 +461,22 @@
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="50%">
-<p><strong>Leaf Level Handling:</strong>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Leaf level handling</p>
 <img src="images/14_leaf_attribute_conflict_color_rgba.webp" alt="Leaf Handling" width="100%">
-<br><br>
-<strong>Parent Level Override:</strong>
-If we attached an attribute to the <code class="docutils literal notranslate"><span class="pre">root</span></code> Union node, it would apply across both boxes natively, dropping the individual red and blue assignments.
-<img src="images/15_parent_attribute_override_color_rgba.webp" alt="Parent Override" width="100%"></p>
-</td>
-</tr>
-</table>
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Parent level override</p>
+<p>If we attached an attribute to the <code>root</code> Union node, it would apply across both boxes natively, dropping the individual red and blue assignments.</p>
+<img src="images/15_parent_attribute_override_color_rgba.webp" alt="Parent Override" width="100%">
+</div>
+</div>
 </section>
 <section id="lesson-8-coordinate-spaces">
 <h2>Lesson 8: Coordinate Spaces<a class="headerlink" href="#lesson-8-coordinate-spaces" title="Link to this heading"></a></h2>
 <p>All attributes operate in the <em>local</em> space of the node they are assigned to. That means if you move/rotate a node containing an attribute, the attribute will translate/rotate with the geometry!</p>
 <p>Formally, transform nodes like <code class="docutils literal notranslate"><span class="pre">Translate</span></code>, <code class="docutils literal notranslate"><span class="pre">Rotate</span></code>, and <code class="docutils literal notranslate"><span class="pre">Scale</span></code> are unary nodes that apply a change of variables to both geometry and attributes: when the system evaluates a point in world space, it is first mapped back into the child’s local coordinates before sampling the signed-distance field and any attached attributes.</p>
-<table>
-<tr>
-<td width="60%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># A rectangular prism, long along X</span>
 <span class="n">prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 
@@ -535,16 +493,13 @@ If we attached an attribute to the <code class="docutils literal notranslate"><s
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="40%">
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (gradient rotates with geometry)</p>
 <img src="images/16_identity_before_color_rgba.webp" alt="Identity Before" width="100%">
-</td>
-</tr>
-</table>
+</div>
+</div>
 <p>To apply a <em>global</em> static gradient regardless of rotation, apply the attribute AFTER the rotation using an <code class="docutils literal notranslate"><span class="pre">Identity</span></code> node:</p>
-<table>
-<tr>
-<td width="60%">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Start with an attribute-less rectangular prism</span>
 <span class="n">prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
 <span class="n">rotated_prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Rotate</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">90.0</span><span class="p">,</span> <span class="n">prism</span><span class="p">)</span>
@@ -560,33 +515,60 @@ If we attached an attribute to the <code class="docutils literal notranslate"><s
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span><span class="p">)</span>
 </pre></div>
 </div>
-</td>
-<td width="40%">
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (world-aligned gradient via Identity)</p>
 <img src="images/17_identity_after_color_rgba.webp" alt="Identity After" width="100%">
-</td>
-</tr>
-</table>
+</div>
+</div>
 </section>
 <section id="lesson-9-bringing-it-all-together">
 <h2>Lesson 9: Bringing It All Together<a class="headerlink" href="#lesson-9-bringing-it-all-together" title="Link to this heading"></a></h2>
 <p>A single object can carry multiple attributes simultaneously. In the render window, use the dropdown in the top-right corner to select which attribute to visualize.</p>
 <p>Internally, those entries correspond to names defined in <code class="docutils literal notranslate"><span class="pre">pv.DefaultAttributes</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">MODULUS</span></code>, <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code>, <code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code>). At any given sample point, the engine evaluates all attached attributes in one pass and then the renderer simply chooses which field to map to colors.</p>
-<table align="center" width="100%">
-<tr>
-  <td align="center">
-    <b>Modulus (Float)</b><br>
-    <img src="images/18_multiple_attributes_modulus.webp" alt="Multiple Attributes - Modulus" width="100%">
-  </td>
-  <td align="center">
-    <b>Color (Vec4)</b><br>
-    <img src="images/18_multiple_attributes_color_rgba.webp" alt="Multiple Attributes - Color" width="100%">
-  </td>
-  <td align="center">
-    <b>Volume Fractions</b><br>
-    <img src="images/18_multiple_attributes_volume_fractions.webp" alt="Multiple Attributes - Volume Fractions" width="100%">
-  </td>
-</tr>
-</table>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+<span class="n">cube</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">20</span><span class="p">))</span>
+
+<span class="n">modulus</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">&quot;z + 10&quot;</span><span class="p">)</span>
+<span class="n">cube</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span> <span class="n">modulus</span><span class="p">)</span>
+
+<span class="n">color</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec4Attribute</span><span class="p">(</span>
+    <span class="s2">&quot;x/20 + 0.5&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;1.0 - (x/20 + 0.5)&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;x/20 + 0.5&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;1.0&quot;</span>
+<span class="p">)</span>
+<span class="n">cube</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span> <span class="n">color</span><span class="p">)</span>
+
+<span class="n">fractions</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;-y/20 + 0.5&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;gray&quot;</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;y/20 + 0.5&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;green&quot;</span><span class="p">))</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">cube</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span> <span class="n">fractions</span><span class="p">)</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">cube</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Modulus (float)</p>
+<img src="images/18_multiple_attributes_modulus.webp" alt="Multiple Attributes - Modulus" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Color (Vec4)</p>
+<img src="images/18_multiple_attributes_color_rgba.webp" alt="Multiple Attributes - Color" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Volume fractions</p>
+<img src="images/18_multiple_attributes_volume_fractions.webp" alt="Multiple Attributes - Volume Fractions" width="100%">
+</div>
+</div>
 </section>
 <hr class="docutils" />
 <section id="appendix-attribute-expressions-coordinate-systems-and-default-names">

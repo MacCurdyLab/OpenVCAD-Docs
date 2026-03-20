@@ -1,5 +1,5 @@
 /**
- * Click-to-enlarge lightbox for images in the main Sphinx article body (#furo-main-content).
+ * Click-to-enlarge lightbox for images in the main Sphinx article body (#main-content).
  * Set data-no-lightbox on an <img> to disable.
  */
 (function () {
@@ -71,7 +71,7 @@
         if (img.getAttribute('data-no-lightbox') !== null) {
             return;
         }
-        var root = document.getElementById('furo-main-content');
+        var root = document.getElementById('main-content');
         if (!root || !root.contains(img)) {
             return;
         }
@@ -88,7 +88,7 @@
     }
 
     function init() {
-        var root = document.getElementById('furo-main-content');
+        var root = document.getElementById('main-content');
         if (!root) {
             return;
         }

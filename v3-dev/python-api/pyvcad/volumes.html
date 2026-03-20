@@ -314,12 +314,9 @@
 </ul>
 </details></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="../pyvcad_rendering/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code> module</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l2"><a class="reference internal" href="../pyvcad_rendering/render.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering.render</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../pyvcad_rendering/export.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering.export</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../pyvcad_rendering/render_frame.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering.render_frame</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../pyvcad_rendering/export_frame.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering.export_frame</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../pyvcad_rendering/vtk_pipeline_wx.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering.vtk_pipeline_wx</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="../pyvcad_rendering/compiler_input_ui.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering.compiler_input_ui</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_rendering/interactive.html">Interactive (GUI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_rendering/headless.html">Headless (no GUI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_rendering/vtk_data_export.html">VTK data export</a></li>
 </ul>
 </details></li>
 </ul>
@@ -420,9 +417,464 @@
 </section>
 <section id="volume-types">
 <h2>Volume types<a class="headerlink" href="#volume-types" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.FloatVolume">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">FloatVolume</span></span><a class="headerlink" href="#pyvcad.FloatVolume" title="Link to this definition">#</a></dt>
+<dd><p>A VDB volume storing scalar float values.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.FloatVolume.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.FloatVolume.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.FloatVolume) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates an empty FloatVDBVolume.</p>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.FloatVolume, grid: openvdb::v13_0::Grid&lt;openvdb::v13_0::tree::Tree&lt;openvdb::v13_0::tree::RootNode&lt;openvdb::v13_0::tree::InternalNode&lt;openvdb::v13_0::tree::InternalNode&lt;openvdb::v13_0::tree::LeafNode&lt;float, 3u&gt;, 4u&gt;, 5u&gt;&gt;&gt;&gt;, center: bool = False) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a FloatVDBVolume from an existing grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grid</strong> (<em>FloatGrid</em>) – The OpenVDB grid to use.</p></li>
+<li><p><strong>center</strong> (<em>bool</em>) – If True, centers the volume about the origin. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.FloatVolume.bounding_box">
+<span class="sig-name descname"><span class="pre">bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.FloatVolume" title="pyvcad.pyvcad.FloatVolume"><span class="pre">pyvcad.pyvcad.FloatVolume</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.FloatVolume.bounding_box" title="Link to this definition">#</a></dt>
+<dd><p>Get the world space bounding box of the volume.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The minimum and maximum coordinates.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[<a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.Vec3">Vec3</a>, <a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.Vec3">Vec3</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.FloatVolume.clone">
+<span class="sig-name descname"><span class="pre">clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.FloatVolume" title="pyvcad.pyvcad.FloatVolume"><span class="pre">pyvcad.pyvcad.FloatVolume</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.FloatVolume" title="pyvcad.pyvcad.FloatVolume"><span class="pre">pyvcad.pyvcad.FloatVolume</span></a></span></span><a class="headerlink" href="#pyvcad.FloatVolume.clone" title="Link to this definition">#</a></dt>
+<dd><p>Create a thread-safe clone of this volume.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A cloned volume instance.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#pyvcad.FloatVolume" title="pyvcad.FloatVolume">FloatVolume</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.FloatVolume.grid_type">
+<span class="sig-name descname"><span class="pre">grid_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.FloatVolume" title="pyvcad.pyvcad.FloatVolume"><span class="pre">pyvcad.pyvcad.FloatVolume</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#pyvcad.FloatVolume.grid_type" title="Link to this definition">#</a></dt>
+<dd><p>Get the grid type name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The grid type name.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.FloatVolume.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.FloatVolume" title="pyvcad.pyvcad.FloatVolume"><span class="pre">pyvcad.pyvcad.FloatVolume</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pyvcad.FloatVolume.sample" title="Link to this definition">#</a></dt>
+<dd><p>Sample the volume at the given coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – X coordinate.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Y coordinate.</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – Z coordinate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The sampled value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Vec2sVolume">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Vec2sVolume</span></span><a class="headerlink" href="#pyvcad.Vec2sVolume" title="Link to this definition">#</a></dt>
+<dd><p>A VDB volume storing 2D vector values with single precision.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec2sVolume.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec2sVolume" title="pyvcad.pyvcad.Vec2sVolume"><span class="pre">pyvcad.pyvcad.Vec2sVolume</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Vec2sVolume.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Constructor. Creates an empty Vec2sVDBVolume.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec2sVolume.bounding_box">
+<span class="sig-name descname"><span class="pre">bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec2sVolume" title="pyvcad.pyvcad.Vec2sVolume"><span class="pre">pyvcad.pyvcad.Vec2sVolume</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Vec2sVolume.bounding_box" title="Link to this definition">#</a></dt>
+<dd><p>Get the world space bounding box of the volume.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The minimum and maximum coordinates.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[<a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.Vec3">Vec3</a>, <a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.Vec3">Vec3</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec2sVolume.clone">
+<span class="sig-name descname"><span class="pre">clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec2sVolume" title="pyvcad.pyvcad.Vec2sVolume"><span class="pre">pyvcad.pyvcad.Vec2sVolume</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.Vec2sVolume" title="pyvcad.pyvcad.Vec2sVolume"><span class="pre">pyvcad.pyvcad.Vec2sVolume</span></a></span></span><a class="headerlink" href="#pyvcad.Vec2sVolume.clone" title="Link to this definition">#</a></dt>
+<dd><p>Create a thread-safe clone of this volume.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A cloned volume instance.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#pyvcad.Vec2sVolume" title="pyvcad.Vec2sVolume">Vec2sVolume</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec2sVolume.grid_type">
+<span class="sig-name descname"><span class="pre">grid_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec2sVolume" title="pyvcad.pyvcad.Vec2sVolume"><span class="pre">pyvcad.pyvcad.Vec2sVolume</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#pyvcad.Vec2sVolume.grid_type" title="Link to this definition">#</a></dt>
+<dd><p>Get the grid type name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The grid type name.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec2sVolume.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec2sVolume" title="pyvcad.pyvcad.Vec2sVolume"><span class="pre">pyvcad.pyvcad.Vec2sVolume</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="geometry.html#pyvcad.Vec2" title="pyvcad.pyvcad.Vec2"><span class="pre">pyvcad.pyvcad.Vec2</span></a></span></span><a class="headerlink" href="#pyvcad.Vec2sVolume.sample" title="Link to this definition">#</a></dt>
+<dd><p>Sample the volume at the given coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – X coordinate.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Y coordinate.</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – Z coordinate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The sampled 2D vector value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="geometry.html#pyvcad.Vec2" title="pyvcad.Vec2">Vec2</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Vec3sVolume">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Vec3sVolume</span></span><a class="headerlink" href="#pyvcad.Vec3sVolume" title="Link to this definition">#</a></dt>
+<dd><p>A VDB volume storing 3D vector values with single precision.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec3sVolume.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Vec3sVolume.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Vec3sVolume) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates an empty Vec3sVDBVolume.</p>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Vec3sVolume, grid: openvdb::v13_0::Grid&lt;openvdb::v13_0::tree::Tree&lt;openvdb::v13_0::tree::RootNode&lt;openvdb::v13_0::tree::InternalNode&lt;openvdb::v13_0::tree::InternalNode&lt;openvdb::v13_0::tree::LeafNode&lt;openvdb::v13_0::math::Vec3&lt;float&gt;, 3u&gt;, 4u&gt;, 5u&gt;&gt;&gt;&gt;, center: bool = False) -&gt; None</p></li>
+</ol>
+<p>Constructor. Creates a Vec3sVDBVolume from an existing grid.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>grid</strong> (<em>Vec3SGrid</em>) – The OpenVDB grid to use.</p></li>
+<li><p><strong>center</strong> (<em>bool</em>) – If True, centers the volume about the origin. Defaults to False.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec3sVolume.bounding_box">
+<span class="sig-name descname"><span class="pre">bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3sVolume" title="pyvcad.pyvcad.Vec3sVolume"><span class="pre">pyvcad.pyvcad.Vec3sVolume</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Vec3sVolume.bounding_box" title="Link to this definition">#</a></dt>
+<dd><p>Get the world space bounding box of the volume.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The minimum and maximum coordinates.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[<a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.Vec3">Vec3</a>, <a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.Vec3">Vec3</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec3sVolume.clone">
+<span class="sig-name descname"><span class="pre">clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3sVolume" title="pyvcad.pyvcad.Vec3sVolume"><span class="pre">pyvcad.pyvcad.Vec3sVolume</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.Vec3sVolume" title="pyvcad.pyvcad.Vec3sVolume"><span class="pre">pyvcad.pyvcad.Vec3sVolume</span></a></span></span><a class="headerlink" href="#pyvcad.Vec3sVolume.clone" title="Link to this definition">#</a></dt>
+<dd><p>Create a thread-safe clone of this volume.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A cloned volume instance.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#pyvcad.Vec3sVolume" title="pyvcad.Vec3sVolume">Vec3sVolume</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec3sVolume.grid_type">
+<span class="sig-name descname"><span class="pre">grid_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3sVolume" title="pyvcad.pyvcad.Vec3sVolume"><span class="pre">pyvcad.pyvcad.Vec3sVolume</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#pyvcad.Vec3sVolume.grid_type" title="Link to this definition">#</a></dt>
+<dd><p>Get the grid type name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The grid type name.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec3sVolume.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3sVolume" title="pyvcad.pyvcad.Vec3sVolume"><span class="pre">pyvcad.pyvcad.Vec3sVolume</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></span><a class="headerlink" href="#pyvcad.Vec3sVolume.sample" title="Link to this definition">#</a></dt>
+<dd><p>Sample the volume at the given coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – X coordinate.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Y coordinate.</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – Z coordinate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The sampled 3D vector value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.Vec3">Vec3</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Vec4sVolume">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Vec4sVolume</span></span><a class="headerlink" href="#pyvcad.Vec4sVolume" title="Link to this definition">#</a></dt>
+<dd><p>A VDB volume storing 4D vector values with single precision.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec4sVolume.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec4sVolume" title="pyvcad.pyvcad.Vec4sVolume"><span class="pre">pyvcad.pyvcad.Vec4sVolume</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Vec4sVolume.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Constructor. Creates an empty Vec4sVDBVolume.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec4sVolume.bounding_box">
+<span class="sig-name descname"><span class="pre">bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec4sVolume" title="pyvcad.pyvcad.Vec4sVolume"><span class="pre">pyvcad.pyvcad.Vec4sVolume</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.Vec4sVolume.bounding_box" title="Link to this definition">#</a></dt>
+<dd><p>Get the world space bounding box of the volume.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The minimum and maximum coordinates.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple[<a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.Vec3">Vec3</a>, <a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.Vec3">Vec3</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec4sVolume.clone">
+<span class="sig-name descname"><span class="pre">clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec4sVolume" title="pyvcad.pyvcad.Vec4sVolume"><span class="pre">pyvcad.pyvcad.Vec4sVolume</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.Vec4sVolume" title="pyvcad.pyvcad.Vec4sVolume"><span class="pre">pyvcad.pyvcad.Vec4sVolume</span></a></span></span><a class="headerlink" href="#pyvcad.Vec4sVolume.clone" title="Link to this definition">#</a></dt>
+<dd><p>Create a thread-safe clone of this volume.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A cloned volume instance.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#pyvcad.Vec4sVolume" title="pyvcad.Vec4sVolume">Vec4sVolume</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec4sVolume.grid_type">
+<span class="sig-name descname"><span class="pre">grid_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec4sVolume" title="pyvcad.pyvcad.Vec4sVolume"><span class="pre">pyvcad.pyvcad.Vec4sVolume</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#pyvcad.Vec4sVolume.grid_type" title="Link to this definition">#</a></dt>
+<dd><p>Get the grid type name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The grid type name.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>str</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec4sVolume.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec4sVolume" title="pyvcad.pyvcad.Vec4sVolume"><span class="pre">pyvcad.pyvcad.Vec4sVolume</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="geometry.html#pyvcad.Vec4" title="pyvcad.pyvcad.Vec4"><span class="pre">pyvcad.pyvcad.Vec4</span></a></span></span><a class="headerlink" href="#pyvcad.Vec4sVolume.sample" title="Link to this definition">#</a></dt>
+<dd><p>Sample the volume at the given coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>float</em>) – X coordinate.</p></li>
+<li><p><strong>y</strong> (<em>float</em>) – Y coordinate.</p></li>
+<li><p><strong>z</strong> (<em>float</em>) – Z coordinate.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The sampled 4D vector value.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="geometry.html#pyvcad.Vec4" title="pyvcad.Vec4">Vec4</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="loaders">
 <h2>Loaders<a class="headerlink" href="#loaders" title="Link to this heading">#</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.DICOMLoader">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">DICOMLoader</span></span><a class="headerlink" href="#pyvcad.DICOMLoader" title="Link to this definition">#</a></dt>
+<dd><p>A loader for DICOM image stacks that converts them to VDB volumes.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.DICOMLoader.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.DICOMLoader" title="pyvcad.pyvcad.DICOMLoader"><span class="pre">pyvcad.pyvcad.DICOMLoader</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">directory</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">center</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rescale_slope</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rescale_intercept</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">slice_thickness</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_pixel_spacing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-inf</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_pixel_spacing</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-inf</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.DICOMLoader.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Constructor. Creates a DICOMLoader for loading DICOM image stacks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>directory</strong> (<em>str</em>) – The directory containing the DICOM stack.</p></li>
+<li><p><strong>center</strong> (<em>bool</em><em>, </em><em>optional</em>) – Whether to center the volume at the origin. Default is false.</p></li>
+<li><p><strong>rescale_slope</strong> (<em>double</em><em>, </em><em>optional</em>) – The rescale slope to apply to pixel values.</p></li>
+<li><p><strong>rescale_intercept</strong> (<em>double</em><em>, </em><em>optional</em>) – The rescale intercept to apply to pixel values.</p></li>
+<li><p><strong>slice_thickness</strong> (<em>double</em><em>, </em><em>optional</em>) – The slice thickness in mm.</p></li>
+<li><p><strong>x_pixel_spacing</strong> (<em>double</em><em>, </em><em>optional</em>) – The pixel spacing in x direction in mm.</p></li>
+<li><p><strong>y_pixel_spacing</strong> (<em>double</em><em>, </em><em>optional</em>) – The pixel spacing in y direction in mm.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.DICOMLoader.as_volume">
+<span class="sig-name descname"><span class="pre">as_volume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.DICOMLoader" title="pyvcad.pyvcad.DICOMLoader"><span class="pre">pyvcad.pyvcad.DICOMLoader</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.FloatVolume" title="pyvcad.pyvcad.FloatVolume"><span class="pre">pyvcad.pyvcad.FloatVolume</span></a></span></span><a class="headerlink" href="#pyvcad.DICOMLoader.as_volume" title="Link to this definition">#</a></dt>
+<dd><p>Convert the loaded DICOM stack to a VDB volume.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The resulting VDB volume.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>FloatVDBVolume</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.DICOMLoader.get_bounding_box">
+<span class="sig-name descname"><span class="pre">get_bounding_box</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.DICOMLoader" title="pyvcad.pyvcad.DICOMLoader"><span class="pre">pyvcad.pyvcad.DICOMLoader</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.DICOMLoader.get_bounding_box" title="Link to this definition">#</a></dt>
+<dd><p>Get the axis-aligned bounding box of the loaded DICOM volume in mm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A tuple containing two glm.vec3 vectors representing the minimum and maximum corners of the bounding box ((min_x, min_y, min_z), (max_x, max_y, max_z)).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.DICOMLoader.get_dimensions">
+<span class="sig-name descname"><span class="pre">get_dimensions</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.DICOMLoader" title="pyvcad.pyvcad.DICOMLoader"><span class="pre">pyvcad.pyvcad.DICOMLoader</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></span><a class="headerlink" href="#pyvcad.DICOMLoader.get_dimensions" title="Link to this definition">#</a></dt>
+<dd><p>Get the physical dimensions of the loaded DICOM volume in mm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A vector containing the dimensions in x, y, and z directions (x_dim, y_dim, z_dim).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>glm.vec3</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.DICOMLoader.get_min_max_hu">
+<span class="sig-name descname"><span class="pre">get_min_max_hu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.DICOMLoader" title="pyvcad.pyvcad.DICOMLoader"><span class="pre">pyvcad.pyvcad.DICOMLoader</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.DICOMLoader.get_min_max_hu" title="Link to this definition">#</a></dt>
+<dd><p>Get the minimum and maximum Hounsfield Unit (HU) values in the loaded DICOM volume.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A tuple containing the minimum and maximum HU values (min_hu, max_hu).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>tuple</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.DICOMLoader.get_rescale_intercept">
+<span class="sig-name descname"><span class="pre">get_rescale_intercept</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.DICOMLoader" title="pyvcad.pyvcad.DICOMLoader"><span class="pre">pyvcad.pyvcad.DICOMLoader</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pyvcad.DICOMLoader.get_rescale_intercept" title="Link to this definition">#</a></dt>
+<dd><p>Get the rescale intercept used for converting pixel values to Hounsfield Units (HU).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The rescale intercept.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>double</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.DICOMLoader.get_rescale_slope">
+<span class="sig-name descname"><span class="pre">get_rescale_slope</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.DICOMLoader" title="pyvcad.pyvcad.DICOMLoader"><span class="pre">pyvcad.pyvcad.DICOMLoader</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pyvcad.DICOMLoader.get_rescale_slope" title="Link to this definition">#</a></dt>
+<dd><p>Get the rescale slope used for converting pixel values to Hounsfield Units (HU).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The rescale slope.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>double</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.DICOMLoader.get_voxel_size">
+<span class="sig-name descname"><span class="pre">get_voxel_size</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.DICOMLoader" title="pyvcad.pyvcad.DICOMLoader"><span class="pre">pyvcad.pyvcad.DICOMLoader</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></span><a class="headerlink" href="#pyvcad.DICOMLoader.get_voxel_size" title="Link to this definition">#</a></dt>
+<dd><p>Get the voxel size of the loaded DICOM volume in mm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A vector containing the voxel size in x, y, and z directions (x_size, y_size, z_size).</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>glm.vec3</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-pyvcad.vdb_loader">
 <span id="pyvcad-vdb-loader"></span><h2><code class="docutils literal notranslate"><span class="pre">pyvcad.vdb_loader</span></code><a class="headerlink" href="#module-pyvcad.vdb_loader" title="Link to this heading">#</a></h2>
@@ -478,8 +930,55 @@
   <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#volume-types">Volume types</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loaders">Loaders</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#volume-types">Volume types</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FloatVolume"><code class="docutils literal notranslate"><span class="pre">FloatVolume</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FloatVolume.__init__"><code class="docutils literal notranslate"><span class="pre">FloatVolume.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FloatVolume.bounding_box"><code class="docutils literal notranslate"><span class="pre">FloatVolume.bounding_box()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FloatVolume.clone"><code class="docutils literal notranslate"><span class="pre">FloatVolume.clone()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FloatVolume.grid_type"><code class="docutils literal notranslate"><span class="pre">FloatVolume.grid_type()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FloatVolume.sample"><code class="docutils literal notranslate"><span class="pre">FloatVolume.sample()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec2sVolume"><code class="docutils literal notranslate"><span class="pre">Vec2sVolume</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec2sVolume.__init__"><code class="docutils literal notranslate"><span class="pre">Vec2sVolume.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec2sVolume.bounding_box"><code class="docutils literal notranslate"><span class="pre">Vec2sVolume.bounding_box()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec2sVolume.clone"><code class="docutils literal notranslate"><span class="pre">Vec2sVolume.clone()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec2sVolume.grid_type"><code class="docutils literal notranslate"><span class="pre">Vec2sVolume.grid_type()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec2sVolume.sample"><code class="docutils literal notranslate"><span class="pre">Vec2sVolume.sample()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3sVolume"><code class="docutils literal notranslate"><span class="pre">Vec3sVolume</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3sVolume.__init__"><code class="docutils literal notranslate"><span class="pre">Vec3sVolume.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3sVolume.bounding_box"><code class="docutils literal notranslate"><span class="pre">Vec3sVolume.bounding_box()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3sVolume.clone"><code class="docutils literal notranslate"><span class="pre">Vec3sVolume.clone()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3sVolume.grid_type"><code class="docutils literal notranslate"><span class="pre">Vec3sVolume.grid_type()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3sVolume.sample"><code class="docutils literal notranslate"><span class="pre">Vec3sVolume.sample()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec4sVolume"><code class="docutils literal notranslate"><span class="pre">Vec4sVolume</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec4sVolume.__init__"><code class="docutils literal notranslate"><span class="pre">Vec4sVolume.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec4sVolume.bounding_box"><code class="docutils literal notranslate"><span class="pre">Vec4sVolume.bounding_box()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec4sVolume.clone"><code class="docutils literal notranslate"><span class="pre">Vec4sVolume.clone()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec4sVolume.grid_type"><code class="docutils literal notranslate"><span class="pre">Vec4sVolume.grid_type()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec4sVolume.sample"><code class="docutils literal notranslate"><span class="pre">Vec4sVolume.sample()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loaders">Loaders</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.DICOMLoader"><code class="docutils literal notranslate"><span class="pre">DICOMLoader</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.DICOMLoader.__init__"><code class="docutils literal notranslate"><span class="pre">DICOMLoader.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.DICOMLoader.as_volume"><code class="docutils literal notranslate"><span class="pre">DICOMLoader.as_volume()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.DICOMLoader.get_bounding_box"><code class="docutils literal notranslate"><span class="pre">DICOMLoader.get_bounding_box()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.DICOMLoader.get_dimensions"><code class="docutils literal notranslate"><span class="pre">DICOMLoader.get_dimensions()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.DICOMLoader.get_min_max_hu"><code class="docutils literal notranslate"><span class="pre">DICOMLoader.get_min_max_hu()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.DICOMLoader.get_rescale_intercept"><code class="docutils literal notranslate"><span class="pre">DICOMLoader.get_rescale_intercept()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.DICOMLoader.get_rescale_slope"><code class="docutils literal notranslate"><span class="pre">DICOMLoader.get_rescale_slope()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.DICOMLoader.get_voxel_size"><code class="docutils literal notranslate"><span class="pre">DICOMLoader.get_voxel_size()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyvcad.vdb_loader"><code class="docutils literal notranslate"><span class="pre">pyvcad.vdb_loader</span></code></a></li>
 </ul>
   </nav></div>

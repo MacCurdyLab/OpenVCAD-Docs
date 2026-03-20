@@ -223,7 +223,9 @@ viz.Render(root)
 </div>
 
 ## Lesson 4: Attributes
-Attributes define continuous field properties over a volume (like modulus or temperature). Let's define a simple constant value attribute:
+Attributes define continuous field properties over a volume (like modulus or temperature). Canonical string names and matching `*_TYPE` values are listed in the Python API under {ref}`Default attribute names and types <pyvcad-default-attribute-names-and-types>`.
+
+Let's define a simple constant value attribute:
 
 `pv.FloatAttribute` is a flexible container for scalar fields. You can construct it in several ways:
 
@@ -431,7 +433,7 @@ viz.Render(root, pv.default_materials)
 ## Lesson 9: Bringing It All Together
 A single object can carry multiple attributes simultaneously. In the render window, use the dropdown in the top-right corner to select which attribute to visualize.
 
-Internally, those entries correspond to names defined in `pv.DefaultAttributes` (e.g. `MODULUS`, `COLOR_RGBA`, `VOLUME_FRACTIONS`). At any given sample point, the engine evaluates all attached attributes in one pass and then the renderer simply chooses which field to map to colors.
+Internally, those entries correspond to names defined in `pv.DefaultAttributes` (e.g. `MODULUS`, `COLOR_RGBA`, `VOLUME_FRACTIONS`; see {ref}`Default attribute names and types <pyvcad-default-attribute-names-and-types>`). At any given sample point, the engine evaluates all attached attributes in one pass and then the renderer simply chooses which field to map to colors.
 
 ```python
 import pyvcad as pv
@@ -504,12 +506,6 @@ Every attribute in OpenVCAD has:
 
 From the renderer's perspective, you can attach attributes with any user-defined names and then select among them in the attribute dropdown; as long as the return type is something the renderer knows how to visualize, it will happily display it.
 
-However, the **compiler layer** (which translates OpenVCAD designs into printable or simulation-ready formats) expects certain standardized attribute names so it can map fields into the correct channels. This is what `pv.DefaultAttributes` provides: a curated set of canonical names plus their expected return types. The Python bindings for these live in:
-
-- `core-lib/bindings/pyvcad/attributes/default_attributes.h` (Python exposure)
-
-and the authoritative core definitions (including the list of built-ins and their `Attribute::ReturnType` enums) live in:
-
-- `core-lib/include/libvcad/attributes/default_attributes.h` (C++ core)
+However, the **compiler layer** (which translates OpenVCAD designs into printable or simulation-ready formats) expects certain standardized attribute names so it can map fields into the correct channels. This is what `pv.DefaultAttributes` provides: a curated set of canonical names plus their expected return types. The full Python reference is in {ref}`Default attribute names and types <pyvcad-default-attribute-names-and-types>`. Implementation details: the Python bindings live in `core-lib/bindings/pyvcad/attributes/default_attributes.h`, and the authoritative C++ definitions (including built-ins and their `Attribute::ReturnType` enums) live in `core-lib/include/libvcad/attributes/default_attributes.h`.
 
 When authoring new designs intended for downstream compilers, prefer the names in `pv.DefaultAttributes` (e.g. `DefaultAttributes.MODULUS`, `DefaultAttributes.TEMPERATURE`, `DefaultAttributes.COLOR_RGBA`, `DefaultAttributes.VOLUME_FRACTIONS`, etc.) so that your attribute fields line up with the expectations of printers, slicers, and analysis pipelines that consume OpenVCAD output.

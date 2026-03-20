@@ -1,86 +1,31 @@
-/* Wider content row when local TOC is shown (filling space beside capped text) */
-@media screen and (min-width: 960px) {
-    .wy-body-for-nav .wy-nav-content-wrap .wy-nav-content:has(.openvcad-doc-columns:not(.openvcad-doc-columns--no-toc)) {
-        max-width: min(1180px, 96vw);
-    }
-}
-
-.openvcad-doc-columns {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    gap: 1.25rem;
+/* Gradients guide: matplotlib plot on its own row, then renders in one strip */
+.guide-figure-stack {
+    margin: 1.25rem 0 2rem 0;
     width: 100%;
 }
 
-@media screen and (min-width: 960px) {
-    .openvcad-doc-columns:not(.openvcad-doc-columns--no-toc) {
-        flex-direction: row;
-        align-items: flex-start;
-        gap: 1.75rem;
-    }
-
-    .openvcad-doc-main {
-        flex: 1 1 auto;
-        min-width: 0;
-        max-width: 800px;
-    }
-
-    .openvcad-localtoc {
-        flex: 0 0 220px;
-        width: 220px;
-        max-width: 220px;
-    }
-
-    .openvcad-localtoc-sticky {
-        position: sticky;
-        top: 1rem;
-        max-height: calc(100vh - 2rem);
-        overflow-y: auto;
-        padding-right: 0.25rem;
-    }
+.guide-figure-plot {
+    margin-bottom: 1.25rem;
+    width: 100%;
 }
 
-.openvcad-localtoc-title {
-    font-size: 0.85rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: #2980b9;
-    margin: 0 0 0.65rem 0;
-    padding-bottom: 0.35rem;
-    border-bottom: 1px solid #e1e4e5;
+.guide-figure-plot img {
+    display: block;
+    width: 100%;
+    max-width: min(960px, 100%);
+    height: auto;
+    margin: 0 auto;
 }
 
-.openvcad-localtoc-nav {
-    font-size: 0.82rem;
-    line-height: 1.35;
+.guide-figure-renders {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem 1.25rem;
+    align-items: start;
+    width: 100%;
 }
 
-.openvcad-localtoc-nav ul {
-    list-style: none;
-    padding-left: 0;
-    margin: 0;
-}
-
-.openvcad-localtoc-nav > ul ul {
-    padding-left: 1rem;
-    margin-top: 0.25rem;
-}
-
-.openvcad-localtoc-nav li {
-    margin-bottom: 0.35rem;
-}
-
-.openvcad-localtoc-nav a {
-    color: #404040;
-}
-
-.openvcad-localtoc-nav a:hover {
-    color: #2980b9;
-}
-
-/* Responsive figure rows under code (gradients guide) */
+/* Legacy: single grid (e.g. getting-started) */
 .guide-figure-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -99,6 +44,18 @@
     vertical-align: middle;
 }
 
+.guide-figure-stack .guide-figure-label {
+    font-weight: 600;
+    margin: 0 0 0.4rem 0;
+    font-size: 0.92rem;
+}
+
+.guide-figure-renders .guide-figure-label {
+    font-weight: 600;
+    margin: 0 0 0.4rem 0;
+    font-size: 0.92rem;
+}
+
 .guide-figure-cell .guide-figure-label {
     font-weight: 600;
     margin: 0 0 0.4rem 0;
@@ -109,4 +66,65 @@
     font-size: 0.88rem;
     margin: 0 0 0.5rem 0;
     line-height: 1.35;
+}
+
+/* Click-to-enlarge (see openvcad_lightbox.js) */
+#furo-main-content img {
+    cursor: zoom-in;
+}
+
+#furo-main-content img[data-no-lightbox] {
+    cursor: default;
+}
+
+.openvcad-lightbox-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem 1rem 3rem;
+    box-sizing: border-box;
+    background: rgba(0, 0, 0, 0.88);
+}
+
+.openvcad-lightbox-inner {
+    position: relative;
+    max-width: 96vw;
+    max-height: 92vh;
+    margin: auto;
+}
+
+.openvcad-lightbox-image {
+    display: block;
+    max-width: 96vw;
+    max-height: 92vh;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+    object-fit: contain;
+}
+
+.openvcad-lightbox-close {
+    position: fixed;
+    top: 0.75rem;
+    right: 1rem;
+    z-index: 10001;
+    width: 2.5rem;
+    height: 2.5rem;
+    padding: 0;
+    border: none;
+    border-radius: 4px;
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+    font-size: 1.75rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.openvcad-lightbox-close:hover,
+.openvcad-lightbox-close:focus {
+    background: rgba(255, 255, 255, 0.22);
+    outline: 2px solid #2980b9;
 }

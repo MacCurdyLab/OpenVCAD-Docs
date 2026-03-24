@@ -1,0 +1,732 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Material Inkjet Compiler &#8212; OpenVCAD 3.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_theme.css?v=ee9d5c20" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_branding.css?v=c43e02c9" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=110ea713"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'guides/compilers/material-inkjet';</script>
+    <script src="../../_static/openvcad_lightbox.js?v=e11fca97"></script>
+    <link rel="icon" href="../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Color Inkjet Compiler" href="color-inkjet.html" />
+    <link rel="prev" title="Compilers" href="index.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="OpenVCAD - Home"/>
+    <img src="../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="OpenVCAD - Home"/>
+  
+  
+    <p class="title logo__title">OpenVCAD Documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item dropdown active">
+      <button class="btn dropdown-toggle nav-link active" type="button" id="pst-nav-dd-guides" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Guides
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-guides">
+        <li><a class="dropdown-item" href="../../install.html">Installation</a></li>
+        <li><a class="dropdown-item" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
+        <li><a class="dropdown-item" href="../gradients.html">Functional grading</a></li>
+        <li><a class="dropdown-item" href="../math-expressions.html">Math expressions</a></li>
+        <li><a class="dropdown-item active" href="index.html">Compilers</a></li>
+      </ul>
+    </li>
+    <li class="nav-item dropdown">
+      <button class="btn dropdown-toggle nav-link" type="button" id="pst-nav-dd-py" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Python API
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-py">
+        <li><a class="dropdown-item" href="../../python-api/pyvcad/index.html">pyvcad module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_compilers/index.html">pyvcad_compilers module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_rendering/index.html">pyvcad_rendering module</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../cpp-api/index.html">C++ API</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../papers.html">Papers</a>
+    </li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item"><span class="nav-link py-1 fw-bold text-muted small">Guides</span></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../install.html">Installation</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../gradients.html">Functional grading</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../math-expressions.html">Math expressions</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3 active" href="index.html">Compilers</a></li>
+    <li class="nav-item"><span class="nav-link py-1 fw-bold text-muted small">Python API</span></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../python-api/pyvcad/index.html">pyvcad module</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../python-api/pyvcad_compilers/index.html">pyvcad_compilers module</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../python-api/pyvcad_rendering/index.html">pyvcad_rendering module</a></li>
+    <li class="nav-item"><a class="nav-link py-1" href="../../cpp-api/index.html">C++ API</a></li>
+    <li class="nav-item"><a class="nav-link py-1" href="../../papers.html">Papers</a></li>
+  </ul>
+</nav>
+</div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gradients.html">Functional Grading Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../math-expressions.html">Math expressions in OpenVCAD</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Compilers</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Material Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="color-inkjet.html">Color Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slicer-project.html">Slicer Project Compiler</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Guides</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Compilers</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Material Inkjet Compiler</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="material-inkjet-compiler">
+<span id="guide-compilers-material-inkjet"></span><h1>Material Inkjet Compiler<a class="headerlink" href="#material-inkjet-compiler" title="Link to this heading">#</a></h1>
+<p>The <strong>MaterialInkjetCompiler</strong> turns OpenVCAD designs with <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> into a <strong>stack of RGBA PNG images</strong>—one image per build layer—where each pixel encodes the <strong>resolved material</strong> (via your material table’s RGBA) for material-jetting style workflows.</p>
+<p>This page is both a <strong>tutorial</strong> (from a valid design to PNG slices) and a <strong>reference</strong> for compiler behavior and Python API.</p>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>OpenVCAD installed with <strong><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code></strong> and <strong><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code></strong> (see the installation guide and repository <code class="docutils literal notranslate"><span class="pre">examples/project_example</span></code>).</p></li>
+<li><p>Familiarity with <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> on geometry (see <a class="reference internal" href="../getting-started.html#guide-getting-started"><span class="std std-ref">Getting Started with OpenVCAD</span></a>, especially <a class="reference internal" href="../getting-started.html#lesson-6-volume-fractions"><span class="std std-ref">Lesson 6: Volume Fractions</span></a>, and the <a class="reference internal" href="../gradients.html"><span class="std std-doc">Functional Grading Guide</span></a>).</p></li>
+</ul>
+</section>
+<section id="what-this-compiler-is-for">
+<h2>What this compiler is for<a class="headerlink" href="#what-this-compiler-is-for" title="Link to this heading">#</a></h2>
+<p>Use <strong>Material Inkjet</strong> when you need <strong>discrete material assignment per voxel</strong> derived from a <strong>volume-fraction mixture</strong> at each point, exported as <strong>slice images</strong> for hardware or software that consumes <strong>layered PNG (or similar) stacks</strong>. Typical examples include <strong>multi-material jetting</strong> systems (often compared to PolyJet-class processes) and other pipelines that think in <strong>Z-ordered voxel planes</strong>.</p>
+<p>If your goal is <strong>continuous RGB color</strong> per voxel through an ICC-aware pipeline that maps to <strong>CMYK + white + clear</strong> process inks, use the <a class="reference internal" href="color-inkjet.html"><span class="std std-doc">Color Inkjet</span></a> compiler instead (<strong><code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code></strong>).</p>
+</section>
+<section id="what-png-stacks-means-here">
+<h2>What “PNG stacks” means here<a class="headerlink" href="#what-png-stacks-means-here" title="Link to this heading">#</a></h2>
+<p>After compilation you get <strong>one PNG file per Z layer</strong> in the voxel grid built from the scene’s bounding box:</p>
+<ul class="simple">
+<li><p><strong>Width × height</strong> of each PNG equals the <strong>X × Y</strong> voxel resolution for that job.</p></li>
+<li><p><strong>RGBA</strong> stores the <strong>material color</strong> from your <strong><code class="docutils literal notranslate"><span class="pre">MaterialDefs</span></code></strong> for the <strong>chosen</strong> material ID at that voxel—not a continuous mixture rendered as a color blend in the PNG (see <a class="reference internal" href="#stochastic-material-choice"><span class="xref myst">Stochastic material choice</span></a> below).</p></li>
+<li><p><strong>File naming:</strong> each slice is written as your <strong><code class="docutils literal notranslate"><span class="pre">file_prefix</span></code></strong> plus the layer index plus <strong><code class="docutils literal notranslate"><span class="pre">.png</span></code></strong> in the output directory. <strong>Empty layers</strong> (no active voxels) are <strong>removed</strong> after the run to keep the stack smaller.</p></li>
+<li><p><strong>Coordinate note:</strong> slice images may use an <strong>X-axis flip</strong> relative to world axes. If your downstream tool expects a different image handedness, you may need to account for that when interpreting files.</p></li>
+</ul>
+</section>
+<section id="pipeline-overview">
+<h2>Pipeline overview<a class="headerlink" href="#pipeline-overview" title="Link to this heading">#</a></h2>
+<p>The compiler voxelizes the model’s bounding box using your <strong><code class="docutils literal notranslate"><span class="pre">voxel_size</span></code></strong>, evaluates the implicit shape and <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> field on that grid, and writes one RGBA PNG per Z layer. <strong>Inside</strong> voxels get a <strong>single</strong> material pick from the local mixture (see below); <strong>outside</strong> voxels are left transparent in the slice. When the job finishes, you get <strong><code class="docutils literal notranslate"><span class="pre">resolution()</span></code></strong> and <strong><code class="docutils literal notranslate"><span class="pre">material_voxel_counts()</span></code></strong>, and empty slices are dropped from the stack.</p>
+<section id="stochastic-material-choice">
+<h3>Stochastic material choice<a class="headerlink" href="#stochastic-material-choice" title="Link to this heading">#</a></h3>
+<p>Where <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> define a <strong>mixture</strong> of materials, the PNG does <strong>not</strong> store fractional blending. The compiler performs a <strong>weighted random choice</strong> among materials according to the local mixture. Fine voxels can still look <strong>noisy</strong> when two materials are mixed—this is normal for this representation.</p>
+</section>
+<section id="liquid-keep-out">
+<h3>Liquid keep-out<a class="headerlink" href="#liquid-keep-out" title="Link to this heading">#</a></h3>
+<p>If <strong><code class="docutils literal notranslate"><span class="pre">liquid_keep_out_distance</span> <span class="pre">&gt;</span> <span class="pre">0</span></code></strong>, the <strong>liquid</strong> material is removed from the local mixture when the sample lies within that distance of the <strong>surface</strong> (using the signed distance). Your <strong><code class="docutils literal notranslate"><span class="pre">MaterialDefs</span></code></strong> must include a material named <strong><code class="docutils literal notranslate"><span class="pre">&quot;liquid&quot;</span></code></strong> in that mode, or construction raises an error. Use this when your process should avoid assigning liquid near boundaries.</p>
+</section>
+<section id="missing-volume-fractions-inside-the-solid">
+<h3>Missing <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> inside the solid<a class="headerlink" href="#missing-volume-fractions-inside-the-solid" title="Link to this heading">#</a></h3>
+<p>This behavior is separate from the <strong>up-front check</strong> that the design exposes <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> at the root. Review <a class="reference internal" href="../getting-started.html#lesson-6-volume-fractions"><span class="std std-ref">Lesson 6: Volume Fractions</span></a> for how the attribute is attached, and <a class="reference internal" href="../getting-started.html#lesson-7-the-node-hierarchy-and-attribute-priority"><span class="std std-ref">Lesson 7: The Node Hierarchy and Attribute Priority</span></a> for how unions and overrides affect which regions inherit <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong>—which is why one branch of a union can be “missing” data even when another branch is not:</p>
+<ul class="simple">
+<li><p><strong>Default:</strong> if a voxel is inside the solid but <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> are not defined there, the compiler uses <strong><code class="docutils literal notranslate"><span class="pre">fallback_material_id</span></code></strong> (default <strong>0</strong>, typically <strong>void</strong> in the default material table) and still treats the voxel as active.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">set_strict_mode(True)</span></code>:</strong> raises <strong><code class="docutils literal notranslate"><span class="pre">RuntimeError</span></code></strong> on the first inside voxel that lacks <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong>, including the world-space location in the message.</p></li>
+</ul>
+<p>If the <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> name never appears on the root attribute list at all, <strong><code class="docutils literal notranslate"><span class="pre">compile()</span></code></strong> fails before voxelization. See <strong><code class="docutils literal notranslate"><span class="pre">examples/attributes_by_type/undefined/material_inkjet_example.py</span></code></strong> for a union where only one child carries <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong>.</p>
+</section>
+</section>
+<section id="tutorial-design-to-png-slices">
+<h2>Tutorial: design to PNG slices<a class="headerlink" href="#tutorial-design-to-png-slices" title="Link to this heading">#</a></h2>
+<p>The scripts for this walkthrough live under <strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/material_inkjet/</span></code></strong> in the repository.</p>
+<section id="build-geometry-with-volume-fractions">
+<h3>1. Build geometry with <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong><a class="headerlink" href="#build-geometry-with-volume-fractions" title="Link to this heading">#</a></h3>
+<p>Use <strong><code class="docutils literal notranslate"><span class="pre">pv.VolumeFractionsAttribute</span></code></strong> with expressions and material IDs from <strong><code class="docutils literal notranslate"><span class="pre">pv.default_materials</span></code></strong> (or your own <strong><code class="docutils literal notranslate"><span class="pre">MaterialDefs</span></code></strong> JSON). Fractions at each point should <strong>sum to 1</strong> (see <a class="reference internal" href="../getting-started.html#lesson-6-volume-fractions"><span class="std std-ref">Lesson 6: Volume Fractions</span></a>).</p>
+</section>
+<section id="choose-voxel-size">
+<h3>2. Choose <strong><code class="docutils literal notranslate"><span class="pre">voxel_size</span></code></strong><a class="headerlink" href="#choose-voxel-size" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">voxel_size</span></code> is a <strong><code class="docutils literal notranslate"><span class="pre">Vec3</span></code></strong> of voxel edge lengths in <strong>millimeters</strong> (same unit convention as the rest of OpenVCAD). Resolution in each axis scales with <strong>bounding box extent ÷ voxel size</strong>. Finer voxels increase memory and file count.</p>
+<p>For inkjet workflows, <strong><code class="docutils literal notranslate"><span class="pre">voxel_size</span></code> is often set to match your printer’s native voxel or slice resolution</strong> (or an integer fraction of it) so the stack aligns with what the machine or RIP expects.</p>
+</section>
+<section id="run-the-compiler">
+<h3>3. Run the compiler<a class="headerlink" href="#run-the-compiler" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_compilers</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pvc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+
+<span class="n">cube</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">fraction_gradient</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">(</span>
+    <span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;x/20 + 0.5&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">)),</span>
+        <span class="p">(</span><span class="s2">&quot;-x/20 + 0.5&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">))</span>
+    <span class="p">]</span>
+<span class="p">)</span>
+<span class="n">cube</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span> <span class="n">fraction_gradient</span><span class="p">)</span>
+<span class="n">root</span> <span class="o">=</span> <span class="n">cube</span>
+
+<span class="n">voxel_size</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">)</span>
+<span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;output&quot;</span><span class="p">)</span>
+<span class="n">prefix</span> <span class="o">=</span> <span class="s2">&quot;slice_&quot;</span>
+
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">compiler</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">MaterialInkjetCompiler</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">prefix</span><span class="p">,</span> <span class="n">materials</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">on_progress</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;compile progress: </span><span class="si">{:.1f}</span><span class="s2">%&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mf">100.0</span> <span class="o">*</span> <span class="n">p</span><span class="p">))</span>
+
+<span class="n">compiler</span><span class="o">.</span><span class="n">set_progress_callback</span><span class="p">(</span><span class="n">on_progress</span><span class="p">)</span>
+<span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;resolution (x, y, z png count):&quot;</span><span class="p">,</span> <span class="n">compiler</span><span class="o">.</span><span class="n">resolution</span><span class="p">())</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;material voxel counts:&quot;</span><span class="p">,</span> <span class="n">compiler</span><span class="o">.</span><span class="n">material_voxel_counts</span><span class="p">())</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>After <strong><code class="docutils literal notranslate"><span class="pre">compile()</span></code></strong>, <strong><code class="docutils literal notranslate"><span class="pre">output/</span></code></strong> contains the PNG stack. Inspect a slice in any image viewer; Z order follows the file index.</p>
+<p>From the repository root, with the project virtual environment activated: <strong><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/compilers/material_inkjet/01_basic_png_stack.py</span></code></strong> runs the compile and then opens the interactive preview (<strong><code class="docutils literal notranslate"><span class="pre">viz.Render</span></code></strong> does not return until you close the window). To verify only the compile step, temporarily comment out the final <strong><code class="docutils literal notranslate"><span class="pre">viz.Render</span></code></strong> line.</p>
+</section>
+<section id="preview-in-the-renderer">
+<h3>4. Preview in the renderer<a class="headerlink" href="#preview-in-the-renderer" title="Link to this heading">#</a></h3>
+<p>With <strong><code class="docutils literal notranslate"><span class="pre">viz.Render(root,</span> <span class="pre">materials)</span></code></strong>, use the renderer’s attribute selection to view <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> as usual. The PNG stack, however, shows <strong>picked</strong> materials per voxel, not the continuous mixture.</p>
+</section>
+</section>
+<section id="reference-python-api">
+<h2>Reference: Python API<a class="headerlink" href="#reference-python-api" title="Link to this heading">#</a></h2>
+<section id="constructor">
+<h3>Constructor<a class="headerlink" href="#constructor" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">MaterialInkjetCompiler(root,</span> <span class="pre">voxel_size,</span> <span class="pre">output_directory,</span> <span class="pre">file_prefix,</span> <span class="pre">material_defs,</span> <span class="pre">liquid_keep_out_distance=0.0)</span></code></p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Argument</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">root</span></code></p></td>
+<td><p>Root <strong><code class="docutils literal notranslate"><span class="pre">Node</span></code></strong> of the design tree.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">voxel_size</span></code></p></td>
+<td><p><strong><code class="docutils literal notranslate"><span class="pre">Vec3</span></code></strong> voxel spacing (mm).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">output_directory</span></code></p></td>
+<td><p>Folder to create/write PNGs into.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">file_prefix</span></code></p></td>
+<td><p>Prefix for slice filenames (<code class="docutils literal notranslate"><span class="pre">prefix</span> <span class="pre">+</span> <span class="pre">z</span> <span class="pre">+</span> <span class="pre">&quot;.png&quot;</span></code>).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">material_defs</span></code></p></td>
+<td><p><strong><code class="docutils literal notranslate"><span class="pre">MaterialDefs</span></code></strong> (e.g. <strong><code class="docutils literal notranslate"><span class="pre">pv.default_materials</span></code></strong>) mapping IDs to RGBA.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">liquid_keep_out_distance</span></code></p></td>
+<td><p>Distance (mm) for <a class="reference internal" href="#liquid-keep-out"><span class="xref myst">liquid keep-out</span></a>; <strong><code class="docutils literal notranslate"><span class="pre">0</span></code></strong> disables.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="methods-including-compilerbase">
+<h3>Methods (including <strong><code class="docutils literal notranslate"><span class="pre">CompilerBase</span></code></strong>)<a class="headerlink" href="#methods-including-compilerbase" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>Role</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">compile()</span></code></p></td>
+<td><p>Run the full pipeline.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">supported_attributes()</span></code></p></td>
+<td><p>Names this compiler requires (includes <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong>; same string as <strong><code class="docutils literal notranslate"><span class="pre">pv.DefaultAttributes.VOLUME_FRACTIONS</span></code></strong>).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cancel()</span></code></p></td>
+<td><p>Request cooperative cancellation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">set_progress_callback(fn)</span></code></p></td>
+<td><p><strong><code class="docutils literal notranslate"><span class="pre">fn(progress)</span></code></strong> with <strong><code class="docutils literal notranslate"><span class="pre">progress</span></code></strong> in <strong>[0, 1]</strong>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">resolution()</span></code></p></td>
+<td><p><strong><code class="docutils literal notranslate"><span class="pre">(x_pixels,</span> <span class="pre">y_pixels,</span> <span class="pre">z_png_count)</span></code></strong> after compile.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">material_voxel_counts()</span></code></p></td>
+<td><p><strong><code class="docutils literal notranslate"><span class="pre">dict</span></code></strong> mapping <strong>material ID</strong> → <strong>active voxel count</strong>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">set_strict_mode(bool)</span></code></p></td>
+<td><p>Require <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> at every inside voxel.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">set_fallback_material_id(id)</span></code></p></td>
+<td><p>Material ID when strict mode is off and samples are missing.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>For full autodoc signatures, see the <strong>pyvcad_compilers</strong> section (<strong><code class="docutils literal notranslate"><span class="pre">MaterialInkjetCompiler</span></code></strong> and <strong><code class="docutils literal notranslate"><span class="pre">CompilerBase</span></code></strong>).</p>
+</section>
+</section>
+<section id="figures">
+<h2>Figures<a class="headerlink" href="#figures" title="Link to this heading">#</a></h2>
+<p><strong>Design preview</strong> (interactive renderer; same scene as the example script):</p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">VOLUME_FRACTIONS (preview)</p>
+<img src="../images/compilers_material_inkjet_preview.png" alt="Material inkjet guide preview render" width="100%">
+</div>
+</div>
+<p><strong>Example slices</strong> from the compiled PNG stack (same Z layer index in the middle of the stack; same scene as the tutorial, different <strong><code class="docutils literal notranslate"><span class="pre">voxel_size</span></code></strong>). Smaller voxels increase in-plane resolution and make smooth <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> gradients look less blocky at pixel scale (at the cost of more layers and longer compile times):</p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Slice — 0.15 mm voxels</p>
+<img src="../images/compilers_material_inkjet_slice_voxel_0p15mm.png" alt="Material inkjet slice at 0.15 mm voxel size" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Slice — 0.05 mm voxels</p>
+<img src="../images/compilers_material_inkjet_slice_voxel_0p05mm.png" alt="Material inkjet slice at 0.05 mm voxel size" width="100%">
+</div>
+</div>
+</section>
+<section id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>One discrete material</strong> per voxel in the output; mixtures become <strong>stochastic</strong> picks, not blended colors in the PNG.</p></li>
+<li><p>Effective <strong>resolution</strong> is tied to <strong><code class="docutils literal notranslate"><span class="pre">voxel_size</span></code></strong> and <strong>bounding box</strong>; fine spatial detail needs sufficiently small voxels.</p></li>
+<li><p><strong>Asymmetric</strong> <strong><code class="docutils literal notranslate"><span class="pre">voxel_size</span></code></strong> components are allowed—treat X, Y, and Z resolution separately.</p></li>
+<li><p><strong>Root attribute list</strong> must include <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong>; missing <strong>per-voxel</strong> samples are handled by <strong>strict</strong> / <strong>fallback</strong> and are a different situation than the attribute never appearing on the tree.</p></li>
+</ul>
+</section>
+<section id="further-examples">
+<h2>Further examples<a class="headerlink" href="#further-examples" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/material_inkjet/01_basic_png_stack.py</span></code></strong> — end-to-end compile + render (this guide).</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">examples/attributes_by_type/undefined/material_inkjet_example.py</span></code></strong> — default fallback, custom fallback, and strict mode with <strong>partial</strong> <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> on a union.</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Compilers</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="color-inkjet.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Color Inkjet Compiler</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-this-compiler-is-for">What this compiler is for</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-png-stacks-means-here">What “PNG stacks” means here</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-overview">Pipeline overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stochastic-material-choice">Stochastic material choice</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#liquid-keep-out">Liquid keep-out</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#missing-volume-fractions-inside-the-solid">Missing <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> inside the solid</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tutorial-design-to-png-slices">Tutorial: design to PNG slices</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-geometry-with-volume-fractions">1. Build geometry with <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#choose-voxel-size">2. Choose <strong><code class="docutils literal notranslate"><span class="pre">voxel_size</span></code></strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-the-compiler">3. Run the compiler</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#preview-in-the-renderer">4. Preview in the renderer</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-python-api">Reference: Python API</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#constructor">Constructor</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#methods-including-compilerbase">Methods (including <strong><code class="docutils literal notranslate"><span class="pre">CompilerBase</span></code></strong>)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#figures">Figures</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations">Limitations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-examples">Further examples</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/guides/compilers/material-inkjet.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Charles Wade and Robert MacCurdy.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

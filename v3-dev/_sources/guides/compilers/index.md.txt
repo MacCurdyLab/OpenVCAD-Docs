@@ -1,0 +1,39 @@
+(guide-compilers)=
+# Compilers
+
+OpenVCAD **compilers** translate prepared implicit **`Node`** trees into concrete outputs: voxel image stacks, slicer projects, and other machine-facing artifacts. They are exposed as **`pyvcad_compilers`**.
+
+This section compares the compilers shipped today and links to dedicated guides. Each compiler assumes you have already built a design with the attributes it consumes (see {ref}`guide-getting-started` and the [Functional Grading Guide](../gradients.md)).
+
+## Compiler comparison
+
+| Compiler | Required attributes (root) | Primary output | Typical use |
+| -------- | --------------------------- | -------------- | ----------- |
+| [Material Inkjet](material-inkjet.md) | **`VOLUME_FRACTIONS`** | Stack of RGBA PNG slices (one per Z layer) | Multi-material **material jetting** workflows that consume per-layer voxel images (e.g. PolyJet-class systems and similar slice-based pipelines) |
+| [Color Inkjet](color-inkjet.md) | **`COLOR_RGBA`** | Stack of RGBA PNG slices (ICC / color pipeline → discrete CMYK + white + clear) | Full-color **PolyJet-class** inkjet builds from **sRGBA** designs |
+| [Slicer Project](slicer-project.md) | (validated internally; see guide) | **`.3mf`** project for **PrusaSlicer** | **FFF / filament** slicing with spatially varying scalar fields → per-volume settings or G-code extrusion |
+
+Shape-wise, the two inkjet compilers both emit **PNG stacks**; they differ in **which field** drives each voxel (discrete materials from **`VOLUME_FRACTIONS`** vs. processed **`COLOR_RGBA`**).
+
+```{note}
+Compile-time checks use the root node’s merged **attribute list** (names present anywhere in the tree), not a full per-voxel scan. Per-voxel rules (for example strict handling of missing samples) are separate and documented per compiler.
+```
+
+## Validation and automatic adapters
+
+Before compiling, a compiler may **validate** that required attribute **names** are present on the design root (for example that **`VOLUME_FRACTIONS`** appears in the tree’s reported attribute list).
+
+**Per-voxel checks** are separate: some compilers can **fail fast** when an **inside** voxel lacks data for a required field (strict mode), which is not the same as “the attribute name was never attached anywhere.”
+
+**Automatic conversion** is reserved for a future path where the library could wrap the tree to synthesize a missing attribute when a known mapping exists. Today, supply the attributes your compiler expects (or add modifiers in your **`Node`** tree yourself).
+
+Details such as strict mode and fallback material are documented on each compiler page.
+
+```{toctree}
+:maxdepth: 2
+:caption: Compiler guides
+
+material-inkjet
+color-inkjet
+slicer-project
+```

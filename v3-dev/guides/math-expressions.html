@@ -155,6 +155,7 @@
         <li><a class="dropdown-item" href="gradients.html">Functional grading</a></li>
         <li><a class="dropdown-item active" href="#">Math expressions</a></li>
         <li><a class="dropdown-item" href="compilers/index.html">Compilers</a></li>
+        <li><a class="dropdown-item" href="attribute-resolver.html">Attribute modifier and resolver</a></li>
       </ul>
     </li>
     <li class="nav-item dropdown">
@@ -261,6 +262,7 @@
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="gradients.html">Functional grading</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3 active" href="#">Math expressions</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="compilers/index.html">Compilers</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="attribute-resolver.html">Attribute modifier and resolver</a></li>
     <li class="nav-item"><span class="nav-link py-1 fw-bold text-muted small">Python API</span></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../python-api/pyvcad/index.html">pyvcad module</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../python-api/pyvcad_compilers/index.html">pyvcad_compilers module</a></li>
@@ -306,6 +308,7 @@
 <li class="toctree-l2"><a class="reference internal" href="compilers/slicer-project.html">Slicer Project Compiler</a></li>
 </ul>
 </details></li>
+<li class="toctree-l1"><a class="reference internal" href="attribute-resolver.html">Attribute Modifier and Resolver Guide</a></li>
 </ul>
 </div>
 </nav></div>
@@ -590,77 +593,6 @@
 </div>
 <p>You can also use numeric literals (e.g. <code class="docutils literal notranslate"><span class="pre">3.14159</span></code>).</p>
 </section>
-<section id="examples-attribute-modeling">
-<h2>Examples (attribute modeling)<a class="headerlink" href="#examples-attribute-modeling" title="Link to this heading">#</a></h2>
-<p>Expressions below are attached with <code class="docutils literal notranslate"><span class="pre">set_attribute</span></code> on geometry nodes. Select <strong>Object → Selected Attribute</strong> in the renderer to inspect each field.</p>
-<section id="linear-blend-along-x-volume-fractions">
-<h3>Linear blend along X (volume fractions)<a class="headerlink" href="#linear-blend-along-x-volume-fractions" title="Link to this heading">#</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
-
-<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
-<span class="n">bar</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-<span class="n">bar</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
-    <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span>
-    <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([</span>
-        <span class="p">(</span><span class="s2">&quot;x/100 + 0.5&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)),</span>
-        <span class="p">(</span><span class="s2">&quot;-x/100 + 0.5&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">)),</span>
-    <span class="p">]),</span>
-<span class="p">)</span>
-<span class="n">root</span> <span class="o">=</span> <span class="n">bar</span>
-</pre></div>
-</div>
-</section>
-<section id="radial-blend-spherical-r">
-<h3>Radial blend (spherical <code class="docutils literal notranslate"><span class="pre">r</span></code>)<a class="headerlink" href="#radial-blend-spherical-r" title="Link to this heading">#</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
-<span class="n">sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">5.0</span><span class="p">)</span>
-<span class="n">sphere</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
-    <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span>
-    <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([</span>
-        <span class="p">(</span><span class="s2">&quot;clamp(0, 1 - r/5, 1)&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)),</span>
-        <span class="p">(</span><span class="s2">&quot;clamp(0, r/5, 1)&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">)),</span>
-    <span class="p">]),</span>
-<span class="p">)</span>
-<span class="n">root</span> <span class="o">=</span> <span class="n">sphere</span>
-</pre></div>
-</div>
-</section>
-<section id="angular-sweep-cylindrical-phic">
-<h3>Angular sweep (cylindrical <code class="docutils literal notranslate"><span class="pre">phic</span></code>)<a class="headerlink" href="#angular-sweep-cylindrical-phic" title="Link to this heading">#</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">pi</span></code> is available inside expression strings (ExprTk built-in).</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
-<span class="n">cyl</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Cylinder</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
-<span class="n">cyl</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
-    <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span>
-    <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([</span>
-        <span class="p">(</span><span class="s2">&quot;(phic + pi) / (2*pi)&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)),</span>
-        <span class="p">(</span><span class="s2">&quot;1 - (phic + pi) / (2*pi)&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">)),</span>
-    <span class="p">]),</span>
-<span class="p">)</span>
-<span class="n">root</span> <span class="o">=</span> <span class="n">cyl</span>
-</pre></div>
-</div>
-</section>
-<section id="surface-following-split-signed-distance-d">
-<h3>Surface-following split (signed distance <code class="docutils literal notranslate"><span class="pre">d</span></code>)<a class="headerlink" href="#surface-following-split-signed-distance-d" title="Link to this heading">#</a></h3>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
-<span class="n">sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">5.0</span><span class="p">)</span>
-<span class="n">sphere</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
-    <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span>
-    <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([</span>
-        <span class="p">(</span><span class="s2">&quot;clamp(0, -d/2 + 0.5, 1)&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)),</span>
-        <span class="p">(</span><span class="s2">&quot;clamp(0, d/2 + 0.5, 1)&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">)),</span>
-    <span class="p">]),</span>
-<span class="p">)</span>
-<span class="n">root</span> <span class="o">=</span> <span class="n">sphere</span>
-</pre></div>
-</div>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>For <code class="docutils literal notranslate"><span class="pre">VolumeFractionsAttribute</span></code>, expressions at each point should sum to 1.0. If they do not, results may be normalized in ways that are hard to predict—keep PDFs explicitly normalized when possible.</p>
-</div>
-</section>
-</section>
 <section id="tips">
 <h2>Tips<a class="headerlink" href="#tips" title="Link to this heading">#</a></h2>
 <ul class="simple">
@@ -729,13 +661,6 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#general-purpose-functions">General-purpose functions</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#trigonometry">Trigonometry</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#constants">Constants</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-attribute-modeling">Examples (attribute modeling)</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#linear-blend-along-x-volume-fractions">Linear blend along X (volume fractions)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#radial-blend-spherical-r">Radial blend (spherical <code class="docutils literal notranslate"><span class="pre">r</span></code>)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#angular-sweep-cylindrical-phic">Angular sweep (cylindrical <code class="docutils literal notranslate"><span class="pre">phic</span></code>)</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#surface-following-split-signed-distance-d">Surface-following split (signed distance <code class="docutils literal notranslate"><span class="pre">d</span></code>)</a></li>
-</ul>
-</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tips">Tips</a></li>
 </ul>
   </nav></div>

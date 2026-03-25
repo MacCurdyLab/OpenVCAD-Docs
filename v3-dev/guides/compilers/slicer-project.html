@@ -49,8 +49,8 @@
     <link rel="icon" href="../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Attribute Modifier and Resolver Guide" href="../attribute-resolver.html" />
-    <link rel="prev" title="Color Inkjet Compiler" href="color-inkjet.html" />
+    <link rel="next" title="Simulation Compiler" href="simulation-compiler.html" />
+    <link rel="prev" title="VAT Photo Compiler" href="vat-photo.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -307,7 +307,9 @@
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Compilers</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="material-inkjet.html">Material Inkjet Compiler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="color-inkjet.html">Color Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vat-photo.html">VAT Photo Compiler</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Slicer Project Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-compiler.html">Simulation Compiler</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../attribute-resolver.html">Attribute Modifier and Resolver Guide</a></li>
@@ -376,13 +378,26 @@
                   
   <section id="slicer-project-compiler">
 <span id="guide-compilers-slicer-project"></span><h1>Slicer Project Compiler<a class="headerlink" href="#slicer-project-compiler" title="Link to this heading">#</a></h1>
+<!--
+Build dependency sentinel for guide sidebar compiler membership.
+Guide pages that render the shared Guides sidebar include this file so
+changes to the compiler-guide set force those pages to rebuild on
+incremental Sphinx runs.
+
+Current compiler guides:
+- material-inkjet
+- color-inkjet
+- vat-photo
+- slicer-project
+- simulation-compiler
+-->
 <p>The <strong>SlicerProjectCompiler</strong> turns OpenVCAD designs that carry <strong>scalar slicer attributes</strong> (for example <strong><code class="docutils literal notranslate"><span class="pre">INFILL_DENSITY</span></code></strong>, <strong><code class="docutils literal notranslate"><span class="pre">FUZZY_SKIN_POINT_DISTANCE</span></code></strong>, or <strong><code class="docutils literal notranslate"><span class="pre">TEMPERATURE</span></code></strong>) into a <strong>PrusaSlicer-style 3MF project</strong> (<code class="docutils literal notranslate"><span class="pre">.3mf</span></code>). You <strong>import that file into PrusaSlicer</strong> (or another slicer that understands the same project layout), slice, and print on <strong>filament / FFF</strong> hardware.</p>
 <p>This page explains <strong>how the compiler works</strong> (by method, not line-by-line code), walks through <strong>examples</strong>, and documents the <strong>Python API</strong>. Renders show the <strong>OpenVCAD</strong> fields; <strong>PrusaSlicer</strong> screenshots show the sliced out.</p>
 <section id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>OpenVCAD with <strong><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code></strong> and <strong><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code></strong> installed.</p></li>
-<li><p>Familiarity with <strong>scalar attributes</strong> on geometry (see <a class="reference internal" href="../getting-started.html#guide-getting-started"><span class="std std-ref">Getting Started with OpenVCAD</span></a>, especially <a class="reference internal" href="../getting-started.html#lesson-4-attributes"><span class="std std-ref">Lesson 4: Attributes</span></a>, and the <a class="reference internal" href="../gradients.html"><span class="std std-doc">Functional Grading Guide</span></a>).</p></li>
+<li><p>Familiarity with <strong>scalar attributes</strong> on geometry (see <a class="reference internal" href="../getting-started.html#guide-getting-started"><span class="std std-ref">Getting Started with OpenVCAD</span></a>, especially <strong>Lesson 4: Attributes</strong>, and the <a class="reference internal" href="../gradients.html"><span class="std std-doc">Functional Grading Guide</span></a>).</p></li>
 </ul>
 </section>
 <section id="what-this-compiler-is-for">
@@ -390,7 +405,7 @@
 <p>Use <strong>Slicer Project</strong> when you want <strong>spatially varying slicer settings</strong> derived from continuous fields on your model, exported as a <strong>single project file</strong> for <strong>PrusaSlicer</strong>, instead of <strong>voxel PNG stacks</strong> for inkjet workflows. For slice <strong>images</strong>, see the <a class="reference internal" href="material-inkjet.html"><span class="std std-doc">Material Inkjet</span></a> and <a class="reference internal" href="color-inkjet.html"><span class="std std-doc">Color Inkjet</span></a> guides.</p>
 </section>
 <section id="opening-your-project-in-prusaslicer">
-<h2>Opening your project in PrusaSlicer<a class="headerlink" href="#opening-your-project-in-prusaslicer" title="Link to this heading">#</a></h2>
+<span id="id1"></span><h2>Opening your project in PrusaSlicer<a class="headerlink" href="#opening-your-project-in-prusaslicer" title="Link to this heading">#</a></h2>
 <p>The compiler <strong>only writes</strong> the <strong><code class="docutils literal notranslate"><span class="pre">.3mf</span></code></strong>. It does <strong>not</strong> launch a slicer.</p>
 <ol class="arabic simple">
 <li><p>Run your Python script (or build the compiler in code) so <strong><code class="docutils literal notranslate"><span class="pre">compile()</span></code></strong> finishes and the <strong><code class="docutils literal notranslate"><span class="pre">.3mf</span></code></strong> path exists.</p></li>
@@ -483,7 +498,7 @@
 </section>
 <section id="examples-and-figures">
 <h2>Examples and figures<a class="headerlink" href="#examples-and-figures" title="Link to this heading">#</a></h2>
-<p>The scripts below live under <strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/slicer_project/</span></code></strong> and write <strong><code class="docutils literal notranslate"><span class="pre">.3mf</span></code></strong> files under <strong><code class="docutils literal notranslate"><span class="pre">output/</span></code></strong> next to each script. Run them from the repository with your venv, then <strong>import the <code class="docutils literal notranslate"><span class="pre">.3mf</span></code> into PrusaSlicer</strong> as described <a class="reference internal" href="#opening-your-project-in-prusaslicer"><span class="xref myst">above</span></a>.</p>
+<p>The scripts below live under <strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/slicer_project/</span></code></strong> and write <strong><code class="docutils literal notranslate"><span class="pre">.3mf</span></code></strong> files under <strong><code class="docutils literal notranslate"><span class="pre">output/</span></code></strong> next to each script. Run them from the repository with your venv, then <strong>import the <code class="docutils literal notranslate"><span class="pre">.3mf</span></code> into PrusaSlicer</strong> as described <a class="reference internal" href="#opening-your-project-in-prusaslicer">above</a>.</p>
 <section id="a-fuzzy-skin-gradient-on-a-cylinder">
 <h3>(a) Fuzzy skin gradient on a cylinder<a class="headerlink" href="#a-fuzzy-skin-gradient-on-a-cylinder" title="Link to this heading">#</a></h3>
 <p>Design (<strong><code class="docutils literal notranslate"><span class="pre">FUZZY_SKIN_POINT_DISTANCE</span></code></strong> ramp along <strong>Z</strong>): matches the idea of <strong><code class="docutils literal notranslate"><span class="pre">examples/applications/slicer_settings_mesh/fuzzy_skin_cylinder.py</span></code></strong>. Script: <strong><code class="docutils literal notranslate"><span class="pre">01_fuzzy_skin_cylinder.py</span></code></strong> → <strong><code class="docutils literal notranslate"><span class="pre">output/fuzzy_skin_cylinder.3mf</span></code></strong>.</p>
@@ -733,20 +748,20 @@
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="color-inkjet.html"
+       href="vat-photo.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Color Inkjet Compiler</p>
+        <p class="prev-next-title">VAT Photo Compiler</p>
       </div>
     </a>
     <a class="right-next"
-       href="../attribute-resolver.html"
+       href="simulation-compiler.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Attribute Modifier and Resolver Guide</p>
+        <p class="prev-next-title">Simulation Compiler</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

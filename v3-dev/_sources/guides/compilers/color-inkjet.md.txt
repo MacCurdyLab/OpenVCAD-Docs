@@ -1,6 +1,9 @@
 (guide-compilers-color-inkjet)=
 # Color Inkjet Compiler
 
+```{include} ../_guide-sidebar-compiler-membership.md
+```
+
 The **ColorInkjetCompiler** turns OpenVCAD designs with **`COLOR_RGBA`** into a **stack of RGBA PNG images**—one image per build layer. Unlike a screen or paper preview, each pixel in the stack represents a **single deposited ink** at that voxel after a **color pipeline** maps your continuous **sRGBA** design colors into **discrete** choices among the printer’s **base materials**.
 
 This page is both a **tutorial** (from a compatible design to PNG slices) and a **reference** for compiler behavior and Python API.
@@ -28,7 +31,7 @@ The **default** ICC profile bundled with **`pyvcad_compilers`** is set up for **
 ## Prerequisites
 
 - OpenVCAD installed with **`pyvcad`** and **`pyvcad_compilers`** (see the installation guide and repository `examples/project_example`).
-- Familiarity with **`COLOR_RGBA`** on geometry (see {ref}`guide-getting-started`, especially [Lesson 5: Colors](../getting-started.md#lesson-5-colors), and the [Functional Grading Guide](../gradients.md)).
+- Familiarity with **`COLOR_RGBA`** on geometry (see {ref}`guide-getting-started`, especially **Lesson 5: Colors**, and the [Functional Grading Guide](../gradients.md)).
 
 ## What this compiler is for
 
@@ -64,7 +67,7 @@ So the **PNG stack encodes “which base ink + how it looks in RGBA in the file,
 
 ### Missing **`COLOR_RGBA`** inside the solid
 
-This is separate from the **root** check that **`COLOR_RGBA`** appears on the tree (see [Lesson 5: Colors](../getting-started.md#lesson-5-colors) and [Lesson 7: The Node Hierarchy and Attribute Priority](../getting-started.md#lesson-7-the-node-hierarchy-and-attribute-priority) for how unions and overrides can leave regions without a color):
+This is separate from the **root** check that **`COLOR_RGBA`** appears on the tree (see **Lesson 5: Colors** and **Lesson 7: The Node Hierarchy and Attribute Priority** for how unions and overrides can leave regions without a color):
 
 - **Default:** undefined inside voxels use **`set_fallback_color`** (default **fully transparent** **sRGBA** `(0, 0, 0, 0)`), then pass through the same pipeline.
 - **`set_strict_mode(True)`:** raises **`RuntimeError`** on the first inside voxel missing **`COLOR_RGBA`**, with world-space coordinates in the message.
@@ -77,7 +80,7 @@ Scripts for this walkthrough live under **`examples/compilers/color_inkjet/`**.
 
 ### 1. Build geometry with **`COLOR_RGBA`**
 
-Use **`pv.Vec4Attribute`** (or compatible color attributes) with **`pv.DefaultAttributes.COLOR_RGBA`**. Keep components in **[0, 1]** (see [Lesson 5](../getting-started.md#lesson-5-colors)).
+Use **`pv.Vec4Attribute`** (or compatible color attributes) with **`pv.DefaultAttributes.COLOR_RGBA`**. Keep components in **[0, 1]** (see **Lesson 5: Colors**).
 
 ### 2. Choose **`voxel_size`**
 

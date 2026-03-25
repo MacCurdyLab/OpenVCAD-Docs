@@ -307,7 +307,9 @@
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Compilers</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Material Inkjet Compiler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="color-inkjet.html">Color Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vat-photo.html">VAT Photo Compiler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="slicer-project.html">Slicer Project Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-compiler.html">Simulation Compiler</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../attribute-resolver.html">Attribute Modifier and Resolver Guide</a></li>
@@ -376,13 +378,26 @@
                   
   <section id="material-inkjet-compiler">
 <span id="guide-compilers-material-inkjet"></span><h1>Material Inkjet Compiler<a class="headerlink" href="#material-inkjet-compiler" title="Link to this heading">#</a></h1>
+<!--
+Build dependency sentinel for guide sidebar compiler membership.
+Guide pages that render the shared Guides sidebar include this file so
+changes to the compiler-guide set force those pages to rebuild on
+incremental Sphinx runs.
+
+Current compiler guides:
+- material-inkjet
+- color-inkjet
+- vat-photo
+- slicer-project
+- simulation-compiler
+-->
 <p>The <strong>MaterialInkjetCompiler</strong> turns OpenVCAD designs with <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> into a <strong>stack of RGBA PNG images</strong>—one image per build layer—where each pixel encodes the <strong>resolved material</strong> (via your material table’s RGBA) for material-jetting style workflows.</p>
 <p>This page is both a <strong>tutorial</strong> (from a valid design to PNG slices) and a <strong>reference</strong> for compiler behavior and Python API.</p>
 <section id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>OpenVCAD installed with <strong><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code></strong> and <strong><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code></strong> (see the installation guide and repository <code class="docutils literal notranslate"><span class="pre">examples/project_example</span></code>).</p></li>
-<li><p>Familiarity with <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> on geometry (see <a class="reference internal" href="../getting-started.html#guide-getting-started"><span class="std std-ref">Getting Started with OpenVCAD</span></a>, especially <a class="reference internal" href="../getting-started.html#lesson-6-volume-fractions"><span class="std std-ref">Lesson 6: Volume Fractions</span></a>, and the <a class="reference internal" href="../gradients.html"><span class="std std-doc">Functional Grading Guide</span></a>).</p></li>
+<li><p>Familiarity with <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> on geometry (see <a class="reference internal" href="../getting-started.html#guide-getting-started"><span class="std std-ref">Getting Started with OpenVCAD</span></a>, especially <strong>Lesson 6: Volume Fractions</strong>, and the <a class="reference internal" href="../gradients.html"><span class="std std-doc">Functional Grading Guide</span></a>).</p></li>
 </ul>
 </section>
 <section id="what-this-compiler-is-for">
@@ -395,7 +410,7 @@
 <p>After compilation you get <strong>one PNG file per Z layer</strong> in the voxel grid built from the scene’s bounding box:</p>
 <ul class="simple">
 <li><p><strong>Width × height</strong> of each PNG equals the <strong>X × Y</strong> voxel resolution for that job.</p></li>
-<li><p><strong>RGBA</strong> stores the <strong>material color</strong> from your <strong><code class="docutils literal notranslate"><span class="pre">MaterialDefs</span></code></strong> for the <strong>chosen</strong> material ID at that voxel—not a continuous mixture rendered as a color blend in the PNG (see <a class="reference internal" href="#stochastic-material-choice"><span class="xref myst">Stochastic material choice</span></a> below).</p></li>
+<li><p><strong>RGBA</strong> stores the <strong>material color</strong> from your <strong><code class="docutils literal notranslate"><span class="pre">MaterialDefs</span></code></strong> for the <strong>chosen</strong> material ID at that voxel—not a continuous mixture rendered as a color blend in the PNG (see <a class="reference internal" href="#stochastic-material-choice">Stochastic material choice</a> below).</p></li>
 <li><p><strong>File naming:</strong> each slice is written as your <strong><code class="docutils literal notranslate"><span class="pre">file_prefix</span></code></strong> plus the layer index plus <strong><code class="docutils literal notranslate"><span class="pre">.png</span></code></strong> in the output directory. <strong>Empty layers</strong> (no active voxels) are <strong>removed</strong> after the run to keep the stack smaller.</p></li>
 <li><p><strong>Coordinate note:</strong> slice images may use an <strong>X-axis flip</strong> relative to world axes. If your downstream tool expects a different image handedness, you may need to account for that when interpreting files.</p></li>
 </ul>
@@ -404,16 +419,16 @@
 <h2>Pipeline overview<a class="headerlink" href="#pipeline-overview" title="Link to this heading">#</a></h2>
 <p>The compiler voxelizes the model’s bounding box using your <strong><code class="docutils literal notranslate"><span class="pre">voxel_size</span></code></strong>, evaluates the implicit shape and <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> field on that grid, and writes one RGBA PNG per Z layer. <strong>Inside</strong> voxels get a <strong>single</strong> material pick from the local mixture (see below); <strong>outside</strong> voxels are left transparent in the slice. When the job finishes, you get <strong><code class="docutils literal notranslate"><span class="pre">resolution()</span></code></strong> and <strong><code class="docutils literal notranslate"><span class="pre">material_voxel_counts()</span></code></strong>, and empty slices are dropped from the stack.</p>
 <section id="stochastic-material-choice">
-<h3>Stochastic material choice<a class="headerlink" href="#stochastic-material-choice" title="Link to this heading">#</a></h3>
+<span id="id1"></span><h3>Stochastic material choice<a class="headerlink" href="#stochastic-material-choice" title="Link to this heading">#</a></h3>
 <p>Where <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> define a <strong>mixture</strong> of materials, the PNG does <strong>not</strong> store fractional blending. The compiler performs a <strong>weighted random choice</strong> among materials according to the local mixture. Fine voxels can still look <strong>noisy</strong> when two materials are mixed—this is normal for this representation.</p>
 </section>
 <section id="liquid-keep-out">
-<h3>Liquid keep-out<a class="headerlink" href="#liquid-keep-out" title="Link to this heading">#</a></h3>
+<span id="id2"></span><h3>Liquid keep-out<a class="headerlink" href="#liquid-keep-out" title="Link to this heading">#</a></h3>
 <p>If <strong><code class="docutils literal notranslate"><span class="pre">liquid_keep_out_distance</span> <span class="pre">&gt;</span> <span class="pre">0</span></code></strong>, the <strong>liquid</strong> material is removed from the local mixture when the sample lies within that distance of the <strong>surface</strong> (using the signed distance). Your <strong><code class="docutils literal notranslate"><span class="pre">MaterialDefs</span></code></strong> must include a material named <strong><code class="docutils literal notranslate"><span class="pre">&quot;liquid&quot;</span></code></strong> in that mode, or construction raises an error. Use this when your process should avoid assigning liquid near boundaries.</p>
 </section>
 <section id="missing-volume-fractions-inside-the-solid">
 <h3>Missing <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> inside the solid<a class="headerlink" href="#missing-volume-fractions-inside-the-solid" title="Link to this heading">#</a></h3>
-<p>This behavior is separate from the <strong>up-front check</strong> that the design exposes <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> at the root. Review <a class="reference internal" href="../getting-started.html#lesson-6-volume-fractions"><span class="std std-ref">Lesson 6: Volume Fractions</span></a> for how the attribute is attached, and <a class="reference internal" href="../getting-started.html#lesson-7-the-node-hierarchy-and-attribute-priority"><span class="std std-ref">Lesson 7: The Node Hierarchy and Attribute Priority</span></a> for how unions and overrides affect which regions inherit <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong>—which is why one branch of a union can be “missing” data even when another branch is not:</p>
+<p>This behavior is separate from the <strong>up-front check</strong> that the design exposes <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> at the root. Review <strong>Lesson 6: Volume Fractions</strong> for how the attribute is attached, and <strong>Lesson 7: The Node Hierarchy and Attribute Priority</strong> for how unions and overrides affect which regions inherit <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong>—which is why one branch of a union can be “missing” data even when another branch is not:</p>
 <ul class="simple">
 <li><p><strong>Default:</strong> if a voxel is inside the solid but <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> are not defined there, the compiler uses <strong><code class="docutils literal notranslate"><span class="pre">fallback_material_id</span></code></strong> (default <strong>0</strong>, typically <strong>void</strong> in the default material table) and still treats the voxel as active.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">set_strict_mode(True)</span></code>:</strong> raises <strong><code class="docutils literal notranslate"><span class="pre">RuntimeError</span></code></strong> on the first inside voxel that lacks <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong>, including the world-space location in the message.</p></li>
@@ -426,7 +441,7 @@
 <p>The scripts for this walkthrough live under <strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/material_inkjet/</span></code></strong> in the repository.</p>
 <section id="build-geometry-with-volume-fractions">
 <h3>1. Build geometry with <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong><a class="headerlink" href="#build-geometry-with-volume-fractions" title="Link to this heading">#</a></h3>
-<p>Use <strong><code class="docutils literal notranslate"><span class="pre">pv.VolumeFractionsAttribute</span></code></strong> with expressions and material IDs from <strong><code class="docutils literal notranslate"><span class="pre">pv.default_materials</span></code></strong> (or your own <strong><code class="docutils literal notranslate"><span class="pre">MaterialDefs</span></code></strong> JSON). Fractions at each point should <strong>sum to 1</strong> (see <a class="reference internal" href="../getting-started.html#lesson-6-volume-fractions"><span class="std std-ref">Lesson 6: Volume Fractions</span></a>).</p>
+<p>Use <strong><code class="docutils literal notranslate"><span class="pre">pv.VolumeFractionsAttribute</span></code></strong> with expressions and material IDs from <strong><code class="docutils literal notranslate"><span class="pre">pv.default_materials</span></code></strong> (or your own <strong><code class="docutils literal notranslate"><span class="pre">MaterialDefs</span></code></strong> JSON). Fractions at each point should <strong>sum to 1</strong> (see <strong>Lesson 6: Volume Fractions</strong>).</p>
 </section>
 <section id="choose-voxel-size">
 <h3>2. Choose <strong><code class="docutils literal notranslate"><span class="pre">voxel_size</span></code></strong><a class="headerlink" href="#choose-voxel-size" title="Link to this heading">#</a></h3>
@@ -510,7 +525,7 @@
 <td><p><strong><code class="docutils literal notranslate"><span class="pre">MaterialDefs</span></code></strong> (e.g. <strong><code class="docutils literal notranslate"><span class="pre">pv.default_materials</span></code></strong>) mapping IDs to RGBA.</p></td>
 </tr>
 <tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">liquid_keep_out_distance</span></code></p></td>
-<td><p>Distance (mm) for <a class="reference internal" href="#liquid-keep-out"><span class="xref myst">liquid keep-out</span></a>; <strong><code class="docutils literal notranslate"><span class="pre">0</span></code></strong> disables.</p></td>
+<td><p>Distance (mm) for <a class="reference internal" href="#liquid-keep-out">liquid keep-out</a>; <strong><code class="docutils literal notranslate"><span class="pre">0</span></code></strong> disables.</p></td>
 </tr>
 </tbody>
 </table>

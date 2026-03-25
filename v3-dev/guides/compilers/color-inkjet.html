@@ -49,7 +49,7 @@
     <link rel="icon" href="../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Slicer Project Compiler" href="slicer-project.html" />
+    <link rel="next" title="VAT Photo Compiler" href="vat-photo.html" />
     <link rel="prev" title="Material Inkjet Compiler" href="material-inkjet.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -307,7 +307,9 @@
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Compilers</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="material-inkjet.html">Material Inkjet Compiler</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Color Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vat-photo.html">VAT Photo Compiler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="slicer-project.html">Slicer Project Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-compiler.html">Simulation Compiler</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../attribute-resolver.html">Attribute Modifier and Resolver Guide</a></li>
@@ -376,6 +378,19 @@
                   
   <section id="color-inkjet-compiler">
 <span id="guide-compilers-color-inkjet"></span><h1>Color Inkjet Compiler<a class="headerlink" href="#color-inkjet-compiler" title="Link to this heading">#</a></h1>
+<!--
+Build dependency sentinel for guide sidebar compiler membership.
+Guide pages that render the shared Guides sidebar include this file so
+changes to the compiler-guide set force those pages to rebuild on
+incremental Sphinx runs.
+
+Current compiler guides:
+- material-inkjet
+- color-inkjet
+- vat-photo
+- slicer-project
+- simulation-compiler
+-->
 <p>The <strong>ColorInkjetCompiler</strong> turns OpenVCAD designs with <strong><code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code></strong> into a <strong>stack of RGBA PNG images</strong>—one image per build layer. Unlike a screen or paper preview, each pixel in the stack represents a <strong>single deposited ink</strong> at that voxel after a <strong>color pipeline</strong> maps your continuous <strong>sRGBA</strong> design colors into <strong>discrete</strong> choices among the printer’s <strong>base materials</strong>.</p>
 <p>This page is both a <strong>tutorial</strong> (from a compatible design to PNG slices) and a <strong>reference</strong> for compiler behavior and Python API.</p>
 <section id="printer-model-required-inks-on-a-polyjet-printer">
@@ -403,7 +418,7 @@
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p>OpenVCAD installed with <strong><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code></strong> and <strong><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code></strong> (see the installation guide and repository <code class="docutils literal notranslate"><span class="pre">examples/project_example</span></code>).</p></li>
-<li><p>Familiarity with <strong><code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code></strong> on geometry (see <a class="reference internal" href="../getting-started.html#guide-getting-started"><span class="std std-ref">Getting Started with OpenVCAD</span></a>, especially <a class="reference internal" href="../getting-started.html#lesson-5-colors"><span class="std std-ref">Lesson 5: Colors</span></a>, and the <a class="reference internal" href="../gradients.html"><span class="std std-doc">Functional Grading Guide</span></a>).</p></li>
+<li><p>Familiarity with <strong><code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code></strong> on geometry (see <a class="reference internal" href="../getting-started.html#guide-getting-started"><span class="std std-ref">Getting Started with OpenVCAD</span></a>, especially <strong>Lesson 5: Colors</strong>, and the <a class="reference internal" href="../gradients.html"><span class="std std-doc">Functional Grading Guide</span></a>).</p></li>
 </ul>
 </section>
 <section id="what-this-compiler-is-for">
@@ -437,7 +452,7 @@
 </section>
 <section id="missing-color-rgba-inside-the-solid">
 <h3>Missing <strong><code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code></strong> inside the solid<a class="headerlink" href="#missing-color-rgba-inside-the-solid" title="Link to this heading">#</a></h3>
-<p>This is separate from the <strong>root</strong> check that <strong><code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code></strong> appears on the tree (see <a class="reference internal" href="../getting-started.html#lesson-5-colors"><span class="std std-ref">Lesson 5: Colors</span></a> and <a class="reference internal" href="../getting-started.html#lesson-7-the-node-hierarchy-and-attribute-priority"><span class="std std-ref">Lesson 7: The Node Hierarchy and Attribute Priority</span></a> for how unions and overrides can leave regions without a color):</p>
+<p>This is separate from the <strong>root</strong> check that <strong><code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code></strong> appears on the tree (see <strong>Lesson 5: Colors</strong> and <strong>Lesson 7: The Node Hierarchy and Attribute Priority</strong> for how unions and overrides can leave regions without a color):</p>
 <ul class="simple">
 <li><p><strong>Default:</strong> undefined inside voxels use <strong><code class="docutils literal notranslate"><span class="pre">set_fallback_color</span></code></strong> (default <strong>fully transparent</strong> <strong>sRGBA</strong> <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0,</span> <span class="pre">0)</span></code>), then pass through the same pipeline.</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">set_strict_mode(True)</span></code>:</strong> raises <strong><code class="docutils literal notranslate"><span class="pre">RuntimeError</span></code></strong> on the first inside voxel missing <strong><code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code></strong>, with world-space coordinates in the message.</p></li>
@@ -450,7 +465,7 @@
 <p>Scripts for this walkthrough live under <strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/color_inkjet/</span></code></strong>.</p>
 <section id="build-geometry-with-color-rgba">
 <h3>1. Build geometry with <strong><code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code></strong><a class="headerlink" href="#build-geometry-with-color-rgba" title="Link to this heading">#</a></h3>
-<p>Use <strong><code class="docutils literal notranslate"><span class="pre">pv.Vec4Attribute</span></code></strong> (or compatible color attributes) with <strong><code class="docutils literal notranslate"><span class="pre">pv.DefaultAttributes.COLOR_RGBA</span></code></strong>. Keep components in <strong>[0, 1]</strong> (see <a class="reference internal" href="../getting-started.html#lesson-5-colors"><span class="std std-ref">Lesson 5</span></a>).</p>
+<p>Use <strong><code class="docutils literal notranslate"><span class="pre">pv.Vec4Attribute</span></code></strong> (or compatible color attributes) with <strong><code class="docutils literal notranslate"><span class="pre">pv.DefaultAttributes.COLOR_RGBA</span></code></strong>. Keep components in <strong>[0, 1]</strong> (see <strong>Lesson 5: Colors</strong>).</p>
 </section>
 <section id="choose-voxel-size">
 <h3>2. Choose <strong><code class="docutils literal notranslate"><span class="pre">voxel_size</span></code></strong><a class="headerlink" href="#choose-voxel-size" title="Link to this heading">#</a></h3>
@@ -635,11 +650,11 @@
       </div>
     </a>
     <a class="right-next"
-       href="slicer-project.html"
+       href="vat-photo.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Slicer Project Compiler</p>
+        <p class="prev-next-title">VAT Photo Compiler</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

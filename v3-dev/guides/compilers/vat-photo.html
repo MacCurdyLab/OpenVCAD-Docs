@@ -1,0 +1,788 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>VAT Photo Compiler &#8212; OpenVCAD 3.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_theme.css?v=ee9d5c20" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_branding.css?v=c43e02c9" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../../_static/documentation_options.js?v=110ea713"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'guides/compilers/vat-photo';</script>
+    <script src="../../_static/openvcad_lightbox.js?v=e11fca97"></script>
+    <link rel="icon" href="../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Slicer Project Compiler" href="slicer-project.html" />
+    <link rel="prev" title="Color Inkjet Compiler" href="color-inkjet.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="OpenVCAD - Home"/>
+    <img src="../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="OpenVCAD - Home"/>
+  
+  
+    <p class="title logo__title">OpenVCAD Documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item dropdown active">
+      <button class="btn dropdown-toggle nav-link active" type="button" id="pst-nav-dd-guides" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Guides
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-guides">
+        <li><a class="dropdown-item" href="../../install.html">Installation</a></li>
+        <li><a class="dropdown-item" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
+        <li><a class="dropdown-item" href="../gradients.html">Functional grading</a></li>
+        <li><a class="dropdown-item" href="../math-expressions.html">Math expressions</a></li>
+        <li><a class="dropdown-item active" href="index.html">Compilers</a></li>
+        <li><a class="dropdown-item" href="../attribute-resolver.html">Attribute modifier and resolver</a></li>
+      </ul>
+    </li>
+    <li class="nav-item dropdown">
+      <button class="btn dropdown-toggle nav-link" type="button" id="pst-nav-dd-py" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Python API
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-py">
+        <li><a class="dropdown-item" href="../../python-api/pyvcad/index.html">pyvcad module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_compilers/index.html">pyvcad_compilers module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_rendering/index.html">pyvcad_rendering module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_attribute_resolver/index.html">pyvcad_attribute_resolver module</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../cpp-api/index.html">C++ API</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../papers.html">Papers</a>
+    </li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item"><span class="nav-link py-1 fw-bold text-muted small">Guides</span></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../install.html">Installation</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../gradients.html">Functional grading</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../math-expressions.html">Math expressions</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3 active" href="index.html">Compilers</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../attribute-resolver.html">Attribute modifier and resolver</a></li>
+    <li class="nav-item"><span class="nav-link py-1 fw-bold text-muted small">Python API</span></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../python-api/pyvcad/index.html">pyvcad module</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../python-api/pyvcad_compilers/index.html">pyvcad_compilers module</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../python-api/pyvcad_rendering/index.html">pyvcad_rendering module</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../python-api/pyvcad_attribute_resolver/index.html">pyvcad_attribute_resolver module</a></li>
+    <li class="nav-item"><a class="nav-link py-1" href="../../cpp-api/index.html">C++ API</a></li>
+    <li class="nav-item"><a class="nav-link py-1" href="../../papers.html">Papers</a></li>
+  </ul>
+</nav>
+</div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gradients.html">Functional Grading Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../math-expressions.html">Math expressions in OpenVCAD</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Compilers</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="material-inkjet.html">Material Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="color-inkjet.html">Color Inkjet Compiler</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">VAT Photo Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slicer-project.html">Slicer Project Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-compiler.html">Simulation Compiler</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../attribute-resolver.html">Attribute Modifier and Resolver Guide</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Guides</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Compilers</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">VAT Photo Compiler</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="vat-photo-compiler">
+<span id="guide-compilers-vat-photo"></span><h1>VAT Photo Compiler<a class="headerlink" href="#vat-photo-compiler" title="Link to this heading">#</a></h1>
+<!--
+Build dependency sentinel for guide sidebar compiler membership.
+Guide pages that render the shared Guides sidebar include this file so
+changes to the compiler-guide set force those pages to rebuild on
+incremental Sphinx runs.
+
+Current compiler guides:
+- material-inkjet
+- color-inkjet
+- vat-photo
+- slicer-project
+- simulation-compiler
+-->
+<p>The <strong>VatCompiler</strong> turns OpenVCAD designs with <strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span></code></strong> into a <strong>stack of 8-bit grayscale BMP images</strong>—one image per build layer. Each pixel stores the local exposure intensity for a vat-photopolymer workflow: <strong><code class="docutils literal notranslate"><span class="pre">0</span></code></strong> is black / no exposure, <strong><code class="docutils literal notranslate"><span class="pre">255</span></code></strong> is white / maximum exposure.</p>
+<p>This page is both a <strong>tutorial</strong> (from a compatible design to BMP slices) and a <strong>reference</strong> for compiler behavior and Python API.</p>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>OpenVCAD installed with <strong><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code></strong>, <strong><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code></strong>, and <strong><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code></strong>.</p></li>
+<li><p>Familiarity with <strong>scalar attributes</strong> on geometry (see <a class="reference internal" href="../getting-started.html#guide-getting-started"><span class="std std-ref">Getting Started with OpenVCAD</span></a>, especially <strong>Lesson 4: Attributes</strong>, and the <a class="reference internal" href="../gradients.html"><span class="std std-doc">Functional Grading Guide</span></a>).</p></li>
+</ul>
+</section>
+<section id="what-this-compiler-is-for">
+<h2>What this compiler is for<a class="headerlink" href="#what-this-compiler-is-for" title="Link to this heading">#</a></h2>
+<p>Use <strong>VAT Photo</strong> when your machine consumes <strong>grayscale layer images</strong> instead of meshes or RGBA PNG stacks. This targets <strong>vat photopolymer</strong> workflows such as <strong>masked SLA</strong>, <strong>LCD</strong>, and <strong>DLP</strong> systems where each XY pixel controls <strong>exposure dose</strong> or <strong>curing intensity</strong> for that point in the layer.</p>
+<p>The modeled field is <strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span></code></strong>, a scalar attribute in <strong><code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code></strong>. In Python, attach it with <strong><code class="docutils literal notranslate"><span class="pre">pv.FloatAttribute</span></code></strong> under <strong><code class="docutils literal notranslate"><span class="pre">pv.DefaultAttributes.INTENSITY</span></code></strong>. In the renderer, <strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span></code></strong> defaults to a <strong>grayscale</strong> palette automatically, so the preview matches the mental model of “darker = less exposure, brighter = more exposure.”</p>
+</section>
+<section id="what-bmp-stacks-means-here">
+<h2>What “BMP stacks” means here<a class="headerlink" href="#what-bmp-stacks-means-here" title="Link to this heading">#</a></h2>
+<p>After compilation you get <strong>one BMP file per Z layer</strong>:</p>
+<ul class="simple">
+<li><p><strong>Width × height</strong> is the <strong>XY voxel resolution</strong> for the compiled domain.</p></li>
+<li><p>Each image is <strong>8-bit grayscale</strong> with values from <strong>0</strong> to <strong>255</strong>.</p></li>
+<li><p><strong>File naming:</strong> each slice is written as <strong><code class="docutils literal notranslate"><span class="pre">file_prefix</span> <span class="pre">+</span> <span class="pre">z</span> <span class="pre">+</span> <span class="pre">&quot;.bmp&quot;</span></code></strong> in the output directory.</p></li>
+<li><p><strong>Empty layers</strong> are <strong>removed</strong> after the run. A layer is considered empty when every inside voxel resolves to <strong>zero intensity</strong>.</p></li>
+<li><p><strong>Coordinate note:</strong> slice images use an <strong>X-axis flip</strong> relative to world X, matching the existing image-stack compilers.</p></li>
+</ul>
+</section>
+<section id="pipeline-overview">
+<h2>Pipeline overview<a class="headerlink" href="#pipeline-overview" title="Link to this heading">#</a></h2>
+<p>The compiler samples the model on a voxel grid, reads <strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span></code></strong> at each inside voxel, clamps the value into <strong><code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code></strong>, converts it to a grayscale byte with <strong><code class="docutils literal notranslate"><span class="pre">round(intensity</span> <span class="pre">*</span> <span class="pre">255)</span></code></strong>, writes one BMP per layer, and trims empty layers at the beginning and end of the stack.</p>
+<section id="zero-intensity-and-empty-layers">
+<h3>Zero intensity and empty layers<a class="headerlink" href="#zero-intensity-and-empty-layers" title="Link to this heading">#</a></h3>
+<p>Unlike the material and color inkjet compilers, <strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span> <span class="pre">==</span> <span class="pre">0</span></code></strong> is treated as <strong>unexposed / empty</strong> instead of “active but assigned a fallback material.” This means a fully black region contributes no active voxels to the layer, and a fully black layer can be trimmed away entirely.</p>
+</section>
+</section>
+<section id="two-domain-modes">
+<h2>Two domain modes<a class="headerlink" href="#two-domain-modes" title="Link to this heading">#</a></h2>
+<p>The <strong>VatCompiler</strong> supports two constructor shapes:</p>
+<section id="printer-volume-mode">
+<h3>1. Printer-volume mode<a class="headerlink" href="#printer-volume-mode" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">VatCompiler(root,</span> <span class="pre">voxel_size,</span> <span class="pre">printer_volume,</span> <span class="pre">output_directory,</span> <span class="pre">file_prefix)</span></code></p>
+<p>Use this when your machine expects a <strong>fixed XY canvas</strong> tied to a known panel or build area. The compiler:</p>
+<ul class="simple">
+<li><p>computes <strong>X</strong> and <strong>Y</strong> resolution from <strong><code class="docutils literal notranslate"><span class="pre">printer_volume</span> <span class="pre">/</span> <span class="pre">voxel_size</span></code></strong></p></li>
+<li><p>keeps <strong>Z</strong> sampling aligned to the model height</p></li>
+<li><p><strong>centers the model in XY</strong> within the printer volume</p></li>
+<li><p>raises <strong><code class="docutils literal notranslate"><span class="pre">RuntimeError</span></code></strong> if the model exceeds the configured printer volume</p></li>
+</ul>
+</section>
+<section id="bounding-box-mode">
+<h3>2. Bounding-box mode<a class="headerlink" href="#bounding-box-mode" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">VatCompiler(root,</span> <span class="pre">voxel_size,</span> <span class="pre">output_directory,</span> <span class="pre">file_prefix)</span></code></p>
+<p>Use this when you want the output stack to <strong>hug the model’s bounding box</strong> instead of a fixed machine canvas. The resulting BMPs are usually smaller and easier to inspect, but they do <strong>not</strong> preserve the machine’s full XY panel layout. You will need to separately composite the image inside of a printer volume image.</p>
+</section>
+</section>
+<section id="missing-intensity-inside-the-solid">
+<h2>Missing <strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span></code></strong> inside the solid<a class="headerlink" href="#missing-intensity-inside-the-solid" title="Link to this heading">#</a></h2>
+<p>This is where the <a class="reference internal" href="../getting-started.html"><span class="std std-doc">Getting Started guide</span></a> matters directly:</p>
+<ul class="simple">
+<li><p><strong>Lesson 4: Attributes</strong> covers how scalar fields are attached to geometry in the first place.</p></li>
+<li><p><strong>Lesson 7: The Node Hierarchy and Attribute Priority</strong> explains why a <strong>union</strong> can contain regions where one child defines an attribute and another child does not.</p></li>
+</ul>
+<p>For <strong>VatCompiler</strong>, undefined intensity is handled <strong>per voxel</strong>, not by an up-front root validation step:</p>
+<ul class="simple">
+<li><p><strong>Default:</strong> undefined inside voxels use <strong>fallback intensity <code class="docutils literal notranslate"><span class="pre">1.0</span></code></strong>, so they export as <strong>white / full exposure</strong>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">set_fallback_intensity(value)</span></code></strong> lets you override that fallback with any value in <strong><code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code></strong>.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">set_strict_mode(True)</span></code></strong> raises <strong><code class="docutils literal notranslate"><span class="pre">RuntimeError</span></code></strong> on the first inside voxel missing <strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span></code></strong>, including the world-space position in the message.</p></li>
+</ul>
+</section>
+<section id="tutorial-design-to-bmp-slices">
+<h2>Tutorial: design to BMP slices<a class="headerlink" href="#tutorial-design-to-bmp-slices" title="Link to this heading">#</a></h2>
+<p>The main scripts for this walkthrough live under <strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/vat/</span></code></strong>.</p>
+<section id="build-geometry-with-intensity">
+<h3>1. Build geometry with <strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span></code></strong><a class="headerlink" href="#build-geometry-with-intensity" title="Link to this heading">#</a></h3>
+<p>Use <strong><code class="docutils literal notranslate"><span class="pre">pv.FloatAttribute</span></code></strong> with <strong><code class="docutils literal notranslate"><span class="pre">pv.DefaultAttributes.INTENSITY</span></code></strong>. This is the same scalar-attribute workflow introduced in <strong>Lesson 4: Attributes</strong>, just targeting a printer-facing compiler instead of a preview-only field.</p>
+</section>
+<section id="choose-voxel-size-and-optionally-printer-volume">
+<h3>2. Choose <strong><code class="docutils literal notranslate"><span class="pre">voxel_size</span></code></strong> and, optionally, <strong><code class="docutils literal notranslate"><span class="pre">printer_volume</span></code></strong><a class="headerlink" href="#choose-voxel-size-and-optionally-printer-volume" title="Link to this heading">#</a></h3>
+<p><strong><code class="docutils literal notranslate"><span class="pre">voxel_size</span></code></strong> is a <strong><code class="docutils literal notranslate"><span class="pre">Vec3</span></code></strong> in <strong>millimeters</strong>. This usually is derived from your machine config.</p>
+<p>In <strong>printer-volume mode</strong>, choose a <strong><code class="docutils literal notranslate"><span class="pre">printer_volume</span></code></strong> that matches the machine’s physical panel or intended job area. In <strong>bounding-box mode</strong>, omit <strong><code class="docutils literal notranslate"><span class="pre">printer_volume</span></code></strong> and let the output crop tightly around the model.</p>
+</section>
+<section id="run-the-compiler-in-printer-volume-mode">
+<h3>3. Run the compiler in printer-volume mode<a class="headerlink" href="#run-the-compiler-in-printer-volume-mode" title="Link to this heading">#</a></h3>
+<p>The example below matches <strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/vat/01_basic_bmp_stack.py</span></code></strong>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_compilers</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pvc</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">cube</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+<span class="c1"># High exposure on the left, low exposure on the right so the exported</span>
+<span class="c1"># bitmaps show a visible grayscale ramp after the X-axis image flip.</span>
+<span class="n">intensity_gradient</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">&quot;-x/20 + 0.5&quot;</span><span class="p">)</span>
+<span class="n">cube</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">INTENSITY</span><span class="p">,</span> <span class="n">intensity_gradient</span><span class="p">)</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">cube</span>
+
+<span class="n">voxel_size</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">)</span>
+<span class="n">printer_volume</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">96.0</span><span class="p">,</span> <span class="mf">54.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">)</span>
+<span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;output&quot;</span><span class="p">)</span>
+<span class="n">prefix</span> <span class="o">=</span> <span class="s2">&quot;slice_&quot;</span>
+
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isdir</span><span class="p">(</span><span class="n">output_dir</span><span class="p">):</span>
+    <span class="n">shutil</span><span class="o">.</span><span class="n">rmtree</span><span class="p">(</span><span class="n">output_dir</span><span class="p">)</span>
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">compiler</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">VatCompiler</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">,</span> <span class="n">printer_volume</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">prefix</span><span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">on_progress</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;compile progress: </span><span class="si">{:.1f}</span><span class="s2">%&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="mf">100.0</span> <span class="o">*</span> <span class="n">p</span><span class="p">))</span>
+
+<span class="n">compiler</span><span class="o">.</span><span class="n">set_progress_callback</span><span class="p">(</span><span class="n">on_progress</span><span class="p">)</span>
+<span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;resolution (x, y, z bmp count):&quot;</span><span class="p">,</span> <span class="n">compiler</span><span class="o">.</span><span class="n">resolution</span><span class="p">())</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>From the repository root, with the project virtual environment activated: <strong><code class="docutils literal notranslate"><span class="pre">python</span> <span class="pre">examples/compilers/vat/01_basic_bmp_stack.py</span></code></strong> compiles then opens the interactive preview. The renderer will show <strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span></code></strong> in grayscale by default.</p>
+</section>
+<section id="id1">
+<h3>4. Bounding-box mode<a class="headerlink" href="#id1" title="Link to this heading">#</a></h3>
+<p>If you want a tightly cropped stack instead of a fixed printer canvas, use the bounding-box constructor:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">compiler</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">VatCompiler</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">,</span> <span class="n">output_dir</span><span class="p">,</span> <span class="n">prefix</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The companion script <strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/vat/02_bbox_bmp_stack.py</span></code></strong> uses the same prism and gradient as the printer-volume example, so you can compare the slice layout directly.</p>
+</section>
+<section id="undefined-intensity-and-fallback-behavior">
+<h3>5. Undefined intensity and fallback behavior<a class="headerlink" href="#undefined-intensity-and-fallback-behavior" title="Link to this heading">#</a></h3>
+<p>The companion example <strong><code class="docutils literal notranslate"><span class="pre">examples/attributes_by_type/undefined/vat_example.py</span></code></strong> builds two overlapping cubes where only one branch defines <strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span></code></strong>. In default mode, the undefined region is exported with <strong>fallback intensity <code class="docutils literal notranslate"><span class="pre">1.0</span></code></strong>, so it appears <strong>white</strong> in the output slice:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">left_cube</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">right_cube</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+
+<span class="n">left_cube</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">INTENSITY</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="mf">0.25</span><span class="p">))</span>
+<span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">(</span><span class="n">left_cube</span><span class="p">,</span> <span class="n">right_cube</span><span class="p">)</span>
+
+<span class="n">compiler</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">VatCompiler</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">,</span> <span class="n">default_output_dir</span><span class="p">,</span> <span class="s2">&quot;slice_&quot;</span><span class="p">)</span>
+<span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>That example also shows <strong><code class="docutils literal notranslate"><span class="pre">set_fallback_intensity(...)</span></code></strong> and <strong>strict mode</strong> in the same script.</p>
+</section>
+</section>
+<section id="reference-python-api">
+<h2>Reference: Python API<a class="headerlink" href="#reference-python-api" title="Link to this heading">#</a></h2>
+<section id="constructors">
+<h3>Constructors<a class="headerlink" href="#constructors" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Constructor</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">VatCompiler(root,</span> <span class="pre">voxel_size,</span> <span class="pre">output_directory,</span> <span class="pre">file_prefix)</span></code></p></td>
+<td><p>Compile only the model bounding box.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">VatCompiler(root,</span> <span class="pre">voxel_size,</span> <span class="pre">printer_volume,</span> <span class="pre">output_directory,</span> <span class="pre">file_prefix)</span></code></p></td>
+<td><p>Compile onto a fixed printer-volume XY canvas with centered XY placement.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="methods-including-compilerbase">
+<h3>Methods (including <strong><code class="docutils literal notranslate"><span class="pre">CompilerBase</span></code></strong>)<a class="headerlink" href="#methods-including-compilerbase" title="Link to this heading">#</a></h3>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>Role</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">compile()</span></code></p></td>
+<td><p>Run the full pipeline.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">supported_attributes()</span></code></p></td>
+<td><p>Reports the compiler’s consumed field name (<strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span></code></strong>).</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cancel()</span></code></p></td>
+<td><p>Request cooperative cancellation.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">set_progress_callback(fn)</span></code></p></td>
+<td><p><strong><code class="docutils literal notranslate"><span class="pre">fn(progress)</span></code></strong> with <strong><code class="docutils literal notranslate"><span class="pre">progress</span></code></strong> in <strong><code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code></strong>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">resolution()</span></code></p></td>
+<td><p><strong><code class="docutils literal notranslate"><span class="pre">(x_pixels,</span> <span class="pre">y_pixels,</span> <span class="pre">z_bmp_count)</span></code></strong> after compile.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">set_strict_mode(bool)</span></code></p></td>
+<td><p>Require <strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span></code></strong> at every inside voxel.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">set_fallback_intensity(value)</span></code></p></td>
+<td><p>Fallback intensity for undefined inside voxels when strict mode is off.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>For full autodoc signatures, see the <strong>pyvcad_compilers</strong> section (<strong><code class="docutils literal notranslate"><span class="pre">VatCompiler</span></code></strong> and <strong><code class="docutils literal notranslate"><span class="pre">CompilerBase</span></code></strong>).</p>
+</section>
+</section>
+<section id="figures">
+<h2>Figures<a class="headerlink" href="#figures" title="Link to this heading">#</a></h2>
+<p><strong>Design preview</strong> (same prism and gradient as the tutorial; the renderer uses the default grayscale palette for <strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span></code></strong>):</p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">INTENSITY (preview)</p>
+<img src="../images/compilers_vat_preview.png" alt="VAT compiler guide preview render showing the intensity field in grayscale" width="100%">
+</div>
+</div>
+<p><strong>Example slices</strong> from the compiled BMP stacks. The printer-volume version preserves the full machine canvas; the bounding-box version crops tightly around the model:</p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Slice — printer-volume mode</p>
+<img src="../images/compilers_vat_slice_printer_volume_0p15mm.png" alt="VAT compiler slice using printer-volume mode" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Slice — bounding-box mode</p>
+<img src="../images/compilers_vat_slice_bbox_0p15mm.png" alt="VAT compiler slice using bounding-box mode" width="100%">
+</div>
+</div>
+<p><strong>Fallback behavior</strong> when a branch of the design has geometry but no <strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span></code></strong>. In default mode, the missing region compiles as full exposure (<strong>white</strong>) because the fallback intensity is <strong><code class="docutils literal notranslate"><span class="pre">1.0</span></code></strong>:</p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Slice — undefined region uses fallback intensity 1.0</p>
+<img src="../images/compilers_vat_slice_fallback_default.png" alt="VAT compiler slice showing fallback intensity in an undefined region" width="100%">
+</div>
+</div>
+</section>
+<section id="limitations">
+<h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>The output is <strong>8-bit grayscale BMP only</strong> in this workflow.</p></li>
+<li><p>The compiler assumes <strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span></code></strong> is meaningful in <strong><code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code></strong> and clamps values outside that range.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span> <span class="pre">==</span> <span class="pre">0</span></code></strong> is treated as <strong>empty exposure</strong>, so fully black layers are trimmed away.</p></li>
+<li><p>Printer-volume mode <strong>centers only in XY</strong>; Z still follows the model height.</p></li>
+</ul>
+</section>
+<section id="further-examples">
+<h2>Further examples<a class="headerlink" href="#further-examples" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/vat/01_basic_bmp_stack.py</span></code></strong> — printer-volume workflow (this guide).</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/vat/02_bbox_bmp_stack.py</span></code></strong> — same scene compiled in bounding-box mode.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">examples/attributes_by_type/undefined/vat_example.py</span></code></strong> — fallback intensity and strict mode when <strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span></code></strong> is missing on part of a union.</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="color-inkjet.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Color Inkjet Compiler</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="slicer-project.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Slicer Project Compiler</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-this-compiler-is-for">What this compiler is for</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-bmp-stacks-means-here">What “BMP stacks” means here</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-overview">Pipeline overview</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#zero-intensity-and-empty-layers">Zero intensity and empty layers</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#two-domain-modes">Two domain modes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#printer-volume-mode">1. Printer-volume mode</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#bounding-box-mode">2. Bounding-box mode</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#missing-intensity-inside-the-solid">Missing <strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span></code></strong> inside the solid</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tutorial-design-to-bmp-slices">Tutorial: design to BMP slices</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-geometry-with-intensity">1. Build geometry with <strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span></code></strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#choose-voxel-size-and-optionally-printer-volume">2. Choose <strong><code class="docutils literal notranslate"><span class="pre">voxel_size</span></code></strong> and, optionally, <strong><code class="docutils literal notranslate"><span class="pre">printer_volume</span></code></strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#run-the-compiler-in-printer-volume-mode">3. Run the compiler in printer-volume mode</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">4. Bounding-box mode</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#undefined-intensity-and-fallback-behavior">5. Undefined intensity and fallback behavior</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-python-api">Reference: Python API</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#constructors">Constructors</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#methods-including-compilerbase">Methods (including <strong><code class="docutils literal notranslate"><span class="pre">CompilerBase</span></code></strong>)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#figures">Figures</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations">Limitations</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-examples">Further examples</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../../_sources/guides/compilers/vat-photo.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Charles Wade and Robert MacCurdy.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

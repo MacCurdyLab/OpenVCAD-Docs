@@ -11,12 +11,14 @@ This section compares the compilers shipped today and links to dedicated guides.
 | -------- | --------------------------- | -------------- | ----------- |
 | [Material Inkjet](material-inkjet.md) | **`VOLUME_FRACTIONS`** | Stack of RGBA PNG slices (one per Z layer) | Multi-material **material jetting** workflows that consume per-layer voxel images (e.g. PolyJet-class systems and similar slice-based pipelines) |
 | [Color Inkjet](color-inkjet.md) | **`COLOR_RGBA`** | Stack of RGBA PNG slices (ICC / color pipeline → discrete CMYK + white + clear) | Full-color **PolyJet-class** inkjet builds from **sRGBA** designs |
+| [VAT Photo](vat-photo.md) | **`INTENSITY`** | Stack of 8-bit grayscale BMP slices (one per Z layer) | **Vat photopolymer** workflows that consume grayscale exposure masks (for example LCD / DLP / masked SLA image stacks) |
 | [Slicer Project](slicer-project.md) | (validated internally; see guide) | **`.3mf`** project for **PrusaSlicer** | **FFF / filament** slicing with spatially varying scalar fields → per-volume settings or G-code extrusion |
+| [Simulation Compiler](simulation-compiler.md) | **`VOLUME_FRACTIONS`** or selected direct scalar fields such as **`MODULUS`**, **`POISSONS_RATIO`**, and **`DENSITY`** | **`.xdmf` + `.h5`** or **`.inp`** | Finite-element mesh export for simulation workflows that need geometry plus cell-wise material/property data |
 
-Shape-wise, the two inkjet compilers both emit **PNG stacks**; they differ in **which field** drives each voxel (discrete materials from **`VOLUME_FRACTIONS`** vs. processed **`COLOR_RGBA`**).
+Shape-wise, the two inkjet compilers both emit **RGBA PNG stacks**, while **VAT Photo** emits an **8-bit grayscale BMP stack** driven directly by a scalar exposure field.
 
 ```{note}
-Compile-time checks use the root node’s merged **attribute list** (names present anywhere in the tree), not a full per-voxel scan. Per-voxel rules (for example strict handling of missing samples) are separate and documented per compiler.
+Validation policy is compiler-specific. **Material Inkjet** and **Color Inkjet** validate required attribute names against the root attribute list before sampling. **VAT Photo** handles missing **`INTENSITY`** at sample time so fallback exposure can still be used even when some or all regions omit the field. **Slicer Project** validates internally.
 ```
 
 ## Validation and automatic adapters
@@ -35,5 +37,7 @@ Details such as strict mode and fallback material are documented on each compile
 
 material-inkjet
 color-inkjet
+vat-photo
 slicer-project
+simulation-compiler
 ```

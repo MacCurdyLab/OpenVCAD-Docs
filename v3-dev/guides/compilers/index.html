@@ -307,7 +307,9 @@
 <li class="toctree-l1 current active has-children"><a class="current reference internal" href="#">Compilers</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="material-inkjet.html">Material Inkjet Compiler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="color-inkjet.html">Color Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vat-photo.html">VAT Photo Compiler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="slicer-project.html">Slicer Project Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-compiler.html">Simulation Compiler</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../attribute-resolver.html">Attribute Modifier and Resolver Guide</a></li>
@@ -396,18 +398,28 @@
 <td><p>Stack of RGBA PNG slices (ICC / color pipeline → discrete CMYK + white + clear)</p></td>
 <td><p>Full-color <strong>PolyJet-class</strong> inkjet builds from <strong>sRGBA</strong> designs</p></td>
 </tr>
-<tr class="row-even"><td><p><a class="reference internal" href="slicer-project.html"><span class="std std-doc">Slicer Project</span></a></p></td>
+<tr class="row-even"><td><p><a class="reference internal" href="vat-photo.html"><span class="std std-doc">VAT Photo</span></a></p></td>
+<td><p><strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span></code></strong></p></td>
+<td><p>Stack of 8-bit grayscale BMP slices (one per Z layer)</p></td>
+<td><p><strong>Vat photopolymer</strong> workflows that consume grayscale exposure masks (for example LCD / DLP / masked SLA image stacks)</p></td>
+</tr>
+<tr class="row-odd"><td><p><a class="reference internal" href="slicer-project.html"><span class="std std-doc">Slicer Project</span></a></p></td>
 <td><p>(validated internally; see guide)</p></td>
 <td><p><strong><code class="docutils literal notranslate"><span class="pre">.3mf</span></code></strong> project for <strong>PrusaSlicer</strong></p></td>
 <td><p><strong>FFF / filament</strong> slicing with spatially varying scalar fields → per-volume settings or G-code extrusion</p></td>
 </tr>
+<tr class="row-even"><td><p><a class="reference internal" href="simulation-compiler.html"><span class="std std-doc">Simulation Compiler</span></a></p></td>
+<td><p><strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> or selected direct scalar fields such as <strong><code class="docutils literal notranslate"><span class="pre">MODULUS</span></code></strong>, <strong><code class="docutils literal notranslate"><span class="pre">POISSONS_RATIO</span></code></strong>, and <strong><code class="docutils literal notranslate"><span class="pre">DENSITY</span></code></strong></p></td>
+<td><p><strong><code class="docutils literal notranslate"><span class="pre">.xdmf</span></code> + <code class="docutils literal notranslate"><span class="pre">.h5</span></code></strong> or <strong><code class="docutils literal notranslate"><span class="pre">.inp</span></code></strong></p></td>
+<td><p>Finite-element mesh export for simulation workflows that need geometry plus cell-wise material/property data</p></td>
+</tr>
 </tbody>
 </table>
 </div>
-<p>Shape-wise, the two inkjet compilers both emit <strong>PNG stacks</strong>; they differ in <strong>which field</strong> drives each voxel (discrete materials from <strong><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code></strong> vs. processed <strong><code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code></strong>).</p>
+<p>Shape-wise, the two inkjet compilers both emit <strong>RGBA PNG stacks</strong>, while <strong>VAT Photo</strong> emits an <strong>8-bit grayscale BMP stack</strong> driven directly by a scalar exposure field.</p>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>Compile-time checks use the root node’s merged <strong>attribute list</strong> (names present anywhere in the tree), not a full per-voxel scan. Per-voxel rules (for example strict handling of missing samples) are separate and documented per compiler.</p>
+<p>Validation policy is compiler-specific. <strong>Material Inkjet</strong> and <strong>Color Inkjet</strong> validate required attribute names against the root attribute list before sampling. <strong>VAT Photo</strong> handles missing <strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span></code></strong> at sample time so fallback exposure can still be used even when some or all regions omit the field. <strong>Slicer Project</strong> validates internally.</p>
 </div>
 </section>
 <section id="validation-and-automatic-adapters">
@@ -444,6 +456,20 @@
 <li class="toctree-l2"><a class="reference internal" href="color-inkjet.html#further-examples">Further examples</a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="vat-photo.html">VAT Photo Compiler</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="vat-photo.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vat-photo.html#what-this-compiler-is-for">What this compiler is for</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vat-photo.html#what-bmp-stacks-means-here">What “BMP stacks” means here</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vat-photo.html#pipeline-overview">Pipeline overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vat-photo.html#two-domain-modes">Two domain modes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vat-photo.html#missing-intensity-inside-the-solid">Missing <strong><code class="docutils literal notranslate"><span class="pre">INTENSITY</span></code></strong> inside the solid</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vat-photo.html#tutorial-design-to-bmp-slices">Tutorial: design to BMP slices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vat-photo.html#reference-python-api">Reference: Python API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vat-photo.html#figures">Figures</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vat-photo.html#limitations">Limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vat-photo.html#further-examples">Further examples</a></li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="slicer-project.html">Slicer Project Compiler</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="slicer-project.html#prerequisites">Prerequisites</a></li>
 <li class="toctree-l2"><a class="reference internal" href="slicer-project.html#what-this-compiler-is-for">What this compiler is for</a></li>
@@ -454,6 +480,18 @@
 <li class="toctree-l2"><a class="reference internal" href="slicer-project.html#examples-and-figures">Examples and figures</a></li>
 <li class="toctree-l2"><a class="reference internal" href="slicer-project.html#limitations">Limitations</a></li>
 <li class="toctree-l2"><a class="reference internal" href="slicer-project.html#further-examples">Further examples</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="simulation-compiler.html">Simulation Compiler</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="simulation-compiler.html#prerequisites">Prerequisites</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-compiler.html#what-this-compiler-exports">What this compiler exports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-compiler.html#tutorial-1-volume-fractions">Tutorial 1: Volume fractions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-compiler.html#tutorial-2-direct-mechanical-properties">Tutorial 2: Direct mechanical properties</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-compiler.html#loading-the-xdmf-h5-export-in-fenicsx">Loading the XDMF/H5 export in FEniCSx</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-compiler.html#paraview-inspection-workflow">ParaView inspection workflow</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-compiler.html#abaqus-export">Abaqus export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-compiler.html#practical-settings-reference">Practical settings reference</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-compiler.html#further-examples">Further examples</a></li>
 </ul>
 </li>
 </ul>

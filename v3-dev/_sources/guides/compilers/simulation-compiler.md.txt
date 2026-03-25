@@ -1,0 +1,435 @@
+(guide-compilers-simulation-compiler)=
+# Simulation Compiler
+
+```{include} ../_guide-sidebar-compiler-membership.md
+```
+
+The **SimulationCompiler** turns an OpenVCAD design into a finite-element mesh plus cell-wise simulation data. The supported backends in this guide are:
+
+- **`FENICSX_XDMF`** for **`.xdmf` + `.h5`** mesh/data bundles
+- **`ABAQUS_INP`** for **`.inp`** mesh export
+
+This page is a hands-on guide to the exporter workflow. It focuses on the tetrahedral **XDMF/H5** path, shows the matching hexahedral **Abaqus** calls, and explains the two export modes that matter most:
+
+- **`volume_fractions`** exported as both a stochastic **`material_id`** field and raw **`volume_fraction_*`** fields
+- direct scalar fields such as **`modulus`**, **`poissons_ratio`**, and **`density`** exported directly per element
+
+## Prerequisites
+
+- OpenVCAD installed with **`pip install OpenVCAD`**
+- Familiarity with the [Getting Started guide](../getting-started.md) and the [Functional Grading Guide](../gradients.md)
+
+The guide example files live under **`examples/compilers/simulation/`**:
+
+- **`01_volume_fractions_export.py`**
+- **`02_direct_mechanical_properties_export.py`**
+- **`03_fenicsx_load_exported_design.py`**
+
+## What this compiler exports
+
+The simulation compiler always starts from the same ingredients:
+
+1. a prepared OpenVCAD design
+2. a target mesh type
+3. one export backend
+4. the attributes you want carried into the simulation mesh
+
+The mesh itself can be:
+
+- **hexahedral** using a regular voxel-style grid
+- **tetrahedral** using a tet mesh with variable sized elements
+
+The attribute path depends on what you attach to the model:
+
+- **`volume_fractions`** is treated as a multi-material mixture. The compiler samples the continuous mixture, performs a deterministic weighted stochastic draw per element, and writes the resulting **`material_id`** field. It also writes the raw **`volume_fraction_*`** cell fields for convenience.
+- direct scalar attributes such as **`modulus`**, **`poissons_ratio`**, and **`density`** are sampled directly as cell-wise values. There is no stochastic material draw in this path.
+
+### Why XDMF comes with an H5 file
+
+The **`.xdmf`** file is the lightweight descriptor that tells downstream tools where the mesh and cell datasets live. The bulk numeric arrays live in the paired **`.h5`** file. In practice:
+
+- **`.xdmf`** describes the topology, geometry, and named attributes
+- **`.h5`** stores the actual node coordinates, element connectivity, and cell-data arrays
+
+That pairing is the normal way to move simulation-sized meshes into tools such as **DOLFINx/FEniCSx** and viewers such as **ParaView**.
+
+## Tutorial 1: Volume fractions
+
+The script **`examples/compilers/simulation/01_volume_fractions_export.py`** builds a centered rectangular bar with a left-to-right material blend. It exports the same design three ways:
+
+- **hex + Abaqus**
+- **tet + XDMF/H5 (high resolution)**
+- **tet + XDMF/H5 (low resolution)**
+
+```python
+import os
+import shutil
+
+import pyvcad as pv
+import pyvcad_compilers as pvc
+import pyvcad_rendering as viz
+
+materials = pv.default_materials
+
+bar_length = 30.0
+bar_width = 10.0
+bar_height = 10.0
+half_length = 0.5 * bar_length
+
+bar = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(bar_length, bar_width, bar_height))
+fractions = pv.VolumeFractionsAttribute(
+    [
+        (f"1 - clamp((x + {half_length}) / {bar_length}, 0, 1)", materials.id("red")),
+        (f"clamp((x + {half_length}) / {bar_length}, 0, 1)", materials.id("blue")),
+    ]
+)
+bar.set_attribute(pv.DefaultAttributes.VOLUME_FRACTIONS, fractions)
+root = bar
+
+output_dir = os.path.join(os.path.dirname(__file__), "output", "volume_fractions")
+
+hex_settings = pvc.SimulationHexMeshSettings()
+hex_settings.voxel_size = pv.Vec3(0.25, 0.25, 0.25)
+
+abaqus_settings = pvc.SimulationCompilerSettings()
+abaqus_settings.output_directory = output_dir
+abaqus_settings.file_prefix = "volume_fractions_hex"
+abaqus_settings.backend = pvc.SimulationBackend.ABAQUS_INP
+abaqus_settings.mesh_kind = pvc.SimulationMeshKind.HEX
+abaqus_settings.hex_settings = hex_settings
+abaqus_settings.random_seed = 42
+abaqus_settings.material_defs = materials
+
+high_fenics_settings = pvc.SimulationCompilerSettings()
+high_fenics_settings.output_directory = output_dir
+high_fenics_settings.file_prefix = "volume_fractions_tet_high"
+high_fenics_settings.backend = pvc.SimulationBackend.FENICSX_XDMF
+high_fenics_settings.mesh_kind = pvc.SimulationMeshKind.TET
+high_fenics_settings.random_seed = 42
+high_fenics_settings.material_defs = materials
+
+high_tet_settings = pvc.SimulationTetFixedMeshSettings()
+high_tet_settings.facet_size = 0.75
+high_tet_settings.facet_distance = 0.5
+high_tet_settings.cell_size = 0.75
+high_fenics_settings.tet_fixed_settings = high_tet_settings
+
+low_fenics_settings = pvc.SimulationCompilerSettings()
+low_fenics_settings.output_directory = output_dir
+low_fenics_settings.file_prefix = "volume_fractions_tet_low"
+low_fenics_settings.backend = pvc.SimulationBackend.FENICSX_XDMF
+low_fenics_settings.mesh_kind = pvc.SimulationMeshKind.TET
+low_fenics_settings.random_seed = 42
+low_fenics_settings.material_defs = materials
+
+low_tet_settings = pvc.SimulationTetFixedMeshSettings()
+low_tet_settings.facet_size = 2.25
+low_tet_settings.facet_distance = 1.5
+low_tet_settings.cell_size = 2.25
+low_fenics_settings.tet_fixed_settings = low_tet_settings
+
+pvc.SimulationCompiler(root, abaqus_settings).compile()
+pvc.SimulationCompiler(root, high_fenics_settings).compile()
+pvc.SimulationCompiler(root, low_fenics_settings).compile()
+
+viz.Render(root, materials)
+```
+
+From the repository root, with the project virtual environment activated:
+
+```bash
+python examples/compilers/simulation/01_volume_fractions_export.py
+```
+
+This example highlights the settings you will change most often:
+
+- **`backend`** selects the output family
+- **`mesh_kind`** selects **hex** or **tet**
+- **`material_defs`** provides the base material ids used by the sampled **`material_id`** field
+- **`random_seed`** makes the weighted stochastic element selection repeatable
+- tet mesh sizing controls the amount of element-level mixing you can resolve
+
+### OpenVCAD preview
+
+This is the original continuous **`volume_fractions`** field before any stochastic element assignment:
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">OpenVCAD preview — volume_fractions</p>
+<img src="../images/compilers_simulation_preview_volume_fractions.png" alt="OpenVCAD preview of the volume-fraction gradient used by the simulation compiler guide" width="100%">
+</div>
+</div>
+
+### High-resolution tet export in ParaView
+
+The high-resolution tetrahedral export makes the stochastic **`material_id`** field look like a well-mixed gradient because there are enough elements to interdigitate the two materials. The raw **`volume_fraction_*`** fields stay smooth because they store the sampled continuous field directly. In this example the suffixes **`1`** and **`3`** come from the material ids assigned by **`pv.default_materials`**.
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">High-resolution ParaView — material_id</p>
+<img src="../images/compilers_simulation_vol_frac_high_material_id.png" alt="High-resolution tetrahedral simulation export showing the stochastic material_id field" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">High-resolution ParaView — volume_fraction_1</p>
+<img src="../images/compilers_simulation_vol_frac_high_volume_fraction_1.png" alt="High-resolution tetrahedral simulation export showing the volume_fraction_1 field" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">High-resolution ParaView — volume_fraction_3</p>
+<img src="../images/compilers_simulation_vol_frac_high_volume_fraction_3.png" alt="High-resolution tetrahedral simulation export showing the volume_fraction_3 field" width="100%">
+</div>
+</div>
+
+### Low-resolution tet export in ParaView
+
+The low-resolution export uses the same underlying gradient, but the stochastic **`material_id`** field is much harder to read as a smooth transition because there are fewer elements available to represent the mixing pattern. The raw **`volume_fraction_1`** field still shows the same continuous ramp.
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Low-resolution ParaView — material_id</p>
+<img src="../images/compilers_simulation_vol_frac_low_material_id.png" alt="Low-resolution tetrahedral simulation export showing the stochastic material_id field" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Low-resolution ParaView — volume_fraction_1</p>
+<img src="../images/compilers_simulation_vol_frac_low_volume_fraction_1.png" alt="Low-resolution tetrahedral simulation export showing the volume_fraction_1 field" width="100%">
+</div>
+</div>
+
+The practical takeaway is simple:
+
+- if your downstream solver only has a discrete material assignment path, you may need a finer mesh so the stochastic **`material_id`** pattern captures the intended mixture behavior
+- if your downstream code can use the raw **`volume_fraction_*`** arrays directly, the exporter already saves them for you
+
+ParaView exposes the available cell datasets directly in the attribute selector:
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">ParaView attribute list — volume fractions export</p>
+<img src="../images/compilers_simulation_vol_frac_attributes.png" alt="ParaView attribute list for the volume-fractions simulation export" width="100%">
+</div>
+</div>
+
+## Tutorial 2: Direct mechanical properties
+
+The script **`examples/compilers/simulation/02_direct_mechanical_properties_export.py`** shows the direct scalar path. Here the bar carries:
+
+- **`modulus`** graded along **x**
+- **`poissons_ratio`** graded along **z**
+- **`density`** graded along **y**
+
+```python
+import os
+import shutil
+
+import pyvcad as pv
+import pyvcad_compilers as pvc
+import pyvcad_rendering as viz
+
+bar = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(40.0, 12.0, 12.0))
+bar.set_attribute(
+    pv.DefaultAttributes.MODULUS,
+    pv.FloatAttribute("1200 + 800 * clamp((x + 20.0) / 40.0, 0, 1)")
+)
+bar.set_attribute(
+    pv.DefaultAttributes.POISSONS_RATIO,
+    pv.FloatAttribute("0.20 + 0.15 * clamp((z + 6.0) / 12.0, 0, 1)")
+)
+bar.set_attribute(
+    pv.DefaultAttributes.DENSITY,
+    pv.FloatAttribute("0.95 + 0.20 * clamp((y + 6.0) / 12.0, 0, 1)")
+)
+root = bar
+
+output_dir = os.path.join(os.path.dirname(__file__), "output", "mechanical_properties")
+
+direct_attributes = [
+    pv.DefaultAttributes.MODULUS,
+    pv.DefaultAttributes.POISSONS_RATIO,
+    pv.DefaultAttributes.DENSITY,
+]
+
+fenics_settings = pvc.SimulationCompilerSettings()
+fenics_settings.output_directory = output_dir
+fenics_settings.file_prefix = "mechanical_tet"
+fenics_settings.backend = pvc.SimulationBackend.FENICSX_XDMF
+fenics_settings.mesh_kind = pvc.SimulationMeshKind.TET
+fenics_settings.random_seed = 7
+fenics_settings.direct_attributes = direct_attributes
+
+tet_settings = pvc.SimulationTetFixedMeshSettings()
+tet_settings.facet_size = 0.75
+tet_settings.facet_distance = 0.75
+tet_settings.cell_size = 0.75
+fenics_settings.tet_fixed_settings = tet_settings
+
+pvc.SimulationCompiler(root, fenics_settings).compile()
+viz.Render(root)
+```
+
+Run it with:
+
+```bash
+python examples/compilers/simulation/02_direct_mechanical_properties_export.py
+```
+
+The key setting here is **`direct_attributes`**. It tells the compiler which non-volume-fraction fields to carry into the output mesh as direct cell data. Unlike the **`volume_fractions`** workflow, these attributes are not converted into a stochastic material assignment. Each element simply stores its sampled scalar value.
+
+That means:
+
+- the exported fields remain smooth as long as the underlying field varies smoothly
+- mesh resolution still matters for how accurately the gradient is sampled
+- but resolution is no longer about representing a stochastic mixing pattern
+
+### OpenVCAD previews
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">OpenVCAD preview — modulus</p>
+<img src="../images/compilers_simulation_preview_modulus.png" alt="OpenVCAD preview of the modulus field used by the simulation compiler guide" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">OpenVCAD preview — poissons_ratio</p>
+<img src="../images/compilers_simulation_preview_poissons_ratio.png" alt="OpenVCAD preview of the Poisson ratio field used by the simulation compiler guide" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">OpenVCAD preview — density</p>
+<img src="../images/compilers_simulation_preview_density.png" alt="OpenVCAD preview of the density field used by the simulation compiler guide" width="100%">
+</div>
+</div>
+
+### ParaView views of the exported cell fields
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">ParaView — modulus</p>
+<img src="../images/compilers_simulation_mech_modulus.png" alt="ParaView screenshot showing the exported modulus field from the simulation compiler" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">ParaView — poissons_ratio</p>
+<img src="../images/compilers_simulation_mech_poissons_ratio.png" alt="ParaView screenshot showing the exported Poisson ratio field from the simulation compiler" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">ParaView — density</p>
+<img src="../images/compilers_simulation_mech_density.png" alt="ParaView screenshot showing the exported density field from the simulation compiler" width="100%">
+</div>
+</div>
+
+ParaView exposes the direct scalar datasets the same way:
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">ParaView attribute list — direct mechanical export</p>
+<img src="../images/compilers_simulation_mech_attributes.png" alt="ParaView attribute list for the direct mechanical simulation export" width="100%">
+</div>
+</div>
+
+## Loading the XDMF/H5 export in FEniCSx
+
+The script **`examples/compilers/simulation/03_fenicsx_load_exported_design.py`** shows the intended loading pattern for the generated XDMF/H5 bundle.
+
+Install notes:
+
+```bash
+conda create -n fenicsx -c conda-forge fenics-dolfinx mpi4py h5py numpy
+conda activate fenicsx
+```
+
+If you already have a working DOLFINx environment, **`h5py`** and **`numpy`** can also be installed with **`pip`** inside that environment.
+
+```python
+import os
+
+import h5py
+import numpy as np
+from mpi4py import MPI
+from dolfinx import fem
+from dolfinx.io import XDMFFile
+
+here = os.path.dirname(os.path.abspath(__file__))
+output_dir = os.path.join(here, "output", "mechanical_properties")
+xdmf_path = os.path.join(output_dir, "mechanical_tet.xdmf")
+h5_path = os.path.join(output_dir, "mechanical_tet.h5")
+
+with XDMFFile(MPI.COMM_WORLD, xdmf_path, "r") as xdmf:
+    mesh = xdmf.read_mesh(name="OpenVCADMesh")
+
+cell_space = fem.functionspace(mesh, ("DG", 0))
+modulus = fem.Function(cell_space, name="modulus")
+poissons_ratio = fem.Function(cell_space, name="poissons_ratio")
+density = fem.Function(cell_space, name="density")
+
+with h5py.File(h5_path, "r") as h5:
+    modulus_data = np.asarray(h5["/CellData/modulus"])
+    poissons_ratio_data = np.asarray(h5["/CellData/poissons_ratio"])
+    density_data = np.asarray(h5["/CellData/density"])
+    material_id_data = np.asarray(h5["/CellData/material_id"]) if "/CellData/material_id" in h5 else None
+
+    vf_datasets = {}
+    for key in h5["/CellData"].keys():
+        if key.startswith("volume_fraction_"):
+            vf_datasets[key] = np.asarray(h5["/CellData"][key])
+
+modulus.x.array[:] = modulus_data
+poissons_ratio.x.array[:] = poissons_ratio_data
+density.x.array[:] = density_data
+
+modulus.x.scatter_forward()
+poissons_ratio.x.scatter_forward()
+density.x.scatter_forward()
+```
+
+This script does not set up a full constitutive model or solve a PDE. It just loads the mesh and cell data so your downstream simulation code can use them.
+
+## ParaView inspection workflow
+
+If you want to inspect the exported XDMF/H5 files before writing any simulation code:
+
+1. Open the **`.xdmf`** file in **ParaView**
+2. click **Apply**
+3. switch the coloring dropdown to **`material_id`**, **`volume_fraction_*`**, **`modulus`**, **`poissons_ratio`**, or **`density`**
+4. use the screenshots above as a reference for what each dataset represents
+
+The **`.h5`** file must stay next to the **`.xdmf`** file because the XDMF descriptor references it directly.
+
+## Abaqus export
+
+The same design can be exported to Abaqus by switching the backend and choosing a hexahedral mesh:
+
+```python
+hex_settings = pvc.SimulationHexMeshSettings()
+hex_settings.voxel_size = pv.Vec3(0.25, 0.25, 0.25)
+
+abaqus_settings = pvc.SimulationCompilerSettings()
+abaqus_settings.output_directory = output_dir
+abaqus_settings.file_prefix = "volume_fractions_hex"
+abaqus_settings.backend = pvc.SimulationBackend.ABAQUS_INP
+abaqus_settings.mesh_kind = pvc.SimulationMeshKind.HEX
+abaqus_settings.hex_settings = hex_settings
+abaqus_settings.random_seed = 42
+abaqus_settings.material_defs = materials
+
+pvc.SimulationCompiler(root, abaqus_settings).compile()
+```
+
+Think of the Abaqus path as the same prepared mesh-and-attributes export idea written into **`.inp`** form instead of an **XDMF/H5** bundle.
+
+## Practical settings reference
+
+| Setting | Meaning |
+| ------- | ------- |
+| **`output_directory`** | Folder where the compiler writes the exported files. |
+| **`file_prefix`** | Prefix used for the written files. |
+| **`backend`** | Output family such as **`FENICSX_XDMF`** or **`ABAQUS_INP`**. |
+| **`mesh_kind`** | Element family: **`HEX`** or **`TET`**. |
+| **`hex_settings.voxel_size`** | Regular hexahedral cell size in millimeters. |
+| **`tet_fixed_settings.facet_size`** | Surface triangle size target for fixed tet meshing. |
+| **`tet_fixed_settings.facet_distance`** | Surface approximation tolerance for fixed tet meshing. |
+| **`tet_fixed_settings.cell_size`** | Interior tetrahedral size target. |
+| **`random_seed`** | Seed used for deterministic stochastic material assignment. |
+| **`material_defs`** | Base material definitions used when exporting **`volume_fractions`**. |
+| **`direct_attributes`** | List of scalar attributes to export directly as cell data. |
+
+## Further examples
+
+- **`examples/compilers/simulation/01_volume_fractions_export.py`** — stochastic material assignment plus raw volume-fraction datasets
+- **`examples/compilers/simulation/02_direct_mechanical_properties_export.py`** — direct scalar mechanical fields
+- **`examples/compilers/simulation/03_fenicsx_load_exported_design.py`** — DOLFINx/FEniCSx loading pattern for the exported XDMF/H5 bundle

@@ -1,6 +1,9 @@
 (guide-compilers-material-inkjet)=
 # Material Inkjet Compiler
 
+```{include} ../_guide-sidebar-compiler-membership.md
+```
+
 The **MaterialInkjetCompiler** turns OpenVCAD designs with **`VOLUME_FRACTIONS`** into a **stack of RGBA PNG images**—one image per build layer—where each pixel encodes the **resolved material** (via your material table’s RGBA) for material-jetting style workflows.
 
 This page is both a **tutorial** (from a valid design to PNG slices) and a **reference** for compiler behavior and Python API.
@@ -8,7 +11,7 @@ This page is both a **tutorial** (from a valid design to PNG slices) and a **ref
 ## Prerequisites
 
 - OpenVCAD installed with **`pyvcad`** and **`pyvcad_compilers`** (see the installation guide and repository `examples/project_example`).
-- Familiarity with **`VOLUME_FRACTIONS`** on geometry (see {ref}`guide-getting-started`, especially [Lesson 6: Volume Fractions](../getting-started.md#lesson-6-volume-fractions), and the [Functional Grading Guide](../gradients.md)).
+- Familiarity with **`VOLUME_FRACTIONS`** on geometry (see {ref}`guide-getting-started`, especially **Lesson 6: Volume Fractions**, and the [Functional Grading Guide](../gradients.md)).
 
 ## What this compiler is for
 
@@ -29,17 +32,19 @@ After compilation you get **one PNG file per Z layer** in the voxel grid built f
 
 The compiler voxelizes the model’s bounding box using your **`voxel_size`**, evaluates the implicit shape and **`VOLUME_FRACTIONS`** field on that grid, and writes one RGBA PNG per Z layer. **Inside** voxels get a **single** material pick from the local mixture (see below); **outside** voxels are left transparent in the slice. When the job finishes, you get **`resolution()`** and **`material_voxel_counts()`**, and empty slices are dropped from the stack.
 
+(stochastic-material-choice)=
 ### Stochastic material choice
 
 Where **`VOLUME_FRACTIONS`** define a **mixture** of materials, the PNG does **not** store fractional blending. The compiler performs a **weighted random choice** among materials according to the local mixture. Fine voxels can still look **noisy** when two materials are mixed—this is normal for this representation.
 
+(liquid-keep-out)=
 ### Liquid keep-out
 
 If **`liquid_keep_out_distance > 0`**, the **liquid** material is removed from the local mixture when the sample lies within that distance of the **surface** (using the signed distance). Your **`MaterialDefs`** must include a material named **`"liquid"`** in that mode, or construction raises an error. Use this when your process should avoid assigning liquid near boundaries.
 
 ### Missing **`VOLUME_FRACTIONS`** inside the solid
 
-This behavior is separate from the **up-front check** that the design exposes **`VOLUME_FRACTIONS`** at the root. Review [Lesson 6: Volume Fractions](../getting-started.md#lesson-6-volume-fractions) for how the attribute is attached, and [Lesson 7: The Node Hierarchy and Attribute Priority](../getting-started.md#lesson-7-the-node-hierarchy-and-attribute-priority) for how unions and overrides affect which regions inherit **`VOLUME_FRACTIONS`**—which is why one branch of a union can be “missing” data even when another branch is not:
+This behavior is separate from the **up-front check** that the design exposes **`VOLUME_FRACTIONS`** at the root. Review **Lesson 6: Volume Fractions** for how the attribute is attached, and **Lesson 7: The Node Hierarchy and Attribute Priority** for how unions and overrides affect which regions inherit **`VOLUME_FRACTIONS`**—which is why one branch of a union can be “missing” data even when another branch is not:
 
 - **Default:** if a voxel is inside the solid but **`VOLUME_FRACTIONS`** are not defined there, the compiler uses **`fallback_material_id`** (default **0**, typically **void** in the default material table) and still treats the voxel as active.
 - **`set_strict_mode(True)`:** raises **`RuntimeError`** on the first inside voxel that lacks **`VOLUME_FRACTIONS`**, including the world-space location in the message.
@@ -52,7 +57,7 @@ The scripts for this walkthrough live under **`examples/compilers/material_inkje
 
 ### 1. Build geometry with **`VOLUME_FRACTIONS`**
 
-Use **`pv.VolumeFractionsAttribute`** with expressions and material IDs from **`pv.default_materials`** (or your own **`MaterialDefs`** JSON). Fractions at each point should **sum to 1** (see [Lesson 6: Volume Fractions](../getting-started.md#lesson-6-volume-fractions)).
+Use **`pv.VolumeFractionsAttribute`** with expressions and material IDs from **`pv.default_materials`** (or your own **`MaterialDefs`** JSON). Fractions at each point should **sum to 1** (see **Lesson 6: Volume Fractions**).
 
 ### 2. Choose **`voxel_size`**
 

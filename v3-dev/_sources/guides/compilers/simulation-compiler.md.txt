@@ -9,7 +9,11 @@ The **SimulationCompiler** turns an OpenVCAD design into a finite-element mesh p
 - **`FENICSX_XDMF`** for **`.xdmf` + `.h5`** mesh/data bundles
 - **`ABAQUS_INP`** for **`.inp`** mesh export
 
-This page is a hands-on guide to the exporter workflow. It focuses on the tetrahedral **XDMF/H5** path, shows the matching hexahedral **Abaqus** calls, and explains the two export modes that matter most:
+This page is a hands-on guide to the exporter workflow. It is organized as three
+lessons: a volume-fractions export, an export-only direct-mechanical beam, and a
+self-contained OpenVCAD-to-FEniCSx beam solve. It focuses on the tetrahedral
+**XDMF/H5** path, shows the matching hexahedral **Abaqus** calls, and explains
+the two export modes that matter most:
 
 - **`volume_fractions`** exported as both a stochastic **`material_id`** field and raw **`volume_fraction_*`** fields
 - direct scalar fields such as **`modulus`**, **`poissons_ratio`**, and **`density`** exported directly per element
@@ -53,7 +57,7 @@ The **`.xdmf`** file is the lightweight descriptor that tells downstream tools w
 
 That pairing is the normal way to move simulation-sized meshes into tools such as **DOLFINx/FEniCSx** and viewers such as **ParaView**.
 
-## Tutorial 1: Volume fractions
+## Lesson 1: Volume fractions
 
 The script **`examples/compilers/simulation/01_volume_fractions_export.py`** builds a centered rectangular bar with a left-to-right material blend. It exports the same design three ways:
 
@@ -208,13 +212,18 @@ ParaView exposes the available cell datasets directly in the attribute selector:
 </div>
 </div>
 
-## Tutorial 2: Direct mechanical properties
+## Lesson 2: Direct mechanical property export
 
 The script **`examples/compilers/simulation/02_direct_mechanical_properties_export.py`** shows the direct scalar path. Here the bar carries:
 
 - **`modulus`** graded along **x**
 - **`poissons_ratio`** graded along **z**
-- **`density`** graded along **y**
+
+This lesson is intentionally export-only. It uses a different beam than Lesson 3:
+here **`poissons_ratio`** varies through the beam height, while Lesson 3 uses a
+separate cantilever beam where both elastic fields vary along the beam length.
+Density is omitted so the walkthrough stays focused on the two scalar fields
+that are carried directly into the simulation mesh.
 
 ```python
 import os
@@ -233,18 +242,13 @@ bar.set_attribute(
     pv.DefaultAttributes.POISSONS_RATIO,
     pv.FloatAttribute("0.20 + 0.15 * clamp((z + 6.0) / 12.0, 0, 1)")
 )
-bar.set_attribute(
-    pv.DefaultAttributes.DENSITY,
-    pv.FloatAttribute("0.95 + 0.20 * clamp((y + 6.0) / 12.0, 0, 1)")
-)
 root = bar
 
-output_dir = os.path.join(os.path.dirname(__file__), "output", "mechanical_properties")
+output_dir = "output"
 
 direct_attributes = [
     pv.DefaultAttributes.MODULUS,
     pv.DefaultAttributes.POISSONS_RATIO,
-    pv.DefaultAttributes.DENSITY,
 ]
 
 fenics_settings = pvc.SimulationCompilerSettings()
@@ -265,13 +269,18 @@ pvc.SimulationCompiler(root, fenics_settings).compile()
 viz.Render(root)
 ```
 
-Run it with:
+Run the export with the **`fenicsx`** conda environment active:
 
 ```bash
+conda activate fenicsx
 python examples/compilers/simulation/02_direct_mechanical_properties_export.py
 ```
 
-The key setting here is **`direct_attributes`**. It tells the compiler which non-volume-fraction fields to carry into the output mesh as direct cell data. Unlike the **`volume_fractions`** workflow, these attributes are not converted into a stochastic material assignment. Each element simply stores its sampled scalar value.
+The key setting here is **`direct_attributes`**. It tells the compiler which
+non-volume-fraction fields to carry into the output mesh as direct cell data.
+Unlike the **`volume_fractions`** workflow, these attributes are not converted
+into a stochastic material assignment. Each element simply stores its sampled
+scalar value.
 
 That means:
 
@@ -290,10 +299,6 @@ That means:
 <p class="guide-figure-label">OpenVCAD preview — poissons_ratio</p>
 <img src="../images/compilers_simulation_preview_poissons_ratio.png" alt="OpenVCAD preview of the Poisson ratio field used by the simulation compiler guide" width="100%">
 </div>
-<div class="guide-figure-cell">
-<p class="guide-figure-label">OpenVCAD preview — density</p>
-<img src="../images/compilers_simulation_preview_density.png" alt="OpenVCAD preview of the density field used by the simulation compiler guide" width="100%">
-</div>
 </div>
 
 ### ParaView views of the exported cell fields
@@ -307,24 +312,46 @@ That means:
 <p class="guide-figure-label">ParaView — poissons_ratio</p>
 <img src="../images/compilers_simulation_mech_poissons_ratio.png" alt="ParaView screenshot showing the exported Poisson ratio field from the simulation compiler" width="100%">
 </div>
-<div class="guide-figure-cell">
-<p class="guide-figure-label">ParaView — density</p>
-<img src="../images/compilers_simulation_mech_density.png" alt="ParaView screenshot showing the exported density field from the simulation compiler" width="100%">
-</div>
 </div>
 
-ParaView exposes the direct scalar datasets the same way:
+### Abaqus export from the same Lesson 2 beam
 
-<div class="guide-figure-grid">
-<div class="guide-figure-cell">
-<p class="guide-figure-label">ParaView attribute list — direct mechanical export</p>
-<img src="../images/compilers_simulation_mech_attributes.png" alt="ParaView attribute list for the direct mechanical simulation export" width="100%">
-</div>
-</div>
+The same Lesson 2 design can be exported to Abaqus by switching the backend and
+choosing a hexahedral mesh:
 
-## Loading the XDMF/H5 export in FEniCSx
+```python
+hex_settings = pvc.SimulationHexMeshSettings()
+hex_settings.voxel_size = pv.Vec3(1.5, 1.5, 1.5)
 
-The script **`examples/compilers/simulation/03_fenicsx_load_exported_design.py`** shows the intended loading pattern for the generated XDMF/H5 bundle.
+abaqus_settings = pvc.SimulationCompilerSettings()
+abaqus_settings.output_directory = "output"
+abaqus_settings.file_prefix = "mechanical_hex"
+abaqus_settings.backend = pvc.SimulationBackend.ABAQUS_INP
+abaqus_settings.mesh_kind = pvc.SimulationMeshKind.HEX
+abaqus_settings.random_seed = 7
+abaqus_settings.direct_attributes = [
+    pv.DefaultAttributes.MODULUS,
+    pv.DefaultAttributes.POISSONS_RATIO,
+]
+abaqus_settings.hex_settings = hex_settings
+
+pvc.SimulationCompiler(root, abaqus_settings).compile()
+```
+
+Think of the Abaqus path as the same mesh-and-attributes export idea written
+into **`.inp`** form instead of an **XDMF/H5** bundle.
+
+## Lesson 3: Solving the exported beam in FEniCSx
+
+The script **`examples/compilers/simulation/03_fenicsx_load_exported_design.py`**
+is the full one-shot workflow. It builds a second graded beam inside the same
+script, exports the FEniCSx XDMF/H5 bundle, reloads the exported cell-wise
+material fields inside DOLFINx, and solves a small-strain static cantilever
+problem.
+
+Lesson 3 intentionally uses a different beam than Lesson 2. In this solved
+cantilever example, both **`modulus`** and **`poissons_ratio`** ramp along the
+beam length so the constitutive variation follows the loading direction.
 
 Install notes:
 
@@ -333,84 +360,168 @@ conda create -n fenicsx -c conda-forge fenics-dolfinx mpi4py h5py numpy
 conda activate fenicsx
 ```
 
-If you already have a working DOLFINx environment, **`h5py`** and **`numpy`** can also be installed with **`pip`** inside that environment.
+If you already have a working DOLFINx environment, **`h5py`** and **`numpy`**
+can also be installed with **`pip`** inside that environment.
+
+### OpenVCAD previews for the Lesson 3 beam
+
+The simulation script builds its own beam before exporting it to FEniCSx.
+These previews show the exact OpenVCAD fields used by the solve:
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">OpenVCAD preview — Lesson 3 modulus</p>
+<img src="../images/compilers_simulation_lesson3_preview_modulus.png" alt="OpenVCAD preview of the Lesson 3 modulus gradient used by the self-contained FEniCSx beam solve" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">OpenVCAD preview — Lesson 3 poissons_ratio</p>
+<img src="../images/compilers_simulation_lesson3_preview_poissons_ratio.png" alt="OpenVCAD preview of the Lesson 3 Poisson ratio gradient used by the self-contained FEniCSx beam solve" width="100%">
+</div>
+</div>
+
+The lesson-3 beam definition is intentionally small and direct:
 
 ```python
-import os
+def build_design():
+    beam = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(40.0, 12.0, 12.0))
+    beam.set_attribute(
+        pv.DefaultAttributes.MODULUS,
+        pv.FloatAttribute("1200 + 800 * clamp((x + 20.0) / 40.0, 0, 1)")
+    )
+    beam.set_attribute(
+        pv.DefaultAttributes.POISSONS_RATIO,
+        pv.FloatAttribute("0.20 + 0.15 * clamp((x + 20.0) / 40.0, 0, 1)")
+    )
+    return beam
+```
 
-import h5py
-import numpy as np
-from mpi4py import MPI
-from dolfinx import fem
-from dolfinx.io import XDMFFile
+### Governing equations
 
-here = os.path.dirname(os.path.abspath(__file__))
-output_dir = os.path.join(here, "output", "mechanical_properties")
-xdmf_path = os.path.join(output_dir, "mechanical_tet.xdmf")
-h5_path = os.path.join(output_dir, "mechanical_tet.h5")
+The solve is the standard 3D isotropic linear-elastic form with a spatially
+varying modulus **`E(x)`** and Poisson ratio **`nu(x)`**:
 
-with XDMFFile(MPI.COMM_WORLD, xdmf_path, "r") as xdmf:
-    mesh = xdmf.read_mesh(name="OpenVCADMesh")
+$$
+\varepsilon(u) = \mathrm{sym}(\nabla u)
+$$
 
-cell_space = fem.functionspace(mesh, ("DG", 0))
+$$
+\sigma(u) = 2\mu(x)\varepsilon(u) + \lambda(x)\,\mathrm{tr}(\varepsilon(u)) I
+$$
+
+with Lame parameters reconstructed from the exported OpenVCAD fields:
+
+$$
+\mu(x) = \frac{E(x)}{2(1 + \nu(x))}
+\qquad
+\lambda(x) = \frac{E(x)\nu(x)}{(1 + \nu(x))(1 - 2\nu(x))}
+$$
+
+The weak form is:
+
+$$
+\int_{\Omega} \sigma(u) : \varepsilon(v)\,dx = \int_{\Gamma_{\mathrm{load}}} t \cdot v\,ds
+$$
+
+with the left beam face fixed (**`u = 0`**) and a uniform end traction
+**`t = (0, 0, -5)`** applied on the right beam face.
+
+Because the exported tetrahedral surface is slightly perturbed from the exact
+analytic box, the script locates the left and right beam faces using a small
+**`0.05 mm`** threshold around the mesh bounding box instead of relying on
+exact **`x == min/max`** comparisons.
+
+### Key implementation snippets
+
+The full script lives at **`examples/compilers/simulation/03_fenicsx_load_exported_design.py`**.
+The snippets below show the important stages without reproducing the whole file.
+
+#### 1. Export once on rank 0
+
+```python
+export_error = None
+if comm.rank == 0:
+    try:
+        root = build_design()
+        fenics_settings = pvc.SimulationCompilerSettings()
+        fenics_settings.output_directory = output_dir
+        fenics_settings.file_prefix = "simulation_results"
+        fenics_settings.backend = pvc.SimulationBackend.FENICSX_XDMF
+        fenics_settings.mesh_kind = pvc.SimulationMeshKind.TET
+        fenics_settings.direct_attributes = [
+            pv.DefaultAttributes.MODULUS,
+            pv.DefaultAttributes.POISSONS_RATIO,
+        ]
+        pvc.SimulationCompiler(root, fenics_settings).compile()
+    except Exception as exc:
+        export_error = str(exc)
+
+export_error = comm.bcast(export_error, root=0)
+if export_error is not None:
+    raise RuntimeError(f"OpenVCAD export failed on MPI rank 0: {export_error}")
+```
+
+#### 2. Reload the exported cell fields with MPI-safe cell indexing
+
+The example uses **`beam_mesh.topology.original_cell_index`** so each MPI rank
+pulls the correct subset of the exported cell arrays back into its local DG0
+storage.
+
+```python
+with XDMFFile(comm, xdmf_path, "r") as xdmf:
+    beam_mesh = xdmf.read_mesh(name="OpenVCADMesh")
+
+cell_space = fem.functionspace(beam_mesh, ("DG", 0))
 modulus = fem.Function(cell_space, name="modulus")
 poissons_ratio = fem.Function(cell_space, name="poissons_ratio")
-density = fem.Function(cell_space, name="density")
 
 with h5py.File(h5_path, "r") as h5:
     modulus_data = np.asarray(h5["/CellData/modulus"])
     poissons_ratio_data = np.asarray(h5["/CellData/poissons_ratio"])
-    density_data = np.asarray(h5["/CellData/density"])
-    material_id_data = np.asarray(h5["/CellData/material_id"]) if "/CellData/material_id" in h5 else None
 
-    vf_datasets = {}
-    for key in h5["/CellData"].keys():
-        if key.startswith("volume_fraction_"):
-            vf_datasets[key] = np.asarray(h5["/CellData"][key])
-
-modulus.x.array[:] = modulus_data
-poissons_ratio.x.array[:] = poissons_ratio_data
-density.x.array[:] = density_data
+original_cell_index = np.asarray(beam_mesh.topology.original_cell_index, dtype=np.int64)
+modulus.x.array[:] = modulus_data[original_cell_index]
+poissons_ratio.x.array[:] = poissons_ratio_data[original_cell_index]
 
 modulus.x.scatter_forward()
 poissons_ratio.x.scatter_forward()
-density.x.scatter_forward()
 ```
 
-This script does not set up a full constitutive model or solve a PDE. It just loads the mesh and cell data so your downstream simulation code can use them.
+#### 3. Solve and patch the exported file in place
+
+After reloading the DG0 fields, the script reconstructs the Lam\'e parameters,
+solves the cantilever problem, evaluates DG0 von Mises stress, gathers the
+result arrays to rank 0, and updates the original OpenVCAD export in place.
+That means **`simulation_results.xdmf`** keeps the same mesh but gains two new
+fields:
+
+- **`displacement`** as a node-centered vector field
+- **`von_mises`** as a cell-centered scalar field
+
+Run the full one-shot workflow with the **`fenicsx`** environment active:
+
+```bash
+conda activate fenicsx
+python examples/compilers/simulation/03_fenicsx_load_exported_design.py
+```
 
 ## ParaView inspection workflow
 
-If you want to inspect the exported XDMF/H5 files before writing any simulation code:
+1. Open **`simulation_results.xdmf`**
+2. Click **Apply**
+3. Switch the coloring dropdown between **`modulus`**, **`poissons_ratio`**,
+   **`displacement`**, and **`von_mises`**
+4. Use **Warp By Vector** with **`displacement`** if you want a deformed beam view
 
-1. Open the **`.xdmf`** file in **ParaView**
-2. click **Apply**
-3. switch the coloring dropdown to **`material_id`**, **`volume_fraction_*`**, **`modulus`**, **`poissons_ratio`**, or **`density`**
-4. use the screenshots above as a reference for what each dataset represents
-
-The **`.h5`** file must stay next to the **`.xdmf`** file because the XDMF descriptor references it directly.
-
-## Abaqus export
-
-The same design can be exported to Abaqus by switching the backend and choosing a hexahedral mesh:
-
-```python
-hex_settings = pvc.SimulationHexMeshSettings()
-hex_settings.voxel_size = pv.Vec3(0.25, 0.25, 0.25)
-
-abaqus_settings = pvc.SimulationCompilerSettings()
-abaqus_settings.output_directory = output_dir
-abaqus_settings.file_prefix = "volume_fractions_hex"
-abaqus_settings.backend = pvc.SimulationBackend.ABAQUS_INP
-abaqus_settings.mesh_kind = pvc.SimulationMeshKind.HEX
-abaqus_settings.hex_settings = hex_settings
-abaqus_settings.random_seed = 42
-abaqus_settings.material_defs = materials
-
-pvc.SimulationCompiler(root, abaqus_settings).compile()
-```
-
-Think of the Abaqus path as the same prepared mesh-and-attributes export idea written into **`.inp`** form instead of an **XDMF/H5** bundle.
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">ParaView — displacement magnitude result</p>
+<img src="../images/compilers_simulation_beam_displacement.png" alt="ParaView screenshot of the deformed cantilever beam colored by displacement magnitude" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">ParaView — von Mises stress result</p>
+<img src="../images/compilers_simulation_beam_von_mises.png" alt="ParaView screenshot of the cantilever beam colored by von Mises stress" width="100%">
+</div>
+</div>
 
 ## Practical settings reference
 
@@ -431,5 +542,5 @@ Think of the Abaqus path as the same prepared mesh-and-attributes export idea wr
 ## Further examples
 
 - **`examples/compilers/simulation/01_volume_fractions_export.py`** — stochastic material assignment plus raw volume-fraction datasets
-- **`examples/compilers/simulation/02_direct_mechanical_properties_export.py`** — direct scalar mechanical fields
-- **`examples/compilers/simulation/03_fenicsx_load_exported_design.py`** — DOLFINx/FEniCSx loading pattern for the exported XDMF/H5 bundle
+- **`examples/compilers/simulation/02_direct_mechanical_properties_export.py`** — export-only direct scalar mechanical fields with **`poissons_ratio`** varying through **z**
+- **`examples/compilers/simulation/03_fenicsx_load_exported_design.py`** — self-contained DOLFINx/FEniCSx cantilever solve with both elastic fields varying along **x**

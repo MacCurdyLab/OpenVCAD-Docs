@@ -44,6 +44,8 @@
     <script src="../../_static/documentation_options.js?v=110ea713"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'guides/compilers/simulation-compiler';</script>
     <script src="../../_static/openvcad_lightbox.js?v=e11fca97"></script>
     <link rel="icon" href="../../_static/favicon.png"/>
@@ -376,7 +378,7 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="simulation-compiler">
+  <section class="tex2jax_ignore mathjax_ignore" id="simulation-compiler">
 <span id="guide-compilers-simulation-compiler"></span><h1>Simulation Compiler<a class="headerlink" href="#simulation-compiler" title="Link to this heading">#</a></h1>
 <!--
 Build dependency sentinel for guide sidebar compiler membership.
@@ -396,7 +398,11 @@ Current compiler guides:
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">FENICSX_XDMF</span></code></strong> for <strong><code class="docutils literal notranslate"><span class="pre">.xdmf</span></code> + <code class="docutils literal notranslate"><span class="pre">.h5</span></code></strong> mesh/data bundles</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">ABAQUS_INP</span></code></strong> for <strong><code class="docutils literal notranslate"><span class="pre">.inp</span></code></strong> mesh export</p></li>
 </ul>
-<p>This page is a hands-on guide to the exporter workflow. It focuses on the tetrahedral <strong>XDMF/H5</strong> path, shows the matching hexahedral <strong>Abaqus</strong> calls, and explains the two export modes that matter most:</p>
+<p>This page is a hands-on guide to the exporter workflow. It is organized as three
+lessons: a volume-fractions export, an export-only direct-mechanical beam, and a
+self-contained OpenVCAD-to-FEniCSx beam solve. It focuses on the tetrahedral
+<strong>XDMF/H5</strong> path, shows the matching hexahedral <strong>Abaqus</strong> calls, and explains
+the two export modes that matter most:</p>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">volume_fractions</span></code></strong> exported as both a stochastic <strong><code class="docutils literal notranslate"><span class="pre">material_id</span></code></strong> field and raw <strong><code class="docutils literal notranslate"><span class="pre">volume_fraction_*</span></code></strong> fields</p></li>
 <li><p>direct scalar fields such as <strong><code class="docutils literal notranslate"><span class="pre">modulus</span></code></strong>, <strong><code class="docutils literal notranslate"><span class="pre">poissons_ratio</span></code></strong>, and <strong><code class="docutils literal notranslate"><span class="pre">density</span></code></strong> exported directly per element</p></li>
@@ -443,8 +449,8 @@ Current compiler guides:
 <p>That pairing is the normal way to move simulation-sized meshes into tools such as <strong>DOLFINx/FEniCSx</strong> and viewers such as <strong>ParaView</strong>.</p>
 </section>
 </section>
-<section id="tutorial-1-volume-fractions">
-<h2>Tutorial 1: Volume fractions<a class="headerlink" href="#tutorial-1-volume-fractions" title="Link to this heading">#</a></h2>
+<section id="lesson-1-volume-fractions">
+<h2>Lesson 1: Volume fractions<a class="headerlink" href="#lesson-1-volume-fractions" title="Link to this heading">#</a></h2>
 <p>The script <strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/simulation/01_volume_fractions_export.py</span></code></strong> builds a centered rectangular bar with a left-to-right material blend. It exports the same design three ways:</p>
 <ul class="simple">
 <li><p><strong>hex + Abaqus</strong></p></li>
@@ -591,14 +597,18 @@ Current compiler guides:
 </div>
 </section>
 </section>
-<section id="tutorial-2-direct-mechanical-properties">
-<h2>Tutorial 2: Direct mechanical properties<a class="headerlink" href="#tutorial-2-direct-mechanical-properties" title="Link to this heading">#</a></h2>
+<section id="lesson-2-direct-mechanical-property-export">
+<h2>Lesson 2: Direct mechanical property export<a class="headerlink" href="#lesson-2-direct-mechanical-property-export" title="Link to this heading">#</a></h2>
 <p>The script <strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/simulation/02_direct_mechanical_properties_export.py</span></code></strong> shows the direct scalar path. Here the bar carries:</p>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">modulus</span></code></strong> graded along <strong>x</strong></p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">poissons_ratio</span></code></strong> graded along <strong>z</strong></p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">density</span></code></strong> graded along <strong>y</strong></p></li>
 </ul>
+<p>This lesson is intentionally export-only. It uses a different beam than Lesson 3:
+here <strong><code class="docutils literal notranslate"><span class="pre">poissons_ratio</span></code></strong> varies through the beam height, while Lesson 3 uses a
+separate cantilever beam where both elastic fields vary along the beam length.
+Density is omitted so the walkthrough stays focused on the two scalar fields
+that are carried directly into the simulation mesh.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">shutil</span>
 
@@ -615,18 +625,13 @@ Current compiler guides:
     <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">POISSONS_RATIO</span><span class="p">,</span>
     <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">&quot;0.20 + 0.15 * clamp((z + 6.0) / 12.0, 0, 1)&quot;</span><span class="p">)</span>
 <span class="p">)</span>
-<span class="n">bar</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
-    <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">DENSITY</span><span class="p">,</span>
-    <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">&quot;0.95 + 0.20 * clamp((y + 6.0) / 12.0, 0, 1)&quot;</span><span class="p">)</span>
-<span class="p">)</span>
 <span class="n">root</span> <span class="o">=</span> <span class="n">bar</span>
 
-<span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="vm">__file__</span><span class="p">),</span> <span class="s2">&quot;output&quot;</span><span class="p">,</span> <span class="s2">&quot;mechanical_properties&quot;</span><span class="p">)</span>
+<span class="n">output_dir</span> <span class="o">=</span> <span class="s2">&quot;output&quot;</span>
 
 <span class="n">direct_attributes</span> <span class="o">=</span> <span class="p">[</span>
     <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span>
     <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">POISSONS_RATIO</span><span class="p">,</span>
-    <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">DENSITY</span><span class="p">,</span>
 <span class="p">]</span>
 
 <span class="n">fenics_settings</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">SimulationCompilerSettings</span><span class="p">()</span>
@@ -647,11 +652,16 @@ Current compiler guides:
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 </pre></div>
 </div>
-<p>Run it with:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>examples/compilers/simulation/02_direct_mechanical_properties_export.py
+<p>Run the export with the <strong><code class="docutils literal notranslate"><span class="pre">fenicsx</span></code></strong> conda environment active:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>fenicsx
+python<span class="w"> </span>examples/compilers/simulation/02_direct_mechanical_properties_export.py
 </pre></div>
 </div>
-<p>The key setting here is <strong><code class="docutils literal notranslate"><span class="pre">direct_attributes</span></code></strong>. It tells the compiler which non-volume-fraction fields to carry into the output mesh as direct cell data. Unlike the <strong><code class="docutils literal notranslate"><span class="pre">volume_fractions</span></code></strong> workflow, these attributes are not converted into a stochastic material assignment. Each element simply stores its sampled scalar value.</p>
+<p>The key setting here is <strong><code class="docutils literal notranslate"><span class="pre">direct_attributes</span></code></strong>. It tells the compiler which
+non-volume-fraction fields to carry into the output mesh as direct cell data.
+Unlike the <strong><code class="docutils literal notranslate"><span class="pre">volume_fractions</span></code></strong> workflow, these attributes are not converted
+into a stochastic material assignment. Each element simply stores its sampled
+scalar value.</p>
 <p>That means:</p>
 <ul class="simple">
 <li><p>the exported fields remain smooth as long as the underlying field varies smoothly</p></li>
@@ -669,10 +679,6 @@ Current compiler guides:
 <p class="guide-figure-label">OpenVCAD preview — poissons_ratio</p>
 <img src="../images/compilers_simulation_preview_poissons_ratio.png" alt="OpenVCAD preview of the Poisson ratio field used by the simulation compiler guide" width="100%">
 </div>
-<div class="guide-figure-cell">
-<p class="guide-figure-label">OpenVCAD preview — density</p>
-<img src="../images/compilers_simulation_preview_density.png" alt="OpenVCAD preview of the density field used by the simulation compiler guide" width="100%">
-</div>
 </div>
 </section>
 <section id="paraview-views-of-the-exported-cell-fields">
@@ -686,102 +692,203 @@ Current compiler guides:
 <p class="guide-figure-label">ParaView — poissons_ratio</p>
 <img src="../images/compilers_simulation_mech_poissons_ratio.png" alt="ParaView screenshot showing the exported Poisson ratio field from the simulation compiler" width="100%">
 </div>
-<div class="guide-figure-cell">
-<p class="guide-figure-label">ParaView — density</p>
-<img src="../images/compilers_simulation_mech_density.png" alt="ParaView screenshot showing the exported density field from the simulation compiler" width="100%">
-</div>
-</div>
-<p>ParaView exposes the direct scalar datasets the same way:</p>
-<div class="guide-figure-grid">
-<div class="guide-figure-cell">
-<p class="guide-figure-label">ParaView attribute list — direct mechanical export</p>
-<img src="../images/compilers_simulation_mech_attributes.png" alt="ParaView attribute list for the direct mechanical simulation export" width="100%">
-</div>
 </div>
 </section>
+<section id="abaqus-export-from-the-same-lesson-2-beam">
+<h3>Abaqus export from the same Lesson 2 beam<a class="headerlink" href="#abaqus-export-from-the-same-lesson-2-beam" title="Link to this heading">#</a></h3>
+<p>The same Lesson 2 design can be exported to Abaqus by switching the backend and
+choosing a hexahedral mesh:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">hex_settings</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">SimulationHexMeshSettings</span><span class="p">()</span>
+<span class="n">hex_settings</span><span class="o">.</span><span class="n">voxel_size</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">)</span>
+
+<span class="n">abaqus_settings</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">SimulationCompilerSettings</span><span class="p">()</span>
+<span class="n">abaqus_settings</span><span class="o">.</span><span class="n">output_directory</span> <span class="o">=</span> <span class="s2">&quot;output&quot;</span>
+<span class="n">abaqus_settings</span><span class="o">.</span><span class="n">file_prefix</span> <span class="o">=</span> <span class="s2">&quot;mechanical_hex&quot;</span>
+<span class="n">abaqus_settings</span><span class="o">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">SimulationBackend</span><span class="o">.</span><span class="n">ABAQUS_INP</span>
+<span class="n">abaqus_settings</span><span class="o">.</span><span class="n">mesh_kind</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">SimulationMeshKind</span><span class="o">.</span><span class="n">HEX</span>
+<span class="n">abaqus_settings</span><span class="o">.</span><span class="n">random_seed</span> <span class="o">=</span> <span class="mi">7</span>
+<span class="n">abaqus_settings</span><span class="o">.</span><span class="n">direct_attributes</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">POISSONS_RATIO</span><span class="p">,</span>
+<span class="p">]</span>
+<span class="n">abaqus_settings</span><span class="o">.</span><span class="n">hex_settings</span> <span class="o">=</span> <span class="n">hex_settings</span>
+
+<span class="n">pvc</span><span class="o">.</span><span class="n">SimulationCompiler</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">abaqus_settings</span><span class="p">)</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+</pre></div>
+</div>
+<p>Think of the Abaqus path as the same mesh-and-attributes export idea written
+into <strong><code class="docutils literal notranslate"><span class="pre">.inp</span></code></strong> form instead of an <strong>XDMF/H5</strong> bundle.</p>
 </section>
-<section id="loading-the-xdmf-h5-export-in-fenicsx">
-<h2>Loading the XDMF/H5 export in FEniCSx<a class="headerlink" href="#loading-the-xdmf-h5-export-in-fenicsx" title="Link to this heading">#</a></h2>
-<p>The script <strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/simulation/03_fenicsx_load_exported_design.py</span></code></strong> shows the intended loading pattern for the generated XDMF/H5 bundle.</p>
+</section>
+<section id="lesson-3-solving-the-exported-beam-in-fenicsx">
+<h2>Lesson 3: Solving the exported beam in FEniCSx<a class="headerlink" href="#lesson-3-solving-the-exported-beam-in-fenicsx" title="Link to this heading">#</a></h2>
+<p>The script <strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/simulation/03_fenicsx_load_exported_design.py</span></code></strong>
+is the full one-shot workflow. It builds a second graded beam inside the same
+script, exports the FEniCSx XDMF/H5 bundle, reloads the exported cell-wise
+material fields inside DOLFINx, and solves a small-strain static cantilever
+problem.</p>
+<p>Lesson 3 intentionally uses a different beam than Lesson 2. In this solved
+cantilever example, both <strong><code class="docutils literal notranslate"><span class="pre">modulus</span></code></strong> and <strong><code class="docutils literal notranslate"><span class="pre">poissons_ratio</span></code></strong> ramp along the
+beam length so the constitutive variation follows the loading direction.</p>
 <p>Install notes:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>fenicsx<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>fenics-dolfinx<span class="w"> </span>mpi4py<span class="w"> </span>h5py<span class="w"> </span>numpy
 conda<span class="w"> </span>activate<span class="w"> </span>fenicsx
 </pre></div>
 </div>
-<p>If you already have a working DOLFINx environment, <strong><code class="docutils literal notranslate"><span class="pre">h5py</span></code></strong> and <strong><code class="docutils literal notranslate"><span class="pre">numpy</span></code></strong> can also be installed with <strong><code class="docutils literal notranslate"><span class="pre">pip</span></code></strong> inside that environment.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<p>If you already have a working DOLFINx environment, <strong><code class="docutils literal notranslate"><span class="pre">h5py</span></code></strong> and <strong><code class="docutils literal notranslate"><span class="pre">numpy</span></code></strong>
+can also be installed with <strong><code class="docutils literal notranslate"><span class="pre">pip</span></code></strong> inside that environment.</p>
+<section id="openvcad-previews-for-the-lesson-3-beam">
+<h3>OpenVCAD previews for the Lesson 3 beam<a class="headerlink" href="#openvcad-previews-for-the-lesson-3-beam" title="Link to this heading">#</a></h3>
+<p>The simulation script builds its own beam before exporting it to FEniCSx.
+These previews show the exact OpenVCAD fields used by the solve:</p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">OpenVCAD preview — Lesson 3 modulus</p>
+<img src="../images/compilers_simulation_lesson3_preview_modulus.png" alt="OpenVCAD preview of the Lesson 3 modulus gradient used by the self-contained FEniCSx beam solve" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">OpenVCAD preview — Lesson 3 poissons_ratio</p>
+<img src="../images/compilers_simulation_lesson3_preview_poissons_ratio.png" alt="OpenVCAD preview of the Lesson 3 Poisson ratio gradient used by the self-contained FEniCSx beam solve" width="100%">
+</div>
+</div>
+<p>The lesson-3 beam definition is intentionally small and direct:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">build_design</span><span class="p">():</span>
+    <span class="n">beam</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">40.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">))</span>
+    <span class="n">beam</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
+        <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span>
+        <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">&quot;1200 + 800 * clamp((x + 20.0) / 40.0, 0, 1)&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">beam</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
+        <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">POISSONS_RATIO</span><span class="p">,</span>
+        <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">&quot;0.20 + 0.15 * clamp((x + 20.0) / 40.0, 0, 1)&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">beam</span>
+</pre></div>
+</div>
+</section>
+<section id="governing-equations">
+<h3>Governing equations<a class="headerlink" href="#governing-equations" title="Link to this heading">#</a></h3>
+<p>The solve is the standard 3D isotropic linear-elastic form with a spatially
+varying modulus <strong><code class="docutils literal notranslate"><span class="pre">E(x)</span></code></strong> and Poisson ratio <strong><code class="docutils literal notranslate"><span class="pre">nu(x)</span></code></strong>:</p>
+<div class="math notranslate nohighlight">
+\[
+\varepsilon(u) = \mathrm{sym}(\nabla u)
+\]</div>
+<div class="math notranslate nohighlight">
+\[
+\sigma(u) = 2\mu(x)\varepsilon(u) + \lambda(x)\,\mathrm{tr}(\varepsilon(u)) I
+\]</div>
+<p>with Lame parameters reconstructed from the exported OpenVCAD fields:</p>
+<div class="math notranslate nohighlight">
+\[
+\mu(x) = \frac{E(x)}{2(1 + \nu(x))}
+\qquad
+\lambda(x) = \frac{E(x)\nu(x)}{(1 + \nu(x))(1 - 2\nu(x))}
+\]</div>
+<p>The weak form is:</p>
+<div class="math notranslate nohighlight">
+\[
+\int_{\Omega} \sigma(u) : \varepsilon(v)\,dx = \int_{\Gamma_{\mathrm{load}}} t \cdot v\,ds
+\]</div>
+<p>with the left beam face fixed (<strong><code class="docutils literal notranslate"><span class="pre">u</span> <span class="pre">=</span> <span class="pre">0</span></code></strong>) and a uniform end traction
+<strong><code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">-5)</span></code></strong> applied on the right beam face.</p>
+<p>Because the exported tetrahedral surface is slightly perturbed from the exact
+analytic box, the script locates the left and right beam faces using a small
+<strong><code class="docutils literal notranslate"><span class="pre">0.05</span> <span class="pre">mm</span></code></strong> threshold around the mesh bounding box instead of relying on
+exact <strong><code class="docutils literal notranslate"><span class="pre">x</span> <span class="pre">==</span> <span class="pre">min/max</span></code></strong> comparisons.</p>
+</section>
+<section id="key-implementation-snippets">
+<h3>Key implementation snippets<a class="headerlink" href="#key-implementation-snippets" title="Link to this heading">#</a></h3>
+<p>The full script lives at <strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/simulation/03_fenicsx_load_exported_design.py</span></code></strong>.
+The snippets below show the important stages without reproducing the whole file.</p>
+<section id="export-once-on-rank-0">
+<h4>1. Export once on rank 0<a class="headerlink" href="#export-once-on-rank-0" title="Link to this heading">#</a></h4>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">export_error</span> <span class="o">=</span> <span class="kc">None</span>
+<span class="k">if</span> <span class="n">comm</span><span class="o">.</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">root</span> <span class="o">=</span> <span class="n">build_design</span><span class="p">()</span>
+        <span class="n">fenics_settings</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">SimulationCompilerSettings</span><span class="p">()</span>
+        <span class="n">fenics_settings</span><span class="o">.</span><span class="n">output_directory</span> <span class="o">=</span> <span class="n">output_dir</span>
+        <span class="n">fenics_settings</span><span class="o">.</span><span class="n">file_prefix</span> <span class="o">=</span> <span class="s2">&quot;simulation_results&quot;</span>
+        <span class="n">fenics_settings</span><span class="o">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">SimulationBackend</span><span class="o">.</span><span class="n">FENICSX_XDMF</span>
+        <span class="n">fenics_settings</span><span class="o">.</span><span class="n">mesh_kind</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">SimulationMeshKind</span><span class="o">.</span><span class="n">TET</span>
+        <span class="n">fenics_settings</span><span class="o">.</span><span class="n">direct_attributes</span> <span class="o">=</span> <span class="p">[</span>
+            <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span>
+            <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">POISSONS_RATIO</span><span class="p">,</span>
+        <span class="p">]</span>
+        <span class="n">pvc</span><span class="o">.</span><span class="n">SimulationCompiler</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">fenics_settings</span><span class="p">)</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+    <span class="k">except</span> <span class="ne">Exception</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+        <span class="n">export_error</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">exc</span><span class="p">)</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">h5py</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">mpi4py</span><span class="w"> </span><span class="kn">import</span> <span class="n">MPI</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx</span><span class="w"> </span><span class="kn">import</span> <span class="n">fem</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">dolfinx.io</span><span class="w"> </span><span class="kn">import</span> <span class="n">XDMFFile</span>
+<span class="n">export_error</span> <span class="o">=</span> <span class="n">comm</span><span class="o">.</span><span class="n">bcast</span><span class="p">(</span><span class="n">export_error</span><span class="p">,</span> <span class="n">root</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="k">if</span> <span class="n">export_error</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;OpenVCAD export failed on MPI rank 0: </span><span class="si">{</span><span class="n">export_error</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="reload-the-exported-cell-fields-with-mpi-safe-cell-indexing">
+<h4>2. Reload the exported cell fields with MPI-safe cell indexing<a class="headerlink" href="#reload-the-exported-cell-fields-with-mpi-safe-cell-indexing" title="Link to this heading">#</a></h4>
+<p>The example uses <strong><code class="docutils literal notranslate"><span class="pre">beam_mesh.topology.original_cell_index</span></code></strong> so each MPI rank
+pulls the correct subset of the exported cell arrays back into its local DG0
+storage.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">with</span> <span class="n">XDMFFile</span><span class="p">(</span><span class="n">comm</span><span class="p">,</span> <span class="n">xdmf_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">xdmf</span><span class="p">:</span>
+    <span class="n">beam_mesh</span> <span class="o">=</span> <span class="n">xdmf</span><span class="o">.</span><span class="n">read_mesh</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;OpenVCADMesh&quot;</span><span class="p">)</span>
 
-<span class="n">here</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
-<span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">here</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="p">,</span> <span class="s2">&quot;mechanical_properties&quot;</span><span class="p">)</span>
-<span class="n">xdmf_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;mechanical_tet.xdmf&quot;</span><span class="p">)</span>
-<span class="n">h5_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;mechanical_tet.h5&quot;</span><span class="p">)</span>
-
-<span class="k">with</span> <span class="n">XDMFFile</span><span class="p">(</span><span class="n">MPI</span><span class="o">.</span><span class="n">COMM_WORLD</span><span class="p">,</span> <span class="n">xdmf_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">xdmf</span><span class="p">:</span>
-    <span class="n">mesh</span> <span class="o">=</span> <span class="n">xdmf</span><span class="o">.</span><span class="n">read_mesh</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;OpenVCADMesh&quot;</span><span class="p">)</span>
-
-<span class="n">cell_space</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">functionspace</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;DG&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="n">cell_space</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">functionspace</span><span class="p">(</span><span class="n">beam_mesh</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;DG&quot;</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
 <span class="n">modulus</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">cell_space</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;modulus&quot;</span><span class="p">)</span>
 <span class="n">poissons_ratio</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">cell_space</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;poissons_ratio&quot;</span><span class="p">)</span>
-<span class="n">density</span> <span class="o">=</span> <span class="n">fem</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">cell_space</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;density&quot;</span><span class="p">)</span>
 
 <span class="k">with</span> <span class="n">h5py</span><span class="o">.</span><span class="n">File</span><span class="p">(</span><span class="n">h5_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">h5</span><span class="p">:</span>
     <span class="n">modulus_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">h5</span><span class="p">[</span><span class="s2">&quot;/CellData/modulus&quot;</span><span class="p">])</span>
     <span class="n">poissons_ratio_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">h5</span><span class="p">[</span><span class="s2">&quot;/CellData/poissons_ratio&quot;</span><span class="p">])</span>
-    <span class="n">density_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">h5</span><span class="p">[</span><span class="s2">&quot;/CellData/density&quot;</span><span class="p">])</span>
-    <span class="n">material_id_data</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">h5</span><span class="p">[</span><span class="s2">&quot;/CellData/material_id&quot;</span><span class="p">])</span> <span class="k">if</span> <span class="s2">&quot;/CellData/material_id&quot;</span> <span class="ow">in</span> <span class="n">h5</span> <span class="k">else</span> <span class="kc">None</span>
 
-    <span class="n">vf_datasets</span> <span class="o">=</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">key</span> <span class="ow">in</span> <span class="n">h5</span><span class="p">[</span><span class="s2">&quot;/CellData&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">keys</span><span class="p">():</span>
-        <span class="k">if</span> <span class="n">key</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;volume_fraction_&quot;</span><span class="p">):</span>
-            <span class="n">vf_datasets</span><span class="p">[</span><span class="n">key</span><span class="p">]</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">h5</span><span class="p">[</span><span class="s2">&quot;/CellData&quot;</span><span class="p">][</span><span class="n">key</span><span class="p">])</span>
-
-<span class="n">modulus</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">array</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">modulus_data</span>
-<span class="n">poissons_ratio</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">array</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">poissons_ratio_data</span>
-<span class="n">density</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">array</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">density_data</span>
+<span class="n">original_cell_index</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">beam_mesh</span><span class="o">.</span><span class="n">topology</span><span class="o">.</span><span class="n">original_cell_index</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int64</span><span class="p">)</span>
+<span class="n">modulus</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">array</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">modulus_data</span><span class="p">[</span><span class="n">original_cell_index</span><span class="p">]</span>
+<span class="n">poissons_ratio</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">array</span><span class="p">[:]</span> <span class="o">=</span> <span class="n">poissons_ratio_data</span><span class="p">[</span><span class="n">original_cell_index</span><span class="p">]</span>
 
 <span class="n">modulus</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">scatter_forward</span><span class="p">()</span>
 <span class="n">poissons_ratio</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">scatter_forward</span><span class="p">()</span>
-<span class="n">density</span><span class="o">.</span><span class="n">x</span><span class="o">.</span><span class="n">scatter_forward</span><span class="p">()</span>
 </pre></div>
 </div>
-<p>This script does not set up a full constitutive model or solve a PDE. It just loads the mesh and cell data so your downstream simulation code can use them.</p>
+</section>
+<section id="solve-and-patch-the-exported-file-in-place">
+<h4>3. Solve and patch the exported file in place<a class="headerlink" href="#solve-and-patch-the-exported-file-in-place" title="Link to this heading">#</a></h4>
+<p>After reloading the DG0 fields, the script reconstructs the Lam’e parameters,
+solves the cantilever problem, evaluates DG0 von Mises stress, gathers the
+result arrays to rank 0, and updates the original OpenVCAD export in place.
+That means <strong><code class="docutils literal notranslate"><span class="pre">simulation_results.xdmf</span></code></strong> keeps the same mesh but gains two new
+fields:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">displacement</span></code></strong> as a node-centered vector field</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">von_mises</span></code></strong> as a cell-centered scalar field</p></li>
+</ul>
+<p>Run the full one-shot workflow with the <strong><code class="docutils literal notranslate"><span class="pre">fenicsx</span></code></strong> environment active:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>fenicsx
+python<span class="w"> </span>examples/compilers/simulation/03_fenicsx_load_exported_design.py
+</pre></div>
+</div>
+</section>
+</section>
 </section>
 <section id="paraview-inspection-workflow">
 <h2>ParaView inspection workflow<a class="headerlink" href="#paraview-inspection-workflow" title="Link to this heading">#</a></h2>
-<p>If you want to inspect the exported XDMF/H5 files before writing any simulation code:</p>
 <ol class="arabic simple">
-<li><p>Open the <strong><code class="docutils literal notranslate"><span class="pre">.xdmf</span></code></strong> file in <strong>ParaView</strong></p></li>
-<li><p>click <strong>Apply</strong></p></li>
-<li><p>switch the coloring dropdown to <strong><code class="docutils literal notranslate"><span class="pre">material_id</span></code></strong>, <strong><code class="docutils literal notranslate"><span class="pre">volume_fraction_*</span></code></strong>, <strong><code class="docutils literal notranslate"><span class="pre">modulus</span></code></strong>, <strong><code class="docutils literal notranslate"><span class="pre">poissons_ratio</span></code></strong>, or <strong><code class="docutils literal notranslate"><span class="pre">density</span></code></strong></p></li>
-<li><p>use the screenshots above as a reference for what each dataset represents</p></li>
+<li><p>Open <strong><code class="docutils literal notranslate"><span class="pre">simulation_results.xdmf</span></code></strong></p></li>
+<li><p>Click <strong>Apply</strong></p></li>
+<li><p>Switch the coloring dropdown between <strong><code class="docutils literal notranslate"><span class="pre">modulus</span></code></strong>, <strong><code class="docutils literal notranslate"><span class="pre">poissons_ratio</span></code></strong>,
+<strong><code class="docutils literal notranslate"><span class="pre">displacement</span></code></strong>, and <strong><code class="docutils literal notranslate"><span class="pre">von_mises</span></code></strong></p></li>
+<li><p>Use <strong>Warp By Vector</strong> with <strong><code class="docutils literal notranslate"><span class="pre">displacement</span></code></strong> if you want a deformed beam view</p></li>
 </ol>
-<p>The <strong><code class="docutils literal notranslate"><span class="pre">.h5</span></code></strong> file must stay next to the <strong><code class="docutils literal notranslate"><span class="pre">.xdmf</span></code></strong> file because the XDMF descriptor references it directly.</p>
-</section>
-<section id="abaqus-export">
-<h2>Abaqus export<a class="headerlink" href="#abaqus-export" title="Link to this heading">#</a></h2>
-<p>The same design can be exported to Abaqus by switching the backend and choosing a hexahedral mesh:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">hex_settings</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">SimulationHexMeshSettings</span><span class="p">()</span>
-<span class="n">hex_settings</span><span class="o">.</span><span class="n">voxel_size</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span>
-
-<span class="n">abaqus_settings</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">SimulationCompilerSettings</span><span class="p">()</span>
-<span class="n">abaqus_settings</span><span class="o">.</span><span class="n">output_directory</span> <span class="o">=</span> <span class="n">output_dir</span>
-<span class="n">abaqus_settings</span><span class="o">.</span><span class="n">file_prefix</span> <span class="o">=</span> <span class="s2">&quot;volume_fractions_hex&quot;</span>
-<span class="n">abaqus_settings</span><span class="o">.</span><span class="n">backend</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">SimulationBackend</span><span class="o">.</span><span class="n">ABAQUS_INP</span>
-<span class="n">abaqus_settings</span><span class="o">.</span><span class="n">mesh_kind</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">SimulationMeshKind</span><span class="o">.</span><span class="n">HEX</span>
-<span class="n">abaqus_settings</span><span class="o">.</span><span class="n">hex_settings</span> <span class="o">=</span> <span class="n">hex_settings</span>
-<span class="n">abaqus_settings</span><span class="o">.</span><span class="n">random_seed</span> <span class="o">=</span> <span class="mi">42</span>
-<span class="n">abaqus_settings</span><span class="o">.</span><span class="n">material_defs</span> <span class="o">=</span> <span class="n">materials</span>
-
-<span class="n">pvc</span><span class="o">.</span><span class="n">SimulationCompiler</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">abaqus_settings</span><span class="p">)</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-</pre></div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">ParaView — displacement magnitude result</p>
+<img src="../images/compilers_simulation_beam_displacement.png" alt="ParaView screenshot of the deformed cantilever beam colored by displacement magnitude" width="100%">
 </div>
-<p>Think of the Abaqus path as the same prepared mesh-and-attributes export idea written into <strong><code class="docutils literal notranslate"><span class="pre">.inp</span></code></strong> form instead of an <strong>XDMF/H5</strong> bundle.</p>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">ParaView — von Mises stress result</p>
+<img src="../images/compilers_simulation_beam_von_mises.png" alt="ParaView screenshot of the cantilever beam colored by von Mises stress" width="100%">
+</div>
+</div>
 </section>
 <section id="practical-settings-reference">
 <h2>Practical settings reference<a class="headerlink" href="#practical-settings-reference" title="Link to this heading">#</a></h2>
@@ -833,8 +940,8 @@ conda<span class="w"> </span>activate<span class="w"> </span>fenicsx
 <h2>Further examples<a class="headerlink" href="#further-examples" title="Link to this heading">#</a></h2>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/simulation/01_volume_fractions_export.py</span></code></strong> — stochastic material assignment plus raw volume-fraction datasets</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/simulation/02_direct_mechanical_properties_export.py</span></code></strong> — direct scalar mechanical fields</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/simulation/03_fenicsx_load_exported_design.py</span></code></strong> — DOLFINx/FEniCSx loading pattern for the exported XDMF/H5 bundle</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/simulation/02_direct_mechanical_properties_export.py</span></code></strong> — export-only direct scalar mechanical fields with <strong><code class="docutils literal notranslate"><span class="pre">poissons_ratio</span></code></strong> varying through <strong>z</strong></p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/simulation/03_fenicsx_load_exported_design.py</span></code></strong> — self-contained DOLFINx/FEniCSx cantilever solve with both elastic fields varying along <strong>x</strong></p></li>
 </ul>
 </section>
 </section>
@@ -891,20 +998,30 @@ conda<span class="w"> </span>activate<span class="w"> </span>fenicsx
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#why-xdmf-comes-with-an-h5-file">Why XDMF comes with an H5 file</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tutorial-1-volume-fractions">Tutorial 1: Volume fractions</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-1-volume-fractions">Lesson 1: Volume fractions</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#openvcad-preview">OpenVCAD preview</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#high-resolution-tet-export-in-paraview">High-resolution tet export in ParaView</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#low-resolution-tet-export-in-paraview">Low-resolution tet export in ParaView</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tutorial-2-direct-mechanical-properties">Tutorial 2: Direct mechanical properties</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-2-direct-mechanical-property-export">Lesson 2: Direct mechanical property export</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#openvcad-previews">OpenVCAD previews</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#paraview-views-of-the-exported-cell-fields">ParaView views of the exported cell fields</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#abaqus-export-from-the-same-lesson-2-beam">Abaqus export from the same Lesson 2 beam</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#loading-the-xdmf-h5-export-in-fenicsx">Loading the XDMF/H5 export in FEniCSx</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-3-solving-the-exported-beam-in-fenicsx">Lesson 3: Solving the exported beam in FEniCSx</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#openvcad-previews-for-the-lesson-3-beam">OpenVCAD previews for the Lesson 3 beam</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#governing-equations">Governing equations</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#key-implementation-snippets">Key implementation snippets</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#export-once-on-rank-0">1. Export once on rank 0</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#reload-the-exported-cell-fields-with-mpi-safe-cell-indexing">2. Reload the exported cell fields with MPI-safe cell indexing</a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#solve-and-patch-the-exported-file-in-place">3. Solve and patch the exported file in place</a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#paraview-inspection-workflow">ParaView inspection workflow</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#abaqus-export">Abaqus export</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-settings-reference">Practical settings reference</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-examples">Further examples</a></li>
 </ul>

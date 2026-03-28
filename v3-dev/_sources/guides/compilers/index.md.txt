@@ -15,22 +15,6 @@ This section compares the compilers shipped today and links to dedicated guides.
 | [Slicer Project](slicer-project.md) | (validated internally; see guide) | **`.3mf`** project for **PrusaSlicer** | **FFF / filament** slicing with spatially varying scalar fields → per-volume settings or G-code extrusion |
 | [Simulation Compiler](simulation-compiler.md) | **`VOLUME_FRACTIONS`** or selected direct scalar fields such as **`MODULUS`**, **`POISSONS_RATIO`**, and **`DENSITY`** | **`.xdmf` + `.h5`** or **`.inp`** | Finite-element mesh export for simulation workflows that need geometry plus cell-wise material/property data |
 
-Shape-wise, the two inkjet compilers both emit **RGBA PNG stacks**, while **VAT Photo** emits an **8-bit grayscale BMP stack** driven directly by a scalar exposure field.
-
-```{note}
-Validation policy is compiler-specific. **Material Inkjet** and **Color Inkjet** validate required attribute names against the root attribute list before sampling. **VAT Photo** handles missing **`INTENSITY`** at sample time so fallback exposure can still be used even when some or all regions omit the field. **Slicer Project** validates internally.
-```
-
-## Validation and automatic adapters
-
-Before compiling, a compiler may **validate** that required attribute **names** are present on the design root (for example that **`VOLUME_FRACTIONS`** appears in the tree’s reported attribute list).
-
-**Per-voxel checks** are separate: some compilers can **fail fast** when an **inside** voxel lacks data for a required field (strict mode), which is not the same as “the attribute name was never attached anywhere.”
-
-**Automatic conversion** is reserved for a future path where the library could wrap the tree to synthesize a missing attribute when a known mapping exists. Today, supply the attributes your compiler expects (or add modifiers in your **`Node`** tree yourself).
-
-Details such as strict mode and fallback material are documented on each compiler page.
-
 ```{toctree}
 :maxdepth: 2
 :caption: Compiler guides

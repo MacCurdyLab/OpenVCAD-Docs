@@ -49,7 +49,7 @@
     <link rel="icon" href="../_static/favicon.png"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Math expressions in OpenVCAD" href="math-expressions.html" />
+    <link rel="next" title="Python Functions for Attributes" href="numba-attributes.html" />
     <link rel="prev" title="Getting Started with OpenVCAD" href="getting-started.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -153,6 +153,7 @@
         <li><a class="dropdown-item" href="../install.html">Installation</a></li>
         <li><a class="dropdown-item" href="getting-started.html">Getting Started with OpenVCAD</a></li>
         <li><a class="dropdown-item active" href="#">Functional grading</a></li>
+        <li><a class="dropdown-item" href="numba-attributes.html">Python functions for attributes</a></li>
         <li><a class="dropdown-item" href="math-expressions.html">Math expressions</a></li>
         <li><a class="dropdown-item" href="compilers/index.html">Compilers</a></li>
         <li><a class="dropdown-item" href="attribute-resolver.html">Attribute modifier and resolver</a></li>
@@ -261,6 +262,7 @@
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../install.html">Installation</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="getting-started.html">Getting Started with OpenVCAD</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3 active" href="#">Functional grading</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="numba-attributes.html">Python functions for attributes</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="math-expressions.html">Math expressions</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="compilers/index.html">Compilers</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="attribute-resolver.html">Attribute modifier and resolver</a></li>
@@ -303,6 +305,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started with OpenVCAD</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Functional Grading Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numba-attributes.html">Python Functions for Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="math-expressions.html">Math expressions in OpenVCAD</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="compilers/index.html">Compilers</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="compilers/material-inkjet.html">Material Inkjet Compiler</a></li>
@@ -389,6 +392,7 @@ Current compiler guides:
 - simulation-compiler
 -->
 <p>This guide is a practical reference for defining <strong>spatial gradients</strong> in OpenVCAD. Gradients are the core mechanism for creating functionally graded designs — parts whose material properties, colors, or compositions change continuously through space.</p>
+<p>This guide stays focused on the <strong>expression-string</strong> workflow because it is the shortest way to build many common gradients. If you want to write gradients as Python functions instead, annotate them with <strong>Numba <code class="docutils literal notranslate"><span class="pre">&#64;cfunc</span></code></strong> and use the <a class="reference internal" href="numba-attributes.html"><span class="std std-doc">Python functions for attributes guide</span></a>.</p>
 <section id="prerequisites">
 <h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
 <p>This guide assumes you have completed the <a class="reference internal" href="getting-started.html"><span class="std std-doc">Getting Started Guide</span></a>, in particular:</p>
@@ -529,6 +533,25 @@ Current compiler guides:
 </div>
 </div>
 </div>
+<p>If you want to build the same linear modulus gradient with a Python function instead of an expression string, the Numba version is still short:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numba</span><span class="w"> </span><span class="kn">import</span> <span class="n">cfunc</span><span class="p">,</span> <span class="n">types</span>
+
+<span class="n">length</span> <span class="o">=</span> <span class="mf">40.0</span>
+<span class="n">half_len</span> <span class="o">=</span> <span class="n">length</span> <span class="o">/</span> <span class="mf">2.0</span>
+
+<span class="nd">@cfunc</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">modulus_gradient</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">9.0</span> <span class="o">*</span> <span class="p">((</span><span class="n">x</span> <span class="o">+</span> <span class="n">half_len</span><span class="p">)</span> <span class="o">/</span> <span class="n">length</span><span class="p">)</span>
+
+<span class="n">prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">prism</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">modulus_gradient</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>For a complete walkthrough covering all three attribute types, see the <a class="reference internal" href="numba-attributes.html"><span class="std std-doc">Python functions for attributes guide</span></a>.</p>
 </section>
 <hr class="docutils" />
 <section id="lesson-2-non-linear-gradients">
@@ -1036,11 +1059,11 @@ Current compiler guides:
       </div>
     </a>
     <a class="right-next"
-       href="math-expressions.html"
+       href="numba-attributes.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Math expressions in OpenVCAD</p>
+        <p class="prev-next-title">Python Functions for Attributes</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

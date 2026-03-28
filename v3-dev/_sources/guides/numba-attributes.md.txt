@@ -1,0 +1,224 @@
+# Python Functions for Attributes
+
+```{include} _guide-sidebar-compiler-membership.md
+```
+
+This guide shows how to write OpenVCAD attributes as small Python functions instead of expression strings. Use this approach when the field logic is easier to express with ordinary Python code, such as clamping, conditionals, or small reusable calculations.
+
+OpenVCAD supports Python function definitions for:
+
+- `FloatAttribute`
+- `Vec4Attribute`
+- `VolumeFractionsAttribute`
+
+In Python, these attribute functions must be compiled with **Numba `@cfunc`**.
+
+## What Numba Is
+
+Numba is a Python library for compiling numerical Python code into native machine code. In this guide, OpenVCAD uses `numba.cfunc`, which takes a Python function plus an explicit type signature and turns it into a compiled C-callable function.
+
+That is why OpenVCAD uses Numba here instead of an ordinary Python function object: the Numba version gives OpenVCAD a compiled native function to evaluate, while a normal Python function does not.
+
+## Prerequisites
+
+This guide assumes you have already worked through:
+
+- [Getting Started](getting-started.md), especially lessons 4–6
+- [Functional Grading Guide](gradients.md)
+
+Those guides introduce the attribute system and the expression-string workflow first. This guide picks up from there and shows how to write the same kinds of fields as Python functions.
+
+## When to Use Numba vs. Strings
+
+Prefer **expression strings** when:
+
+- the field is simple algebra
+- you want the shortest syntax
+- you want to stay close to the expression-focused examples in the getting-started and grading guides
+
+Prefer **Numba functions** when:
+
+- the logic is clearer as Python code than as one string
+- you want conditionals or clamping that would be awkward in an expression
+- you want to reuse small helper calculations across multiple attribute components
+
+## Common Inputs
+
+All three attribute types in this guide sample the same local-space inputs:
+
+- `x`, `y`, `z`: query coordinates
+- `d`: signed distance to the surface
+
+Each Numba function returns a scalar `float64`, but the way those scalar results are assembled depends on the attribute type.
+
+## Lesson 1: FloatAttribute
+
+`FloatAttribute` takes a single scalar evaluation function with this form:
+
+```python
+from numba import cfunc, types
+
+@cfunc(types.float64(types.float64, types.float64, types.float64, types.float64))
+def my_scalar_field(x, y, z, d):
+    return ...
+```
+
+The example script `examples/attributes_by_type/numba/01_float_modulus_numba.py` builds a linear modulus gradient with a Python function:
+
+```python
+import pyvcad as pv
+import pyvcad_rendering as viz
+from numba import cfunc, types
+
+materials = pv.default_materials
+
+length = 40.0
+width = 10.0
+height = 10.0
+half_length = length / 2.0
+modulus_min = 1.0
+modulus_span = 9.0
+
+@cfunc(types.float64(types.float64, types.float64, types.float64, types.float64))
+def modulus_gradient(x, y, z, d):
+    t = (x + half_length) / length
+    if t < 0.0:
+        t = 0.0
+    elif t > 1.0:
+        t = 1.0
+    return modulus_min + modulus_span * t
+
+bar = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(length, width, height))
+bar.set_attribute(pv.DefaultAttributes.MODULUS, pv.FloatAttribute(modulus_gradient))
+
+root = bar
+viz.Render(root, materials)
+```
+
+## Lesson 2: Vec4Attribute
+
+`Vec4Attribute` uses four scalar evaluation functions, one for each component. For a color field, those components are red, green, blue, and alpha.
+
+Each component function uses the same scalar form:
+
+```python
+from numba import cfunc, types
+
+@cfunc(types.float64(types.float64, types.float64, types.float64, types.float64))
+def component(x, y, z, d):
+    return ...
+```
+
+The example script `examples/attributes_by_type/numba/02_color_numba.py` builds a color field from four separate functions:
+
+```python
+import pyvcad as pv
+import pyvcad_rendering as viz
+from numba import cfunc, types
+
+length = 50.0
+width = 18.0
+height = 8.0
+half_length = length / 2.0
+half_width = width / 2.0
+
+@cfunc(types.float64(types.float64, types.float64, types.float64, types.float64))
+def color_r(x, y, z, d):
+    t = (x + half_length) / length
+    if t < 0.0:
+        t = 0.0
+    elif t > 1.0:
+        t = 1.0
+    return t
+
+@cfunc(types.float64(types.float64, types.float64, types.float64, types.float64))
+def color_g(x, y, z, d):
+    t = (y + half_width) / width
+    if t < 0.0:
+        t = 0.0
+    elif t > 1.0:
+        t = 1.0
+    return 0.2 + 0.6 * t
+
+@cfunc(types.float64(types.float64, types.float64, types.float64, types.float64))
+def color_b(x, y, z, d):
+    t = (x + half_length) / length
+    if t < 0.0:
+        t = 0.0
+    elif t > 1.0:
+        t = 1.0
+    return 1.0 - t
+
+@cfunc(types.float64(types.float64, types.float64, types.float64, types.float64))
+def color_a(x, y, z, d):
+    return 1.0
+
+panel = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(length, width, height))
+panel.set_attribute(
+    pv.DefaultAttributes.COLOR_RGBA,
+    pv.Vec4Attribute(color_r, color_g, color_b, color_a),
+)
+
+root = panel
+viz.Render(root)
+```
+
+## Lesson 3: VolumeFractionsAttribute
+
+`VolumeFractionsAttribute` uses one scalar evaluation function per material. Each function returns the fraction for one material at the query point, and the fractions should sum to `1.0` where the mixture is defined.
+
+The example script `examples/attributes_by_type/numba/03_volume_fractions_numba.py` uses the common list-of-pairs form:
+
+```python
+import pyvcad as pv
+import pyvcad_rendering as viz
+from numba import cfunc, types
+
+materials = pv.default_materials
+
+length = 50.0
+width = 18.0
+height = 8.0
+half_length = length / 2.0
+
+@cfunc(types.float64(types.float64, types.float64, types.float64, types.float64))
+def blue_fraction(x, y, z, d):
+    t = (x + half_length) / length
+    if t < 0.0:
+        t = 0.0
+    elif t > 1.0:
+        t = 1.0
+    return t
+
+@cfunc(types.float64(types.float64, types.float64, types.float64, types.float64))
+def green_fraction(x, y, z, d):
+    t = (x + half_length) / length
+    if t < 0.0:
+        t = 0.0
+    elif t > 1.0:
+        t = 1.0
+    return 1.0 - t
+
+panel = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(length, width, height))
+panel.set_attribute(
+    pv.DefaultAttributes.VOLUME_FRACTIONS,
+    pv.VolumeFractionsAttribute(
+        [
+            (blue_fraction, materials.id("blue")),
+            (green_fraction, materials.id("green")),
+        ]
+    ),
+)
+
+root = panel
+viz.Render(root, materials)
+```
+
+You can also build the same attribute from parallel lists of functions and material IDs if that form fits your code better.
+
+## Notes
+
+- Python-side attribute functions must use `numba.cfunc`.
+- Plain Python lambdas and functions are not accepted for these attribute types.
+- `Vec4Attribute` expects four scalar functions, not one function returning a full vector.
+- C++ attribute lambdas are unchanged; this guide only covers the Python bindings.

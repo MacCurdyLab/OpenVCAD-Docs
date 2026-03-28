@@ -153,6 +153,7 @@
         <li><a class="dropdown-item" href="../../install.html">Installation</a></li>
         <li><a class="dropdown-item" href="../../guides/getting-started.html">Getting Started with OpenVCAD</a></li>
         <li><a class="dropdown-item" href="../../guides/gradients.html">Functional grading</a></li>
+        <li><a class="dropdown-item" href="../../guides/numba-attributes.html">Python functions for attributes</a></li>
         <li><a class="dropdown-item" href="../../guides/math-expressions.html">Math expressions</a></li>
         <li><a class="dropdown-item" href="../../guides/compilers/index.html">Compilers</a></li>
         <li><a class="dropdown-item" href="../../guides/attribute-resolver.html">Attribute modifier and resolver</a></li>
@@ -261,6 +262,7 @@
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../install.html">Installation</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/getting-started.html">Getting Started with OpenVCAD</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/gradients.html">Functional grading</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/numba-attributes.html">Python functions for attributes</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/math-expressions.html">Math expressions</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/compilers/index.html">Compilers</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/attribute-resolver.html">Attribute modifier and resolver</a></li>
@@ -405,6 +407,7 @@
 <li><p><strong>``FloatAttribute``</strong> — one scalar per point (physical scalars, temperatures, etc.).</p></li>
 <li><p><strong>``Vec4Attribute``</strong> — four components per point (typical use: linear RGBA in <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code>).</p></li>
 <li><p><strong>``VolumeFractionsAttribute``</strong> — maps material IDs to fractions at each point; fractions should sum to 1 where mixtures apply.</p></li>
+<li><p>Python function support is <strong>Numba-only</strong>. Use <code class="docutils literal notranslate"><span class="pre">numba.cfunc</span></code> with the signature <code class="docutils literal notranslate"><span class="pre">float64(float64,</span> <span class="pre">float64,</span> <span class="pre">float64,</span> <span class="pre">float64)</span></code>.</p></li>
 </ul>
 <p>Attributes are only evaluated where the geometry exists (inside or on the surface), so expensive expressions are not run in empty space.</p>
 <section id="examples">
@@ -420,6 +423,21 @@
 <span class="n">cube</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
     <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span>
     <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">&quot;0.18 * z + 5.5&quot;</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Scalar field (Numba function)</strong></p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numba</span><span class="w"> </span><span class="kn">import</span> <span class="n">cfunc</span><span class="p">,</span> <span class="n">types</span>
+
+<span class="nd">@cfunc</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">modulus_gradient</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mf">0.18</span> <span class="o">*</span> <span class="n">z</span> <span class="o">+</span> <span class="mf">5.5</span>
+
+<span class="n">cube</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">50</span><span class="p">))</span>
+<span class="n">cube</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">modulus_gradient</span><span class="p">),</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -443,7 +461,7 @@
 <span class="p">)</span>
 </pre></div>
 </div>
-<p>See <a class="reference internal" href="../../guides/getting-started.html#guide-getting-started"><span class="std std-ref">Getting Started with OpenVCAD</span></a> for full lessons, hierarchy/priority rules, and expression details.</p>
+<p>See <a class="reference internal" href="../../guides/getting-started.html#guide-getting-started"><span class="std std-ref">Getting Started with OpenVCAD</span></a> for full lessons, hierarchy/priority rules, and expression details. See also the Python functions guide at <a class="reference internal" href="../../guides/numba-attributes.html"><span class="doc">Python Functions for Attributes</span></a>.</p>
 </section>
 <section id="core-types">
 <h2>Core types<a class="headerlink" href="#core-types" title="Link to this heading">#</a></h2>
@@ -516,7 +534,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyvcad.Attribute.sample">
-<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Attribute" title="pyvcad.pyvcad.Attribute"><span class="pre">pyvcad.pyvcad.Attribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">boost::variant&lt;double,</span> <span class="pre">glm::vec&lt;3,</span> <span class="pre">float,</span> <span class="pre">(glm::qualifier)0&gt;,</span> <span class="pre">glm::vec&lt;4,</span> <span class="pre">float,</span> <span class="pre">(glm::qualifier)0&gt;,</span> <span class="pre">std::__1::shared_ptr&lt;std::__1::unordered_map&lt;unsigned</span> <span class="pre">char,</span> <span class="pre">double,</span> <span class="pre">std::__1::hash&lt;unsigned</span> <span class="pre">char&gt;,</span> <span class="pre">std::__1::equal_to&lt;unsigned</span> <span class="pre">char&gt;,</span> <span class="pre">std::__1::allocator&lt;std::__1::pair&lt;unsigned</span> <span class="pre">char</span> <span class="pre">const,</span> <span class="pre">double&gt;&gt;&gt;&gt;&gt;</span></span></span><a class="headerlink" href="#pyvcad.Attribute.sample" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Attribute" title="pyvcad.pyvcad.Attribute"><span class="pre">pyvcad.pyvcad.Attribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="headerlink" href="#pyvcad.Attribute.sample" title="Link to this definition">#</a></dt>
 <dd><p>Samples the attribute at the given point.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
@@ -545,29 +563,17 @@
 </ol>
 <p>Default constructor.</p>
 <ol class="arabic simple" start="2">
-<li><p>__init__(self: pyvcad.pyvcad.FloatAttribute, expression: str) -&gt; None</p></li>
-</ol>
-<p>Constructor that takes a math expression string.</p>
-<p>:param expression : A math expression representing the attribute.
-:type expression : str</p>
-<ol class="arabic simple" start="3">
-<li><p>__init__(self: pyvcad.pyvcad.FloatAttribute, function: collections.abc.Callable[[typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat], float]) -&gt; None</p></li>
-</ol>
-<p>Constructor that takes a native function.</p>
-<p>:param function : A function returning a float value.
-:type function : callable</p>
-<ol class="arabic simple" start="4">
-<li><p>__init__(self: pyvcad.pyvcad.FloatAttribute, value: typing.SupportsFloat) -&gt; None</p></li>
-</ol>
-<p>Constructor that takes a constant value.</p>
-<p>:param value : A constant value for the attribute.
-:type value : float</p>
-<ol class="arabic simple" start="5">
 <li><p>__init__(self: pyvcad.pyvcad.FloatAttribute, volume: VDBVolume&lt;openvdb::v13_0::Grid&lt;openvdb::v13_0::tree::Tree&lt;openvdb::v13_0::tree::RootNode&lt;openvdb::v13_0::tree::InternalNode&lt;openvdb::v13_0::tree::InternalNode&lt;openvdb::v13_0::tree::LeafNode&lt;float, 3u&gt;, 4u&gt;, 5u&gt;&gt;&gt;&gt;&gt;) -&gt; None</p></li>
 </ol>
 <p>Constructor that takes a VDB volume to sample the attribute from.</p>
 <p>:param volume : A FloatVDBVolume to sample the attribute from.
 :type volume : FloatVDBVolume</p>
+<ol class="arabic simple" start="3">
+<li><p>__init__(self: pyvcad.pyvcad.FloatAttribute, definition: object) -&gt; None</p></li>
+</ol>
+<p>Constructor that takes a constant value, math expression string, or numba.cfunc callback.</p>
+<p>:param definition : A constant value, expression string, or numba.cfunc callback with signature float64(float64, float64, float64, float64).
+:type definition : float | str | numba.cfunc</p>
 </dd></dl>
 
 <dl class="py method">
@@ -584,7 +590,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyvcad.FloatAttribute.sample">
-<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.FloatAttribute" title="pyvcad.pyvcad.FloatAttribute"><span class="pre">pyvcad.pyvcad.FloatAttribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">boost::variant&lt;double,</span> <span class="pre">glm::vec&lt;3,</span> <span class="pre">float,</span> <span class="pre">(glm::qualifier)0&gt;,</span> <span class="pre">glm::vec&lt;4,</span> <span class="pre">float,</span> <span class="pre">(glm::qualifier)0&gt;,</span> <span class="pre">std::__1::shared_ptr&lt;std::__1::unordered_map&lt;unsigned</span> <span class="pre">char,</span> <span class="pre">double,</span> <span class="pre">std::__1::hash&lt;unsigned</span> <span class="pre">char&gt;,</span> <span class="pre">std::__1::equal_to&lt;unsigned</span> <span class="pre">char&gt;,</span> <span class="pre">std::__1::allocator&lt;std::__1::pair&lt;unsigned</span> <span class="pre">char</span> <span class="pre">const,</span> <span class="pre">double&gt;&gt;&gt;&gt;&gt;</span></span></span><a class="headerlink" href="#pyvcad.FloatAttribute.sample" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.FloatAttribute" title="pyvcad.pyvcad.FloatAttribute"><span class="pre">pyvcad.pyvcad.FloatAttribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="headerlink" href="#pyvcad.FloatAttribute.sample" title="Link to this definition">#</a></dt>
 <dd><p>Samples the attribute at the given point.</p>
 <p>:param x : The x-coordinate.
 :type x : double:param y : The y-coordinate.
@@ -603,10 +609,10 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyvcad.FloatAttribute.set_function">
-<span class="sig-name descname"><span class="pre">set_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.FloatAttribute" title="pyvcad.pyvcad.FloatAttribute"><span class="pre">pyvcad.pyvcad.FloatAttribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Callable</span><span class="p"><span class="pre">[</span></span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.FloatAttribute.set_function" title="Link to this definition">#</a></dt>
-<dd><p>Sets the native function for the attribute.</p>
-<p>:param function : A function returning a float value.
-:type function : callable</p>
+<span class="sig-name descname"><span class="pre">set_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.FloatAttribute" title="pyvcad.pyvcad.FloatAttribute"><span class="pre">pyvcad.pyvcad.FloatAttribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.FloatAttribute.set_function" title="Link to this definition">#</a></dt>
+<dd><p>Sets the numba.cfunc callback for the attribute.</p>
+<p>:param function : A numba.cfunc callback with signature float64(float64, float64, float64, float64).
+:type function : numba.cfunc</p>
 </dd></dl>
 
 <dl class="py method">
@@ -641,33 +647,14 @@
 </ol>
 <p>Default constructor.</p>
 <ol class="arabic simple" start="2">
-<li><p>__init__(self: pyvcad.pyvcad.Vec4Attribute, r_expression: str, g_expression: str, b_expression: str, a_expression: str) -&gt; None</p></li>
+<li><p>__init__(self: pyvcad.pyvcad.Vec4Attribute, r: object, g: object, b: object, a: object) -&gt; None</p></li>
 </ol>
-<p>Constructor that takes math expression strings for each component.</p>
-<p>:param r_expression : Expression for the red component.
-:type r_expression : str:param g_expression : Expression for the green component.
-:type g_expression : str:param b_expression : Expression for the blue component.
-:type b_expression : str:param a_expression : Expression for the alpha component.
-:type a_expression : str</p>
-<ol class="arabic simple" start="3">
-<li><p>__init__(self: pyvcad.pyvcad.Vec4Attribute, r_function: collections.abc.Callable[[typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat], float], g_function: collections.abc.Callable[[typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat], float], b_function: collections.abc.Callable[[typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat], float], a_function: collections.abc.Callable[[typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat], float]) -&gt; None</p></li>
-</ol>
-<p>Constructor that takes native functions for each component.</p>
-<p>:param r_function : Function for the red component.
-:type r_function : callable:param g_function : Function for the green component.
-:type g_function : callable:param b_function : Function for the blue component.
-:type b_function : callable:param a_function : Function for the alpha component.
-:type a_function : callable</p>
-<ol class="arabic simple" start="4">
-<li><p>__init__(self: pyvcad.pyvcad.Vec4Attribute, function: collections.abc.Callable[[typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat], pyvcad.pyvcad.Vec4]) -&gt; None</p></li>
-</ol>
-<p>Constructor that takes a native vec4 function.</p>
-<p>:param function : A function returning a vec4.
-:type function : callable</p>
-<ol class="arabic simple" start="5">
-<li><p>__init__(self: pyvcad.pyvcad.Vec4Attribute, r: typing.SupportsFloat, g: typing.SupportsFloat, b: typing.SupportsFloat, a: typing.SupportsFloat) -&gt; None</p></li>
-</ol>
-<p>Constructor that takes constant values for each component.</p>
+<p>Constructor that takes math expression strings, constant values, or numba.cfunc callbacks for each component.</p>
+<p>:param r : Red component definition.
+:type r : str | float | numba.cfunc:param g : Green component definition.
+:type g : str | float | numba.cfunc:param b : Blue component definition.
+:type b : str | float | numba.cfunc:param a : Alpha component definition.
+:type a : str | float | numba.cfunc</p>
 </dd></dl>
 
 <dl class="py method">
@@ -684,7 +671,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyvcad.Vec4Attribute.sample">
-<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec4Attribute" title="pyvcad.pyvcad.Vec4Attribute"><span class="pre">pyvcad.pyvcad.Vec4Attribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">boost::variant&lt;double,</span> <span class="pre">glm::vec&lt;3,</span> <span class="pre">float,</span> <span class="pre">(glm::qualifier)0&gt;,</span> <span class="pre">glm::vec&lt;4,</span> <span class="pre">float,</span> <span class="pre">(glm::qualifier)0&gt;,</span> <span class="pre">std::__1::shared_ptr&lt;std::__1::unordered_map&lt;unsigned</span> <span class="pre">char,</span> <span class="pre">double,</span> <span class="pre">std::__1::hash&lt;unsigned</span> <span class="pre">char&gt;,</span> <span class="pre">std::__1::equal_to&lt;unsigned</span> <span class="pre">char&gt;,</span> <span class="pre">std::__1::allocator&lt;std::__1::pair&lt;unsigned</span> <span class="pre">char</span> <span class="pre">const,</span> <span class="pre">double&gt;&gt;&gt;&gt;&gt;</span></span></span><a class="headerlink" href="#pyvcad.Vec4Attribute.sample" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec4Attribute" title="pyvcad.pyvcad.Vec4Attribute"><span class="pre">pyvcad.pyvcad.Vec4Attribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="headerlink" href="#pyvcad.Vec4Attribute.sample" title="Link to this definition">#</a></dt>
 <dd><p>Samples the attribute at the given point.</p>
 <p>:param x : The x-coordinate.
 :type x : double:param y : The y-coordinate.
@@ -706,16 +693,13 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyvcad.Vec4Attribute.set_function">
-<span class="sig-name descname"><span class="pre">set_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Vec4Attribute.set_function" title="Link to this definition">#</a></dt>
-<dd><p>Overloaded function.</p>
-<ol class="arabic simple">
-<li><p>set_function(self: pyvcad.pyvcad.Vec4Attribute, r_function: collections.abc.Callable[[typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat], float], g_function: collections.abc.Callable[[typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat], float], b_function: collections.abc.Callable[[typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat], float], a_function: collections.abc.Callable[[typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat], float]) -&gt; None</p></li>
-</ol>
-<p>Sets the native functions for each component of the attribute.</p>
-<ol class="arabic simple" start="2">
-<li><p>set_function(self: pyvcad.pyvcad.Vec4Attribute, function: collections.abc.Callable[[typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat], pyvcad.pyvcad.Vec4]) -&gt; None</p></li>
-</ol>
-<p>Sets the native function that returns a vec4.</p>
+<span class="sig-name descname"><span class="pre">set_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec4Attribute" title="pyvcad.pyvcad.Vec4Attribute"><span class="pre">pyvcad.pyvcad.Vec4Attribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">r_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">g_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Vec4Attribute.set_function" title="Link to this definition">#</a></dt>
+<dd><p>Sets numba.cfunc callbacks for each component of the attribute.</p>
+<p>:param r_function : Red component callback with signature float64(float64, float64, float64, float64).
+:type r_function : numba.cfunc:param g_function : Green component callback with signature float64(float64, float64, float64, float64).
+:type g_function : numba.cfunc:param b_function : Blue component callback with signature float64(float64, float64, float64, float64).
+:type b_function : numba.cfunc:param a_function : Alpha component callback with signature float64(float64, float64, float64, float64).
+:type a_function : numba.cfunc</p>
 </dd></dl>
 
 <dl class="py method">
@@ -739,29 +723,18 @@
 </ol>
 <p>Default constructor.</p>
 <ol class="arabic simple" start="2">
-<li><p>__init__(self: pyvcad.pyvcad.VolumeFractionsAttribute, expressions: collections.abc.Sequence[str], materials: collections.abc.Sequence[typing.SupportsInt]) -&gt; None</p></li>
+<li><p>__init__(self: pyvcad.pyvcad.VolumeFractionsAttribute, entries: collections.abc.Sequence) -&gt; None</p></li>
 </ol>
-<p>Constructor that takes lists of math expressions and materials.</p>
+<p>Constructor that takes a list of 2-item entries containing a definition and material id.</p>
+<p>:param entries : A sequence of (definition, material_id) pairs where each definition is a float, expression string, or numba.cfunc callback with signature float64(float64, float64, float64, float64).
+:type entries : sequence</p>
 <ol class="arabic simple" start="3">
-<li><p>__init__(self: pyvcad.pyvcad.VolumeFractionsAttribute, expression_material_pairs: collections.abc.Sequence[tuple[str, typing.SupportsInt]]) -&gt; None</p></li>
+<li><p>__init__(self: pyvcad.pyvcad.VolumeFractionsAttribute, values: collections.abc.Sequence, materials: collections.abc.Sequence) -&gt; None</p></li>
 </ol>
-<p>Constructor that takes expression/material pairs.</p>
-<ol class="arabic simple" start="4">
-<li><p>__init__(self: pyvcad.pyvcad.VolumeFractionsAttribute, functions: collections.abc.Sequence[collections.abc.Callable[[typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat], float]], materials: collections.abc.Sequence[typing.SupportsInt]) -&gt; None</p></li>
-</ol>
-<p>Constructor with native functions and materials.</p>
-<ol class="arabic simple" start="5">
-<li><p>__init__(self: pyvcad.pyvcad.VolumeFractionsAttribute, function_material_pairs: collections.abc.Sequence[tuple[collections.abc.Callable[[typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat], float], typing.SupportsInt]]) -&gt; None</p></li>
-</ol>
-<p>Constructor with function/material pairs.</p>
-<ol class="arabic simple" start="6">
-<li><p>__init__(self: pyvcad.pyvcad.VolumeFractionsAttribute, values: collections.abc.Sequence[typing.SupportsFloat], materials: collections.abc.Sequence[typing.SupportsInt]) -&gt; None</p></li>
-</ol>
-<p>Constructor with constant values and materials.</p>
-<ol class="arabic simple" start="7">
-<li><p>__init__(self: pyvcad.pyvcad.VolumeFractionsAttribute, value_material_pairs: collections.abc.Sequence[tuple[typing.SupportsFloat, typing.SupportsInt]]) -&gt; None</p></li>
-</ol>
-<p>Constructor with value/material pairs.</p>
+<p>Constructor that takes parallel lists of definitions and material ids.</p>
+<p>:param values : A sequence of float values, expression strings, or numba.cfunc callbacks.
+:type values : sequence:param materials : A sequence of material ids aligned with values.
+:type materials : sequence</p>
 </dd></dl>
 
 <dl class="py method">
@@ -783,13 +756,13 @@
 <span class="sig-name descname"><span class="pre">add_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.VolumeFractionsAttribute.add_function" title="Link to this definition">#</a></dt>
 <dd><p>Overloaded function.</p>
 <ol class="arabic simple">
-<li><p>add_function(self: pyvcad.pyvcad.VolumeFractionsAttribute, function: collections.abc.Callable[[typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat], float], material: typing.SupportsInt) -&gt; None</p></li>
+<li><p>add_function(self: pyvcad.pyvcad.VolumeFractionsAttribute, function: object, material: typing.SupportsInt) -&gt; None</p></li>
 </ol>
-<p>Adds a native function for a material.</p>
+<p>Adds a numba.cfunc callback for a material.</p>
 <ol class="arabic simple" start="2">
-<li><p>add_function(self: pyvcad.pyvcad.VolumeFractionsAttribute, function_material_pair: tuple[collections.abc.Callable[[typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat], float], typing.SupportsInt]) -&gt; None</p></li>
+<li><p>add_function(self: pyvcad.pyvcad.VolumeFractionsAttribute, function_material_pair: object) -&gt; None</p></li>
 </ol>
-<p>Adds a function/material pair.</p>
+<p>Adds a numba.cfunc callback and material pair.</p>
 </dd></dl>
 
 <dl class="py method">
@@ -818,7 +791,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="pyvcad.VolumeFractionsAttribute.sample">
-<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.VolumeFractionsAttribute" title="pyvcad.pyvcad.VolumeFractionsAttribute"><span class="pre">pyvcad.pyvcad.VolumeFractionsAttribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">boost::variant&lt;double,</span> <span class="pre">glm::vec&lt;3,</span> <span class="pre">float,</span> <span class="pre">(glm::qualifier)0&gt;,</span> <span class="pre">glm::vec&lt;4,</span> <span class="pre">float,</span> <span class="pre">(glm::qualifier)0&gt;,</span> <span class="pre">std::__1::shared_ptr&lt;std::__1::unordered_map&lt;unsigned</span> <span class="pre">char,</span> <span class="pre">double,</span> <span class="pre">std::__1::hash&lt;unsigned</span> <span class="pre">char&gt;,</span> <span class="pre">std::__1::equal_to&lt;unsigned</span> <span class="pre">char&gt;,</span> <span class="pre">std::__1::allocator&lt;std::__1::pair&lt;unsigned</span> <span class="pre">char</span> <span class="pre">const,</span> <span class="pre">double&gt;&gt;&gt;&gt;&gt;</span></span></span><a class="headerlink" href="#pyvcad.VolumeFractionsAttribute.sample" title="Link to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.VolumeFractionsAttribute" title="pyvcad.pyvcad.VolumeFractionsAttribute"><span class="pre">pyvcad.pyvcad.VolumeFractionsAttribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="headerlink" href="#pyvcad.VolumeFractionsAttribute.sample" title="Link to this definition">#</a></dt>
 <dd><p>Samples the attribute.</p>
 </dd></dl>
 

@@ -234,10 +234,12 @@ Let's define a simple constant value attribute:
 
 - **Constant value**: `FloatAttribute(5.0)` (as shown below) stores a single number.
 - **Math expression string**: `FloatAttribute("0.18 * z + 5.5")` defines a function of $(x, y, z, d)$ evaluated at runtime.
-- **Python callable**: `FloatAttribute(lambda x, y, z, d: ...)` lets you write the field in native Python. **Use with caution**
+- **Numba `@cfunc` function**: `FloatAttribute(my_function)` accepts a compiled function with signature `float64(float64, float64, float64, float64)`.
 - **Sampled volume**: `FloatAttribute(vdb_volume)` samples from a VDB volume in the core library.
 
 All of these ultimately provide the same interface to the rest of the system: a function that, given a spatial point (and signed distance), returns a float.
+
+If you want to write an attribute as a Python function, annotate it with Numba `@cfunc` and pass that function to the attribute. The full setup is covered in the [Python functions for attributes guide](numba-attributes.md).
 
 ```python
 cube = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(10, 10, 10))
@@ -279,10 +281,35 @@ viz.Render(root, materials)
 </div>
 </div>
 
+If you want to define the same kind of gradient with a Python function, annotate the function with **Numba `@cfunc`** and pass it to `FloatAttribute`. For the full workflow and rules for each attribute type, see the [Python functions for attributes guide](numba-attributes.md).
+
+Here is the same linear modulus gradient as the example above, but written as a small Numba function:
+
+```python
+import pyvcad as pv
+import pyvcad_rendering as viz
+from numba import cfunc, types
+
+cube = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(10, 10, 50))
+
+@cfunc(types.float64(types.float64, types.float64, types.float64, types.float64))
+def modulus_gradient(x, y, z, d):
+    return 0.18 * z + 5.5
+
+cube.set_attribute(
+    pv.DefaultAttributes.MODULUS,
+    pv.FloatAttribute(modulus_gradient),
+)
+
+materials = pv.default_materials
+root = cube
+viz.Render(root, materials)
+```
+
 ## Lesson 5: Colors
 OpenVCAD uses `Vec4Attribute` to assign continuous color gradients across an object using math expressions. Values represent R, G, B, and Alpha bounded from 0 to 1.
 
-`pv.Vec4Attribute` is the vector-valued analog of `FloatAttribute`. Each component can be provided either as its own expression string, as a native Python function, or as a constant scalar. When used for color, keep each channel in \[0, 1\] so that renderers and downstream compilers can interpret the values consistently as linear RGBA.
+`pv.Vec4Attribute` is the vector-valued analog of `FloatAttribute`. Each component can be provided either as its own expression string, as a Numba `@cfunc` function, or as a constant scalar. When used for color, keep each channel in \[0, 1\] so that renderers and downstream compilers can interpret the values consistently as linear RGBA.
 
 ```python
 cube = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(50, 10, 10))

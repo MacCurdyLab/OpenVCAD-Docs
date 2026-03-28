@@ -5,6 +5,8 @@
 
 This guide is a practical reference for defining **spatial gradients** in OpenVCAD. Gradients are the core mechanism for creating functionally graded designs — parts whose material properties, colors, or compositions change continuously through space.
 
+This guide stays focused on the **expression-string** workflow because it is the shortest way to build many common gradients. If you want to write gradients as Python functions instead, annotate them with **Numba `@cfunc`** and use the [Python functions for attributes guide](numba-attributes.md).
+
 ## Prerequisites
 
 This guide assumes you have completed the [Getting Started Guide](getting-started.md), in particular:
@@ -133,6 +135,28 @@ viz.Render(root)
 </div>
 </div>
 </div>
+
+If you want to build the same linear modulus gradient with a Python function instead of an expression string, the Numba version is still short:
+
+```python
+import pyvcad as pv
+from numba import cfunc, types
+
+length = 40.0
+half_len = length / 2.0
+
+@cfunc(types.float64(types.float64, types.float64, types.float64, types.float64))
+def modulus_gradient(x, y, z, d):
+    return 1.0 + 9.0 * ((x + half_len) / length)
+
+prism = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(length, 10, 10))
+prism.set_attribute(
+    pv.DefaultAttributes.MODULUS,
+    pv.FloatAttribute(modulus_gradient),
+)
+```
+
+For a complete walkthrough covering all three attribute types, see the [Python functions for attributes guide](numba-attributes.md).
 
 ---
 

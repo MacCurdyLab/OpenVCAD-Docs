@@ -12,6 +12,7 @@ Conceptually, each attribute implements a **sample** at ``(x, y, z)`` together w
 * **``FloatAttribute``** — one scalar per point (physical scalars, temperatures, etc.).
 * **``Vec4Attribute``** — four components per point (typical use: linear RGBA in ``[0, 1]``).
 * **``VolumeFractionsAttribute``** — maps material IDs to fractions at each point; fractions should sum to 1 where mixtures apply.
+* Python function support is **Numba-only**. Use ``numba.cfunc`` with the signature ``float64(float64, float64, float64, float64)``.
 
 Attributes are only evaluated where the geometry exists (inside or on the surface), so expensive expressions are not run in empty space.
 
@@ -33,6 +34,23 @@ The patterns below mirror the getting-started guide (lessons 4–6); they show t
    cube.set_attribute(
        pv.DefaultAttributes.MODULUS,
        pv.FloatAttribute("0.18 * z + 5.5"),
+   )
+
+**Scalar field (Numba function)**
+
+.. code-block:: python
+
+   import pyvcad as pv
+   from numba import cfunc, types
+
+   @cfunc(types.float64(types.float64, types.float64, types.float64, types.float64))
+   def modulus_gradient(x, y, z, d):
+       return 0.18 * z + 5.5
+
+   cube = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(10, 10, 50))
+   cube.set_attribute(
+       pv.DefaultAttributes.MODULUS,
+       pv.FloatAttribute(modulus_gradient),
    )
 
 **RGBA color field**
@@ -59,7 +77,7 @@ The patterns below mirror the getting-started guide (lessons 4–6); they show t
        ),
    )
 
-See :ref:`guide-getting-started` for full lessons, hierarchy/priority rules, and expression details.
+See :ref:`guide-getting-started` for full lessons, hierarchy/priority rules, and expression details. See also the Python functions guide at :doc:`/guides/numba-attributes`.
 
 .. currentmodule:: pyvcad
 

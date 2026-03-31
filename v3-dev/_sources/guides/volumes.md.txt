@@ -1,0 +1,248 @@
+(guide-volumes)=
+# Working with Volumes in OpenVCAD
+
+```{include} _guide-sidebar-compiler-membership.md
+```
+
+This guide shows how to use sampled volumetric data inside OpenVCAD's Python workflow. The key idea is simple: a volume is not a separate kind of geometry. Instead, OpenVCAD loads the sampled data as a field, wraps that field in an attribute, and then attaches the attribute to ordinary OpenVCAD geometry.
+
+If you have not already done so, work through [Getting Started](getting-started.md), [Functional grading](gradients.md), and the [Attribute modifier and resolver guide](attribute-resolver.md) first. This guide assumes you are already comfortable with basic nodes, attributes, attribute translation, and the render preview.
+
+All scripts for this guide live under `examples/volumes/`. In the snippets below, assume the VDB file or `dicom/` folder sits next to the script, and run each script from that example directory.
+
+## Mental Model
+
+At the Python level, the workflow looks like this:
+
+1. Load a sampled dataset from disk, usually a VDB file or a DICOM stack.
+2. Wrap that dataset in an attribute such as `pv.FloatAttribute(...)`.
+3. Attach the attribute to normal OpenVCAD geometry.
+4. Visualize the sampled field directly in the renderer, or translate it into another attribute such as `COLOR_RGBA` for a downstream compiler.
+
+That is the pattern you will see in all three lessons.
+
+## Lesson 1: Load a Density Volume and Render It
+
+This first lesson keeps the workflow as small as possible. We load a single `density` grid from a VDB file, wrap it as a `FloatAttribute`, attach it to a cube, and render the `DENSITY` field directly.
+
+OpenVDB is an open-source format and library for sparse volumetric data. Instead of storing a dense 3D array everywhere, it stores only the active parts of the volume efficiently, which makes it a good fit for fields such as smoke, fire, fog, signed distance fields, and medical data. A single `.vdb` file can also hold multiple named grids, which is why later lessons can load both `density` and `temperature` from the same file.
+
+The example lives in `examples/volumes/vdb/basic_density/`. Run it from that directory so `basic_density.vdb` is resolved locally.
+
+```python
+import pyvcad as pv
+import pyvcad_rendering as viz
+
+
+density_volume = pv.vdb_loader.load_float_volume("basic_density.vdb", "density", center=True)
+density_attribute = pv.FloatAttribute(density_volume)
+
+volume_bbox_min, volume_bbox_max = density_volume.bounding_box()
+cube = pv.RectPrism.FromMinAndMax(volume_bbox_min, volume_bbox_max)
+cube.set_attribute(pv.DefaultAttributes.DENSITY, density_attribute)
+
+root = cube
+viz.Render(root)
+```
+
+There are only three volume-specific steps here:
+
+- `pv.vdb_loader.load_float_volume(...)` loads the `density` grid from disk.
+- `pv.FloatAttribute(density_volume)` turns the sampled data into an OpenVCAD attribute.
+- `cube.set_attribute(...)` attaches that field to a normal piece of geometry.
+
+When you run the script from `examples/volumes/vdb/basic_density/`, select the `DENSITY` attribute in the renderer to inspect the sampled field inside the cube.
+
+The figure below is the direct `DENSITY` preview of that setup. This small OpenVDB file was generated as a smooth radial-falloff density field normalized to the range `0` to `1`, then saved as a single `density` grid. The script simply loads that grid and attaches it to the cube as `DENSITY`. If you want more sample VDB datasets to experiment with, OpenVDB provides additional example files on its [download page](https://www.openvdb.org/download/).
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">DENSITY field</p>
+<img src="images/volumes_basic_density_density.png" alt="Basic density VDB rendered as the density field on a cube" width="100%">
+</div>
+</div>
+
+## Lesson 2: Fire Volumes to Printable RGBA
+
+The fire example shows the full volume workflow that matters for fabrication: multiple sampled fields are loaded, attached to geometry, then translated into `COLOR_RGBA` for a compiler.
+
+The full example lives in `examples/volumes/vdb/fire/`. Run `fire.py` from that directory so the local `fire.vdb` file is picked up directly.
+
+The `fire.vdb` file used here is an example dataset from the [OpenVDB download page](https://www.openvdb.org/download/). It works well for this lesson because it already contains the two named sparse grids we want to discuss: `temperature` and `density`.
+
+### What is stored in `fire.vdb`
+
+This file carries two scalar grids:
+
+- `temperature`: how hot the simulated fire is at each point
+- `density`: how much smoke or flame material is present at each point
+
+Together, those two fields describe both the structure of the plume and how it should look. `density` tells us where the fire and smoke exist and how thick they are, while `temperature` gives us the second signal we need to drive color. In this example, one field tells us where the material is and the other tells us how to color it.
+
+Both grids are loaded the same way:
+
+```python
+density_volume = pv.vdb_loader.load_float_volume("fire.vdb", "density")
+density_attribute = pv.FloatAttribute(density_volume)
+
+temperature_volume = pv.vdb_loader.load_float_volume("fire.vdb", "temperature")
+temperature_attribute = pv.FloatAttribute(temperature_volume)
+```
+
+The example then builds a simple carrier object from the volume bounds and attaches both attributes to it:
+
+```python
+volume_bbox_min, volume_bbox_max = temperature_volume.bounding_box()
+object = pv.RectPrism.FromMinAndMax(volume_bbox_min, volume_bbox_max)
+
+object.set_attribute(pv.DefaultAttributes.DENSITY, density_attribute)
+object.set_attribute(pv.DefaultAttributes.TEMPERATURE, temperature_attribute)
+```
+
+That pattern is the same one from Lesson 1. The only difference is that we now have two sampled scalar fields on the same object instead of one.
+
+### Translating the fields into `COLOR_RGBA`
+
+The downstream color pipeline does not use `temperature` and `density` directly. Instead, the example translates them into a printable `COLOR_RGBA` field with an `AttributeModifier`.
+
+If that wrapper is new to you, start with the opening lesson of the [Attribute Modifier and Resolver Guide](attribute-resolver.md). The fire example uses the same mechanism, but with sampled volume-backed attributes instead of analytic expressions.
+
+The important part is the converter setup:
+
+```python
+entries = [
+    pv.LookupTableEntry(
+        [(row[0][0], row[0][1]), (row[2][0], row[2][1])],
+        [row[1], row[3]]
+    )
+    for row in new_map
+]
+
+mod = pv.LookupTableConverter(
+    [pv.DefaultAttributes.TEMPERATURE, pv.DefaultAttributes.DENSITY],
+    [pv.DefaultAttributes.COLOR_RGBA],
+    entries,
+    pv.InterpolationMode.STEP
+)
+
+root = pv.AttributeModifier(mod, object)
+```
+
+Conceptually, this lookup table is meant to mimic how fire changes visually:
+
+- low temperature and low density stay close to transparent smoke
+- hotter regions shift through red and orange into yellow-white
+- higher density increases opacity so the core of the flame reads as fuller and brighter
+
+The result is a `COLOR_RGBA` field that can be previewed directly in OpenVCAD and then sent to the [Color Inkjet Compiler](compilers/color-inkjet.md) through `pyvcad_compilers.ColorInkjetCompiler`.
+
+The two sweep animations below show the raw source fields before that conversion. The temperature sweep makes it easy to see where the hottest parts of the plume sit, while the density sweep shows where the smoke and flame mass are concentrated along the length of the fire volume.
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Temperature sweep</p>
+<img src="images/volumes_fire_temperature_sweep.webp" alt="Sweep animation through the fire temperature field" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Density sweep</p>
+<img src="images/volumes_fire_density_sweep.webp" alt="Sweep animation through the fire density field" width="100%">
+</div>
+</div>
+
+The turntable below shows the final `COLOR_RGBA` result after the lookup-table mapping. This is the stage that matters for fabrication: by this point the volume is no longer just a set of scalar fields, but a printable color-and-opacity field.
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Final COLOR_RGBA field</p>
+<img src="images/volumes_fire_color_rgba.webp" alt="Turntable animation of the fire rendered with the final color_rgba field" width="100%">
+</div>
+</div>
+
+For both the fire and tumor workflows in this guide, the final `COLOR_RGBA` field was compiled with the Color Inkjet Compiler and printed on a Stratasys J750 PolyJet printer using Vero Cyan Vivid, Vero Yellow Vivid, Vero Magenta Vivid, Vero Black Plus, Vero Pure White, and Vero Clear materials.
+
+The photo below shows the physical fire print from that pipeline. It lets you compare the rendered `COLOR_RGBA` result above with the final printed object.
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell" style="max-width: 160px; margin: 0 auto;">
+<p class="guide-figure-label">Printed result</p>
+<img src="images/volumes_fire_print.png" alt="Photograph of the printed fire object" style="width: 100%; height: auto; display: block; margin: 0 auto;">
+</div>
+</div>
+
+## Lesson 3: CT Head Scan to `COLOR_RGBA`
+
+The tumor example uses the same overall workflow, but now the source data is a DICOM stack instead of a VDB file.
+
+The full example lives in `examples/volumes/imaging/medical/mr_brain_tumor/`. For the guide snippets, assume the `dicom/` stack folder is next to `tumor.py` and run the script from that directory. This example also differs from Lessons 1 and 2 because it imports a mesh to act as the bounding volume. In the VDB examples, we used simple boxes built from the volume bounds. Here, the outer boundary is an anatomical surface mesh created with segmentation operations in [3D Slicer](https://www.slicer.org/) and exported as `MRTumor.stl`.
+
+### What the DICOM stack represents
+
+DICOM is the standard file format used for medical imaging. In a CT workflow like this one, the stack is a sequence of 2D slices taken through the body. OpenVCAD reads those slices, reconstructs the 3D volume, and exposes the sampled values as a continuous field. The CT scan and segmentation-derived mesh used in this example are sample data from the 3D Slicer ecosystem.
+
+For CT data, those sampled values are **Hounsfield units (HU)**. HU is a radiodensity scale:
+
+- lower values correspond to air-like regions
+- mid-range values capture soft tissue
+- higher values correspond to denser structures such as bone
+
+The example begins by loading the stack and converting it to a sampled float attribute:
+
+```python
+dicom_loader = pv.DICOMLoader("dicom")
+dicom_volume = dicom_loader.as_volume()
+dicom_attribute = pv.FloatAttribute(dicom_volume)
+```
+
+That attribute is then attached to the head geometry as `HU`.
+
+The head geometry itself is important here. Instead of attaching the attribute to a simple rectangular carrier, the example uses the segmented mesh as the object that receives the volume-backed `HU` field. That gives the volume data a more meaningful anatomical boundary.
+
+### Mapping HU to `COLOR_RGBA`
+
+The medical helper builds a color-and-opacity map across the HU range we want to emphasize:
+
+```python
+opacity_function = lambda t: 0.6 * (1 - t) + 0.15 * t
+hu_color_map = med.color_maps.create_linear_gradient_hu_map(
+    75,
+    190,
+    palette=med.color_maps.get_color_palette(color_palette),
+    steps=30,
+    opacity_function=opacity_function
+)
+```
+
+That map is then applied with the same `LookupTableConverter` + `AttributeModifier` pattern from Lesson 2:
+
+```python
+mod = pv.LookupTableConverter(
+    [pv.DefaultAttributes.HU],
+    [pv.DefaultAttributes.COLOR_RGBA],
+    hu_color_map,
+    pv.InterpolationMode.STEP
+)
+attr_mod = pv.AttributeModifier(mod, head_union)
+```
+
+The example clips the final model to the right half of the head so the interior structures remain readable in a volumetric render. Below, the turntable keeps that clipped view, while the Z sweep shows the full head volume.
+
+The turntable is the easiest way to read the final mapped result as an object: it shows how the HU-to-`COLOR_RGBA` mapping separates outer structure from the denser internal regions. The sweep complements that view by moving through the full head volume slice by slice so you can see how the mapped field changes through the scan depth.
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Right-half turntable</p>
+<img src="images/volumes_tumor_right_half_color_rgba.webp" alt="Turntable animation of the right half of the CT head tumor example rendered in color_rgba" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Whole-head Z sweep</p>
+<img src="images/volumes_tumor_whole_color_rgba_sweep_z.webp" alt="Z-axis sweep animation of the full CT head tumor example rendered in color_rgba" width="100%">
+</div>
+</div>
+
+Like the fire example, physical prints of this tumor workflow were produced from the `COLOR_RGBA` field with the Color Inkjet Compiler on a Stratasys J750 PolyJet printer using Vero Cyan Vivid, Vero Yellow Vivid, Vero Magenta Vivid, Vero Black Plus, Vero Pure White, and Vero Clear materials. The renders above are previews of that same printable field.
+
+## Where to Go Next
+
+- Use the patterns in this guide when you want sampled data to participate in normal OpenVCAD attribute workflows.
+- Use the [Attribute Modifier and Resolver Guide](attribute-resolver.md) when you need to translate one field into another.
+- Use the [Color Inkjet Compiler](compilers/color-inkjet.md) when your final field is `COLOR_RGBA` and you want printable PNG slice stacks.

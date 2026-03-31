@@ -1,0 +1,798 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Attribute Conflict Resolution &#8212; OpenVCAD 3.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=8878045cc6db502f8baf" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../_static/openvcad_theme.css?v=ee9d5c20" />
+    <link rel="stylesheet" type="text/css" href="../_static/openvcad_branding.css?v=c43e02c9" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=8878045cc6db502f8baf"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf" />
+
+    <script src="../_static/documentation_options.js?v=110ea713"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'guides/attribute-conflicts';</script>
+    <script src="../_static/openvcad_lightbox.js?v=e11fca97"></script>
+    <link rel="icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Attribute Modifier and Resolver Guide" href="attribute-resolver.html" />
+    <link rel="prev" title="Simulation Compiler" href="compilers/simulation-compiler.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="OpenVCAD - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="OpenVCAD - Home"/>
+  
+  
+    <p class="title logo__title">OpenVCAD Documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item dropdown active">
+      <button class="btn dropdown-toggle nav-link active" type="button" id="pst-nav-dd-guides" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Guides
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-guides">
+        <li><a class="dropdown-item" href="../install.html">Installation</a></li>
+        <li><a class="dropdown-item" href="getting-started.html">Getting Started with OpenVCAD</a></li>
+        <li><a class="dropdown-item" href="gradients.html">Functional grading</a></li>
+        <li><a class="dropdown-item" href="numba-attributes.html">Python functions for attributes</a></li>
+        <li><a class="dropdown-item" href="math-expressions.html">Math expressions</a></li>
+        <li><a class="dropdown-item" href="compilers/index.html">Compilers</a></li>
+        <li><a class="dropdown-item active" href="#">Attribute conflict resolution</a></li>
+        <li><a class="dropdown-item" href="attribute-resolver.html">Attribute modifier and resolver</a></li>
+        <li><a class="dropdown-item" href="volumes.html">Working with volumes</a></li>
+      </ul>
+    </li>
+    <li class="nav-item dropdown">
+      <button class="btn dropdown-toggle nav-link" type="button" id="pst-nav-dd-py" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Python API
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-py">
+        <li><a class="dropdown-item" href="../python-api/pyvcad/index.html">pyvcad module</a></li>
+        <li><a class="dropdown-item" href="../python-api/pyvcad_compilers/index.html">pyvcad_compilers module</a></li>
+        <li><a class="dropdown-item" href="../python-api/pyvcad_rendering/index.html">pyvcad_rendering module</a></li>
+        <li><a class="dropdown-item" href="../python-api/pyvcad_attribute_resolver/index.html">pyvcad_attribute_resolver module</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../cpp-api/index.html">C++ API</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../papers.html">Papers</a>
+    </li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item"><span class="nav-link py-1 fw-bold text-muted small">Guides</span></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../install.html">Installation</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="getting-started.html">Getting Started with OpenVCAD</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="gradients.html">Functional grading</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="numba-attributes.html">Python functions for attributes</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="math-expressions.html">Math expressions</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="compilers/index.html">Compilers</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3 active" href="#">Attribute conflict resolution</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="attribute-resolver.html">Attribute modifier and resolver</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="volumes.html">Working with volumes</a></li>
+    <li class="nav-item"><span class="nav-link py-1 fw-bold text-muted small">Python API</span></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../python-api/pyvcad/index.html">pyvcad module</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../python-api/pyvcad_compilers/index.html">pyvcad_compilers module</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../python-api/pyvcad_rendering/index.html">pyvcad_rendering module</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../python-api/pyvcad_attribute_resolver/index.html">pyvcad_attribute_resolver module</a></li>
+    <li class="nav-item"><a class="nav-link py-1" href="../cpp-api/index.html">C++ API</a></li>
+    <li class="nav-item"><a class="nav-link py-1" href="../papers.html">Papers</a></li>
+  </ul>
+</nav>
+</div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gradients.html">Functional Grading Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numba-attributes.html">Python Functions for Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="math-expressions.html">Math expressions in OpenVCAD</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="compilers/index.html">Compilers</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="compilers/material-inkjet.html">Material Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/color-inkjet.html">Color Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/vat-photo.html">VAT Photo Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/slicer-project.html">Slicer Project Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/simulation-compiler.html">Simulation Compiler</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Attribute Conflict Resolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attribute-resolver.html">Attribute Modifier and Resolver Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="volumes.html">Working with Volumes in OpenVCAD</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Guides</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Attribute Conflict Resolution</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="attribute-conflict-resolution">
+<span id="guide-attribute-conflicts"></span><h1>Attribute Conflict Resolution<a class="headerlink" href="#attribute-conflict-resolution" title="Link to this heading">#</a></h1>
+<!--
+Build dependency sentinel for guide sidebar compiler membership.
+Guide pages that render the shared Guides sidebar include this file so
+changes to the compiler-guide set force those pages to rebuild on
+incremental Sphinx runs.
+
+Current compiler guides:
+- material-inkjet
+- color-inkjet
+- vat-photo
+- slicer-project
+- simulation-compiler
+-->
+<p>This guide covers <strong>Attribute Conflict Resolution</strong>, a powerful feature for managing overlapping implicit geometries that possess conflicting attribute assignments.</p>
+<p><strong>Prerequisites:</strong> Before proceeding, you must ensure you have completed the following guides. You must be deeply familiar with these concepts before trying to manage conflicts:</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="getting-started.html"><span class="std std-doc">Getting Started with OpenVCAD</span></a></p></li>
+<li><p><a class="reference internal" href="gradients.html"><span class="std std-doc">Functional grading</span></a></p></li>
+<li><p><a class="reference internal" href="numba-attributes.html"><span class="std std-doc">Python functions for attributes</span></a></p></li>
+</ul>
+<section id="the-problem">
+<h2>The Problem<a class="headerlink" href="#the-problem" title="Link to this heading">#</a></h2>
+<p>As you learned in <strong>Lesson 7 of the Getting Started Guide</strong>, when two objects overlap during Constructive Solid Geometry (CSG) operations like <code class="docutils literal notranslate"><span class="pre">pv.Union</span></code>, OpenVCAD enforces a system of priority rules. Without an explicit parent override, the first child (often the left-hand argument) dominates the resulting overlap zone.</p>
+<p>While this default behavior is predictable, it prevents actual material blending, composite density distribution, or additive coloring inside the intersecting volume. To correct this, we use the <code class="docutils literal notranslate"><span class="pre">set_attribute_conflict_resolver()</span></code> API.</p>
+<p>Below are 6 concrete lessons demonstrating the various built-in and customizable conflict resolvers designed to combine continuous field functions gracefully within structural nodes.</p>
+</section>
+<hr class="docutils" />
+<section id="lesson-1-averaging-resolvers">
+<h2>Lesson 1: Averaging Resolvers<a class="headerlink" href="#lesson-1-averaging-resolvers" title="Link to this heading">#</a></h2>
+<p>The most straightforward way to tackle conflicting fields (e.g., merging a Red color and a Blue color) is to take their mean across the boundary.</p>
+<p>In this example, we apply the <code class="docutils literal notranslate"><span class="pre">pv.resolvers.AverageConflictResolver</span></code> to the <code class="docutils literal notranslate"><span class="pre">pv.DefaultAttributes.COLOR_RGBA</span></code> attribute of an <code class="docutils literal notranslate"><span class="pre">Intersection</span></code> node. Unlike the default priority, the returned lens shape averages out to a perfect purple core!</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+
+<span class="n">left_sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">10.0</span><span class="p">)</span>
+<span class="n">right_sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">10.0</span><span class="p">)</span>
+
+<span class="c1"># Red </span>
+<span class="n">left_sphere</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec4Attribute</span><span class="p">(</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">))</span>
+<span class="c1"># Blue</span>
+<span class="n">right_sphere</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec4Attribute</span><span class="p">(</span><span class="s2">&quot;0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">))</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Intersection</span><span class="p">(</span><span class="n">left_sphere</span><span class="p">,</span> <span class="n">right_sphere</span><span class="p">)</span>
+
+<span class="c1"># Instead of the default behavior, we average them.</span>
+<span class="c1"># The entire resulting intersection lens will be purple instead or red or blue!</span>
+<span class="n">root</span><span class="o">.</span><span class="n">set_attribute_conflict_resolver</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">resolvers</span><span class="o">.</span><span class="n">AverageConflictResolver</span><span class="p">())</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (color)</p>
+<img src="images/01_average_resolution_color_rgba.webp" alt="Average Resolution" width="100%">
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="lesson-2-min-max-and-mode-selection">
+<h2>Lesson 2: Min/Max and Mode Selection<a class="headerlink" href="#lesson-2-min-max-and-mode-selection" title="Link to this heading">#</a></h2>
+<p>Some workflows require conservative or aggressive attribute bounds. You can construct a <code class="docutils literal notranslate"><span class="pre">MinConflictResolver</span></code> or a <code class="docutils literal notranslate"><span class="pre">MaxConflictResolver</span></code>.</p>
+<p>For arrays like <code class="docutils literal notranslate"><span class="pre">Vec4</span></code>, these resolvers utilize an operational <code class="docutils literal notranslate"><span class="pre">pv.resolvers.Vec4Mode</span></code>. You can resolve conflicts based on total <em>Magnitude</em>, or resolve them <em>PerChannel</em>. In this example, intersecting horizontal (Cyan) and vertical (Yellow) components use <code class="docutils literal notranslate"><span class="pre">Vec4Mode.PerChannel</span></code>. The maximum of both results in a bright White crossing section.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+
+<span class="c1"># Two intersecting rectangular prisms forming a cross (+)</span>
+<span class="n">cube_x</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">cube_y</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="c1"># Horizontal prism is Cyan (R=0, G=1, B=1)</span>
+<span class="n">cube_x</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec4Attribute</span><span class="p">(</span><span class="s2">&quot;0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">))</span>
+<span class="c1"># Vertical prism is Yellow (R=1, G=1, B=0)</span>
+<span class="n">cube_y</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec4Attribute</span><span class="p">(</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">,</span> <span class="s2">&quot;0.0&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">))</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">(</span><span class="n">cube_x</span><span class="p">,</span> <span class="n">cube_y</span><span class="p">)</span>
+
+<span class="c1"># We use MaxConflictResolver with PerChannel mode.</span>
+<span class="c1"># The intersection takes the maximum of each color channel:</span>
+<span class="c1"># Max(R=0, R=1) -&gt; R=1</span>
+<span class="c1"># Max(G=1, G=1) -&gt; G=1</span>
+<span class="c1"># Max(B=1, B=0) -&gt; B=1</span>
+<span class="c1"># The result in the center will be White (1, 1, 1).</span>
+<span class="n">resolver</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">resolvers</span><span class="o">.</span><span class="n">MaxConflictResolver</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">resolvers</span><span class="o">.</span><span class="n">Vec4Mode</span><span class="o">.</span><span class="n">PerChannel</span><span class="p">)</span>
+<span class="n">root</span><span class="o">.</span><span class="n">set_attribute_conflict_resolver</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span> <span class="n">resolver</span><span class="p">)</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (color)</p>
+<img src="images/02_min_max_resolution_color_rgba.webp" alt="Min/Max Resolution" width="100%">
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="lesson-3-volume-fractions-handling">
+<h2>Lesson 3: Volume Fractions Handling<a class="headerlink" href="#lesson-3-volume-fractions-handling" title="Link to this heading">#</a></h2>
+<p>Resolving discrete materials correctly requires extreme precision: the total component distribution percentage must always cleanly equal <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">AverageConflictResolver</span></code> integrates natively with <code class="docutils literal notranslate"><span class="pre">pv.DefaultAttributes.VOLUME_FRACTIONS</span></code>. It tracks the distinct components inside each volume and automatically re-normalizes the distribution upon evaluation, yielding a physically valid composite material across the blend zone.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+
+<span class="c1"># Crossing rectangular prisms</span>
+<span class="n">cube_x</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">cube_y</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="c1"># Horizontal prism is 100% blue</span>
+<span class="n">frac_blue</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([(</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">))])</span>
+<span class="n">cube_x</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span> <span class="n">frac_blue</span><span class="p">)</span>
+
+<span class="c1"># Vertical prism is 100% red</span>
+<span class="n">frac_red</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([(</span><span class="s2">&quot;1.0&quot;</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">))])</span>
+<span class="n">cube_y</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span> <span class="n">frac_red</span><span class="p">)</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">(</span><span class="n">cube_x</span><span class="p">,</span> <span class="n">cube_y</span><span class="p">)</span>
+
+<span class="c1"># The AverageConflictResolver automatically handles normalized material distributions.</span>
+<span class="c1"># Where the cubes intersect, it will average the distributions and re-normalize,</span>
+<span class="c1"># creating a perfect 50/50 mix of Red and Blue material.</span>
+<span class="n">root</span><span class="o">.</span><span class="n">set_attribute_conflict_resolver</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">resolvers</span><span class="o">.</span><span class="n">AverageConflictResolver</span><span class="p">())</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (volume fractions)</p>
+<img src="images/03_volume_fraction_resolution_volume_fractions.webp" alt="Volume Fraction Resolution" width="100%">
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="lesson-4-custom-scalar-logistics-via-numba">
+<h2>Lesson 4: Custom Scalar Logistics via Numba<a class="headerlink" href="#lesson-4-custom-scalar-logistics-via-numba" title="Link to this heading">#</a></h2>
+<p>If the native averaging or max/min thresholds aren’t appropriate for your application, you can inject highly performant C++ callbacks directly into the engine’s compilation loop using Numba.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">CustomFloatConflictResolver</span></code> allows you to define a <code class="docutils literal notranslate"><span class="pre">cfunc</span></code> that takes two <code class="docutils literal notranslate"><span class="pre">float64</span></code> properties and returns a computed answer. In this example, overlapping spheres multiply their independent baseline densities.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numba</span><span class="w"> </span><span class="kn">import</span> <span class="n">cfunc</span><span class="p">,</span> <span class="n">types</span>
+
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+
+<span class="n">left_sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">10.0</span><span class="p">)</span>
+<span class="n">right_sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">10.0</span><span class="p">)</span>
+
+<span class="c1"># Left sphere has density 2.0</span>
+<span class="n">left_sphere</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">&quot;2.0&quot;</span><span class="p">))</span>
+<span class="c1"># Right sphere has density 3.0</span>
+<span class="n">right_sphere</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">&quot;3.0&quot;</span><span class="p">))</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Intersection</span><span class="p">(</span><span class="n">left_sphere</span><span class="p">,</span> <span class="n">right_sphere</span><span class="p">)</span>
+
+<span class="c1"># We define a custom Numba C-callback for fast, compiled evaluation</span>
+<span class="c1"># during the geometry sampling loop. Let&#39;s multiply the densities.</span>
+<span class="nd">@cfunc</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">multiply_densities</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">*</span> <span class="n">b</span>
+
+<span class="c1"># Apply the custom float resolver</span>
+<span class="n">root</span><span class="o">.</span><span class="n">set_attribute_conflict_resolver</span><span class="p">(</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">resolvers</span><span class="o">.</span><span class="n">CustomFloatConflictResolver</span><span class="p">(</span><span class="n">multiply_densities</span><span class="p">))</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (density)</p>
+<img src="images/04_custom_scalar_resolution_density.webp" alt="Custom Scalar Resolution" width="100%">
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="lesson-5-granular-vector-customization">
+<h2>Lesson 5: Granular Vector Customization<a class="headerlink" href="#lesson-5-granular-vector-customization" title="Link to this heading">#</a></h2>
+<p>For extreme customization involving complex vector datasets (like <code class="docutils literal notranslate"><span class="pre">pv.Vec4Attribute</span></code>), you can attach independent arithmetic functions to individual geometric dimensions or individual color channels via <code class="docutils literal notranslate"><span class="pre">CustomVec4ConflictResolver</span></code>.</p>
+<p>Below, a bespoke solver dictates that Red resolves through <code class="docutils literal notranslate"><span class="pre">max()</span></code>, Green through <code class="docutils literal notranslate"><span class="pre">min()</span></code>, Blue via summation (<code class="docutils literal notranslate"><span class="pre">a+b</span></code>), and Alpha locks itself to an immutable baseline of <code class="docutils literal notranslate"><span class="pre">1.0</span></code>. The solver operates over overlapping orthogonal prisms.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numba</span><span class="w"> </span><span class="kn">import</span> <span class="n">cfunc</span><span class="p">,</span> <span class="n">types</span>
+
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+
+<span class="n">cube_x</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">cube_y</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+
+<span class="c1"># Horizontal prism is mostly Cyan</span>
+<span class="n">cube_x</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec4Attribute</span><span class="p">(</span><span class="s2">&quot;0.2&quot;</span><span class="p">,</span> <span class="s2">&quot;0.8&quot;</span><span class="p">,</span> <span class="s2">&quot;0.8&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">))</span>
+<span class="c1"># Vertical prism is mostly Yellow</span>
+<span class="n">cube_y</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec4Attribute</span><span class="p">(</span><span class="s2">&quot;0.8&quot;</span><span class="p">,</span> <span class="s2">&quot;0.8&quot;</span><span class="p">,</span> <span class="s2">&quot;0.2&quot;</span><span class="p">,</span> <span class="s2">&quot;1.0&quot;</span><span class="p">))</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">(</span><span class="n">cube_x</span><span class="p">,</span> <span class="n">cube_y</span><span class="p">)</span>
+
+<span class="c1"># With CustomVec4ConflictResolver, we can configure completely different </span>
+<span class="c1"># logic for Red, Green, Blue, and Alpha channels in the overlap region.</span>
+
+<span class="nd">@cfunc</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">logic_r</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">max</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="c1"># Take maximum Red</span>
+
+<span class="nd">@cfunc</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">logic_g</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="nb">min</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="c1"># Take minimum Green</span>
+
+<span class="nd">@cfunc</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">logic_b</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">+</span> <span class="n">b</span>     <span class="c1"># Add Blue components</span>
+
+<span class="nd">@cfunc</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">logic_a</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mf">1.0</span>       <span class="c1"># Always solid alpha</span>
+
+<span class="n">resolver</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">resolvers</span><span class="o">.</span><span class="n">CustomVec4ConflictResolver</span><span class="p">(</span><span class="n">logic_r</span><span class="p">,</span> <span class="n">logic_g</span><span class="p">,</span> <span class="n">logic_b</span><span class="p">,</span> <span class="n">logic_a</span><span class="p">)</span>
+<span class="n">root</span><span class="o">.</span><span class="n">set_attribute_conflict_resolver</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span> <span class="n">resolver</span><span class="p">)</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (color)</p>
+<img src="images/05_custom_vector_resolution_color_rgba.webp" alt="Custom Vector Resolution" width="100%">
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="lesson-6-n-ary-conflict-reductions">
+<h2>Lesson 6: N-ary Conflict Reductions<a class="headerlink" href="#lesson-6-n-ary-conflict-reductions" title="Link to this heading">#</a></h2>
+<p>While <code class="docutils literal notranslate"><span class="pre">pv.Union</span></code> and <code class="docutils literal notranslate"><span class="pre">pv.Intersection</span></code> are standard <em>binary</em> boolean operations that process exactly two geometries, the <code class="docutils literal notranslate"><span class="pre">pv.BBoxUnion</span></code> and <code class="docutils literal notranslate"><span class="pre">pv.BBoxIntersection</span></code> are highly optimized <em>N-ary</em> nodes that can take any number of children (e.g., thousands of lattice struts).</p>
+<p>So how does our custom conflict resolution function—which only takes two parameters (<code class="docutils literal notranslate"><span class="pre">left_val</span></code>, <code class="docutils literal notranslate"><span class="pre">right_val</span></code>)—handle an overlap of four, five, or fifty objects?</p>
+<p>It uses <strong>Binary Reduction</strong>. A binary reduction simply resolves the array of conflicts two at a time sequentially. The node compares the first two intersecting objects, evaluates their localized attribute fields, and resolves them using your custom function. The resulting “virtual” attribute field is then fed into the <em>left side</em> of the custom function against the third overlapping object on the <em>right side</em>. The result is fed against the fourth object, and so on until the entire spatial stack is resolved into a single value for that discrete coordinate.</p>
+<p>In this example, we union four rectangular prisms arranged in a 2×2 grid (<code class="docutils literal notranslate"><span class="pre">pv.BBoxUnion</span></code>), one in each quadrant of the XY plane, with their edges deliberately overlapping by a few units. Each prism carries a <code class="docutils literal notranslate"><span class="pre">DENSITY</span></code> attribute of <code class="docutils literal notranslate"><span class="pre">1.0</span></code>. We then attach an additive custom resolver (<code class="docutils literal notranslate"><span class="pre">left_val</span> <span class="pre">+</span> <span class="pre">right_val</span></code>). Because of binary reduction, any 3D coordinate that lies inside only one prism keeps its density of <code class="docutils literal notranslate"><span class="pre">1.0</span></code>. Along the shared edges where exactly two prisms overlap, the reduction yields <code class="docutils literal notranslate"><span class="pre">2.0</span></code>. At the very center of the grid where all four prisms meet, the reduction cascades through all four children: <code class="docutils literal notranslate"><span class="pre">(1.0</span> <span class="pre">+</span> <span class="pre">1.0)</span> <span class="pre">+</span> <span class="pre">1.0</span> <span class="pre">+</span> <span class="pre">1.0</span> <span class="pre">=</span> <span class="pre">4.0</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numba</span><span class="w"> </span><span class="kn">import</span> <span class="n">cfunc</span><span class="p">,</span> <span class="n">types</span>
+
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+
+<span class="c1"># 1. Define four rectangular prisms, one in each quadrant of the XY plane.</span>
+<span class="c1">#    Each prism is 12x12x6 but offset so they overlap by 2 units along</span>
+<span class="c1">#    each shared edge, creating a cross-shaped overlap region in the center.</span>
+<span class="n">q1</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span> <span class="mf">5.0</span><span class="p">,</span>  <span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">12.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">))</span>
+<span class="n">q2</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span>  <span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">12.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">))</span>
+<span class="n">q3</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">12.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">))</span>
+<span class="n">q4</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span> <span class="mf">5.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">12.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="mf">6.0</span><span class="p">))</span>
+
+<span class="c1"># 2. Assign identical density scalars to each prism</span>
+<span class="n">q1</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">&quot;1.0&quot;</span><span class="p">))</span>
+<span class="n">q2</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">&quot;1.0&quot;</span><span class="p">))</span>
+<span class="n">q3</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">&quot;1.0&quot;</span><span class="p">))</span>
+<span class="n">q4</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">&quot;density&quot;</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">&quot;1.0&quot;</span><span class="p">))</span>
+
+<span class="c1"># 3. Use BBoxUnion - an N-ary union node.</span>
+<span class="c1">#    Conflicts in overlapping regions are resolved via Binary Reduction.</span>
+<span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">BBoxUnion</span><span class="p">([</span><span class="n">q1</span><span class="p">,</span> <span class="n">q2</span><span class="p">,</span> <span class="n">q3</span><span class="p">,</span> <span class="n">q4</span><span class="p">])</span>
+
+<span class="c1"># 4. Define an additive custom resolver using a Numba cfunc.</span>
+<span class="c1">#    The same binary function signature (left_val, right_val) is reused</span>
+<span class="c1">#    for every pair during the reduction across all overlapping children.</span>
+<span class="nd">@cfunc</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">additive_density</span><span class="p">(</span><span class="n">left_val</span><span class="p">,</span> <span class="n">right_val</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">left_val</span> <span class="o">+</span> <span class="n">right_val</span>
+
+<span class="n">root</span><span class="o">.</span><span class="n">set_attribute_conflict_resolver</span><span class="p">(</span>
+    <span class="s2">&quot;density&quot;</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">resolvers</span><span class="o">.</span><span class="n">CustomFloatConflictResolver</span><span class="p">(</span><span class="n">additive_density</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (density)</p>
+<img src="images/06_n_ary_binary_reduction_density.webp" alt="N-ary Reduction Resolution" width="100%">
+<p align="center" style="font-size: 0.9em;"><em>The outer regions of each prism show a density of 1.0. Along the shared edges, density rises to 2.0. At the very center where all four prisms meet, the additive binary reduction yields a peak density of 4.0.</em></p>
+</div>
+</div>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="compilers/simulation-compiler.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Simulation Compiler</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="attribute-resolver.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Attribute Modifier and Resolver Guide</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav class="bd-toc-nav page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-problem">The Problem</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-1-averaging-resolvers">Lesson 1: Averaging Resolvers</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-2-min-max-and-mode-selection">Lesson 2: Min/Max and Mode Selection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-3-volume-fractions-handling">Lesson 3: Volume Fractions Handling</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-4-custom-scalar-logistics-via-numba">Lesson 4: Custom Scalar Logistics via Numba</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-5-granular-vector-customization">Lesson 5: Granular Vector Customization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-6-n-ary-conflict-reductions">Lesson 6: N-ary Conflict Reductions</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="../_sources/guides/attribute-conflicts.md.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=8878045cc6db502f8baf"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=8878045cc6db502f8baf"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Charles Wade and Robert MacCurdy.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.16.1.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

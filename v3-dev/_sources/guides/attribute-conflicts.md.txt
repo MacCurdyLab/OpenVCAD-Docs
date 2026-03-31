@@ -1,0 +1,305 @@
+(guide-attribute-conflicts)=
+# Attribute Conflict Resolution
+
+```{include} _guide-sidebar-compiler-membership.md
+```
+
+This guide covers **Attribute Conflict Resolution**, a powerful feature for managing overlapping implicit geometries that possess conflicting attribute assignments. 
+
+**Prerequisites:** Before proceeding, you must ensure you have completed the following guides. You must be deeply familiar with these concepts before trying to manage conflicts:
+* [Getting Started with OpenVCAD](getting-started.md)
+* [Functional grading](gradients.md)
+* [Python functions for attributes](numba-attributes.md)
+
+## The Problem
+As you learned in **Lesson 7 of the Getting Started Guide**, when two objects overlap during Constructive Solid Geometry (CSG) operations like `pv.Union`, OpenVCAD enforces a system of priority rules. Without an explicit parent override, the first child (often the left-hand argument) dominates the resulting overlap zone.
+
+While this default behavior is predictable, it prevents actual material blending, composite density distribution, or additive coloring inside the intersecting volume. To correct this, we use the `set_attribute_conflict_resolver()` API.
+
+Below are 6 concrete lessons demonstrating the various built-in and customizable conflict resolvers designed to combine continuous field functions gracefully within structural nodes.
+
+---
+
+## Lesson 1: Averaging Resolvers
+
+The most straightforward way to tackle conflicting fields (e.g., merging a Red color and a Blue color) is to take their mean across the boundary.
+
+In this example, we apply the `pv.resolvers.AverageConflictResolver` to the `pv.DefaultAttributes.COLOR_RGBA` attribute of an `Intersection` node. Unlike the default priority, the returned lens shape averages out to a perfect purple core!
+
+```python
+import pyvcad as pv
+import pyvcad_rendering as viz
+
+materials = pv.default_materials
+
+left_sphere = pv.Sphere(pv.Vec3(-4, 0, 0), 10.0)
+right_sphere = pv.Sphere(pv.Vec3(4, 0, 0), 10.0)
+
+# Red 
+left_sphere.set_attribute(pv.DefaultAttributes.COLOR_RGBA, pv.Vec4Attribute("1.0", "0.0", "0.0", "1.0"))
+# Blue
+right_sphere.set_attribute(pv.DefaultAttributes.COLOR_RGBA, pv.Vec4Attribute("0.0", "0.0", "1.0", "1.0"))
+
+root = pv.Intersection(left_sphere, right_sphere)
+
+# Instead of the default behavior, we average them.
+# The entire resulting intersection lens will be purple instead or red or blue!
+root.set_attribute_conflict_resolver(pv.DefaultAttributes.COLOR_RGBA, pv.resolvers.AverageConflictResolver())
+
+viz.Render(root, materials)
+```
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (color)</p>
+<img src="images/01_average_resolution_color_rgba.webp" alt="Average Resolution" width="100%">
+</div>
+</div>
+
+---
+
+## Lesson 2: Min/Max and Mode Selection
+
+Some workflows require conservative or aggressive attribute bounds. You can construct a `MinConflictResolver` or a `MaxConflictResolver`. 
+
+For arrays like `Vec4`, these resolvers utilize an operational `pv.resolvers.Vec4Mode`. You can resolve conflicts based on total *Magnitude*, or resolve them *PerChannel*. In this example, intersecting horizontal (Cyan) and vertical (Yellow) components use `Vec4Mode.PerChannel`. The maximum of both results in a bright White crossing section.
+
+```python
+import pyvcad as pv
+import pyvcad_rendering as viz
+
+materials = pv.default_materials
+
+# Two intersecting rectangular prisms forming a cross (+)
+cube_x = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(20, 6, 6))
+cube_y = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(6, 20, 6))
+
+# Horizontal prism is Cyan (R=0, G=1, B=1)
+cube_x.set_attribute(pv.DefaultAttributes.COLOR_RGBA, pv.Vec4Attribute("0.0", "1.0", "1.0", "1.0"))
+# Vertical prism is Yellow (R=1, G=1, B=0)
+cube_y.set_attribute(pv.DefaultAttributes.COLOR_RGBA, pv.Vec4Attribute("1.0", "1.0", "0.0", "1.0"))
+
+root = pv.Union(cube_x, cube_y)
+
+# We use MaxConflictResolver with PerChannel mode.
+# The intersection takes the maximum of each color channel:
+# Max(R=0, R=1) -> R=1
+# Max(G=1, G=1) -> G=1
+# Max(B=1, B=0) -> B=1
+# The result in the center will be White (1, 1, 1).
+resolver = pv.resolvers.MaxConflictResolver(pv.resolvers.Vec4Mode.PerChannel)
+root.set_attribute_conflict_resolver(pv.DefaultAttributes.COLOR_RGBA, resolver)
+
+viz.Render(root, materials)
+```
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (color)</p>
+<img src="images/02_min_max_resolution_color_rgba.webp" alt="Min/Max Resolution" width="100%">
+</div>
+</div>
+
+---
+
+## Lesson 3: Volume Fractions Handling
+
+Resolving discrete materials correctly requires extreme precision: the total component distribution percentage must always cleanly equal `1.0`.
+
+The `AverageConflictResolver` integrates natively with `pv.DefaultAttributes.VOLUME_FRACTIONS`. It tracks the distinct components inside each volume and automatically re-normalizes the distribution upon evaluation, yielding a physically valid composite material across the blend zone.
+
+```python
+import pyvcad as pv
+import pyvcad_rendering as viz
+
+materials = pv.default_materials
+
+# Crossing rectangular prisms
+cube_x = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(20, 6, 6))
+cube_y = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(6, 20, 6))
+
+# Horizontal prism is 100% blue
+frac_blue = pv.VolumeFractionsAttribute([("1.0", materials.id("blue"))])
+cube_x.set_attribute(pv.DefaultAttributes.VOLUME_FRACTIONS, frac_blue)
+
+# Vertical prism is 100% red
+frac_red = pv.VolumeFractionsAttribute([("1.0", materials.id("red"))])
+cube_y.set_attribute(pv.DefaultAttributes.VOLUME_FRACTIONS, frac_red)
+
+root = pv.Union(cube_x, cube_y)
+
+# The AverageConflictResolver automatically handles normalized material distributions.
+# Where the cubes intersect, it will average the distributions and re-normalize,
+# creating a perfect 50/50 mix of Red and Blue material.
+root.set_attribute_conflict_resolver(pv.DefaultAttributes.VOLUME_FRACTIONS, pv.resolvers.AverageConflictResolver())
+
+viz.Render(root, materials)
+```
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (volume fractions)</p>
+<img src="images/03_volume_fraction_resolution_volume_fractions.webp" alt="Volume Fraction Resolution" width="100%">
+</div>
+</div>
+
+---
+
+## Lesson 4: Custom Scalar Logistics via Numba
+
+If the native averaging or max/min thresholds aren't appropriate for your application, you can inject highly performant C++ callbacks directly into the engine's compilation loop using Numba.
+
+The `CustomFloatConflictResolver` allows you to define a `cfunc` that takes two `float64` properties and returns a computed answer. In this example, overlapping spheres multiply their independent baseline densities.
+
+```python
+import pyvcad as pv
+import pyvcad_rendering as viz
+from numba import cfunc, types
+
+materials = pv.default_materials
+
+left_sphere = pv.Sphere(pv.Vec3(-4.0, 0, 0), 10.0)
+right_sphere = pv.Sphere(pv.Vec3(4.0, 0, 0), 10.0)
+
+# Left sphere has density 2.0
+left_sphere.set_attribute("density", pv.FloatAttribute("2.0"))
+# Right sphere has density 3.0
+right_sphere.set_attribute("density", pv.FloatAttribute("3.0"))
+
+root = pv.Intersection(left_sphere, right_sphere)
+
+# We define a custom Numba C-callback for fast, compiled evaluation
+# during the geometry sampling loop. Let's multiply the densities.
+@cfunc(types.float64(types.float64, types.float64))
+def multiply_densities(a, b):
+    return a * b
+
+# Apply the custom float resolver
+root.set_attribute_conflict_resolver("density", pv.resolvers.CustomFloatConflictResolver(multiply_densities))
+
+viz.Render(root, materials)
+```
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (density)</p>
+<img src="images/04_custom_scalar_resolution_density.webp" alt="Custom Scalar Resolution" width="100%">
+</div>
+</div>
+
+---
+
+## Lesson 5: Granular Vector Customization
+
+For extreme customization involving complex vector datasets (like `pv.Vec4Attribute`), you can attach independent arithmetic functions to individual geometric dimensions or individual color channels via `CustomVec4ConflictResolver`.
+
+Below, a bespoke solver dictates that Red resolves through `max()`, Green through `min()`, Blue via summation (`a+b`), and Alpha locks itself to an immutable baseline of `1.0`. The solver operates over overlapping orthogonal prisms.
+
+```python
+import pyvcad as pv
+import pyvcad_rendering as viz
+from numba import cfunc, types
+
+materials = pv.default_materials
+
+cube_x = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(20, 6, 6))
+cube_y = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(6, 20, 6))
+
+# Horizontal prism is mostly Cyan
+cube_x.set_attribute(pv.DefaultAttributes.COLOR_RGBA, pv.Vec4Attribute("0.2", "0.8", "0.8", "1.0"))
+# Vertical prism is mostly Yellow
+cube_y.set_attribute(pv.DefaultAttributes.COLOR_RGBA, pv.Vec4Attribute("0.8", "0.8", "0.2", "1.0"))
+
+root = pv.Union(cube_x, cube_y)
+
+# With CustomVec4ConflictResolver, we can configure completely different 
+# logic for Red, Green, Blue, and Alpha channels in the overlap region.
+
+@cfunc(types.float64(types.float64, types.float64))
+def logic_r(a, b):
+    return max(a, b) # Take maximum Red
+
+@cfunc(types.float64(types.float64, types.float64))
+def logic_g(a, b):
+    return min(a, b) # Take minimum Green
+
+@cfunc(types.float64(types.float64, types.float64))
+def logic_b(a, b):
+    return a + b     # Add Blue components
+
+@cfunc(types.float64(types.float64, types.float64))
+def logic_a(a, b):
+    return 1.0       # Always solid alpha
+
+resolver = pv.resolvers.CustomVec4ConflictResolver(logic_r, logic_g, logic_b, logic_a)
+root.set_attribute_conflict_resolver(pv.DefaultAttributes.COLOR_RGBA, resolver)
+
+viz.Render(root, materials)
+```
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (color)</p>
+<img src="images/05_custom_vector_resolution_color_rgba.webp" alt="Custom Vector Resolution" width="100%">
+</div>
+</div>
+
+---
+
+## Lesson 6: N-ary Conflict Reductions
+
+While `pv.Union` and `pv.Intersection` are standard *binary* boolean operations that process exactly two geometries, the `pv.BBoxUnion` and `pv.BBoxIntersection` are highly optimized *N-ary* nodes that can take any number of children (e.g., thousands of lattice struts). 
+
+So how does our custom conflict resolution function—which only takes two parameters (`left_val`, `right_val`)—handle an overlap of four, five, or fifty objects?
+
+It uses **Binary Reduction**. A binary reduction simply resolves the array of conflicts two at a time sequentially. The node compares the first two intersecting objects, evaluates their localized attribute fields, and resolves them using your custom function. The resulting "virtual" attribute field is then fed into the *left side* of the custom function against the third overlapping object on the *right side*. The result is fed against the fourth object, and so on until the entire spatial stack is resolved into a single value for that discrete coordinate. 
+
+In this example, we union four rectangular prisms arranged in a 2×2 grid (`pv.BBoxUnion`), one in each quadrant of the XY plane, with their edges deliberately overlapping by a few units. Each prism carries a `DENSITY` attribute of `1.0`. We then attach an additive custom resolver (`left_val + right_val`). Because of binary reduction, any 3D coordinate that lies inside only one prism keeps its density of `1.0`. Along the shared edges where exactly two prisms overlap, the reduction yields `2.0`. At the very center of the grid where all four prisms meet, the reduction cascades through all four children: `(1.0 + 1.0) + 1.0 + 1.0 = 4.0`.
+
+```python
+import pyvcad as pv
+import pyvcad_rendering as viz
+from numba import cfunc, types
+
+materials = pv.default_materials
+
+# 1. Define four rectangular prisms, one in each quadrant of the XY plane.
+#    Each prism is 12x12x6 but offset so they overlap by 2 units along
+#    each shared edge, creating a cross-shaped overlap region in the center.
+q1 = pv.RectPrism(pv.Vec3( 5.0,  5.0, 0.0), pv.Vec3(12.0, 12.0, 6.0))
+q2 = pv.RectPrism(pv.Vec3(-5.0,  5.0, 0.0), pv.Vec3(12.0, 12.0, 6.0))
+q3 = pv.RectPrism(pv.Vec3(-5.0, -5.0, 0.0), pv.Vec3(12.0, 12.0, 6.0))
+q4 = pv.RectPrism(pv.Vec3( 5.0, -5.0, 0.0), pv.Vec3(12.0, 12.0, 6.0))
+
+# 2. Assign identical density scalars to each prism
+q1.set_attribute("density", pv.FloatAttribute("1.0"))
+q2.set_attribute("density", pv.FloatAttribute("1.0"))
+q3.set_attribute("density", pv.FloatAttribute("1.0"))
+q4.set_attribute("density", pv.FloatAttribute("1.0"))
+
+# 3. Use BBoxUnion - an N-ary union node.
+#    Conflicts in overlapping regions are resolved via Binary Reduction.
+root = pv.BBoxUnion([q1, q2, q3, q4])
+
+# 4. Define an additive custom resolver using a Numba cfunc.
+#    The same binary function signature (left_val, right_val) is reused
+#    for every pair during the reduction across all overlapping children.
+@cfunc(types.float64(types.float64, types.float64))
+def additive_density(left_val, right_val):
+    return left_val + right_val
+
+root.set_attribute_conflict_resolver(
+    "density",
+    pv.resolvers.CustomFloatConflictResolver(additive_density)
+)
+
+viz.Render(root, materials)
+```
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (density)</p>
+<img src="images/06_n_ary_binary_reduction_density.webp" alt="N-ary Reduction Resolution" width="100%">
+<p align="center" style="font-size: 0.9em;"><em>The outer regions of each prism show a density of 1.0. Along the shared edges, density rises to 2.0. At the very center where all four prisms meet, the additive binary reduction yields a peak density of 4.0.</em></p>
+</div>
+</div>

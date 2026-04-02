@@ -62,6 +62,24 @@ root = cube
 viz.Render(root)
 ```
 
+The diagram below introduces the basic format used throughout this guide. The dot and arrow at the top show where evaluation enters the tree, and the first example is just a single geometry leaf at the root. Later lessons will wrap that same kind of geometry in composition, transform, and attribute layers.
+
+<p class="guide-figure-label">Tree / DAG Structure</p>
+
+```{image} images/01_hello_world_tree_structure.svg
+:alt: Tree / DAG diagram for the Hello World example
+:width: 40%
+:align: center
+```
+
+<p class="guide-figure-label">Legend</p>
+
+```{image} images/01_hello_world_tree_legend.svg
+:alt: Legend for the Hello World tree diagram
+:width: 40%
+:align: center
+```
+
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
 <p class="guide-figure-label">Render</p>
@@ -89,6 +107,22 @@ root = pv.Union(left_sphere, right_sphere)
 viz.Render(root)
 ```
 
+<p class="guide-figure-label">Tree / DAG Structure</p>
+
+```{image} images/02_csg_union_tree_structure.svg
+:alt: Tree / DAG diagram for the CSG Union example
+:width: 60%
+:align: center
+```
+
+<p class="guide-figure-label">Legend</p>
+
+```{image} images/02_csg_union_tree_legend.svg
+:alt: Legend for the CSG Union tree diagram
+:width: 60%
+:align: center
+```
+
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
 <p class="guide-figure-label">Render</p>
@@ -108,6 +142,14 @@ root = pv.Intersection(left_sphere, right_sphere)
 viz.Render(root)
 ```
 
+<p class="guide-figure-label">Tree / DAG Structure</p>
+
+```{image} images/03_csg_intersection_tree_structure.svg
+:alt: Tree / DAG diagram for the CSG Intersection example
+:width: 60%
+:align: center
+```
+
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
 <p class="guide-figure-label">Render</p>
@@ -125,6 +167,14 @@ right_sphere = pv.Sphere(pv.Vec3(3, 0, 0), 5.0)
 # Subtract right from left
 root = pv.Difference(left_sphere, right_sphere)
 viz.Render(root)
+```
+
+<p class="guide-figure-label">Tree / DAG Structure</p>
+
+```{image} images/04_csg_difference_tree_structure.svg
+:alt: Tree / DAG diagram for the CSG Difference example
+:width: 60%
+:align: center
 ```
 
 <div class="guide-figure-grid">
@@ -195,6 +245,22 @@ root = pv.Union(cube, translated_cube)
 viz.Render(root)
 ```
 
+<p class="guide-figure-label">Tree / DAG Structure</p>
+
+```{image} images/06_transform_translate_tree_structure.svg
+:alt: Tree / DAG diagram for the Translate example
+:width: 55%
+:align: center
+```
+
+<p class="guide-figure-label">Legend</p>
+
+```{image} images/06_transform_translate_tree_legend.svg
+:alt: Legend for the Translate tree diagram
+:width: 85%
+:align: center
+```
+
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
 <p class="guide-figure-label">Render</p>
@@ -212,6 +278,14 @@ cube = pv.RectPrism(pv.Vec3(10, 0, 0), pv.Vec3(10, 10, 10))
 rotated_cube = pv.Rotate(0.0, 45.0, 0.0, cube)
 root = pv.Union(cube, rotated_cube)
 viz.Render(root)
+```
+
+<p class="guide-figure-label">Tree / DAG Structure</p>
+
+```{image} images/07_transform_rotate_tree_structure.svg
+:alt: Tree / DAG diagram for the Rotate example
+:width: 55%
+:align: center
 ```
 
 <div class="guide-figure-grid">
@@ -232,6 +306,14 @@ scaled_cube = pv.Scale(2.0, 2.0, 2.0, cube)
 moved_scaled = pv.Translate(20.0, 0.0, 0.0, scaled_cube)
 root = pv.Union(cube, moved_scaled)
 viz.Render(root)
+```
+
+<p class="guide-figure-label">Tree / DAG Structure</p>
+
+```{image} images/08_transform_scale_tree_structure.svg
+:alt: Tree / DAG diagram for the Scale example
+:width: 50%
+:align: center
 ```
 
 <div class="guide-figure-grid">
@@ -269,6 +351,22 @@ root = cube
 viz.Render(root, materials)
 ```
 
+<p class="guide-figure-label">Tree / DAG Structure</p>
+
+```{image} images/09_static_float_tree_structure.svg
+:alt: Tree / DAG diagram for the static float attribute example
+:width: 40%
+:align: center
+```
+
+<p class="guide-figure-label">Legend</p>
+
+```{image} images/09_static_float_tree_legend.svg
+:alt: Legend for the static float attribute tree diagram
+:width: 55%
+:align: center
+```
+
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
 <p class="guide-figure-label">Render (modulus)</p>
@@ -288,6 +386,14 @@ cube.set_attribute(pv.DefaultAttributes.MODULUS, gradient)
 materials = pv.default_materials
 root = cube
 viz.Render(root, materials)
+```
+
+<p class="guide-figure-label">Tree / DAG Structure</p>
+
+```{image} images/10_gradient_float_tree_structure.svg
+:alt: Tree / DAG diagram for the gradient float attribute example
+:width: 40%
+:align: center
 ```
 
 <div class="guide-figure-grid">
@@ -322,6 +428,16 @@ root = cube
 viz.Render(root, materials)
 ```
 
+The tree structure is the same as the expression-based gradient example above. Only the implementation of the `Float` attribute changes from a math expression string to a compiled Python function.
+
+<p class="guide-figure-label">Tree / DAG Structure</p>
+
+```{image} images/10_gradient_float_tree_structure.svg
+:alt: Tree / DAG diagram for the Numba float attribute example
+:width: 40%
+:align: center
+```
+
 ## Lesson 5: Colors
 OpenVCAD uses `Vec4Attribute` to assign continuous color gradients across an object using math expressions. Values represent R, G, B, and Alpha bounded from 0 to 1.
 
@@ -342,6 +458,22 @@ cube.set_attribute(pv.DefaultAttributes.COLOR_RGBA, color_gradient)
 materials = pv.default_materials
 root = cube
 viz.Render(root, materials)
+```
+
+<p class="guide-figure-label">Tree / DAG Structure</p>
+
+```{image} images/11_color_gradient_tree_structure.svg
+:alt: Tree / DAG diagram for the color gradient example
+:width: 40%
+:align: center
+```
+
+<p class="guide-figure-label">Legend</p>
+
+```{image} images/11_color_gradient_tree_legend.svg
+:alt: Legend for the color gradient tree diagram
+:width: 55%
+:align: center
 ```
 
 <div class="guide-figure-grid">
@@ -375,6 +507,22 @@ cube.set_attribute(pv.DefaultAttributes.VOLUME_FRACTIONS, fraction_gradient)
 
 root = cube
 viz.Render(root, materials)
+```
+
+<p class="guide-figure-label">Tree / DAG Structure</p>
+
+```{image} images/12_volume_fractions_tree_structure.svg
+:alt: Tree / DAG diagram for the volume fractions example
+:width: 45%
+:align: center
+```
+
+<p class="guide-figure-label">Legend</p>
+
+```{image} images/12_volume_fractions_tree_legend.svg
+:alt: Legend for the volume fractions tree diagram
+:width: 55%
+:align: center
 ```
 
 <div class="guide-figure-grid">

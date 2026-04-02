@@ -1,0 +1,36 @@
+flowchart TB
+    Entry((" "))
+    Root["AttributeModifier"]
+    Carrier["RectPrism"]
+
+    AttrDensity(["Float<br/>DENSITY"])
+    VolDensity[("density<br/>FloatVolume")]
+
+    AttrTemperature(["Float<br/>TEMPERATURE"])
+    VolTemperature[("temperature<br/>FloatVolume")]
+
+    OutAttr(["Vec4<br/>COLOR_RGBA"])
+    Converter["LookupTableConverter<br/>LUT"]
+
+    Entry --> Root
+    Root --> Carrier
+    Carrier -.-> AttrDensity
+    Carrier -.-> AttrTemperature
+    AttrDensity -.-> VolDensity
+    AttrTemperature -.-> VolTemperature
+    Root -.-> OutAttr
+    Root -.-> Converter
+
+    class Entry entryPoint
+    class Root attributeProcessNode
+    class Carrier geometryNode
+    class AttrDensity,AttrTemperature,OutAttr attributeNode
+    class VolDensity,VolTemperature volumeNode
+    class Converter converterNode
+
+    classDef entryPoint fill:#102A43,stroke:#102A43,stroke-width:2px,color:#102A43;
+    classDef geometryNode fill:#EDF2F7,stroke:#2B6CB0,stroke-width:2.5px,color:#1A365D;
+    classDef attributeProcessNode fill:#FDECF3,stroke:#B83280,stroke-width:4px,color:#702459;
+    classDef attributeNode fill:#FDECF3,stroke:#B83280,stroke-width:2.5px,color:#702459;
+    classDef volumeNode fill:#E2E8F0,stroke:#475569,stroke-width:2.5px,color:#1E293B;
+    classDef converterNode fill:#FEE2E2,stroke:#C53030,stroke-width:2.5px,color:#742A2A;

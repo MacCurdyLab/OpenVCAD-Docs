@@ -53,6 +53,24 @@ There are only three volume-specific steps here:
 
 When you run the script from `examples/volumes/vdb/basic_density/`, select the `DENSITY` attribute in the renderer to inspect the sampled field inside the cube.
 
+The tree diagram below makes the carrier pattern explicit: the `RectPrism` is still the geometry root, while the sampled `density` grid sits below it as a volume-backed `DENSITY` attribute.
+
+<p class="guide-figure-label">Tree / DAG Structure</p>
+
+```{image} images/volumes_basic_density_tree_structure.svg
+:alt: Tree / DAG diagram for the basic density volume lesson
+:width: 40%
+:align: center
+```
+
+<p class="guide-figure-label">Legend</p>
+
+```{image} images/volumes_basic_density_tree_legend.svg
+:alt: Legend for the basic density volume tree diagram
+:width: 60%
+:align: center
+```
+
 The figure below is the direct `DENSITY` preview of that setup. This small OpenVDB file was generated as a smooth radial-falloff density field normalized to the range `0` to `1`, then saved as a single `density` grid. The script simply loads that grid and attaches it to the cube as `DENSITY`. If you want more sample VDB datasets to experiment with, OpenVDB provides additional example files on its [download page](https://www.openvdb.org/download/).
 
 <div class="guide-figure-grid">
@@ -126,6 +144,24 @@ mod = pv.LookupTableConverter(
 )
 
 root = pv.AttributeModifier(mod, object)
+```
+
+The tree diagram below shows the full teaching workflow: two sampled scalar fields attach to one carrier object, and an `AttributeModifier` turns them into the derived `COLOR_RGBA` field used for rendering and printing.
+
+<p class="guide-figure-label">Tree / DAG Structure</p>
+
+```{image} images/volumes_fire_tree_structure.svg
+:alt: Tree / DAG diagram for the fire volume workflow
+:width: 100%
+:align: center
+```
+
+<p class="guide-figure-label">Legend</p>
+
+```{image} images/volumes_fire_tree_legend.svg
+:alt: Legend for the fire volume tree diagram
+:width: 100%
+:align: center
 ```
 
 Conceptually, this lookup table is meant to mimic how fire changes visually:

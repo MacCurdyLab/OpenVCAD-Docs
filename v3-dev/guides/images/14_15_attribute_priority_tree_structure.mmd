@@ -1,0 +1,53 @@
+flowchart LR
+    subgraph CaseA["No parent override"]
+        direction TB
+        EntryA((" "))
+        RootA["Union"]
+        LeftA["RectPrism"]
+        RightA["RectPrism"]
+        AttrAL(["Vec4<br/>COLOR_RGBA"])
+        AttrAR(["Vec4<br/>COLOR_RGBA"])
+
+        EntryA --> RootA
+        RootA --> LeftA
+        RootA --> RightA
+        LeftA -.-> AttrAL
+        RightA -.-> AttrAR
+    end
+
+    subgraph CaseB["Parent override"]
+        direction TB
+        EntryB((" "))
+        RootB["Union"]
+        LeftB["RectPrism"]
+        RightB["RectPrism"]
+        AttrBRoot(["Vec4<br/>COLOR_RGBA"])
+        AttrBL(["Vec4<br/>COLOR_RGBA"])
+        AttrBR(["Vec4<br/>COLOR_RGBA"])
+
+        EntryB --> RootB
+        RootB --> LeftB
+        RootB --> RightB
+        RootB -.->|"overrides"| AttrBRoot
+        LeftB -.-> AttrBL
+        RightB -.-> AttrBR
+    end
+
+    RootA ~~~ RootB
+
+    class EntryA,EntryB entryPoint
+    class RootA,RootB compositionNode
+    class LeftA,RightA,LeftB,RightB geometryNode
+    class AttrAL,AttrAR,AttrBRoot attributeNode
+    class AttrBL,AttrBR overriddenAttribute
+
+    classDef entryPoint fill:#102A43,stroke:#102A43,stroke-width:2px,color:#102A43;
+    classDef compositionNode fill:#EAF7EC,stroke:#2F855A,stroke-width:2.5px,color:#173A2D;
+    classDef geometryNode fill:#EDF2F7,stroke:#2B6CB0,stroke-width:2.5px,color:#1A365D;
+    classDef attributeNode fill:#FDECF3,stroke:#B83280,stroke-width:2.5px,color:#702459;
+    classDef overriddenAttribute fill:#FEF2F6,stroke:#D8B4C6,stroke-width:2px,color:#9D7490,stroke-dasharray: 6 3;
+
+    style CaseA fill:#FFFFFF,stroke:#CBD5E0,stroke-width:1px
+    style CaseB fill:#FFFFFF,stroke:#CBD5E0,stroke-width:1px
+    style RootA stroke-width:4px
+    style RootB stroke-width:4px

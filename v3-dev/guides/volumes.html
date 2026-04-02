@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
-    <link rel="stylesheet" type="text/css" href="../_static/openvcad_theme.css?v=ee9d5c20" />
+    <link rel="stylesheet" type="text/css" href="../_static/openvcad_theme.css?v=1b19c5c2" />
     <link rel="stylesheet" type="text/css" href="../_static/openvcad_branding.css?v=c43e02c9" />
   
   <!-- So that users can add custom icons -->
@@ -438,6 +438,11 @@ Current compiler guides:
 <li><p><code class="docutils literal notranslate"><span class="pre">cube.set_attribute(...)</span></code> attaches that field to a normal piece of geometry.</p></li>
 </ul>
 <p>When you run the script from <code class="docutils literal notranslate"><span class="pre">examples/volumes/vdb/basic_density/</span></code>, select the <code class="docutils literal notranslate"><span class="pre">DENSITY</span></code> attribute in the renderer to inspect the sampled field inside the cube.</p>
+<p>The tree diagram below makes the carrier pattern explicit: the <code class="docutils literal notranslate"><span class="pre">RectPrism</span></code> is still the geometry root, while the sampled <code class="docutils literal notranslate"><span class="pre">density</span></code> grid sits below it as a volume-backed <code class="docutils literal notranslate"><span class="pre">DENSITY</span></code> attribute.</p>
+<p class="guide-figure-label">Tree / DAG Structure</p>
+<img alt="Tree / DAG diagram for the basic density volume lesson" class="align-center" src="../_images/volumes_basic_density_tree_structure.svg" style="width: 40%;" />
+<p class="guide-figure-label">Legend</p>
+<img alt="Legend for the basic density volume tree diagram" class="align-center" src="../_images/volumes_basic_density_tree_legend.svg" style="width: 60%;" />
 <p>The figure below is the direct <code class="docutils literal notranslate"><span class="pre">DENSITY</span></code> preview of that setup. This small OpenVDB file was generated as a smooth radial-falloff density field normalized to the range <code class="docutils literal notranslate"><span class="pre">0</span></code> to <code class="docutils literal notranslate"><span class="pre">1</span></code>, then saved as a single <code class="docutils literal notranslate"><span class="pre">density</span></code> grid. The script simply loads that grid and attaches it to the cube as <code class="docutils literal notranslate"><span class="pre">DENSITY</span></code>. If you want more sample VDB datasets to experiment with, OpenVDB provides additional example files on its <a class="reference external" href="https://www.openvdb.org/download/">download page</a>.</p>
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
@@ -500,6 +505,11 @@ Current compiler guides:
 <span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">AttributeModifier</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="nb">object</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>The tree diagram below shows the full teaching workflow: two sampled scalar fields attach to one carrier object, and an <code class="docutils literal notranslate"><span class="pre">AttributeModifier</span></code> turns them into the derived <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code> field used for rendering and printing.</p>
+<p class="guide-figure-label">Tree / DAG Structure</p>
+<img alt="Tree / DAG diagram for the fire volume workflow" class="align-center" src="../_images/volumes_fire_tree_structure.svg" style="width: 100%;" />
+<p class="guide-figure-label">Legend</p>
+<img alt="Legend for the fire volume tree diagram" class="align-center" src="../_images/volumes_fire_tree_legend.svg" style="width: 100%;" />
 <p>Conceptually, this lookup table is meant to mimic how fire changes visually:</p>
 <ul class="simple">
 <li><p>low temperature and low density stay close to transparent smoke</p></li>

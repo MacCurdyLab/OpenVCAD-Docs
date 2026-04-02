@@ -158,6 +158,22 @@ root = pv.Difference(
 viz.Render(root)
 ```
 
+<p class="guide-figure-label">Tree / DAG Structure</p>
+
+```{image} images/05_csg_tree_structure.svg
+:alt: Tree / DAG diagram for the Bringing CSG Together example
+:width: 100%
+:align: center
+```
+
+<p class="guide-figure-label">Legend</p>
+
+```{image} images/05_csg_tree_legend.svg
+:alt: Legend for the Bringing CSG Together tree diagram
+:width: 100%
+:align: center
+```
+
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
 <p class="guide-figure-label">Render</p>
@@ -394,6 +410,24 @@ root = pv.Union(left_cube, right_cube)
 viz.Render(root, pv.default_materials)
 ```
 
+The comparison diagram below highlights the two priority cases: without a parent override, the child attributes remain active and the left child owns the overlap region; once `COLOR_RGBA` is attached to the `Union`, that parent-level attribute replaces both leaf assignments.
+
+<p class="guide-figure-label">Tree / DAG Structure</p>
+
+```{image} images/14_15_attribute_priority_tree_structure.svg
+:alt: Tree / DAG comparison diagram for attribute priority and parent override
+:width: 100%
+:align: center
+```
+
+<p class="guide-figure-label">Legend</p>
+
+```{image} images/14_15_attribute_priority_tree_legend.svg
+:alt: Legend for the attribute priority tree diagram
+:width: 100%
+:align: center
+```
+
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
 <p class="guide-figure-label">Leaf level handling</p>
@@ -428,13 +462,6 @@ root = pv.Rotate(0.0, 0.0, 90.0, prism)
 viz.Render(root, pv.default_materials)
 ```
 
-<div class="guide-figure-grid">
-<div class="guide-figure-cell">
-<p class="guide-figure-label">Render (gradient rotates with geometry)</p>
-<img src="images/16_identity_before_color_rgba.webp" alt="Identity Before" width="100%">
-</div>
-</div>
-
 To apply a *global* static gradient regardless of rotation, apply the attribute AFTER the rotation using an `Identity` node:
 
 ```python
@@ -453,7 +480,29 @@ root.set_attribute(pv.DefaultAttributes.COLOR_RGBA, color_gradient)
 viz.Render(root, pv.default_materials)
 ```
 
+The comparison diagram below shows the same attribute expression attached at two different points in the tree: on the `RectPrism` before rotation, and on `Identity` after rotation.
+
+<p class="guide-figure-label">Tree / DAG Structure</p>
+
+```{image} images/16_17_coordinate_space_identity_tree_structure.svg
+:alt: Tree / DAG comparison diagram for coordinate spaces and Identity
+:width: 100%
+:align: center
+```
+
+<p class="guide-figure-label">Legend</p>
+
+```{image} images/16_17_coordinate_space_identity_tree_legend.svg
+:alt: Legend for the coordinate space and Identity tree diagram
+:width: 100%
+:align: center
+```
+
 <div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (gradient rotates with geometry)</p>
+<img src="images/16_identity_before_color_rgba.webp" alt="Identity Before" width="100%">
+</div>
 <div class="guide-figure-cell">
 <p class="guide-figure-label">Render (world-aligned gradient via Identity)</p>
 <img src="images/17_identity_after_color_rgba.webp" alt="Identity After" width="100%">
@@ -493,6 +542,22 @@ cube.set_attribute(pv.DefaultAttributes.VOLUME_FRACTIONS, fractions)
 
 root = cube
 viz.Render(root, materials)
+```
+
+<p class="guide-figure-label">Tree / DAG Structure</p>
+
+```{image} images/18_multiple_attributes_tree_structure.svg
+:alt: Tree / DAG diagram for the Multiple Attributes example
+:width: 100%
+:align: center
+```
+
+<p class="guide-figure-label">Legend</p>
+
+```{image} images/18_multiple_attributes_tree_legend.svg
+:alt: Legend for the Multiple Attributes tree diagram
+:width: 55%
+:align: center
 ```
 
 <div class="guide-figure-grid">

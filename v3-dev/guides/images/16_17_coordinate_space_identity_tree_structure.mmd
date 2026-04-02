@@ -1,0 +1,45 @@
+flowchart LR
+    subgraph CaseA["Attach before Rotate"]
+        direction TB
+        EntryA((" "))
+        RootA["Rotate"]
+        PrismA["RectPrism"]
+        AttrA(["Vec4<br/>COLOR_RGBA"])
+
+        EntryA --> RootA
+        RootA --> PrismA
+        PrismA -.-> AttrA
+    end
+
+    subgraph CaseB["Attach on Identity after Rotate"]
+        direction TB
+        EntryB((" "))
+        RootB["Identity"]
+        RotateB["Rotate"]
+        PrismB["RectPrism"]
+        AttrB(["Vec4<br/>COLOR_RGBA"])
+
+        EntryB --> RootB
+        RootB --> RotateB
+        RotateB --> PrismB
+        RootB -.-> AttrB
+    end
+
+    RootA ~~~ RootB
+
+    class EntryA,EntryB entryPoint
+    class RootA,RotateB transformNode
+    class RootB compositionNode
+    class PrismA,PrismB geometryNode
+    class AttrA,AttrB attributeNode
+
+    classDef entryPoint fill:#102A43,stroke:#102A43,stroke-width:2px,color:#102A43;
+    classDef compositionNode fill:#EAF7EC,stroke:#2F855A,stroke-width:2.5px,color:#173A2D;
+    classDef geometryNode fill:#EDF2F7,stroke:#2B6CB0,stroke-width:2.5px,color:#1A365D;
+    classDef transformNode fill:#FFF4DB,stroke:#B7791F,stroke-width:2.5px,color:#4A2F10;
+    classDef attributeNode fill:#FDECF3,stroke:#B83280,stroke-width:2.5px,color:#702459;
+
+    style CaseA fill:#FFFFFF,stroke:#CBD5E0,stroke-width:1px
+    style CaseB fill:#FFFFFF,stroke:#CBD5E0,stroke-width:1px
+    style RootA stroke-width:4px
+    style RootB stroke-width:4px

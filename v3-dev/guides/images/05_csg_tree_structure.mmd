@@ -1,0 +1,45 @@
+flowchart TB
+    Entry((" "))
+    Root["Difference"]
+
+    Left["Intersection"]
+    Right["Union"]
+    RightInner["Union"]
+
+    Box["RectPrism"]
+    Sphere["Sphere"]
+    Cylinder["Cylinder"]
+
+    RotX["Rotate<br/>Pitch 90°"]
+    RotY["Rotate<br/>Yaw 90°"]
+
+    Entry --> Root
+
+    Root -->|"keep"| Left
+    Root -->|"subtract"| Right
+
+    Left --> Box
+    Left --> Sphere
+
+    Right --> Cylinder
+    Right --> RightInner
+
+    RightInner --> RotX
+    RightInner --> RotY
+
+    RotX --> Cylinder
+    RotY --> Cylinder
+
+    class Entry entryPoint
+    class Root rootNode
+    class Left,Right,RightInner compositionNode
+    class Box,Sphere,Cylinder geometryNode
+    class RotX,RotY transformNode
+    class Cylinder reusedNode
+
+    classDef entryPoint fill:#102A43,stroke:#102A43,stroke-width:2px,color:#102A43;
+    classDef rootNode fill:#DFF5F1,stroke:#124559,stroke-width:4px,color:#102A43;
+    classDef compositionNode fill:#EAF7EC,stroke:#2F855A,stroke-width:2.5px,color:#173A2D;
+    classDef geometryNode fill:#EDF2F7,stroke:#2B6CB0,stroke-width:2.5px,color:#1A365D;
+    classDef transformNode fill:#FFF4DB,stroke:#B7791F,stroke-width:2.5px,color:#4A2F10;
+    classDef reusedNode stroke-dasharray: 8 4;

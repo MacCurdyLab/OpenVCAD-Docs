@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
-    <link rel="stylesheet" type="text/css" href="../_static/openvcad_theme.css?v=ee9d5c20" />
+    <link rel="stylesheet" type="text/css" href="../_static/openvcad_theme.css?v=1b19c5c2" />
     <link rel="stylesheet" type="text/css" href="../_static/openvcad_branding.css?v=c43e02c9" />
   
   <!-- So that users can add custom icons -->
@@ -440,7 +440,7 @@
 <em>#include &lt;rotate.h&gt;</em></div>
 <p>Rotates a child node around the child’s bounding box center. </p>
 <p>The rotation is specified by pitch, yaw, and roll (Euler angles in degrees).</p>
-<p>The rotation order is roll, then yaw, then pitch. The rotation center is the child’s bounding box center, which is established when <a class="reference internal" href="libvcad-tree-core.html#class_unary_1a6d28d994c6ed91afdb70085819b685a5"><span class="std std-ref">prepare()</span></a> is called; you must call <a class="reference internal" href="libvcad-tree-core.html#class_unary_1a6d28d994c6ed91afdb70085819b685a5"><span class="std std-ref">prepare()</span></a> before <a class="reference internal" href="#class_rotate_1a3e9db986f04a14723328077dead8d223"><span class="std std-ref">evaluate()</span></a>, <a class="reference internal" href="#class_rotate_1ad2a43eea3cedab8ffd80152f30479643"><span class="std std-ref">sample()</span></a>, or <a class="reference internal" href="libvcad-tree-core.html#class_node_1a7f28b6054c502f9eba58e7f08953e1ab"><span class="std std-ref">bounding_box()</span></a>. To apply the rotation, the sample point in <a class="reference internal" href="#class_rotate_1a3e9db986f04a14723328077dead8d223"><span class="std std-ref">evaluate()</span></a> and <a class="reference internal" href="#class_rotate_1ad2a43eea3cedab8ffd80152f30479643"><span class="std std-ref">sample()</span></a> is transformed by the inverse of the rotation matrix around that center. </p>
+<p>The rotation order is roll, then yaw, then pitch. The rotation center is the child’s bounding box center. This is available before <a class="reference internal" href="libvcad-tree-core.html#class_unary_1a6d28d994c6ed91afdb70085819b685a5"><span class="std std-ref">prepare()</span></a> so <a class="reference internal" href="libvcad-tree-core.html#class_node_1a7f28b6054c502f9eba58e7f08953e1ab"><span class="std std-ref">bounding_box()</span></a> is safe before <a class="reference internal" href="libvcad-tree-core.html#class_unary_1a6d28d994c6ed91afdb70085819b685a5"><span class="std std-ref">prepare()</span></a>, but you must still call <a class="reference internal" href="libvcad-tree-core.html#class_unary_1a6d28d994c6ed91afdb70085819b685a5"><span class="std std-ref">prepare()</span></a> before <a class="reference internal" href="#class_rotate_1a3e9db986f04a14723328077dead8d223"><span class="std std-ref">evaluate()</span></a> or <a class="reference internal" href="#class_rotate_1ad2a43eea3cedab8ffd80152f30479643"><span class="std std-ref">sample()</span></a>. To apply the rotation, the sample point in <a class="reference internal" href="#class_rotate_1a3e9db986f04a14723328077dead8d223"><span class="std std-ref">evaluate()</span></a> and <a class="reference internal" href="#class_rotate_1ad2a43eea3cedab8ffd80152f30479643"><span class="std std-ref">sample()</span></a> is transformed by the inverse of the rotation matrix around that center. </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
@@ -992,7 +992,7 @@
 <dd><div class="docutils container">
 <em>#include &lt;conformal_map.h&gt;</em></div>
 <p>Maps a pattern node onto the surface of a base node by warping coordinates. </p>
-<p>Builds a local frame from the base surface, transports the anchor frame to the query by shortest rotation, and computes (u,v) from a rotation vector (axis*angle). Angle-&gt;length is auto-calibrated at the anchor to preserve expected pattern scale without precompute. </p>
+<p>Builds a local frame from the base surface, transports the anchor frame to the query by shortest rotation, and computes (u,v) from a rotation vector (axis*angle). Angle-&gt;length is auto-calibrated at the anchor during <a class="reference internal" href="#class_conformal_map_1af0f0de3fbe9b40679571d68858aca355"><span class="std std-ref">prepare()</span></a> to preserve expected pattern scale without precompute. </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
@@ -1608,17 +1608,6 @@
 </dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N12Intersection12IntersectionEb">
-<span id="_CPPv3N12Intersection12IntersectionEb"></span><span id="_CPPv2N12Intersection12IntersectionEb"></span><span id="Intersection::Intersection__b"></span><span class="target" id="class_intersection_1a73e2490b748d75fa12aee23c658e1d25"></span><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Intersection</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">intersect_distribution</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Intersection12IntersectionEb" title="Link to this definition">#</a><br /></dt>
-<dd><p>Constructor. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>intersect_distribution</strong> – If true, the distribution will be intersected. </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N12Intersection12IntersectionERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI4NodeEE">
 <span id="_CPPv3N12Intersection12IntersectionERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI4NodeEE"></span><span id="_CPPv2N12Intersection12IntersectionERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI4NodeEE"></span><span id="Intersection::Intersection__std::shared_ptr:Node:CR.std::shared_ptr:Node:CR"></span><span class="target" id="class_intersection_1a6b254392b224cbde005faea548bdb51d"></span><span class="sig-name descname"><span class="n"><span class="pre">Intersection</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">lhs</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">rhs</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Intersection12IntersectionERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI4NodeEE" title="Link to this definition">#</a><br /></dt>
 <dd><p>Constructor with children. </p>
@@ -1633,29 +1622,25 @@
 </dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N12Intersection12IntersectionEdbRKNSt6vectorINSt10shared_ptrI4NodeEEEE">
-<span id="_CPPv3N12Intersection12IntersectionEdbRKNSt6vectorINSt10shared_ptrI4NodeEEEE"></span><span id="_CPPv2N12Intersection12IntersectionEdbRKNSt6vectorINSt10shared_ptrI4NodeEEEE"></span><span id="Intersection::Intersection__double.b.std::vector:std::shared_ptr:Node::CR"></span><span class="target" id="class_intersection_1ab243ff54e7c529f7c93db0cc154b6deb"></span><span class="sig-name descname"><span class="n"><span class="pre">Intersection</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">k</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">intersect_distribution</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">children</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Intersection12IntersectionEdbRKNSt6vectorINSt10shared_ptrI4NodeEEEE" title="Link to this definition">#</a><br /></dt>
-<dd><p>Constructor for smooth intersection with children. </p>
+<dt class="sig sig-object cpp" id="_CPPv4N12Intersection12IntersectionEd">
+<span id="_CPPv3N12Intersection12IntersectionEd"></span><span id="_CPPv2N12Intersection12IntersectionEd"></span><span id="Intersection::Intersection__double"></span><span class="target" id="class_intersection_1a76d31ceb76f9de8339ce6e40bce73861"></span><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Intersection</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">k</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Intersection12IntersectionEd" title="Link to this definition">#</a><br /></dt>
+<dd><p>Constructor for smooth intersection. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>k</strong> – The smoothing radius. </p></li>
-<li><p><strong>intersect_distribution</strong> – If true, the distribution will be intersected. </p></li>
-<li><p><strong>children</strong> – The children nodes. </p></li>
-</ul>
+<dd class="field-odd"><p><strong>k</strong> – The smoothing radius. When k &gt; 0, produces a smooth blend. </p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N12Intersection12IntersectionEdb">
-<span id="_CPPv3N12Intersection12IntersectionEdb"></span><span id="_CPPv2N12Intersection12IntersectionEdb"></span><span id="Intersection::Intersection__double.b"></span><span class="target" id="class_intersection_1a6f6e3ff9d4063b9dfdcb17a0fd692364"></span><span class="sig-name descname"><span class="n"><span class="pre">Intersection</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">k</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">intersect_distribution</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Intersection12IntersectionEdb" title="Link to this definition">#</a><br /></dt>
-<dd><p>Constructor for smooth intersection. </p>
+<dt class="sig sig-object cpp" id="_CPPv4N12Intersection12IntersectionEdRKNSt6vectorINSt10shared_ptrI4NodeEEEE">
+<span id="_CPPv3N12Intersection12IntersectionEdRKNSt6vectorINSt10shared_ptrI4NodeEEEE"></span><span id="_CPPv2N12Intersection12IntersectionEdRKNSt6vectorINSt10shared_ptrI4NodeEEEE"></span><span id="Intersection::Intersection__double.std::vector:std::shared_ptr:Node::CR"></span><span class="target" id="class_intersection_1accd7347c2460af57d7cf31f619cb815d"></span><span class="sig-name descname"><span class="n"><span class="pre">Intersection</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">k</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">children</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12Intersection12IntersectionEdRKNSt6vectorINSt10shared_ptrI4NodeEEEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Constructor for smooth intersection with children. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>k</strong> – The smoothing radius. When k &gt; 0, produces a smooth blend. </p></li>
-<li><p><strong>intersect_distribution</strong> – If true, the distribution will be intersected. </p></li>
+<li><p><strong>k</strong> – The smoothing radius. </p></li>
+<li><p><strong>children</strong> – The children nodes. </p></li>
 </ul>
 </dd>
 </dl>
@@ -1687,11 +1672,6 @@
 </div>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N12Intersection24m_intersect_distributionE">
-<span id="_CPPv3N12Intersection24m_intersect_distributionE"></span><span id="_CPPv2N12Intersection24m_intersect_distributionE"></span><span id="Intersection::m_intersect_distribution__b"></span><span class="target" id="class_intersection_1a143cdc5a98287fd46bfee551888ef0c6"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_intersect_distribution</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><a class="headerlink" href="#_CPPv4N12Intersection24m_intersect_distributionE" title="Link to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N12Intersection10m_smooth_kE">
 <span id="_CPPv3N12Intersection10m_smooth_kE"></span><span id="_CPPv2N12Intersection10m_smooth_kE"></span><span id="Intersection::m_smooth_k__double"></span><span class="target" id="class_intersection_1ab75af1ee4b68f422f286f43f559b48bd"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_smooth_k</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.0</span></span><a class="headerlink" href="#_CPPv4N12Intersection10m_smooth_kE" title="Link to this definition">#</a><br /></dt>
@@ -1846,17 +1826,6 @@
 </dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N5Union5UnionEb">
-<span id="_CPPv3N5Union5UnionEb"></span><span id="_CPPv2N5Union5UnionEb"></span><span id="Union::Union__b"></span><span class="target" id="class_union_1a1b609484323114f275484ffbeac4bd51"></span><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Union</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">should_union_distribution</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5Union5UnionEb" title="Link to this definition">#</a><br /></dt>
-<dd><p>Constructor. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>should_union_distribution</strong> – If true, the distribution will be unioned. </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N5Union5UnionERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI4NodeEE">
 <span id="_CPPv3N5Union5UnionERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI4NodeEE"></span><span id="_CPPv2N5Union5UnionERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI4NodeEE"></span><span id="Union::Union__std::shared_ptr:Node:CR.std::shared_ptr:Node:CR"></span><span class="target" id="class_union_1a6d4556948a42baac4226883618721dbe"></span><span class="sig-name descname"><span class="n"><span class="pre">Union</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">lhs</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">rhs</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5Union5UnionERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI4NodeEE" title="Link to this definition">#</a><br /></dt>
 <dd><p>Constructor with children. </p>
@@ -1871,29 +1840,25 @@
 </dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N5Union5UnionEdbRKNSt6vectorINSt10shared_ptrI4NodeEEEE">
-<span id="_CPPv3N5Union5UnionEdbRKNSt6vectorINSt10shared_ptrI4NodeEEEE"></span><span id="_CPPv2N5Union5UnionEdbRKNSt6vectorINSt10shared_ptrI4NodeEEEE"></span><span id="Union::Union__double.b.std::vector:std::shared_ptr:Node::CR"></span><span class="target" id="class_union_1a129dfd2d0ed87d9ee61c23b3af392028"></span><span class="sig-name descname"><span class="n"><span class="pre">Union</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">k</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">should_union_distribution</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">children</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5Union5UnionEdbRKNSt6vectorINSt10shared_ptrI4NodeEEEE" title="Link to this definition">#</a><br /></dt>
-<dd><p>Constructor for smooth union with children. </p>
+<dt class="sig sig-object cpp" id="_CPPv4N5Union5UnionEd">
+<span id="_CPPv3N5Union5UnionEd"></span><span id="_CPPv2N5Union5UnionEd"></span><span id="Union::Union__double"></span><span class="target" id="class_union_1ac5a2334ce2e5b255aa03ea36bf4e525b"></span><span class="k"><span class="pre">explicit</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Union</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">k</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5Union5UnionEd" title="Link to this definition">#</a><br /></dt>
+<dd><p>Constructor for smooth union. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>k</strong> – The smoothing radius. </p></li>
-<li><p><strong>should_union_distribution</strong> – If true, the distribution will be unioned. </p></li>
-<li><p><strong>children</strong> – The children nodes. </p></li>
-</ul>
+<dd class="field-odd"><p><strong>k</strong> – The smoothing radius. When k &gt; 0, produces a smooth blend between children. </p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N5Union5UnionEdb">
-<span id="_CPPv3N5Union5UnionEdb"></span><span id="_CPPv2N5Union5UnionEdb"></span><span id="Union::Union__double.b"></span><span class="target" id="class_union_1a4cb7d824fe3e2c848bca9e22736543cf"></span><span class="sig-name descname"><span class="n"><span class="pre">Union</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">k</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">should_union_distribution</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5Union5UnionEdb" title="Link to this definition">#</a><br /></dt>
-<dd><p>Constructor for smooth union. </p>
+<dt class="sig sig-object cpp" id="_CPPv4N5Union5UnionEdRKNSt6vectorINSt10shared_ptrI4NodeEEEE">
+<span id="_CPPv3N5Union5UnionEdRKNSt6vectorINSt10shared_ptrI4NodeEEEE"></span><span id="_CPPv2N5Union5UnionEdRKNSt6vectorINSt10shared_ptrI4NodeEEEE"></span><span id="Union::Union__double.std::vector:std::shared_ptr:Node::CR"></span><span class="target" id="class_union_1ade064c1fe31c4ab8531fb2b08b132bb1"></span><span class="sig-name descname"><span class="n"><span class="pre">Union</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">k</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">children</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N5Union5UnionEdRKNSt6vectorINSt10shared_ptrI4NodeEEEE" title="Link to this definition">#</a><br /></dt>
+<dd><p>Constructor for smooth union with children. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>k</strong> – The smoothing radius. When k &gt; 0, produces a smooth blend between children. </p></li>
-<li><p><strong>should_union_distribution</strong> – If true, the distribution will be unioned. </p></li>
+<li><p><strong>k</strong> – The smoothing radius. </p></li>
+<li><p><strong>children</strong> – The children nodes. </p></li>
 </ul>
 </dd>
 </dl>
@@ -1920,11 +1885,6 @@
 <span id="_CPPv3N5Union10m_smooth_kE"></span><span id="_CPPv2N5Union10m_smooth_kE"></span><span id="Union::m_smooth_k__double"></span><span class="target" id="class_union_1aae0b0c288217abf814ca84a8a4a78382"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_smooth_k</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.0</span></span><a class="headerlink" href="#_CPPv4N5Union10m_smooth_kE" title="Link to this definition">#</a><br /></dt>
 <dd><p>The smoothing radius for smooth union. 0 = sharp (default). </p>
 </dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N5Union20m_union_distributionE">
-<span id="_CPPv3N5Union20m_union_distributionE"></span><span id="_CPPv2N5Union20m_union_distributionE"></span><span id="Union::m_union_distribution__b"></span><span class="target" id="class_union_1ac3c58ba04e906dd2a08c958daa69b87b"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_union_distribution</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><a class="headerlink" href="#_CPPv4N5Union20m_union_distributionE" title="Link to this definition">#</a><br /></dt>
-<dd></dd></dl>
 
 </div>
 </dd></dl>
@@ -2236,13 +2196,11 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12Intersection5cloneEv"><code class="docutils literal notranslate"><span class="pre">clone()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12Intersection8evaluateEddd"><code class="docutils literal notranslate"><span class="pre">evaluate()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12Intersection12IntersectionEv"><code class="docutils literal notranslate"><span class="pre">Intersection()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12Intersection12IntersectionEb"><code class="docutils literal notranslate"><span class="pre">Intersection()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12Intersection12IntersectionERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI4NodeEE"><code class="docutils literal notranslate"><span class="pre">Intersection()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12Intersection12IntersectionEdbRKNSt6vectorINSt10shared_ptrI4NodeEEEE"><code class="docutils literal notranslate"><span class="pre">Intersection()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12Intersection12IntersectionEdb"><code class="docutils literal notranslate"><span class="pre">Intersection()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12Intersection12IntersectionEd"><code class="docutils literal notranslate"><span class="pre">Intersection()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12Intersection12IntersectionEdRKNSt6vectorINSt10shared_ptrI4NodeEEEE"><code class="docutils literal notranslate"><span class="pre">Intersection()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12Intersection6sampleEddd"><code class="docutils literal notranslate"><span class="pre">sample()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12Intersection20prepare_bounding_boxEv"><code class="docutils literal notranslate"><span class="pre">prepare_bounding_box()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12Intersection24m_intersect_distributionE"><code class="docutils literal notranslate"><span class="pre">m_intersect_distribution</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12Intersection10m_smooth_kE"><code class="docutils literal notranslate"><span class="pre">m_smooth_k</span></code></a></li>
 </ul>
 </li>
@@ -2265,13 +2223,11 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N5Union8evaluateEddd"><code class="docutils literal notranslate"><span class="pre">evaluate()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N5Union6sampleEddd"><code class="docutils literal notranslate"><span class="pre">sample()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N5Union5UnionEv"><code class="docutils literal notranslate"><span class="pre">Union()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N5Union5UnionEb"><code class="docutils literal notranslate"><span class="pre">Union()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N5Union5UnionERKNSt10shared_ptrI4NodeEERKNSt10shared_ptrI4NodeEE"><code class="docutils literal notranslate"><span class="pre">Union()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N5Union5UnionEdbRKNSt6vectorINSt10shared_ptrI4NodeEEEE"><code class="docutils literal notranslate"><span class="pre">Union()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N5Union5UnionEdb"><code class="docutils literal notranslate"><span class="pre">Union()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N5Union5UnionEd"><code class="docutils literal notranslate"><span class="pre">Union()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N5Union5UnionEdRKNSt6vectorINSt10shared_ptrI4NodeEEEE"><code class="docutils literal notranslate"><span class="pre">Union()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N5Union20prepare_bounding_boxEv"><code class="docutils literal notranslate"><span class="pre">prepare_bounding_box()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N5Union10m_smooth_kE"><code class="docutils literal notranslate"><span class="pre">m_smooth_k</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N5Union20m_union_distributionE"><code class="docutils literal notranslate"><span class="pre">m_union_distribution</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv49BBoxUnion"><code class="docutils literal notranslate"><span class="pre">BBoxUnion</span></code></a><ul class="nav section-nav flex-column">

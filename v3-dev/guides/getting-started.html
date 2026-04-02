@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
-    <link rel="stylesheet" type="text/css" href="../_static/openvcad_theme.css?v=ee9d5c20" />
+    <link rel="stylesheet" type="text/css" href="../_static/openvcad_theme.css?v=1b19c5c2" />
     <link rel="stylesheet" type="text/css" href="../_static/openvcad_branding.css?v=c43e02c9" />
   
   <!-- So that users can add custom icons -->
@@ -544,6 +544,10 @@ Current compiler guides:
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 </pre></div>
 </div>
+<p class="guide-figure-label">Tree / DAG Structure</p>
+<img alt="Tree / DAG diagram for the Bringing CSG Together example" class="align-center" src="../_images/05_csg_tree_structure.svg" style="width: 100%;" />
+<p class="guide-figure-label">Legend</p>
+<img alt="Legend for the Bringing CSG Together tree diagram" class="align-center" src="../_images/05_csg_tree_legend.svg" style="width: 100%;" />
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
 <p class="guide-figure-label">Render</p>
@@ -759,6 +763,11 @@ Current compiler guides:
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>The comparison diagram below highlights the two priority cases: without a parent override, the child attributes remain active and the left child owns the overlap region; once <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code> is attached to the <code class="docutils literal notranslate"><span class="pre">Union</span></code>, that parent-level attribute replaces both leaf assignments.</p>
+<p class="guide-figure-label">Tree / DAG Structure</p>
+<img alt="Tree / DAG comparison diagram for attribute priority and parent override" class="align-center" src="../_images/14_15_attribute_priority_tree_structure.svg" style="width: 100%;" />
+<p class="guide-figure-label">Legend</p>
+<img alt="Legend for the attribute priority tree diagram" class="align-center" src="../_images/14_15_attribute_priority_tree_legend.svg" style="width: 100%;" />
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
 <p class="guide-figure-label">Leaf level handling</p>
@@ -791,12 +800,6 @@ Current compiler guides:
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="guide-figure-grid">
-<div class="guide-figure-cell">
-<p class="guide-figure-label">Render (gradient rotates with geometry)</p>
-<img src="images/16_identity_before_color_rgba.webp" alt="Identity Before" width="100%">
-</div>
-</div>
 <p>To apply a <em>global</em> static gradient regardless of rotation, apply the attribute AFTER the rotation using an <code class="docutils literal notranslate"><span class="pre">Identity</span></code> node:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="c1"># Start with an attribute-less rectangular prism</span>
 <span class="n">prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
@@ -813,7 +816,16 @@ Current compiler guides:
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>The comparison diagram below shows the same attribute expression attached at two different points in the tree: on the <code class="docutils literal notranslate"><span class="pre">RectPrism</span></code> before rotation, and on <code class="docutils literal notranslate"><span class="pre">Identity</span></code> after rotation.</p>
+<p class="guide-figure-label">Tree / DAG Structure</p>
+<img alt="Tree / DAG comparison diagram for coordinate spaces and Identity" class="align-center" src="../_images/16_17_coordinate_space_identity_tree_structure.svg" style="width: 100%;" />
+<p class="guide-figure-label">Legend</p>
+<img alt="Legend for the coordinate space and Identity tree diagram" class="align-center" src="../_images/16_17_coordinate_space_identity_tree_legend.svg" style="width: 100%;" />
 <div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (gradient rotates with geometry)</p>
+<img src="images/16_identity_before_color_rgba.webp" alt="Identity Before" width="100%">
+</div>
 <div class="guide-figure-cell">
 <p class="guide-figure-label">Render (world-aligned gradient via Identity)</p>
 <img src="images/17_identity_after_color_rgba.webp" alt="Identity After" width="100%">
@@ -853,6 +865,10 @@ Current compiler guides:
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
 </pre></div>
 </div>
+<p class="guide-figure-label">Tree / DAG Structure</p>
+<img alt="Tree / DAG diagram for the Multiple Attributes example" class="align-center" src="../_images/18_multiple_attributes_tree_structure.svg" style="width: 100%;" />
+<p class="guide-figure-label">Legend</p>
+<img alt="Legend for the Multiple Attributes tree diagram" class="align-center" src="../_images/18_multiple_attributes_tree_legend.svg" style="width: 55%;" />
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
 <p class="guide-figure-label">Modulus (float)</p>

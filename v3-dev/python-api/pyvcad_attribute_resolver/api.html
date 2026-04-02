@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
-    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_theme.css?v=ee9d5c20" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_theme.css?v=1b19c5c2" />
     <link rel="stylesheet" type="text/css" href="../../_static/openvcad_branding.css?v=c43e02c9" />
   
   <!-- So that users can add custom icons -->
@@ -406,65 +406,164 @@
 <h2>Registration<a class="headerlink" href="#registration" title="Link to this heading">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyvcad_attribute_resolver.register_conversion">
-<span class="sig-prename descclassname"><span class="pre">pyvcad_attribute_resolver.</span></span><span class="sig-name descname"><span class="pre">register_conversion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad_attribute_resolver.register_conversion" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">pyvcad_attribute_resolver.</span></span><span class="sig-name descname"><span class="pre">register_conversion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">converter_factory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">priority</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_attribute_resolver/registry.html#register_conversion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_attribute_resolver.register_conversion" title="Link to this definition">#</a></dt>
+<dd><p>Register a conversion edge in the global graph.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> – Input attribute name (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;shore_hardness&quot;</span></code>).</p></li>
+<li><p><strong>target</strong> – Output attribute name (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;temperature&quot;</span></code>).</p></li>
+<li><p><strong>converter_factory</strong> – Zero-argument callable that returns a fresh
+<code class="docutils literal notranslate"><span class="pre">AttributeConverterBase</span></code> instance.</p></li>
+<li><p><strong>name</strong> – Optional human-readable name. Defaults to
+<code class="docutils literal notranslate"><span class="pre">&quot;{source}_to_{target}&quot;</span></code>.</p></li>
+<li><p><strong>priority</strong> – Higher values are preferred during disambiguation.</p></li>
+<li><p><strong>tags</strong> – Optional list of context-filtering labels.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The name of the registered conversion.</p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyvcad_attribute_resolver.unregister_conversion">
-<span class="sig-prename descclassname"><span class="pre">pyvcad_attribute_resolver.</span></span><span class="sig-name descname"><span class="pre">unregister_conversion</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad_attribute_resolver.unregister_conversion" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">pyvcad_attribute_resolver.</span></span><span class="sig-name descname"><span class="pre">unregister_conversion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_attribute_resolver/registry.html#unregister_conversion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_attribute_resolver.unregister_conversion" title="Link to this definition">#</a></dt>
+<dd><p>Remove a conversion by name.</p>
+<p>Raises <code class="docutils literal notranslate"><span class="pre">KeyError</span></code> if the name is not found.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyvcad_attribute_resolver.list_conversions">
-<span class="sig-prename descclassname"><span class="pre">pyvcad_attribute_resolver.</span></span><span class="sig-name descname"><span class="pre">list_conversions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad_attribute_resolver.list_conversions" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">pyvcad_attribute_resolver.</span></span><span class="sig-name descname"><span class="pre">list_conversions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_attribute_resolver/registry.html#list_conversions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_attribute_resolver.list_conversions" title="Link to this definition">#</a></dt>
+<dd><p>Return all registered ConversionEntry objects.</p>
+</dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="pyvcad_attribute_resolver.clear_conversions">
-<span class="sig-prename descclassname"><span class="pre">pyvcad_attribute_resolver.</span></span><span class="sig-name descname"><span class="pre">clear_conversions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad_attribute_resolver.clear_conversions" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">pyvcad_attribute_resolver.</span></span><span class="sig-name descname"><span class="pre">clear_conversions</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_attribute_resolver/registry.html#clear_conversions"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_attribute_resolver.clear_conversions" title="Link to this definition">#</a></dt>
+<dd><p>Remove all registered conversions.</p>
+</dd></dl>
 
 </section>
 <section id="adaptation">
 <h2>Adaptation<a class="headerlink" href="#adaptation" title="Link to this heading">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyvcad_attribute_resolver.adapt">
-<span class="sig-prename descclassname"><span class="pre">pyvcad_attribute_resolver.</span></span><span class="sig-name descname"><span class="pre">adapt</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad_attribute_resolver.adapt" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">pyvcad_attribute_resolver.</span></span><span class="sig-name descname"><span class="pre">adapt</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">design</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target_attributes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allowed_conversions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_depth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_attribute_resolver/adapt.html#adapt"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_attribute_resolver.adapt" title="Link to this definition">#</a></dt>
+<dd><p>Wrap a design node with AttributeModifiers to produce target attributes.</p>
+<p>For each target attribute not already present on the design, the
+solver finds a conversion path through the registered graph and
+wraps the design in the corresponding <code class="docutils literal notranslate"><span class="pre">AttributeModifier</span></code> chain.</p>
+<p>Targets are processed sequentially so that attributes produced by
+earlier conversions are available for later ones.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>design</strong> – <code class="docutils literal notranslate"><span class="pre">pyvcad.Node</span></code>, the root of the design tree.</p></li>
+<li><p><strong>target_attributes</strong> – List of attribute name strings the caller
+needs on the output.</p></li>
+<li><p><strong>allowed_conversions</strong> – Optional list of <code class="docutils literal notranslate"><span class="pre">ConversionEntry</span></code> names
+to restrict the solver.</p></li>
+<li><p><strong>tags</strong> – Optional list of tags to filter conversions.</p></li>
+<li><p><strong>max_depth</strong> – Maximum chain length per target (default 10).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><code class="docutils literal notranslate"><span class="pre">pyvcad.Node</span></code> — the original design wrapped in zero or more
+<code class="docutils literal notranslate"><span class="pre">AttributeModifier</span></code> nodes. Returns the design unchanged if
+all targets are already present.</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><a class="reference internal" href="#pyvcad_attribute_resolver.NoPathError" title="pyvcad_attribute_resolver.NoPathError"><strong>NoPathError</strong></a> – If any target attribute cannot be reached.</p></li>
+<li><p><a class="reference internal" href="#pyvcad_attribute_resolver.AmbiguousPathError" title="pyvcad_attribute_resolver.AmbiguousPathError"><strong>AmbiguousPathError</strong></a> – If disambiguation fails for any target.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </section>
 <section id="discovery">
 <h2>Discovery<a class="headerlink" href="#discovery" title="Link to this heading">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="pyvcad_attribute_resolver.list_modules">
-<span class="sig-prename descclassname"><span class="pre">pyvcad_attribute_resolver.</span></span><span class="sig-name descname"><span class="pre">list_modules</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad_attribute_resolver.list_modules" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="sig-prename descclassname"><span class="pre">pyvcad_attribute_resolver.</span></span><span class="sig-name descname"><span class="pre">list_modules</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_attribute_resolver/modules.html#list_modules"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_attribute_resolver.list_modules" title="Link to this definition">#</a></dt>
+<dd><p>Return the names of all installed sub-packages under <code class="docutils literal notranslate"><span class="pre">modules/</span></code>.</p>
+</dd></dl>
 
 </section>
 <section id="data-structures">
 <h2>Data Structures<a class="headerlink" href="#data-structures" title="Link to this heading">#</a></h2>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyvcad_attribute_resolver.ConversionEntry">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_attribute_resolver.</span></span><span class="sig-name descname"><span class="pre">ConversionEntry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad_attribute_resolver.ConversionEntry" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_attribute_resolver.</span></span><span class="sig-name descname"><span class="pre">ConversionEntry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">converter_factory</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">priority</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tags</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_attribute_resolver/conversion_entry.html#ConversionEntry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_attribute_resolver.ConversionEntry" title="Link to this definition">#</a></dt>
+<dd><p>A registered conversion between two attribute types.</p>
+<p>Each entry represents a directed edge in the conversion graph, from a
+source attribute to a target attribute. The <code class="docutils literal notranslate"><span class="pre">converter_factory</span></code> callable
+produces a fresh <code class="docutils literal notranslate"><span class="pre">AttributeConverterBase</span></code> instance each time it is
+invoked, supporting clone-safe, thread-safe parallel evaluation.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_attribute_resolver.ConversionEntry.source">
+<span class="sig-name descname"><span class="pre">source</span></span><a class="headerlink" href="#pyvcad_attribute_resolver.ConversionEntry.source" title="Link to this definition">#</a></dt>
+<dd><p>Input attribute name.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_attribute_resolver.ConversionEntry.target">
+<span class="sig-name descname"><span class="pre">target</span></span><a class="headerlink" href="#pyvcad_attribute_resolver.ConversionEntry.target" title="Link to this definition">#</a></dt>
+<dd><p>Output attribute name.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_attribute_resolver.ConversionEntry.converter_factory">
+<span class="sig-name descname"><span class="pre">converter_factory</span></span><a class="headerlink" href="#pyvcad_attribute_resolver.ConversionEntry.converter_factory" title="Link to this definition">#</a></dt>
+<dd><p>Zero-argument callable returning an
+<code class="docutils literal notranslate"><span class="pre">AttributeConverterBase</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_attribute_resolver.ConversionEntry.name">
+<span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#pyvcad_attribute_resolver.ConversionEntry.name" title="Link to this definition">#</a></dt>
+<dd><p>Human-readable identifier for this conversion.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_attribute_resolver.ConversionEntry.priority">
+<span class="sig-name descname"><span class="pre">priority</span></span><a class="headerlink" href="#pyvcad_attribute_resolver.ConversionEntry.priority" title="Link to this definition">#</a></dt>
+<dd><p>Higher values are preferred when disambiguating
+multiple equally-short paths.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_attribute_resolver.ConversionEntry.tags">
+<span class="sig-name descname"><span class="pre">tags</span></span><a class="headerlink" href="#pyvcad_attribute_resolver.ConversionEntry.tags" title="Link to this definition">#</a></dt>
+<dd><p>Context-filtering labels (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;foaming_tpu&quot;</span></code>).</p>
+</dd></dl>
+
+</dd></dl>
 
 </section>
 <section id="errors">
 <h2>Errors<a class="headerlink" href="#errors" title="Link to this heading">#</a></h2>
 <dl class="py exception">
 <dt class="sig sig-object py" id="pyvcad_attribute_resolver.ResolverError">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_attribute_resolver.</span></span><span class="sig-name descname"><span class="pre">ResolverError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad_attribute_resolver.ResolverError" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_attribute_resolver.</span></span><span class="sig-name descname"><span class="pre">ResolverError</span></span><a class="reference internal" href="../../_modules/pyvcad_attribute_resolver/solver.html#ResolverError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_attribute_resolver.ResolverError" title="Link to this definition">#</a></dt>
+<dd><p>Base error for the attribute resolver.</p>
+</dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="pyvcad_attribute_resolver.NoPathError">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_attribute_resolver.</span></span><span class="sig-name descname"><span class="pre">NoPathError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad_attribute_resolver.NoPathError" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_attribute_resolver.</span></span><span class="sig-name descname"><span class="pre">NoPathError</span></span><a class="reference internal" href="../../_modules/pyvcad_attribute_resolver/solver.html#NoPathError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_attribute_resolver.NoPathError" title="Link to this definition">#</a></dt>
+<dd><p>No conversion path found between the available and target attributes.</p>
+</dd></dl>
 
 <dl class="py exception">
 <dt class="sig sig-object py" id="pyvcad_attribute_resolver.AmbiguousPathError">
-<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_attribute_resolver.</span></span><span class="sig-name descname"><span class="pre">AmbiguousPathError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad_attribute_resolver.AmbiguousPathError" title="Link to this definition">#</a></dt>
-<dd></dd></dl>
+<span class="property"><span class="k"><span class="pre">exception</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_attribute_resolver.</span></span><span class="sig-name descname"><span class="pre">AmbiguousPathError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">message</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">paths</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_attribute_resolver/solver.html#AmbiguousPathError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_attribute_resolver.AmbiguousPathError" title="Link to this definition">#</a></dt>
+<dd><p>Multiple equally-valid conversion paths found.</p>
+</dd></dl>
 
 </section>
 </section>
@@ -532,7 +631,15 @@
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data-structures">Data Structures</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_attribute_resolver.ConversionEntry"><code class="docutils literal notranslate"><span class="pre">ConversionEntry</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_attribute_resolver.ConversionEntry"><code class="docutils literal notranslate"><span class="pre">ConversionEntry</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_attribute_resolver.ConversionEntry.source"><code class="docutils literal notranslate"><span class="pre">ConversionEntry.source</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_attribute_resolver.ConversionEntry.target"><code class="docutils literal notranslate"><span class="pre">ConversionEntry.target</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_attribute_resolver.ConversionEntry.converter_factory"><code class="docutils literal notranslate"><span class="pre">ConversionEntry.converter_factory</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_attribute_resolver.ConversionEntry.name"><code class="docutils literal notranslate"><span class="pre">ConversionEntry.name</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_attribute_resolver.ConversionEntry.priority"><code class="docutils literal notranslate"><span class="pre">ConversionEntry.priority</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_attribute_resolver.ConversionEntry.tags"><code class="docutils literal notranslate"><span class="pre">ConversionEntry.tags</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#errors">Errors</a><ul class="nav section-nav flex-column">

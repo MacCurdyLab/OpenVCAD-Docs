@@ -1,0 +1,78 @@
+flowchart TB
+    classDef entryPoint fill:#102A43,stroke:#102A43,stroke-width:2px,color:#102A43;
+    classDef rootNode stroke-width:4px;
+    classDef geometryNode fill:#EDF2F7,stroke:#2B6CB0,stroke-width:2.5px,color:#1A365D;
+    classDef compositionNode fill:#EAF7EC,stroke:#2F855A,stroke-width:2.5px,color:#173A2D;
+    classDef transformNode fill:#FFF4DB,stroke:#B7791F,stroke-width:2.5px,color:#4A2F10;
+    classDef modifierNode fill:#FDE6D8,stroke:#C05621,stroke-width:2.5px,color:#7B341E;
+    classDef attributeProcessNode fill:#FDECF3,stroke:#B83280,stroke-width:2.5px,color:#702459;
+    classDef mappingNode fill:#EFE3FF,stroke:#6B46C1,stroke-width:2.5px,color:#44337A;
+    classDef attributeNode fill:#FDECF3,stroke:#B83280,stroke-width:2.5px,color:#702459;
+    classDef volumeNode fill:#E2E8F0,stroke:#475569,stroke-width:2.5px,color:#1E293B;
+    classDef ignoredArtifactNode opacity:0.45,stroke-dasharray: 4 4,color:#64748B;
+    classDef reusedNode stroke-dasharray: 8 4;
+
+    Entry((" "))
+    N1["Difference"]
+    N2["Union"]
+    N3["Intersection"]
+    N4["RectPrism"]
+    N5["Function"]
+    N6["Translate"]
+    N7["Rotate"]
+    N8["Scale"]
+    N9["Function"]
+    N10["Translate"]
+    N11["Scale"]
+    N12["Intersection"]
+    N13["RectPrism"]
+    N14["Function"]
+    A1(["Vec4<br/>COLOR_RGBA"])
+    A2(["Float<br/>DENSITY"])
+    A3(["Vec4<br/>COLOR_RGBA"])
+    A4(["Vec4<br/>COLOR_RGBA"])
+    A5(["Float<br/>HU"])
+
+    Entry --> N1
+    N1 -.-> A1
+    N1 --> |keep| N2
+    N2 -.-> A2
+    N2 --> N3
+    N3 -.-> A3
+    N3 --> N4
+    N3 --> N5
+    N2 --> N6
+    N6 -.-> A4
+    N6 --> N7
+    N7 --> N8
+    N8 --> N9
+    N1 --> |subtract| N10
+    N10 -.-> A5
+    N10 --> N11
+    N11 --> N12
+    N12 --> N13
+    N12 --> N14
+
+    class Entry entryPoint;
+    class N1 compositionNode;
+    class N1 rootNode;
+    class N2 compositionNode;
+    class N3 compositionNode;
+    class N4 geometryNode;
+    class N5 geometryNode;
+    class N6 transformNode;
+    class N7 transformNode;
+    class N8 transformNode;
+    class N9 geometryNode;
+    class N10 transformNode;
+    class N11 transformNode;
+    class N12 compositionNode;
+    class N13 geometryNode;
+    class N14 geometryNode;
+    class A1 attributeNode;
+    class A2 attributeNode;
+    class A3 attributeNode;
+    class A3 ignoredArtifactNode;
+    class A4 attributeNode;
+    class A4 ignoredArtifactNode;
+    class A5 attributeNode;

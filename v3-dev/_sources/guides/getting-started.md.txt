@@ -723,6 +723,40 @@ viz.Render(root, materials)
 </div>
 </div>
 
+## Visualizing Your Design Tree
+When a model starts mixing CSG, transforms, and attributes, it is often helpful to inspect the authored tree directly. OpenVCAD can export any `root` node as Mermaid source or render it straight to an image. The full mug example used below lives in `examples/rendering/demo_tree_visualizer.py`.
+
+```python
+import pyvcad_rendering as viz
+
+# root = your existing OpenVCAD design tree
+viz.Render_Tree_Diagram(root, "my_design_tree.mmd")   # Mermaid source
+viz.Render_Tree_Diagram(root, "my_design_tree.svg")   # Requires `mmdc`
+viz.Render_Tree_Legend("openvcad_master_legend.svg")
+```
+
+Saving to `.mmd` gives you an editable Mermaid diagram, while `.svg` or `.png` uses the Mermaid CLI (`mmdc`) to produce a finished asset. The legend is reusable across diagrams, so you can export it once and pair it with any design tree you generate.
+
+> **Note:** To render `.svg` or `.png` directly, first install Node.js and `npm` if they are not already on your machine, then install the Mermaid CLI with `npm install -g @mermaid-js/mermaid-cli`. Once that completes, `mmdc` should be available on your `PATH`.
+
+> **Tip:** If you do not want to install `mmdc`, save the diagram as `.mmd` and open it in the [Mermaid Live Editor](https://mermaid.ai/live/edit).
+
+<p class="guide-figure-label">Example Tree / DAG Structure</p>
+
+```{image} images/tree_visualizer_example_tree_structure.svg
+:alt: Example OpenVCAD tree diagram exported from the tree visualizer demo
+:width: 100%
+:align: center
+```
+
+<p class="guide-figure-label">Master Legend</p>
+
+```{image} images/tree_visualizer_master_legend.svg
+:alt: Master legend for OpenVCAD tree diagrams
+:width: 65%
+:align: center
+```
+
 ---
 
 ## Appendix: Attribute Expressions, Coordinate Systems, and Default Names

@@ -1,0 +1,92 @@
+flowchart TB
+    classDef entryPoint fill:#102A43,stroke:#102A43,stroke-width:2px,color:#102A43;
+    classDef rootNode stroke-width:4px;
+    classDef geometryNode fill:#EDF2F7,stroke:#2B6CB0,stroke-width:2.5px,color:#1A365D;
+    classDef compositionNode fill:#EAF7EC,stroke:#2F855A,stroke-width:2.5px,color:#173A2D;
+    classDef transformNode fill:#FFF4DB,stroke:#B7791F,stroke-width:2.5px,color:#4A2F10;
+    classDef modifierNode fill:#FDE6D8,stroke:#C05621,stroke-width:2.5px,color:#7B341E;
+    classDef attributeProcessNode fill:#FDECF3,stroke:#B83280,stroke-width:2.5px,color:#702459;
+    classDef mappingNode fill:#EFE3FF,stroke:#6B46C1,stroke-width:2.5px,color:#44337A;
+    classDef attributeNode fill:#FDECF3,stroke:#B83280,stroke-width:2.5px,color:#702459;
+    classDef volumeNode fill:#E2E8F0,stroke:#475569,stroke-width:2.5px,color:#1E293B;
+    classDef ignoredArtifactNode opacity:0.45,stroke-dasharray: 4 4,color:#64748B;
+    classDef reusedNode stroke-dasharray: 8 4;
+    classDef converterNode fill:#FEE2E2,stroke:#C53030,stroke-width:2.5px,color:#742A2A;
+    classDef kernelNode fill:#FFF1D6,stroke:#DD6B20,stroke-width:2.5px,color:#7B341E;
+    classDef noteNode fill:#F8FAFC,stroke:#64748B,stroke-width:1.5px,color:#334155;
+
+    LegendHeader["OpenVCAD TreeDiagram<br/>Master Legend"]
+    LegendSummary["Compact reference for node colors, arrows, attributes, overridden attributes, and volumes."]
+    LegendHeader -.-> LegendSummary
+
+    subgraph NodeFamilies["1. Node Colors"]
+        direction TB
+        FamilyGuide["Color shows semantic family."]
+        FamRoot["Root node"]
+        FamGeometry["Geometry"]
+        FamComposition["Composition / boolean"]
+        FamTransform["Transform"]
+        FamModifier["Modifier"]
+        FamAttributeProcess["Attribute process"]
+        FamMapping["Mapping"]
+        FamilyGuide -.-> FamRoot
+        FamilyGuide -.-> FamGeometry
+        FamilyGuide -.-> FamComposition
+        FamilyGuide -.-> FamTransform
+        FamilyGuide -.-> FamModifier
+        FamilyGuide -.-> FamAttributeProcess
+        FamilyGuide -.-> FamMapping
+    end
+
+    subgraph Connectors["2. Arrows, Attributes, And Volumes"]
+        direction TB
+        EntrySample((" "))
+        ArrowNode["Node"]
+        ArrowChild["Child node"]
+        ArrowAttr(["Float<br/>DENSITY"])
+        ArrowVolume[("FloatVDBVolume")]
+        ArrowNote["Solid arrows show tree structure. Dotted arrows attach attributes and volumes."]
+        EntrySample --> ArrowNode
+        ArrowNode --> ArrowChild
+        ArrowNode -.-> ArrowAttr
+        ArrowAttr -.-> ArrowVolume
+        ArrowNode -.-> ArrowNote
+    end
+
+    subgraph OverrideExample["3. Parent Override"]
+        direction TB
+        OverrideParent["Parent node"]
+        OverrideParentAttr(["Vec4<br/>COLOR_RGBA"])
+        OverrideChild["Child node"]
+        OverrideIgnored(["Vec4<br/>COLOR_RGBA"])
+        OverrideNote["A dimmed child attribute is ignored because the parent defines the same attribute."]
+        OverrideParent --> OverrideChild
+        OverrideParent -.-> OverrideParentAttr
+        OverrideChild -.-> OverrideIgnored
+        OverrideIgnored -.-> OverrideNote
+    end
+
+    class FamEntry entryPoint;
+    class FamRoot compositionNode;
+    class FamRoot rootNode;
+    class FamGeometry geometryNode;
+    class FamComposition compositionNode;
+    class FamTransform transformNode;
+    class FamModifier modifierNode;
+    class FamAttributeProcess attributeProcessNode;
+    class FamMapping mappingNode;
+    class EntrySample entryPoint;
+    class ArrowNode geometryNode;
+    class ArrowChild geometryNode;
+    class ArrowAttr attributeNode;
+    class ArrowVolume volumeNode;
+    class OverrideParent compositionNode;
+    class OverrideParentAttr attributeNode;
+    class OverrideChild geometryNode;
+    class OverrideIgnored attributeNode;
+    class OverrideIgnored ignoredArtifactNode;
+    class LegendHeader noteNode;
+    class LegendSummary noteNode;
+    class FamilyGuide noteNode;
+    class ArrowNote noteNode;
+    class OverrideNote noteNode;

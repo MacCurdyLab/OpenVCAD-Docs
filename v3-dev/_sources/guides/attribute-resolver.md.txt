@@ -265,6 +265,7 @@ The resolver package exposes a small set of registration helpers:
 | `resolver.register_pla_conversions()` | LW-PLA conversions only |
 | `resolver.register_tpu_conversions()` | VarioShore TPU conversions only |
 | `resolver.register_j750_shore_hardness_conversions()` | J750 shore-hardness to volume-fractions conversions |
+| `resolver.register_j750_modulus_toughness_conversions()` | J750 modulus+toughness to volume-fractions inverse-design conversion |
 | `resolver.list_modules()` | Names of installed resolver modules |
 
 For the built-in foaming module, the key tags are:
@@ -274,6 +275,7 @@ For the built-in foaming module, the key tags are:
 | `foaming_pla` | `density -> temperature -> flow_rate` |
 | `foaming_tpu` | `shore_hardness -> temperature -> flow_rate` and `density -> temperature -> flow_rate` |
 | `j750_shore_hardness` | `shore_hardness -> volume_fractions` |
+| `j750_modulus_toughness` | `modulus + toughness -> volume_fractions` |
 
 Tags matter because multiple modules can define the same target attribute. If you register more than one material family and the resolver sees multiple equally valid shortest paths, it raises `AmbiguousPathError` instead of guessing.
 
@@ -284,6 +286,61 @@ resolver.clear_conversions()
 resolver.register_foaming_conversions()
 root = resolver.adapt(design, ["temperature", "flow_rate"], tags=["foaming_tpu"])
 ```
+
+## J750 Modulus and Toughness Inverse Design
+
+The `j750_modulus_toughness` module is different from the one-input examples
+above because it resolves a printer-ready `volume_fractions` field from two
+design-intent attributes at once:
+
+- `MODULUS` in MPa
+- `TOUGHNESS` in MJ/m^3
+
+Internally, the bundled module uses a lookup table generated from a more complex fitting model for J750 material trio:
+
+- `Agilus30`
+- `Vero`
+- `Model Cleanser`
+
+The shipped table uses:
+
+- `table_size=128`
+- `max_liquid_volume=0.30`
+- `FAIL_THRESHOLD=0.05`
+
+You can regenerate the table with a different cleanser cap or a different grid
+resolution:
+
+```python
+import pyvcad_attribute_resolver as resolver
+
+resolver.generate_j750_modulus_toughness_lookup_table(
+    output_path="j750_modulus_toughness_custom.json",
+    table_size=192,
+    max_liquid_volume=0.25,
+    fail_threshold=0.05,
+)
+```
+
+Then register that table for runtime use:
+
+```python
+resolver.register_j750_modulus_toughness_conversions(
+    lookup_table_path="j750_modulus_toughness_custom.json",
+)
+```
+
+The target domain is sampled on a rectangular grid in
+`log10(modulus [MPa]) in [-1.0, 3.5]` and `toughness [MJ/m^3] in [0.0, 6.5]`,
+but not every point in that rectangle is physically reachable. The generator
+stores a separate validity mask for those cells, and the runtime converter
+raises immediately if a requested modulus/toughness pair falls on an invalid
+point or would require interpolation across an invalid cell.
+
+<div class="guide-figure-plot">
+<p class="guide-figure-label">J750 modulus/toughness reachable region</p>
+<img src="images/attribute_resolver_j750_modulus_toughness_region.png" alt="Forward-sampled J750 reachable region in log10 modulus and toughness space with the lookup-table validity boundary overlaid" width="100%">
+</div>
 
 ## Practical Notes
 

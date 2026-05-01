@@ -189,7 +189,7 @@ It says:
 
 The resolver becomes more useful when your model starts with a design-intent field instead of a machine-facing one. In the next example, the bar only defines `DENSITY`. The resolver then derives both `TEMPERATURE` and `FLOW_RATE` using the built-in LW-PLA conversion chain.
 
-> `TEMPERATURE` and `FLOW_RATE` are both required by the `SlicerProjectCompiler` to print with foaming PLA or TPU. After compilation and slicing, the resulting g-code that is sent to the printer grades temperature and flow rates to ensure the right foaming rate and extrusion properties. 
+> `TEMPERATURE` and `FLOW_RATE` are both required by the `PrusaSlicerProjectCompiler` virtual-extrusion workflow to print with foaming PLA or TPU. After compilation and slicing, the resulting g-code that is sent to the printer grades temperature and flow rates to ensure the right foaming rate and extrusion properties. 
 
 ```python
 import pyvcad as pv
@@ -356,7 +356,7 @@ Traditional cross-compilers take one source program and retarget it for multiple
 
 In this guide, the shared source language is `shore_hardness`.
 
-- The foaming TPU workflow targets `SlicerProjectCompiler`, which needs `temperature` and `flow_rate`.
+- The foaming TPU workflow targets `PrusaSlicerProjectCompiler`, which needs `temperature` and `flow_rate`.
 - The J750 workflow targets `MaterialInkjetCompiler`, which needs `volume_fractions`.
 
 This is where model bounds matter. The two registered target models do not cover the same domain:
@@ -448,7 +448,7 @@ printer_profile_path = os.path.join(profiles_dir, "prusa_mk4s_profile.ini")
 filament_profile_path = os.path.join(profiles_dir, "ColorFabb_VarioShore_TPU.ini")
 
 slicer_output_path = os.path.join(output_dir, "cross_compilation_shore_hardness_tpu.3mf")
-slicer_compiler = pvc.SlicerProjectCompiler(
+slicer_compiler = pvc.PrusaSlicerProjectCompiler(
     slicer_root,
     pv.Vec3(0.25, 0.25, 0.25),
     slicer_output_path,

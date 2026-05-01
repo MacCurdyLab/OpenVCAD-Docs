@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
@@ -36,10 +36,10 @@
     <link rel="stylesheet" type="text/css" href="../../_static/openvcad_branding.css?v=c43e02c9" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../../_static/scripts/fontawesome.js?digest=7f76b32a3354e82990f2"></script>
+  <script defer src="../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
 
     <script src="../../_static/documentation_options.js?v=110ea713"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
@@ -53,7 +53,7 @@
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
     <link rel="next" title="Attribute Conflict Resolution" href="../attribute-conflicts.html" />
-    <link rel="prev" title="Slicer Project Compiler" href="slicer-project.html" />
+    <link rel="prev" title="Slicer Project Compilers" href="slicer-project.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -74,7 +74,9 @@
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
+  
+  
+  
   
   <dialog id="pst-search-dialog">
     
@@ -329,7 +331,7 @@
 <li class="toctree-l2"><a class="reference internal" href="material-inkjet.html">Material Inkjet Compiler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="color-inkjet.html">Color Inkjet Compiler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vat-photo.html">VAT Photo Compiler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="slicer-project.html">Slicer Project Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="slicer-project.html">Slicer Project Compilers</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Simulation Compiler</a></li>
 </ul>
 </details></li>
@@ -744,13 +746,13 @@ into <strong><code class="docutils literal notranslate"><span class="pre">.inp</
 <section id="lesson-3-solving-the-exported-beam-in-fenicsx">
 <h2>Lesson 3: Solving the exported beam in FEniCSx<a class="headerlink" href="#lesson-3-solving-the-exported-beam-in-fenicsx" title="Link to this heading">#</a></h2>
 <p>The script <strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/simulation/03_fenicsx_load_exported_design.py</span></code></strong>
-is the full one-shot workflow. It builds a second graded beam inside the same
-script, exports the FEniCSx XDMF/H5 bundle, reloads the exported cell-wise
-material fields inside DOLFINx, and solves a small-strain static cantilever
-problem.</p>
+is the full one-shot workflow. It loads a shared Lesson 3 beam definition,
+exports the FEniCSx XDMF/H5 bundle, reloads the exported cell-wise material
+fields inside DOLFINx, and solves a small-strain static cantilever problem.</p>
 <p>Lesson 3 intentionally uses a different beam than Lesson 2. In this solved
-cantilever example, both <strong><code class="docutils literal notranslate"><span class="pre">modulus</span></code></strong> and <strong><code class="docutils literal notranslate"><span class="pre">poissons_ratio</span></code></strong> ramp along the
-beam length so the constitutive variation follows the loading direction.</p>
+cantilever example, the left face stays stiff, the free right face becomes much
+softer, and <strong><code class="docutils literal notranslate"><span class="pre">poissons_ratio</span></code></strong> stays constant so the displacement trend is
+driven primarily by the graded modulus.</p>
 <p>Install notes:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>create<span class="w"> </span>-n<span class="w"> </span>fenicsx<span class="w"> </span>-c<span class="w"> </span>conda-forge<span class="w"> </span>fenics-dolfinx<span class="w"> </span>mpi4py<span class="w"> </span>h5py<span class="w"> </span>numpy
 conda<span class="w"> </span>activate<span class="w"> </span>fenicsx
@@ -760,28 +762,31 @@ conda<span class="w"> </span>activate<span class="w"> </span>fenicsx
 can also be installed with <strong><code class="docutils literal notranslate"><span class="pre">pip</span></code></strong> inside that environment.</p>
 <section id="openvcad-previews-for-the-lesson-3-beam">
 <h3>OpenVCAD previews for the Lesson 3 beam<a class="headerlink" href="#openvcad-previews-for-the-lesson-3-beam" title="Link to this heading">#</a></h3>
-<p>The simulation script builds its own beam before exporting it to FEniCSx.
-These previews show the exact OpenVCAD fields used by the solve:</p>
+<p>The simulation script builds its beam from a shared helper before exporting it
+to FEniCSx. This preview shows the exact OpenVCAD modulus field used by the
+solve:</p>
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
 <p class="guide-figure-label">OpenVCAD preview — Lesson 3 modulus</p>
 <img src="../images/compilers_simulation_lesson3_preview_modulus.png" alt="OpenVCAD preview of the Lesson 3 modulus gradient used by the self-contained FEniCSx beam solve" width="100%">
 </div>
-<div class="guide-figure-cell">
-<p class="guide-figure-label">OpenVCAD preview — Lesson 3 poissons_ratio</p>
-<img src="../images/compilers_simulation_lesson3_preview_poissons_ratio.png" alt="OpenVCAD preview of the Lesson 3 Poisson ratio gradient used by the self-contained FEniCSx beam solve" width="100%">
 </div>
-</div>
-<p>The lesson-3 beam definition is intentionally small and direct:</p>
+<p>You can read this preview as the mechanical setup for the solve: the modulus is
+highest at the fixed left face and drops steadily toward the free right face.
+That means the beam is progressively easier to deform as you move toward the
+tip, so we should expect larger displacements there once the load is applied.</p>
+<p>The lesson-3 beam definition lives in
+<strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/simulation/lesson3_beam_definition.py</span></code></strong> so the guide
+asset generator and the simulation example use the same geometry and attributes:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">build_design</span><span class="p">():</span>
-    <span class="n">beam</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">40.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">))</span>
+    <span class="n">beam</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">60.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">))</span>
     <span class="n">beam</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
         <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span>
-        <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">&quot;1200 + 800 * clamp((x + 20.0) / 40.0, 0, 1)&quot;</span><span class="p">)</span>
+        <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">&quot;2400.0 - 2000.0 * clamp((x + 30.0) / 60.0, 0, 1)&quot;</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="n">beam</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
         <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">POISSONS_RATIO</span><span class="p">,</span>
-        <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">&quot;0.20 + 0.15 * clamp((x + 20.0) / 40.0, 0, 1)&quot;</span><span class="p">)</span>
+        <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">&quot;0.28&quot;</span><span class="p">)</span>
     <span class="p">)</span>
     <span class="k">return</span> <span class="n">beam</span>
 </pre></div>
@@ -790,7 +795,7 @@ These previews show the exact OpenVCAD fields used by the solve:</p>
 <section id="governing-equations">
 <h3>Governing equations<a class="headerlink" href="#governing-equations" title="Link to this heading">#</a></h3>
 <p>The solve is the standard 3D isotropic linear-elastic form with a spatially
-varying modulus <strong><code class="docutils literal notranslate"><span class="pre">E(x)</span></code></strong> and Poisson ratio <strong><code class="docutils literal notranslate"><span class="pre">nu(x)</span></code></strong>:</p>
+varying modulus <strong><code class="docutils literal notranslate"><span class="pre">E(x)</span></code></strong> and constant Poisson ratio <strong><code class="docutils literal notranslate"><span class="pre">nu</span></code></strong>:</p>
 <div class="math notranslate nohighlight">
 \[
 \varepsilon(u) = \mathrm{sym}(\nabla u)
@@ -802,9 +807,9 @@ varying modulus <strong><code class="docutils literal notranslate"><span class="
 <p>with Lame parameters reconstructed from the exported OpenVCAD fields:</p>
 <div class="math notranslate nohighlight">
 \[
-\mu(x) = \frac{E(x)}{2(1 + \nu(x))}
+\mu(x) = \frac{E(x)}{2(1 + \nu)}
 \qquad
-\lambda(x) = \frac{E(x)\nu(x)}{(1 + \nu(x))(1 - 2\nu(x))}
+\lambda(x) = \frac{E(x)\nu}{(1 + \nu)(1 - 2\nu)}
 \]</div>
 <p>The weak form is:</p>
 <div class="math notranslate nohighlight">
@@ -812,7 +817,9 @@ varying modulus <strong><code class="docutils literal notranslate"><span class="
 \int_{\Omega} \sigma(u) : \varepsilon(v)\,dx = \int_{\Gamma_{\mathrm{load}}} t \cdot v\,ds
 \]</div>
 <p>with the left beam face fixed (<strong><code class="docutils literal notranslate"><span class="pre">u</span> <span class="pre">=</span> <span class="pre">0</span></code></strong>) and a uniform end traction
-<strong><code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">-5)</span></code></strong> applied on the right beam face.</p>
+<strong><code class="docutils literal notranslate"><span class="pre">t</span> <span class="pre">=</span> <span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">-5)</span></code></strong> applied on the right beam face. Because the beam gets
+softer toward the loaded end, the displacement magnitude ramps up more sharply
+than in a uniform cantilever and is easy to inspect in ParaView.</p>
 <p>Because the exported tetrahedral surface is slightly perturbed from the exact
 analytic box, the script locates the left and right beam faces using a small
 <strong><code class="docutils literal notranslate"><span class="pre">0.05</span> <span class="pre">mm</span></code></strong> threshold around the mesh bounding box instead of relying on
@@ -824,7 +831,10 @@ exact <strong><code class="docutils literal notranslate"><span class="pre">x</sp
 The snippets below show the important stages without reproducing the whole file.</p>
 <section id="export-once-on-rank-0">
 <h4>1. Export once on rank 0<a class="headerlink" href="#export-once-on-rank-0" title="Link to this heading">#</a></h4>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">export_error</span> <span class="o">=</span> <span class="kc">None</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">script_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+<span class="n">output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">script_dir</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="p">)</span>
+
+<span class="n">export_error</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="k">if</span> <span class="n">comm</span><span class="o">.</span><span class="n">rank</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">root</span> <span class="o">=</span> <span class="n">build_design</span><span class="p">()</span>
@@ -877,12 +887,17 @@ storage.</p>
 <p>After reloading the DG0 fields, the script reconstructs the Lam’e parameters,
 solves the cantilever problem, evaluates DG0 von Mises stress, gathers the
 result arrays to rank 0, and updates the original OpenVCAD export in place.
-That means <strong><code class="docutils literal notranslate"><span class="pre">simulation_results.xdmf</span></code></strong> keeps the same mesh but gains two new
+That means <strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/simulation/output/simulation_results.xdmf</span></code></strong>
+keeps the same mesh but gains three new
 fields:</p>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">displacement</span></code></strong> as a node-centered vector field</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">displacement_magnitude</span></code></strong> as a node-centered scalar field</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">von_mises</span></code></strong> as a cell-centered scalar field</p></li>
 </ul>
+<p>On rank 0 the example also prints five equal-length <strong>x</strong> bins with their mean
+displacement magnitude, which gives you a quick terminal-side check that the
+response increases from the fixed end to the soft tip.</p>
 <p>Run the full one-shot workflow with the <strong><code class="docutils literal notranslate"><span class="pre">fenicsx</span></code></strong> environment active:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>conda<span class="w"> </span>activate<span class="w"> </span>fenicsx
 python<span class="w"> </span>examples/compilers/simulation/03_fenicsx_load_exported_design.py
@@ -894,12 +909,17 @@ python<span class="w"> </span>examples/compilers/simulation/03_fenicsx_load_expo
 <section id="paraview-inspection-workflow">
 <h2>ParaView inspection workflow<a class="headerlink" href="#paraview-inspection-workflow" title="Link to this heading">#</a></h2>
 <ol class="arabic simple">
-<li><p>Open <strong><code class="docutils literal notranslate"><span class="pre">simulation_results.xdmf</span></code></strong></p></li>
+<li><p>Open <strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/simulation/output/simulation_results.xdmf</span></code></strong></p></li>
 <li><p>Click <strong>Apply</strong></p></li>
 <li><p>Switch the coloring dropdown between <strong><code class="docutils literal notranslate"><span class="pre">modulus</span></code></strong>, <strong><code class="docutils literal notranslate"><span class="pre">poissons_ratio</span></code></strong>,
-<strong><code class="docutils literal notranslate"><span class="pre">displacement</span></code></strong>, and <strong><code class="docutils literal notranslate"><span class="pre">von_mises</span></code></strong></p></li>
+<strong><code class="docutils literal notranslate"><span class="pre">displacement_magnitude</span></code></strong>, and <strong><code class="docutils literal notranslate"><span class="pre">von_mises</span></code></strong></p></li>
 <li><p>Use <strong>Warp By Vector</strong> with <strong><code class="docutils literal notranslate"><span class="pre">displacement</span></code></strong> if you want a deformed beam view</p></li>
 </ol>
+<p>In the displacement-magnitude result, the figure should get brighter toward the
+right-hand tip, and the warped shape should bend more strongly there. That is
+the direct visual signature of the softer material: the fixed end stays
+comparatively stiff, while the lower-modulus tip accumulates more displacement
+under the same applied traction.</p>
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
 <p class="guide-figure-label">ParaView — displacement magnitude result</p>
@@ -962,7 +982,7 @@ python<span class="w"> </span>examples/compilers/simulation/03_fenicsx_load_expo
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/simulation/01_volume_fractions_export.py</span></code></strong> — stochastic material assignment plus raw volume-fraction datasets</p></li>
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/simulation/02_direct_mechanical_properties_export.py</span></code></strong> — export-only direct scalar mechanical fields with <strong><code class="docutils literal notranslate"><span class="pre">poissons_ratio</span></code></strong> varying through <strong>z</strong></p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/simulation/03_fenicsx_load_exported_design.py</span></code></strong> — self-contained DOLFINx/FEniCSx cantilever solve with both elastic fields varying along <strong>x</strong></p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/simulation/03_fenicsx_load_exported_design.py</span></code></strong> — self-contained DOLFINx/FEniCSx cantilever solve with a stiff-to-soft modulus gradient along <strong>x</strong></p></li>
 </ul>
 </section>
 </section>
@@ -983,7 +1003,7 @@ python<span class="w"> </span>examples/compilers/simulation/03_fenicsx_load_expo
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Slicer Project Compiler</p>
+        <p class="prev-next-title">Slicer Project Compilers</p>
       </div>
     </a>
     <a class="right-next"
@@ -1070,8 +1090,8 @@ python<span class="w"> </span>examples/compilers/simulation/03_fenicsx_load_expo
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -1105,7 +1125,7 @@ python<span class="w"> </span>examples/compilers/simulation/03_fenicsx_load_expo
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
 </p></div>
       
     </div>

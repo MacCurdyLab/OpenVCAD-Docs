@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
@@ -36,10 +36,10 @@
     <link rel="stylesheet" type="text/css" href="../_static/openvcad_branding.css?v=c43e02c9" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../_static/scripts/fontawesome.js?digest=7f76b32a3354e82990f2"></script>
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
 
     <script src="../_static/documentation_options.js?v=110ea713"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
@@ -72,7 +72,9 @@
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
+  
+  
+  
   
   <dialog id="pst-search-dialog">
     
@@ -327,7 +329,7 @@
 <li class="toctree-l2"><a class="reference internal" href="compilers/material-inkjet.html">Material Inkjet Compiler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compilers/color-inkjet.html">Color Inkjet Compiler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compilers/vat-photo.html">VAT Photo Compiler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="compilers/slicer-project.html">Slicer Project Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/slicer-project.html">Slicer Project Compilers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compilers/simulation-compiler.html">Simulation Compiler</a></li>
 </ul>
 </details></li>
@@ -572,7 +574,7 @@ Current compiler guides:
 <h2>Lesson 3: Start from Design Intent<a class="headerlink" href="#lesson-3-start-from-design-intent" title="Link to this heading">#</a></h2>
 <p>The resolver becomes more useful when your model starts with a design-intent field instead of a machine-facing one. In the next example, the bar only defines <code class="docutils literal notranslate"><span class="pre">DENSITY</span></code>. The resolver then derives both <code class="docutils literal notranslate"><span class="pre">TEMPERATURE</span></code> and <code class="docutils literal notranslate"><span class="pre">FLOW_RATE</span></code> using the built-in LW-PLA conversion chain.</p>
 <blockquote>
-<div><p><code class="docutils literal notranslate"><span class="pre">TEMPERATURE</span></code> and <code class="docutils literal notranslate"><span class="pre">FLOW_RATE</span></code> are both required by the <code class="docutils literal notranslate"><span class="pre">SlicerProjectCompiler</span></code> to print with foaming PLA or TPU. After compilation and slicing, the resulting g-code that is sent to the printer grades temperature and flow rates to ensure the right foaming rate and extrusion properties.</p>
+<div><p><code class="docutils literal notranslate"><span class="pre">TEMPERATURE</span></code> and <code class="docutils literal notranslate"><span class="pre">FLOW_RATE</span></code> are both required by the <code class="docutils literal notranslate"><span class="pre">PrusaSlicerProjectCompiler</span></code> virtual-extrusion workflow to print with foaming PLA or TPU. After compilation and slicing, the resulting g-code that is sent to the printer grades temperature and flow rates to ensure the right foaming rate and extrusion properties.</p>
 </div></blockquote>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
@@ -762,7 +764,7 @@ point or would require interpolation across an invalid cell.</p>
 <p>Traditional cross-compilers take one source program and retarget it for multiple machines. The attribute resolver supports the same way of thinking: your OpenVCAD model can carry one design-intent field, then different resolver modules can compile that field into the machine-facing attributes required by different fabrication backends.</p>
 <p>In this guide, the shared source language is <code class="docutils literal notranslate"><span class="pre">shore_hardness</span></code>.</p>
 <ul class="simple">
-<li><p>The foaming TPU workflow targets <code class="docutils literal notranslate"><span class="pre">SlicerProjectCompiler</span></code>, which needs <code class="docutils literal notranslate"><span class="pre">temperature</span></code> and <code class="docutils literal notranslate"><span class="pre">flow_rate</span></code>.</p></li>
+<li><p>The foaming TPU workflow targets <code class="docutils literal notranslate"><span class="pre">PrusaSlicerProjectCompiler</span></code>, which needs <code class="docutils literal notranslate"><span class="pre">temperature</span></code> and <code class="docutils literal notranslate"><span class="pre">flow_rate</span></code>.</p></li>
 <li><p>The J750 workflow targets <code class="docutils literal notranslate"><span class="pre">MaterialInkjetCompiler</span></code>, which needs <code class="docutils literal notranslate"><span class="pre">volume_fractions</span></code>.</p></li>
 </ul>
 <p>This is where model bounds matter. The two registered target models do not cover the same domain:</p>
@@ -850,7 +852,7 @@ point or would require interpolation across an invalid cell.</p>
 <span class="n">filament_profile_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">profiles_dir</span><span class="p">,</span> <span class="s2">&quot;ColorFabb_VarioShore_TPU.ini&quot;</span><span class="p">)</span>
 
 <span class="n">slicer_output_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">output_dir</span><span class="p">,</span> <span class="s2">&quot;cross_compilation_shore_hardness_tpu.3mf&quot;</span><span class="p">)</span>
-<span class="n">slicer_compiler</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">SlicerProjectCompiler</span><span class="p">(</span>
+<span class="n">slicer_compiler</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">PrusaSlicerProjectCompiler</span><span class="p">(</span>
     <span class="n">slicer_root</span><span class="p">,</span>
     <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span>
     <span class="n">slicer_output_path</span><span class="p">,</span>
@@ -988,8 +990,8 @@ point or would require interpolation across an invalid cell.</p>
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -1023,7 +1025,7 @@ point or would require interpolation across an invalid cell.</p>
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
 </p></div>
       
     </div>

@@ -344,14 +344,14 @@ into **`.inp`** form instead of an **XDMF/H5** bundle.
 ## Lesson 3: Solving the exported beam in FEniCSx
 
 The script **`examples/compilers/simulation/03_fenicsx_load_exported_design.py`**
-is the full one-shot workflow. It builds a second graded beam inside the same
-script, exports the FEniCSx XDMF/H5 bundle, reloads the exported cell-wise
-material fields inside DOLFINx, and solves a small-strain static cantilever
-problem.
+is the full one-shot workflow. It loads a shared Lesson 3 beam definition,
+exports the FEniCSx XDMF/H5 bundle, reloads the exported cell-wise material
+fields inside DOLFINx, and solves a small-strain static cantilever problem.
 
 Lesson 3 intentionally uses a different beam than Lesson 2. In this solved
-cantilever example, both **`modulus`** and **`poissons_ratio`** ramp along the
-beam length so the constitutive variation follows the loading direction.
+cantilever example, the left face stays stiff, the free right face becomes much
+softer, and **`poissons_ratio`** stays constant so the displacement trend is
+driven primarily by the graded modulus.
 
 Install notes:
 
@@ -365,32 +365,36 @@ can also be installed with **`pip`** inside that environment.
 
 ### OpenVCAD previews for the Lesson 3 beam
 
-The simulation script builds its own beam before exporting it to FEniCSx.
-These previews show the exact OpenVCAD fields used by the solve:
+The simulation script builds its beam from a shared helper before exporting it
+to FEniCSx. This preview shows the exact OpenVCAD modulus field used by the
+solve:
 
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
 <p class="guide-figure-label">OpenVCAD preview — Lesson 3 modulus</p>
 <img src="../images/compilers_simulation_lesson3_preview_modulus.png" alt="OpenVCAD preview of the Lesson 3 modulus gradient used by the self-contained FEniCSx beam solve" width="100%">
 </div>
-<div class="guide-figure-cell">
-<p class="guide-figure-label">OpenVCAD preview — Lesson 3 poissons_ratio</p>
-<img src="../images/compilers_simulation_lesson3_preview_poissons_ratio.png" alt="OpenVCAD preview of the Lesson 3 Poisson ratio gradient used by the self-contained FEniCSx beam solve" width="100%">
-</div>
 </div>
 
-The lesson-3 beam definition is intentionally small and direct:
+You can read this preview as the mechanical setup for the solve: the modulus is
+highest at the fixed left face and drops steadily toward the free right face.
+That means the beam is progressively easier to deform as you move toward the
+tip, so we should expect larger displacements there once the load is applied.
+
+The lesson-3 beam definition lives in
+**`examples/compilers/simulation/lesson3_beam_definition.py`** so the guide
+asset generator and the simulation example use the same geometry and attributes:
 
 ```python
 def build_design():
-    beam = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(40.0, 12.0, 12.0))
+    beam = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(60.0, 12.0, 12.0))
     beam.set_attribute(
         pv.DefaultAttributes.MODULUS,
-        pv.FloatAttribute("1200 + 800 * clamp((x + 20.0) / 40.0, 0, 1)")
+        pv.FloatAttribute("2400.0 - 2000.0 * clamp((x + 30.0) / 60.0, 0, 1)")
     )
     beam.set_attribute(
         pv.DefaultAttributes.POISSONS_RATIO,
-        pv.FloatAttribute("0.20 + 0.15 * clamp((x + 20.0) / 40.0, 0, 1)")
+        pv.FloatAttribute("0.28")
     )
     return beam
 ```
@@ -398,7 +402,7 @@ def build_design():
 ### Governing equations
 
 The solve is the standard 3D isotropic linear-elastic form with a spatially
-varying modulus **`E(x)`** and Poisson ratio **`nu(x)`**:
+varying modulus **`E(x)`** and constant Poisson ratio **`nu`**:
 
 $$
 \varepsilon(u) = \mathrm{sym}(\nabla u)
@@ -411,9 +415,9 @@ $$
 with Lame parameters reconstructed from the exported OpenVCAD fields:
 
 $$
-\mu(x) = \frac{E(x)}{2(1 + \nu(x))}
+\mu(x) = \frac{E(x)}{2(1 + \nu)}
 \qquad
-\lambda(x) = \frac{E(x)\nu(x)}{(1 + \nu(x))(1 - 2\nu(x))}
+\lambda(x) = \frac{E(x)\nu}{(1 + \nu)(1 - 2\nu)}
 $$
 
 The weak form is:
@@ -423,7 +427,9 @@ $$
 $$
 
 with the left beam face fixed (**`u = 0`**) and a uniform end traction
-**`t = (0, 0, -5)`** applied on the right beam face.
+**`t = (0, 0, -5)`** applied on the right beam face. Because the beam gets
+softer toward the loaded end, the displacement magnitude ramps up more sharply
+than in a uniform cantilever and is easy to inspect in ParaView.
 
 Because the exported tetrahedral surface is slightly perturbed from the exact
 analytic box, the script locates the left and right beam faces using a small
@@ -438,6 +444,9 @@ The snippets below show the important stages without reproducing the whole file.
 #### 1. Export once on rank 0
 
 ```python
+script_dir = os.path.dirname(os.path.abspath(__file__))
+output_dir = os.path.join(script_dir, "output")
+
 export_error = None
 if comm.rank == 0:
     try:
@@ -491,11 +500,17 @@ poissons_ratio.x.scatter_forward()
 After reloading the DG0 fields, the script reconstructs the Lam\'e parameters,
 solves the cantilever problem, evaluates DG0 von Mises stress, gathers the
 result arrays to rank 0, and updates the original OpenVCAD export in place.
-That means **`simulation_results.xdmf`** keeps the same mesh but gains two new
+That means **`examples/compilers/simulation/output/simulation_results.xdmf`**
+keeps the same mesh but gains three new
 fields:
 
 - **`displacement`** as a node-centered vector field
+- **`displacement_magnitude`** as a node-centered scalar field
 - **`von_mises`** as a cell-centered scalar field
+
+On rank 0 the example also prints five equal-length **x** bins with their mean
+displacement magnitude, which gives you a quick terminal-side check that the
+response increases from the fixed end to the soft tip.
 
 Run the full one-shot workflow with the **`fenicsx`** environment active:
 
@@ -506,11 +521,17 @@ python examples/compilers/simulation/03_fenicsx_load_exported_design.py
 
 ## ParaView inspection workflow
 
-1. Open **`simulation_results.xdmf`**
+1. Open **`examples/compilers/simulation/output/simulation_results.xdmf`**
 2. Click **Apply**
 3. Switch the coloring dropdown between **`modulus`**, **`poissons_ratio`**,
-   **`displacement`**, and **`von_mises`**
+   **`displacement_magnitude`**, and **`von_mises`**
 4. Use **Warp By Vector** with **`displacement`** if you want a deformed beam view
+
+In the displacement-magnitude result, the figure should get brighter toward the
+right-hand tip, and the warped shape should bend more strongly there. That is
+the direct visual signature of the softer material: the fixed end stays
+comparatively stiff, while the lower-modulus tip accumulates more displacement
+under the same applied traction.
 
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
@@ -543,4 +564,4 @@ python examples/compilers/simulation/03_fenicsx_load_exported_design.py
 
 - **`examples/compilers/simulation/01_volume_fractions_export.py`** — stochastic material assignment plus raw volume-fraction datasets
 - **`examples/compilers/simulation/02_direct_mechanical_properties_export.py`** — export-only direct scalar mechanical fields with **`poissons_ratio`** varying through **z**
-- **`examples/compilers/simulation/03_fenicsx_load_exported_design.py`** — self-contained DOLFINx/FEniCSx cantilever solve with both elastic fields varying along **x**
+- **`examples/compilers/simulation/03_fenicsx_load_exported_design.py`** — self-contained DOLFINx/FEniCSx cantilever solve with a stiff-to-soft modulus gradient along **x**

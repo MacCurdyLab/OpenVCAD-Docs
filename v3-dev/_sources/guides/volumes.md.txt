@@ -19,7 +19,7 @@ At the Python level, the workflow looks like this:
 3. Attach the attribute to normal OpenVCAD geometry.
 4. Visualize the sampled field directly in the renderer, or translate it into another attribute such as `COLOR_RGBA` for a downstream compiler.
 
-That is the pattern you will see in all three lessons.
+That is the pattern you will see in all four lessons.
 
 ## Lesson 1: Load a Density Volume and Render It
 
@@ -80,7 +80,96 @@ The figure below is the direct `DENSITY` preview of that setup. This small OpenV
 </div>
 </div>
 
-## Lesson 2: Fire Volumes to Printable RGBA
+## Lesson 2: PNG Images to Color Volumes
+
+PNG data follows the same adapter pattern as VDB and DICOM: load sampled data, wrap it as an attribute, attach it to geometry. The difference is that PNG sources are already color fields, so you can attach `COLOR_RGB` or `COLOR_RGBA` directly.
+
+OpenVCAD supports two PNG import modes:
+
+- **Single image with depth**: load one PNG and repeat it along z until a requested `depth_mm` is reached.
+- **Image stack**: load an ordered directory of PNG slices as a true 3D color volume.
+
+In both cases, physical scale comes from the user-specified `voxel_size` (`x`, `y`, `z` in mm).
+
+### Color mode behavior (`COLOR_RGB` vs `COLOR_RGBA`)
+
+When importing PNG data, choose a target mode:
+
+- `COLOR_RGB`: if source PNG has alpha, alpha is dropped.
+- `COLOR_RGBA`: if source PNG has no alpha channel, alpha is synthesized as fully opaque (`1.0`).
+- `COLOR_RGBA`: if source PNG has alpha, the alpha values are preserved.
+
+### Single-image example (logo repeated through depth)
+
+The example script lives in `examples/volumes/png/single_image/maclab_logo_color_rgba.py`.
+
+```python
+import os
+import pyvcad as pv
+import pyvcad_rendering as viz
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+image_path = os.path.join(script_dir, "maclab_logo.png")
+
+png_loader = pv.PNGLoader.FromImage(
+    image_path,
+    pv.Vec3(0.25, 0.25, 0.25),
+    10.0,
+    pv.PNGColorMode.COLOR_RGBA,
+    center=True,
+)
+color_volume = png_loader.as_rgba_volume()
+
+bbox_min, bbox_max = color_volume.bounding_box()
+carrier = pv.RectPrism.FromMinAndMax(bbox_min, bbox_max)
+carrier.set_attribute(pv.DefaultAttributes.COLOR_RGBA, pv.Vec4Attribute(color_volume))
+
+root = carrier
+viz.Render(root)
+```
+
+### Stack example (smooth color + transparency pyramid)
+
+The stack example lives in `examples/volumes/png/image_stack/pyramid_color_rgba.py`, using committed deterministic slice data under `examples/volumes/png/image_stack/pyramid_stack/`.
+
+```python
+import os
+import pyvcad as pv
+import pyvcad_rendering as viz
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+stack_dir = os.path.join(script_dir, "pyramid_stack")
+
+png_loader = pv.PNGLoader.FromStack(
+    stack_dir,
+    pv.Vec3(0.35, 0.35, 0.35),
+    pv.PNGColorMode.COLOR_RGBA,
+    center=True,
+)
+color_volume = png_loader.as_rgba_volume()
+
+bbox_min, bbox_max = color_volume.bounding_box()
+carrier = pv.RectPrism.FromMinAndMax(bbox_min, bbox_max)
+carrier.set_attribute(pv.DefaultAttributes.COLOR_RGBA, pv.Vec4Attribute(color_volume))
+
+root = carrier
+viz.Render(root)
+```
+
+The figures below show these two workflows in volumetric rendering mode.
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Single-image depth repeat (`COLOR_RGBA`)</p>
+<img src="images/volumes_png_logo_color_rgba.png" alt="Single PNG imported as a repeated-depth COLOR_RGBA volume" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Image stack (`COLOR_RGBA`)</p>
+<img src="images/volumes_png_pyramid_color_rgba.webp" alt="PNG image stack imported as a COLOR_RGBA volume" width="100%">
+</div>
+</div>
+
+## Lesson 3: Fire Volumes to Printable RGBA
 
 The fire example shows the full volume workflow that matters for fabrication: multiple sampled fields are loaded, attached to geometry, then translated into `COLOR_RGBA` for a compiler.
 
@@ -205,7 +294,7 @@ The photo below shows the physical fire print from that pipeline. It lets you co
 </div>
 </div>
 
-## Lesson 3: CT Head Scan to `COLOR_RGBA`
+## Lesson 4: CT Head Scan to `COLOR_RGBA`
 
 The tumor example uses the same overall workflow, but now the source data is a DICOM stack instead of a VDB file.
 

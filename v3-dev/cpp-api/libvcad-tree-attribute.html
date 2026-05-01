@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
@@ -36,10 +36,10 @@
     <link rel="stylesheet" type="text/css" href="../_static/openvcad_branding.css?v=c43e02c9" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../_static/scripts/fontawesome.js?digest=7f76b32a3354e82990f2"></script>
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
 
     <script src="../_static/documentation_options.js?v=110ea713"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
@@ -72,7 +72,9 @@
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
+  
+  
+  
   
   <dialog id="pst-search-dialog">
     
@@ -530,19 +532,17 @@
 <dd><div class="docutils container">
 <em>#include &lt;convolve.h&gt;</em></div>
 <p>A unary node that convolves the attributes of its child node using a defined kernel. </p>
-<p>This node intercepts <a class="reference internal" href="#class_convolve_1a77d5194251922e2efa1357d77a5fe894"><span class="std std-ref">sample()</span></a> calls to blend/convolve attributes over a local area. The signed distance field (geometry) is passed through unmodified. </p>
+<p><a class="reference internal" href="#class_convolve"><span class="std std-ref">Convolve</span></a> intercepts <a class="reference internal" href="#class_convolve_1a77d5194251922e2efa1357d77a5fe894"><span class="std std-ref">sample()</span></a> calls and blends/convolves the child’s attributes over a local region using an arbitrary kernel. The signed distance field (geometry) is passed through unmodified.</p>
+<p>Under the hood, <a class="reference internal" href="#class_convolve_1a6ebc215255a8608d0c9aeb593e301bb3"><span class="std std-ref">prepare()</span></a> precomputes a dense typed voxel grid of the child’s targeted attributes using the shared AttributeVoxelGrid utility. At sample time each kernel tap becomes a cheap flat-memory trilinear grid lookup instead of a full child-&gt;<a class="reference internal" href="#class_convolve_1a77d5194251922e2efa1357d77a5fe894"><span class="std std-ref">sample()</span></a> traversal, which makes the node orders of magnitude faster than a naive implementation.</p>
+<p><a class="reference internal" href="#class_convolve"><span class="std std-ref">Convolve</span></a> is the generic, flexible sibling of the specialized Blend node; both share the same precomputation utility but have independent sample-time logic. Use Blend as a shorthand for the common box-blend case (where a separable-blur fast path lives entirely in <a class="reference internal" href="#class_convolve_1a6ebc215255a8608d0c9aeb593e301bb3"><span class="std std-ref">prepare()</span></a> and <a class="reference internal" href="#class_convolve_1a77d5194251922e2efa1357d77a5fe894"><span class="std std-ref">sample()</span></a> becomes a single trilinear lookup). Use <a class="reference internal" href="#class_convolve"><span class="std std-ref">Convolve</span></a> for arbitrary kernel weights or non-blur operations (sharpen, derivative, etc.).</p>
+<p>The internal grid defaults to the voxel_size passed to <a class="reference internal" href="#class_convolve_1a6ebc215255a8608d0c9aeb593e301bb3"><span class="std std-ref">prepare()</span></a>. Users can supply a sparser override_voxel_size in the constructor to reduce memory cost for large scenes; trilinear interpolation at sample time still produces smooth output. </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK8Convolve14cache_capacityEv">
-<span id="_CPPv3NK8Convolve14cache_capacityEv"></span><span id="_CPPv2NK8Convolve14cache_capacityEv"></span><span id="Convolve::cache_capacityC"></span><span class="target" id="class_convolve_1a9d08b5a03c0e8a9795d35ca7b6467d72"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">cache_capacity</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8Convolve14cache_capacityEv" title="Link to this definition">#</a><br /></dt>
-<dd><p>Gets the cache capacity. </p>
-</dd></dl>
-
-<dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N8Convolve5cloneEv">
 <span id="_CPPv3N8Convolve5cloneEv"></span><span id="_CPPv2N8Convolve5cloneEv"></span><span id="Convolve::clone"></span><span class="target" id="class_convolve_1a152aeb6a09872de43eaa403a399f7944"></span><span class="k"><span class="pre">virtual</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">clone</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">override</span></span><a class="headerlink" href="#_CPPv4N8Convolve5cloneEv" title="Link to this definition">#</a><br /></dt>
-<dd><p><div class="admonition seealso">
+<dd><p>
+Clones share the immutable precomputed grid via shared_ptr so threaded samplers pay the prepare cost only once per tree. <div class="admonition seealso">
 <p class="admonition-title">See also</p>
 <p><a class="reference internal" href="libvcad-tree-core.html#class_node_1a44c7bbf62749c6bcf5dbc5c7ef06741f"><span class="std std-ref">Node::clone()</span></a></p>
 </div>
@@ -550,33 +550,17 @@
 </dd></dl>
 
 <dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N8Convolve8ConvolveERKNSt10shared_ptrI4NodeEERKNSt6vectorINSt6stringEEERKNSt10shared_ptrI14ConvolveKernelEERKN3glm4vec3E">
-<span id="_CPPv3N8Convolve8ConvolveERKNSt10shared_ptrI4NodeEERKNSt6vectorINSt6stringEEERKNSt10shared_ptrI14ConvolveKernelEERKN3glm4vec3E"></span><span id="_CPPv2N8Convolve8ConvolveERKNSt10shared_ptrI4NodeEERKNSt6vectorINSt6stringEEERKNSt10shared_ptrI14ConvolveKernelEERKN3glm4vec3E"></span><span id="Convolve::Convolve__std::shared_ptr:Node:CR.std::vector:ss:CR.std::shared_ptr:ConvolveKernel:CR.glm::vec3CR"></span><span class="target" id="class_convolve_1a002492deea1488be980fbf2acb4b9ec1"></span><span class="sig-name descname"><span class="n"><span class="pre">Convolve</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">child</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">attributes</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv414ConvolveKernel" title="ConvolveKernel"><span class="n"><span class="pre">ConvolveKernel</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">kernel</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">physical_radius</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Convolve8ConvolveERKNSt10shared_ptrI4NodeEERKNSt6vectorINSt6stringEEERKNSt10shared_ptrI14ConvolveKernelEERKN3glm4vec3E" title="Link to this definition">#</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N8Convolve8ConvolveERKNSt10shared_ptrI4NodeEERKNSt6vectorINSt6stringEEERKNSt10shared_ptrI14ConvolveKernelEERKN3glm4vec3ERKNSt8optionalIN3glm4vec3EEE">
+<span id="_CPPv3N8Convolve8ConvolveERKNSt10shared_ptrI4NodeEERKNSt6vectorINSt6stringEEERKNSt10shared_ptrI14ConvolveKernelEERKN3glm4vec3ERKNSt8optionalIN3glm4vec3EEE"></span><span id="_CPPv2N8Convolve8ConvolveERKNSt10shared_ptrI4NodeEERKNSt6vectorINSt6stringEEERKNSt10shared_ptrI14ConvolveKernelEERKN3glm4vec3ERKNSt8optionalIN3glm4vec3EEE"></span><span id="Convolve::Convolve__std::shared_ptr:Node:CR.std::vector:ss:CR.std::shared_ptr:ConvolveKernel:CR.glm::vec3CR.std::optional:glm::vec3:CR"></span><span class="target" id="class_convolve_1aa8186799d0cb35902aa8711c7e566e90"></span><span class="sig-name descname"><span class="n"><span class="pre">Convolve</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">child</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">attributes</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv414ConvolveKernel" title="ConvolveKernel"><span class="n"><span class="pre">ConvolveKernel</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">kernel</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">physical_radius</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">optional</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">override_voxel_size</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">nullopt</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Convolve8ConvolveERKNSt10shared_ptrI4NodeEERKNSt6vectorINSt6stringEEERKNSt10shared_ptrI14ConvolveKernelEERKN3glm4vec3ERKNSt8optionalIN3glm4vec3EEE" title="Link to this definition">#</a><br /></dt>
 <dd><p>Constructs a <a class="reference internal" href="#class_convolve"><span class="std std-ref">Convolve</span></a> node. </p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>child</strong> – The child node containing the attributes to convolve. </p></li>
-<li><p><strong>attributes</strong> – The names of the attributes to target. If empty, all valid continuous attributes are targeted. </p></li>
+<li><p><strong>attributes</strong> – The names of the attributes to target. If empty, all attributes observed on the child at prepare time are targeted. </p></li>
 <li><p><strong>kernel</strong> – The convolution kernel (weights and extents). </p></li>
 <li><p><strong>physical_radius</strong> – The physical world-space radius (in mm) that the kernel spans along X, Y, and Z. </p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N8Convolve8ConvolveERKNSt10shared_ptrI4NodeEERKNSt6vectorINSt6stringEEERKNSt10shared_ptrI14ConvolveKernelEERKN3glm4vec3Eb">
-<span id="_CPPv3N8Convolve8ConvolveERKNSt10shared_ptrI4NodeEERKNSt6vectorINSt6stringEEERKNSt10shared_ptrI14ConvolveKernelEERKN3glm4vec3Eb"></span><span id="_CPPv2N8Convolve8ConvolveERKNSt10shared_ptrI4NodeEERKNSt6vectorINSt6stringEEERKNSt10shared_ptrI14ConvolveKernelEERKN3glm4vec3Eb"></span><span id="Convolve::Convolve__std::shared_ptr:Node:CR.std::vector:ss:CR.std::shared_ptr:ConvolveKernel:CR.glm::vec3CR.b"></span><span class="target" id="class_convolve_1ab366677cc57fda8575d2ba7d8586e3b2"></span><span class="sig-name descname"><span class="n"><span class="pre">Convolve</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">child</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vector</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">attributes</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv414ConvolveKernel" title="ConvolveKernel"><span class="n"><span class="pre">ConvolveKernel</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">kernel</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">physical_radius</span></span>, <span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">enable_cache</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Convolve8ConvolveERKNSt10shared_ptrI4NodeEERKNSt6vectorINSt6stringEEERKNSt10shared_ptrI14ConvolveKernelEERKN3glm4vec3Eb" title="Link to this definition">#</a><br /></dt>
-<dd><p>Constructs a <a class="reference internal" href="#class_convolve"><span class="std std-ref">Convolve</span></a> node with cache control. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>child</strong> – The child node containing the attributes to convolve. </p></li>
-<li><p><strong>attributes</strong> – The names of the attributes to target. If empty, all valid continuous attributes are targeted. </p></li>
-<li><p><strong>kernel</strong> – The convolution kernel (weights and extents). </p></li>
-<li><p><strong>physical_radius</strong> – The physical world-space radius (in mm) that the kernel spans along X, Y, and Z. </p></li>
-<li><p><strong>enable_cache</strong> – Whether to use the LRU cache (defaults to true). </p></li>
+<li><p><strong>override_voxel_size</strong> – Optional sparser voxel size used for the internal precomputed grid. When unset, the voxel_size passed to <a class="reference internal" href="#class_convolve_1a6ebc215255a8608d0c9aeb593e301bb3"><span class="std std-ref">prepare()</span></a> is used. </p></li>
 </ul>
 </dd>
 </dl>
@@ -623,34 +607,6 @@
 </p>
 </dd></dl>
 
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N8Convolve18set_cache_capacityE6size_t">
-<span id="_CPPv3N8Convolve18set_cache_capacityE6size_t"></span><span id="_CPPv2N8Convolve18set_cache_capacityE6size_t"></span><span id="Convolve::set_cache_capacity__s"></span><span class="target" id="class_convolve_1aea5e7cc8fa2922fc6ded3b37f7f94ad6"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_cache_capacity</span></span></span><span class="sig-paren">(</span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">capacity</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Convolve18set_cache_capacityE6size_t" title="Link to this definition">#</a><br /></dt>
-<dd><p>Sets the cache capacity. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>capacity</strong> – Maximum number of node samples to store in the cache. </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N8Convolve13set_use_cacheEb">
-<span id="_CPPv3N8Convolve13set_use_cacheEb"></span><span id="_CPPv2N8Convolve13set_use_cacheEb"></span><span id="Convolve::set_use_cache__b"></span><span class="target" id="class_convolve_1a170d9976dfa504cb8433342a8fd4fb7d"></span><span class="kt"><span class="pre">void</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">set_use_cache</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">enabled</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Convolve13set_use_cacheEb" title="Link to this definition">#</a><br /></dt>
-<dd><p>Toggles the internal LRU cache. </p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>enabled</strong> – True to use the cache, false to sample the child directly every time. </p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4NK8Convolve9use_cacheEv">
-<span id="_CPPv3NK8Convolve9use_cacheEv"></span><span id="_CPPv2NK8Convolve9use_cacheEv"></span><span id="Convolve::use_cacheC"></span><span class="target" id="class_convolve_1a17c2e6a7ddf9169b98a8f6070e33e84a"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">use_cache</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><span class="w"> </span><span class="k"><span class="pre">const</span></span><a class="headerlink" href="#_CPPv4NK8Convolve9use_cacheEv" title="Link to this definition">#</a><br /></dt>
-<dd><p>Gets whether the cache is enabled. </p>
-</dd></dl>
-
 </div>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-protected-functions">Protected Functions</p>
@@ -661,34 +617,20 @@
 
 </div>
 <div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-functions">Private Functions</p>
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N8Convolve16get_child_sampleEdddRKN3glm5ivec3E">
-<span id="_CPPv3N8Convolve16get_child_sampleEdddRKN3glm5ivec3E"></span><span id="_CPPv2N8Convolve16get_child_sampleEdddRKN3glm5ivec3E"></span><span id="Convolve::get_child_sample__double.double.double.glm::ivec3CR"></span><span class="target" id="class_convolve_1abc42be28dc9ed758074ce8042d53d2e7"></span><span class="n"><span class="pre">TreeSample</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">get_child_sample</span></span></span><span class="sig-paren">(</span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">x</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">y</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">z</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ivec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">grid_coord</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N8Convolve16get_child_sampleEdddRKN3glm5ivec3E" title="Link to this definition">#</a><br /></dt>
-<dd><p>Internal helper to get a sample, either from cache or directly from the child. </p>
-</dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
 <dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N8Convolve7m_cacheE">
-<span id="_CPPv3N8Convolve7m_cacheE"></span><span id="_CPPv2N8Convolve7m_cacheE"></span><span id="Convolve::m_cache__std::shared_ptr:LRUCache:glm::ivec3.TreeSample::"></span><span class="target" id="class_convolve_1a1947fc8873355b924c47c7f7bf66d287"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-utils.html#_CPPv4I00E8LRUCache" title="LRUCache"><span class="n"><span class="pre">LRUCache</span></span></a><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">ivec3</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="n"><span class="pre">TreeSample</span></span><span class="p"><span class="pre">&gt;</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_cache</span></span></span><a class="headerlink" href="#_CPPv4N8Convolve7m_cacheE" title="Link to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N8Convolve16m_cache_capacityE">
-<span id="_CPPv3N8Convolve16m_cache_capacityE"></span><span id="_CPPv2N8Convolve16m_cache_capacityE"></span><span id="Convolve::m_cache_capacity__s"></span><span class="target" id="class_convolve_1a1b0b9c68e7d8871cacc6c8533324bb10"></span><span class="n"><span class="pre">size_t</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_cache_capacity</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">100000</span></span><a class="headerlink" href="#_CPPv4N8Convolve16m_cache_capacityE" title="Link to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N8Convolve20m_expanded_bandwidthE">
-<span id="_CPPv3N8Convolve20m_expanded_bandwidthE"></span><span id="_CPPv2N8Convolve20m_expanded_bandwidthE"></span><span id="Convolve::m_expanded_bandwidth__double"></span><span class="target" id="class_convolve_1ad204dcf95f97a6cb9d4711224688b35f"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_expanded_bandwidth</span></span></span><a class="headerlink" href="#_CPPv4N8Convolve20m_expanded_bandwidthE" title="Link to this definition">#</a><br /></dt>
+<dt class="sig sig-object cpp" id="_CPPv4N8Convolve6m_gridE">
+<span id="_CPPv3N8Convolve6m_gridE"></span><span id="_CPPv2N8Convolve6m_gridE"></span><span id="Convolve::m_grid__std::shared_ptr:AttributeVoxelGrid:"></span><span class="target" id="class_convolve_1a6abc700737323dcb679c6d6e87d400fd"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">AttributeVoxelGrid</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_grid</span></span></span><a class="headerlink" href="#_CPPv4N8Convolve6m_gridE" title="Link to this definition">#</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8Convolve8m_kernelE">
 <span id="_CPPv3N8Convolve8m_kernelE"></span><span id="_CPPv2N8Convolve8m_kernelE"></span><span id="Convolve::m_kernel__std::shared_ptr:ConvolveKernel:"></span><span class="target" id="class_convolve_1a458144b1fabde474242300d43c7a988d"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="#_CPPv414ConvolveKernel" title="ConvolveKernel"><span class="n"><span class="pre">ConvolveKernel</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_kernel</span></span></span><a class="headerlink" href="#_CPPv4N8Convolve8m_kernelE" title="Link to this definition">#</a><br /></dt>
+<dd></dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N8Convolve21m_override_voxel_sizeE">
+<span id="_CPPv3N8Convolve21m_override_voxel_sizeE"></span><span id="_CPPv2N8Convolve21m_override_voxel_sizeE"></span><span id="Convolve::m_override_voxel_size__std::optional:glm::vec3:"></span><span class="target" id="class_convolve_1a47c95c61fbc403619296ccb2082eae63"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">optional</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_override_voxel_size</span></span></span><a class="headerlink" href="#_CPPv4N8Convolve21m_override_voxel_sizeE" title="Link to this definition">#</a><br /></dt>
 <dd></dd></dl>
 
 <dl class="cpp var">
@@ -704,16 +646,6 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N8Convolve23m_target_attributes_setE">
 <span id="_CPPv3N8Convolve23m_target_attributes_setE"></span><span id="_CPPv2N8Convolve23m_target_attributes_setE"></span><span id="Convolve::m_target_attributes_set__std::set:ss:"></span><span class="target" id="class_convolve_1aac9938ae03fac112d246eb978a04a17b"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">set</span></span><span class="p"><span class="pre">&lt;</span></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">string</span></span><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_target_attributes_set</span></span></span><a class="headerlink" href="#_CPPv4N8Convolve23m_target_attributes_setE" title="Link to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N8Convolve11m_use_cacheE">
-<span id="_CPPv3N8Convolve11m_use_cacheE"></span><span id="_CPPv2N8Convolve11m_use_cacheE"></span><span id="Convolve::m_use_cache__b"></span><span class="target" id="class_convolve_1a34368def9f0451de1a417764d89fff89"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_use_cache</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">true</span></span><a class="headerlink" href="#_CPPv4N8Convolve11m_use_cacheE" title="Link to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N8Convolve12m_voxel_sizeE">
-<span id="_CPPv3N8Convolve12m_voxel_sizeE"></span><span id="_CPPv2N8Convolve12m_voxel_sizeE"></span><span id="Convolve::m_voxel_size__glm::vec3"></span><span class="target" id="class_convolve_1a567cf3a26e050a0b0622985204466da6"></span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_voxel_size</span></span></span><a class="headerlink" href="#_CPPv4N8Convolve12m_voxel_sizeE" title="Link to this definition">#</a><br /></dt>
 <dd></dd></dl>
 
 </div>
@@ -976,28 +908,19 @@
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv48Convolve"><code class="docutils literal notranslate"><span class="pre">Convolve</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4NK8Convolve14cache_capacityEv"><code class="docutils literal notranslate"><span class="pre">cache_capacity()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N8Convolve5cloneEv"><code class="docutils literal notranslate"><span class="pre">clone()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N8Convolve8ConvolveERKNSt10shared_ptrI4NodeEERKNSt6vectorINSt6stringEEERKNSt10shared_ptrI14ConvolveKernelEERKN3glm4vec3E"><code class="docutils literal notranslate"><span class="pre">Convolve()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N8Convolve8ConvolveERKNSt10shared_ptrI4NodeEERKNSt6vectorINSt6stringEEERKNSt10shared_ptrI14ConvolveKernelEERKN3glm4vec3Eb"><code class="docutils literal notranslate"><span class="pre">Convolve()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N8Convolve8ConvolveERKNSt10shared_ptrI4NodeEERKNSt6vectorINSt6stringEEERKNSt10shared_ptrI14ConvolveKernelEERKN3glm4vec3ERKNSt8optionalIN3glm4vec3EEE"><code class="docutils literal notranslate"><span class="pre">Convolve()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4NK8Convolve14diagram_familyEv"><code class="docutils literal notranslate"><span class="pre">diagram_family()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4NK8Convolve13diagram_labelEv"><code class="docutils literal notranslate"><span class="pre">diagram_label()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N8Convolve7prepareERKN3glm4vec3Ed"><code class="docutils literal notranslate"><span class="pre">prepare()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N8Convolve6sampleEddd"><code class="docutils literal notranslate"><span class="pre">sample()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N8Convolve18set_cache_capacityE6size_t"><code class="docutils literal notranslate"><span class="pre">set_cache_capacity()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N8Convolve13set_use_cacheEb"><code class="docutils literal notranslate"><span class="pre">set_use_cache()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4NK8Convolve9use_cacheEv"><code class="docutils literal notranslate"><span class="pre">use_cache()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N8Convolve20prepare_bounding_boxEv"><code class="docutils literal notranslate"><span class="pre">prepare_bounding_box()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N8Convolve16get_child_sampleEdddRKN3glm5ivec3E"><code class="docutils literal notranslate"><span class="pre">get_child_sample()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N8Convolve7m_cacheE"><code class="docutils literal notranslate"><span class="pre">m_cache</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N8Convolve16m_cache_capacityE"><code class="docutils literal notranslate"><span class="pre">m_cache_capacity</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N8Convolve20m_expanded_bandwidthE"><code class="docutils literal notranslate"><span class="pre">m_expanded_bandwidth</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N8Convolve6m_gridE"><code class="docutils literal notranslate"><span class="pre">m_grid</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N8Convolve8m_kernelE"><code class="docutils literal notranslate"><span class="pre">m_kernel</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N8Convolve21m_override_voxel_sizeE"><code class="docutils literal notranslate"><span class="pre">m_override_voxel_size</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N8Convolve17m_physical_radiusE"><code class="docutils literal notranslate"><span class="pre">m_physical_radius</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N8Convolve19m_target_attributesE"><code class="docutils literal notranslate"><span class="pre">m_target_attributes</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N8Convolve23m_target_attributes_setE"><code class="docutils literal notranslate"><span class="pre">m_target_attributes_set</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N8Convolve11m_use_cacheE"><code class="docutils literal notranslate"><span class="pre">m_use_cache</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N8Convolve12m_voxel_sizeE"><code class="docutils literal notranslate"><span class="pre">m_voxel_size</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv49BoxKernel"><code class="docutils literal notranslate"><span class="pre">BoxKernel</span></code></a><ul class="nav section-nav flex-column">
@@ -1057,8 +980,8 @@
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -1092,7 +1015,7 @@
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
 </p></div>
       
     </div>

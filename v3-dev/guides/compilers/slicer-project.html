@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Slicer Project Compiler &#8212; OpenVCAD 3.0 documentation</title>
+    <title>Slicer Project Compilers &#8212; OpenVCAD 3.0 documentation</title>
   
   
   
@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
@@ -36,10 +36,10 @@
     <link rel="stylesheet" type="text/css" href="../../_static/openvcad_branding.css?v=c43e02c9" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../../_static/scripts/fontawesome.js?digest=7f76b32a3354e82990f2"></script>
+  <script defer src="../../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
 
     <script src="../../_static/documentation_options.js?v=110ea713"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
@@ -72,7 +72,9 @@
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
+  
+  
+  
   
   <dialog id="pst-search-dialog">
     
@@ -327,7 +329,7 @@
 <li class="toctree-l2"><a class="reference internal" href="material-inkjet.html">Material Inkjet Compiler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="color-inkjet.html">Color Inkjet Compiler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="vat-photo.html">VAT Photo Compiler</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Slicer Project Compiler</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Slicer Project Compilers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="simulation-compiler.html">Simulation Compiler</a></li>
 </ul>
 </details></li>
@@ -380,7 +382,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Compilers</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Slicer Project Compiler</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Slicer Project Compilers</span></li>
   </ul>
 </nav>
 </div>
@@ -397,8 +399,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="slicer-project-compiler">
-<span id="guide-compilers-slicer-project"></span><h1>Slicer Project Compiler<a class="headerlink" href="#slicer-project-compiler" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="slicer-project-compilers">
+<span id="guide-compilers-slicer-project"></span><h1>Slicer Project Compilers<a class="headerlink" href="#slicer-project-compilers" title="Link to this heading">#</a></h1>
 <!--
 Build dependency sentinel for guide sidebar compiler membership.
 Guide pages that render the shared Guides sidebar include this file so
@@ -412,179 +414,231 @@ Current compiler guides:
 - slicer-project
 - simulation-compiler
 -->
-<p>The <strong>SlicerProjectCompiler</strong> turns OpenVCAD designs that carry <strong>scalar slicer attributes</strong> (for example <strong><code class="docutils literal notranslate"><span class="pre">INFILL_DENSITY</span></code></strong>, <strong><code class="docutils literal notranslate"><span class="pre">FUZZY_SKIN_POINT_DISTANCE</span></code></strong>, or <strong><code class="docutils literal notranslate"><span class="pre">TEMPERATURE</span></code></strong>) into a <strong>PrusaSlicer-style 3MF project</strong> (<code class="docutils literal notranslate"><span class="pre">.3mf</span></code>). You <strong>import that file into PrusaSlicer</strong> (or another slicer that understands the same project layout), slice, and print on <strong>filament / FFF</strong> hardware.</p>
-<p>This page explains <strong>how the compiler works</strong> (by method, not line-by-line code), walks through <strong>examples</strong>, and documents the <strong>Python API</strong>. Renders show the <strong>OpenVCAD</strong> fields; <strong>PrusaSlicer</strong> screenshots show the sliced out.</p>
+<section id="intro">
+<h2>Intro<a class="headerlink" href="#intro" title="Link to this heading">#</a></h2>
+<p>Slicer project compilers turn prepared OpenVCAD designs into slicer-native <strong><code class="docutils literal notranslate"><span class="pre">.3mf</span></code> project files</strong> for filament printing workflows. Use them when you want OpenVCAD to generate geometry regions and attribute-derived assignments, while the downstream slicer still owns slicing, preview, and G-code generation.</p>
+<p>There are two separate workflows:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Workflow</p></th>
+<th class="head"><p>Input attributes</p></th>
+<th class="head"><p>Output project</p></th>
+<th class="head"><p>Best fit</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>PrusaSlicer</strong> settings meshes</p></td>
+<td><p>Scalar planning attributes such as <code class="docutils literal notranslate"><span class="pre">INFILL_DENSITY</span></code>, <code class="docutils literal notranslate"><span class="pre">FUZZY_SKIN_POINT_DISTANCE</span></code>, <code class="docutils literal notranslate"><span class="pre">LAYER_HEIGHT</span></code>, or <code class="docutils literal notranslate"><span class="pre">PERIMETER_SPEED</span></code></p></td>
+<td><p>PrusaSlicer-style <code class="docutils literal notranslate"><span class="pre">.3mf</span></code></p></td>
+<td><p>Spatially varying slicer planning settings</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>PrusaSlicer</strong> virtual extrusion</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">TEMPERATURE</span></code> with optional companion <code class="docutils literal notranslate"><span class="pre">FLOW_RATE</span></code></p></td>
+<td><p>PrusaSlicer-style <code class="docutils literal notranslate"><span class="pre">.3mf</span></code> with logical tools and toolchange G-code</p></td>
+<td><p>Machine-state changes at region boundaries</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>FullSpectrum</strong> color</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">COLOR_RGB</span></code></p></td>
+<td><p>Orca / Bambu-style Full Spectrum <code class="docutils literal notranslate"><span class="pre">.3mf</span></code></p></td>
+<td><p>Mixed-filament color approximation from design-space colors</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>FullSpectrum</strong> material fractions</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code> plus <code class="docutils literal notranslate"><span class="pre">volume_fraction_materials</span></code></p></td>
+<td><p>Orca / Bambu-style Full Spectrum <code class="docutils literal notranslate"><span class="pre">.3mf</span></code></p></td>
+<td><p>Direct material-fraction to filament-slot recipes</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>For slice-image workflows instead of slicer projects, see <a class="reference internal" href="material-inkjet.html"><span class="std std-doc">Material Inkjet</span></a>, <a class="reference internal" href="color-inkjet.html"><span class="std std-doc">Color Inkjet</span></a>, and <a class="reference internal" href="vat-photo.html"><span class="std std-doc">VAT Photo</span></a>.</p>
 <section id="prerequisites">
-<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
+<h3>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p>OpenVCAD with <strong><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code></strong> and <strong><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code></strong> installed.</p></li>
-<li><p>Familiarity with <strong>scalar attributes</strong> on geometry (see <a class="reference internal" href="../getting-started.html#guide-getting-started"><span class="std std-ref">Getting Started with OpenVCAD</span></a>, especially <strong>Lesson 4: Attributes</strong>, and the <a class="reference internal" href="../gradients.html"><span class="std std-doc">Functional Grading Guide</span></a>).</p></li>
+<li><p>OpenVCAD with <strong><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code></strong>, <strong><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code></strong>, and <strong><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code></strong> installed.</p></li>
+<li><p>Familiarity with attributes on geometry. See <a class="reference internal" href="../getting-started.html#guide-getting-started"><span class="std std-ref">Getting Started with OpenVCAD</span></a>, especially Lesson 4, and the <a class="reference internal" href="../gradients.html"><span class="std std-doc">Functional Grading Guide</span></a>.</p></li>
+<li><p>A matching slicer for the project you generate: <strong>PrusaSlicer</strong> for Prusa-style scalar projects, or the <a class="reference external" href="https://github.com/ratdoux/OrcaSlicer-FullSpectrum">OrcaSlicer-FullSpectrum</a> fork for the FullSpectrum examples in this guide.</p></li>
 </ul>
 </section>
-<section id="what-this-compiler-is-for">
-<h2>What this compiler is for<a class="headerlink" href="#what-this-compiler-is-for" title="Link to this heading">#</a></h2>
-<p>Use <strong>Slicer Project</strong> when you want <strong>spatially varying slicer settings</strong> derived from continuous fields on your model, exported as a <strong>single project file</strong> for <strong>PrusaSlicer</strong>, instead of <strong>voxel PNG stacks</strong> for inkjet workflows. For slice <strong>images</strong>, see the <a class="reference internal" href="material-inkjet.html"><span class="std std-doc">Material Inkjet</span></a> and <a class="reference internal" href="color-inkjet.html"><span class="std std-doc">Color Inkjet</span></a> guides.</p>
+<section id="shared-3mf-concepts">
+<h3>Shared 3MF Concepts<a class="headerlink" href="#shared-3mf-concepts" title="Link to this heading">#</a></h3>
+<p>A <strong>3MF</strong> file is a compressed package, not a single flat mesh file. Conceptually it behaves like a ZIP / OPC-style container with relationship files, content-type metadata, and XML model parts. The core model part stores triangle meshes as XML vertices and triangles. Slicers extend the package by adding their own project settings and per-model metadata.</p>
+<p>Typical package shapes:</p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>generic_part.3mf
+  [Content_Types].xml
+  _rels/.rels
+  3D/3dmodel.model
+
+prusa_project.3mf
+  3D/3dmodel.model
+  Metadata/Slic3r_PE.config
+  Metadata/Slic3r_PE_model.config
+
+orca_full_spectrum_project.3mf
+  3D/3dmodel.model
+  Metadata/project_settings.config
+  Metadata/model_settings.config
+</pre></div>
+</div>
+<p>A very small 3MF mesh fragment looks like this:</p>
+<div class="highlight-xml notranslate"><div class="highlight"><pre><span></span><span class="nt">&lt;model</span><span class="w"> </span><span class="na">unit=</span><span class="s">&quot;millimeter&quot;</span><span class="w"> </span><span class="na">xml:lang=</span><span class="s">&quot;en-US&quot;</span>
+<span class="w">       </span><span class="na">xmlns=</span><span class="s">&quot;http://schemas.microsoft.com/3dmanufacturing/core/2015/02&quot;</span><span class="nt">&gt;</span>
+<span class="w">  </span><span class="nt">&lt;resources&gt;</span>
+<span class="w">    </span><span class="nt">&lt;object</span><span class="w"> </span><span class="na">id=</span><span class="s">&quot;1&quot;</span><span class="w"> </span><span class="na">type=</span><span class="s">&quot;model&quot;</span><span class="nt">&gt;</span>
+<span class="w">      </span><span class="nt">&lt;mesh&gt;</span>
+<span class="w">        </span><span class="nt">&lt;vertices&gt;</span>
+<span class="w">          </span><span class="nt">&lt;vertex</span><span class="w"> </span><span class="na">x=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">y=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">z=</span><span class="s">&quot;0&quot;</span><span class="nt">/&gt;</span>
+<span class="w">          </span><span class="nt">&lt;vertex</span><span class="w"> </span><span class="na">x=</span><span class="s">&quot;20&quot;</span><span class="w"> </span><span class="na">y=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">z=</span><span class="s">&quot;0&quot;</span><span class="nt">/&gt;</span>
+<span class="w">          </span><span class="nt">&lt;vertex</span><span class="w"> </span><span class="na">x=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">y=</span><span class="s">&quot;20&quot;</span><span class="w"> </span><span class="na">z=</span><span class="s">&quot;0&quot;</span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/vertices&gt;</span>
+<span class="w">        </span><span class="nt">&lt;triangles&gt;</span>
+<span class="w">          </span><span class="nt">&lt;triangle</span><span class="w"> </span><span class="na">v1=</span><span class="s">&quot;0&quot;</span><span class="w"> </span><span class="na">v2=</span><span class="s">&quot;1&quot;</span><span class="w"> </span><span class="na">v3=</span><span class="s">&quot;2&quot;</span><span class="nt">/&gt;</span>
+<span class="w">        </span><span class="nt">&lt;/triangles&gt;</span>
+<span class="w">      </span><span class="nt">&lt;/mesh&gt;</span>
+<span class="w">    </span><span class="nt">&lt;/object&gt;</span>
+<span class="w">  </span><span class="nt">&lt;/resources&gt;</span>
+<span class="nt">&lt;/model&gt;</span>
+</pre></div>
+</div>
+<p>The extra value of slicer project 3MFs comes from the attachments around that core mesh. A PrusaSlicer project can carry Prusa project configuration and per-volume settings. An Orca / Bambu-style project can carry model settings, project settings, and component assignments that tell the slicer which extruder or virtual mixed filament belongs to each region.</p>
+<p>For the 3MF container and core mesh format, see the <a class="reference external" href="https://3mf.io/spec/">3MF Consortium specification page</a> and the <a class="reference external" href="https://3mf.io/spec/core-v1-3-0/">Core 3MF Specification</a>.</p>
 </section>
-<section id="opening-your-project-in-prusaslicer">
-<span id="id1"></span><h2>Opening your project in PrusaSlicer<a class="headerlink" href="#opening-your-project-in-prusaslicer" title="Link to this heading">#</a></h2>
-<p>The compiler <strong>only writes</strong> the <strong><code class="docutils literal notranslate"><span class="pre">.3mf</span></code></strong>. It does <strong>not</strong> launch a slicer.</p>
+</section>
+<section id="prusaslicer">
+<h2>PrusaSlicer<a class="headerlink" href="#prusaslicer" title="Link to this heading">#</a></h2>
+<p>Use the PrusaSlicer compiler when your OpenVCAD design carries scalar process attributes and you want a PrusaSlicer-compatible project file. The compiler samples scalar attributes over the solid, partitions the sampled field into a finite number of regions, emits a mesh for each region, and writes a PrusaSlicer-style <code class="docutils literal notranslate"><span class="pre">.3mf</span></code>.</p>
+<p>The important idea is that a continuous OpenVCAD field becomes <strong>piecewise constant slicer regions</strong>. Each generated region gets one representative value. More regions preserve more variation, but they also create more sub-volumes for PrusaSlicer to manage.</p>
+<section id="opening-the-project">
+<h3>Opening The Project<a class="headerlink" href="#opening-the-project" title="Link to this heading">#</a></h3>
+<p>The compiler only writes the <code class="docutils literal notranslate"><span class="pre">.3mf</span></code>. It does not launch PrusaSlicer.</p>
 <ol class="arabic simple">
-<li><p>Run your Python script (or build the compiler in code) so <strong><code class="docutils literal notranslate"><span class="pre">compile()</span></code></strong> finishes and the <strong><code class="docutils literal notranslate"><span class="pre">.3mf</span></code></strong> path exists.</p></li>
-<li><p>Open <strong>PrusaSlicer</strong>, use <strong>File → Import</strong>, and select the generated <strong><code class="docutils literal notranslate"><span class="pre">.3mf</span></code></strong> (or drag it into the window).</p></li>
-<li><p>Inspect <strong>sub-volumes</strong> and <strong>per-volume settings</strong> in the <strong>Plater / Models</strong> UI, then <strong>Slice now</strong> and review the <strong>G-code preview</strong> (layer view, color by feature, etc.).</p></li>
+<li><p>Run your Python script so <code class="docutils literal notranslate"><span class="pre">compile()</span></code> finishes and the <code class="docutils literal notranslate"><span class="pre">.3mf</span></code> path exists.</p></li>
+<li><p>Open <strong>PrusaSlicer</strong>, use <strong>File -&gt; Import</strong>, and select the generated <code class="docutils literal notranslate"><span class="pre">.3mf</span></code>.</p></li>
+<li><p>Inspect sub-volumes and per-volume settings in the <strong>Plater / Models</strong> UI, then slice and review the G-code preview.</p></li>
 </ol>
-<p>Printer and filament choices inside PrusaSlicer are up to you; the <strong><code class="docutils literal notranslate"><span class="pre">.3mf</span></code></strong> carries <strong>model geometry</strong> and <strong>embedded project/config</strong> produced by the compiler.</p>
 </section>
-<section id="how-it-works">
-<h2>How it works<a class="headerlink" href="#how-it-works" title="Link to this heading">#</a></h2>
-<p>At a high level, <strong><code class="docutils literal notranslate"><span class="pre">compile()</span></code></strong> does the following:</p>
-<ol class="arabic simple">
-<li><p><strong>Discover attributes</strong> on your tree and <strong>classify</strong> each supported name using an internal <strong>registry</strong>. There are two families:</p>
-<ul class="simple">
-<li><p><strong>Settings mesh:</strong> attributes that map to <strong>PrusaSlicer per-volume metadata</strong> (for example <strong><code class="docutils literal notranslate"><span class="pre">INFILL_DENSITY</span></code></strong> → <strong><code class="docutils literal notranslate"><span class="pre">fill_density</span></code></strong>, <strong><code class="docutils literal notranslate"><span class="pre">FUZZY_SKIN_POINT_DISTANCE</span></code></strong> → <strong><code class="docutils literal notranslate"><span class="pre">fuzzy_skin_point_dist</span></code></strong>). The compiler <strong>does not</strong> need separate <strong><code class="docutils literal notranslate"><span class="pre">.ini</span></code></strong> profiles for this mode.</p></li>
-<li><p><strong>Virtual extrusion:</strong> attributes that must be driven through <strong>G-code</strong> (today this path is built around <strong><code class="docutils literal notranslate"><span class="pre">TEMPERATURE</span></code></strong> with a <strong><code class="docutils literal notranslate"><span class="pre">FLOW_RATE</span></code></strong> companion). This mode <strong>requires</strong> <strong><code class="docutils literal notranslate"><span class="pre">printer_profile_path</span></code></strong> and <strong><code class="docutils literal notranslate"><span class="pre">filament_profile_path</span></code></strong> pointing to PrusaSlicer <strong><code class="docutils literal notranslate"><span class="pre">.ini</span></code></strong> files so the compiler can <strong>inject</strong> toolchange-style <strong>G-code</strong> derived from templates. Unsupported attribute names are <strong>printed to the console</strong> and <strong>ignored</strong>.</p></li>
-</ul>
-</li>
-<li><p><strong>Sample</strong> the prepared tree on a <strong>voxel grid</strong> over the <strong>bounding box</strong> using your <strong><code class="docutils literal notranslate"><span class="pre">voxel_size</span></code></strong>. For each voxel <strong>inside</strong> the solid, the compiler reads <strong>double-valued</strong> attributes it cares about.</p></li>
-<li><p><strong>Estimate ranges</strong> for each segmented attribute over the solid, then split each range into <strong><code class="docutils literal notranslate"><span class="pre">num_regions</span></code></strong> <strong>sub-ranges</strong> (default <strong>10</strong>). Each sub-range becomes a <strong>region</strong> of the solid where attribute values are <strong>similar</strong>.</p></li>
-<li><p><strong>Build geometry</strong> for those regions (segmented meshes), attach <strong>Prusa-compatible metadata</strong> (settings mesh) and/or <strong>extruder / tool</strong> assignments (virtual extrusion), and <strong>package</strong> everything into a <strong><code class="docutils literal notranslate"><span class="pre">.3mf</span></code></strong> with the expected <strong>config</strong> attachments.</p></li>
-<li><p><strong>Progress</strong> and <strong>cancellation</strong> follow the usual <strong><code class="docutils literal notranslate"><span class="pre">CompilerBase</span></code></strong> behavior.</p></li>
-</ol>
-<p>The important idea: <strong>continuous</strong> fields in OpenVCAD become <strong>piecewise-constant</strong> regions in the slicer project—each region carries <strong>one</strong> representative setting (derived from the sub-range), not a unique value per voxel inside Prusa’s mesh-metadata model.</p>
-</section>
-<section id="pipeline-overview">
-<h2>Pipeline overview<a class="headerlink" href="#pipeline-overview" title="Link to this heading">#</a></h2>
-<p><strong>Classify</strong> supported attributes → <strong>sample</strong> on a grid → <strong>segment</strong> by attribute ranges → <strong>emit</strong> meshes + metadata and/or <strong>virtual extruders</strong> → <strong>write</strong> <strong><code class="docutils literal notranslate"><span class="pre">.3mf</span></code></strong>.</p>
-</section>
-<section id="reference-python-api">
-<h2>Reference: Python API<a class="headerlink" href="#reference-python-api" title="Link to this heading">#</a></h2>
-<section id="constructor">
-<h3>Constructor<a class="headerlink" href="#constructor" title="Link to this heading">#</a></h3>
-<p><code class="docutils literal notranslate"><span class="pre">SlicerProjectCompiler(root,</span> <span class="pre">voxel_size,</span> <span class="pre">output_file_path,</span> <span class="pre">num_regions=10,</span> <span class="pre">printer_profile_path=&quot;&quot;,</span> <span class="pre">filament_profile_path=&quot;&quot;)</span></code></p>
+<section id="settings-applied-to-meshes">
+<h3>Settings Applied To Meshes<a class="headerlink" href="#settings-applied-to-meshes" title="Link to this heading">#</a></h3>
+<p>The settings-mesh path is for attributes that directly affect <strong>slicer planning</strong>. These settings change how PrusaSlicer computes toolpaths: infill density, layer height, perimeter counts, line widths, and feature speeds. OpenVCAD emits sub-volumes, and each sub-volume carries Prusa-compatible metadata for the selected slicer setting.</p>
+<p>This path is appropriate when the parameter should influence slicing decisions before G-code is generated. For example, an <code class="docutils literal notranslate"><span class="pre">INFILL_DENSITY</span></code> gradient changes how dense the internal infill toolpaths are in each generated region.</p>
+<p>Settings-mesh attributes are scalar fields. The Python names below are available under <code class="docutils literal notranslate"><span class="pre">pv.DefaultAttributes</span></code>.</p>
 <div class="pst-scrollable-table-container"><table class="table">
 <thead>
-<tr class="row-odd"><th class="head"><p>Argument</p></th>
-<th class="head"><p>Meaning</p></th>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>PrusaSlicer setting key</p></th>
+<th class="head"><p>Typical use</p></th>
 </tr>
 </thead>
 <tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">root</span></code></p></td>
-<td><p>Root <strong><code class="docutils literal notranslate"><span class="pre">Node</span></code></strong>.</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">INFILL_DENSITY</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fill_density</span></code></p></td>
+<td><p>Spatial infill percentage</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">voxel_size</span></code></p></td>
-<td><p><strong><code class="docutils literal notranslate"><span class="pre">Vec3</span></code></strong> sampling spacing (mm); finer values better resolve thin regions at higher cost.</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">FUZZY_SKIN_POINT_DISTANCE</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">fuzzy_skin_point_dist</span></code></p></td>
+<td><p>Spatial fuzzy skin roughness</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">output_file_path</span></code></p></td>
-<td><p>Full path to the output <strong><code class="docutils literal notranslate"><span class="pre">.3mf</span></code></strong> file.</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BRIDGE_SPEED</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">bridge_speed</span></code></p></td>
+<td><p>Bridge planning speed</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">num_regions</span></code></p></td>
-<td><p>Number of <strong>sub-ranges</strong> per segmented attribute (default <strong>10</strong>).</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">EXTERNAL_PERIMETER_EXTRUSION_WIDTH</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">external_perimeter_extrusion_width</span></code></p></td>
+<td><p>Outer wall line width</p></td>
 </tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">printer_profile_path</span></code></p></td>
-<td><p>PrusaSlicer <strong>printer</strong> <strong><code class="docutils literal notranslate"><span class="pre">.ini</span></code></strong>; <strong>required</strong> when <strong>virtual extrusion</strong> attributes (e.g. <strong><code class="docutils literal notranslate"><span class="pre">TEMPERATURE</span></code></strong>) are present.</p></td>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">EXTERNAL_PERIMETER_SPEED</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">external_perimeter_speed</span></code></p></td>
+<td><p>Outer wall speed</p></td>
 </tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">filament_profile_path</span></code></p></td>
-<td><p>PrusaSlicer <strong>filament</strong> <strong><code class="docutils literal notranslate"><span class="pre">.ini</span></code></strong>; <strong>required</strong> with virtual extrusion.</p></td>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">EXTRUSION_WIDTH</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">extrusion_width</span></code></p></td>
+<td><p>General line width</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">GAP_FILL_SPEED</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">gap_fill_speed</span></code></p></td>
+<td><p>Gap fill speed</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">INFILL_EXTRUSION_WIDTH</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">infill_extrusion_width</span></code></p></td>
+<td><p>Infill line width</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">INFILL_SPEED</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">infill_speed</span></code></p></td>
+<td><p>Infill speed</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">IRONING_FLOWRATE</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ironing_flowrate</span></code></p></td>
+<td><p>Ironing flow</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">IRONING_SPEED</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">ironing_speed</span></code></p></td>
+<td><p>Ironing speed</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">LAYER_HEIGHT</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">layer_height</span></code></p></td>
+<td><p>Region layer height</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">PERIMETER_EXTRUSION_WIDTH</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">perimeter_extrusion_width</span></code></p></td>
+<td><p>Perimeter line width</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">PERIMETER_SPEED</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">perimeter_speed</span></code></p></td>
+<td><p>Perimeter speed</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">PERIMETERS</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">perimeters</span></code></p></td>
+<td><p>Perimeter count</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SMALL_PERIMETER_SPEED</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">small_perimeter_speed</span></code></p></td>
+<td><p>Small-feature perimeter speed</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SOLID_INFILL_EXTRUSION_WIDTH</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">solid_infill_extrusion_width</span></code></p></td>
+<td><p>Solid infill line width</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">SOLID_INFILL_SPEED</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">solid_infill_speed</span></code></p></td>
+<td><p>Solid infill speed</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">SUPPORT_MATERIAL_EXTRUSION_WIDTH</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">support_material_extrusion_width</span></code></p></td>
+<td><p>Support extrusion width</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">TOP_INFILL_EXTRUSION_WIDTH</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">top_infill_extrusion_width</span></code></p></td>
+<td><p>Top infill line width</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TOP_SOLID_INFILL_SPEED</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">top_solid_infill_speed</span></code></p></td>
+<td><p>Top solid infill speed</p></td>
 </tr>
 </tbody>
 </table>
 </div>
-</section>
-<section id="methods-including-compilerbase">
-<h3>Methods (including <strong><code class="docutils literal notranslate"><span class="pre">CompilerBase</span></code></strong>)<a class="headerlink" href="#methods-including-compilerbase" title="Link to this heading">#</a></h3>
-<div class="pst-scrollable-table-container"><table class="table">
-<thead>
-<tr class="row-odd"><th class="head"><p>Method</p></th>
-<th class="head"><p>Role</p></th>
-</tr>
-</thead>
-<tbody>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">compile()</span></code></p></td>
-<td><p>Build the <strong><code class="docutils literal notranslate"><span class="pre">.3mf</span></code></strong>.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">supported_attributes()</span></code></p></td>
-<td><p><strong>Discovery</strong> list: every attribute name the registry knows (settings mesh + virtual extrusion + companions). The tree does <strong>not</strong> need all of them; only present attributes participate.</p></td>
-</tr>
-<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">cancel()</span></code></p></td>
-<td><p>Request cooperative cancellation.</p></td>
-</tr>
-<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">set_progress_callback(fn)</span></code></p></td>
-<td><p><strong><code class="docutils literal notranslate"><span class="pre">fn(progress)</span></code></strong> with <strong><code class="docutils literal notranslate"><span class="pre">progress</span></code></strong> in <strong>[0, 1]</strong>.</p></td>
-</tr>
-</tbody>
-</table>
-</div>
-<p>For autodoc signatures, see <strong>pyvcad_compilers</strong> (<strong><code class="docutils literal notranslate"><span class="pre">SlicerProjectCompiler</span></code></strong>, <strong><code class="docutils literal notranslate"><span class="pre">CompilerBase</span></code></strong>).</p>
-</section>
-</section>
-<section id="examples-and-figures">
-<h2>Examples and figures<a class="headerlink" href="#examples-and-figures" title="Link to this heading">#</a></h2>
-<p>The scripts below live under <strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/slicer_project/</span></code></strong> and write <strong><code class="docutils literal notranslate"><span class="pre">.3mf</span></code></strong> files under <strong><code class="docutils literal notranslate"><span class="pre">output/</span></code></strong> next to each script. Run them from the repository with your venv, then <strong>import the <code class="docutils literal notranslate"><span class="pre">.3mf</span></code> into PrusaSlicer</strong> as described <a class="reference internal" href="#opening-your-project-in-prusaslicer">above</a>.</p>
-<section id="a-fuzzy-skin-gradient-on-a-cylinder">
-<h3>(a) Fuzzy skin gradient on a cylinder<a class="headerlink" href="#a-fuzzy-skin-gradient-on-a-cylinder" title="Link to this heading">#</a></h3>
-<p>Design (<strong><code class="docutils literal notranslate"><span class="pre">FUZZY_SKIN_POINT_DISTANCE</span></code></strong> ramp along <strong>Z</strong>): matches the idea of <strong><code class="docutils literal notranslate"><span class="pre">examples/applications/slicer_settings_mesh/fuzzy_skin_cylinder.py</span></code></strong>. Script: <strong><code class="docutils literal notranslate"><span class="pre">01_fuzzy_skin_cylinder.py</span></code></strong> → <strong><code class="docutils literal notranslate"><span class="pre">output/fuzzy_skin_cylinder.3mf</span></code></strong>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Slicer project - fuzzy skin gradient (cylinder)</span>
-<span class="sd">==============================================</span>
-
-<span class="sd">Upright cylinder with **FUZZY_SKIN_POINT_DISTANCE** ramping along Z, compiled</span>
-<span class="sd">to a PrusaSlicer-style **.3mf** for per-volume fuzzy skin settings.</span>
-
-<span class="sd">Companion to: docs/source/guides/compilers/slicer-project.md</span>
-<span class="sd">See also: examples/applications/slicer_settings_mesh/fuzzy_skin_cylinder.py</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_compilers</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pvc</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
-
-<span class="n">cylinder_height_mm</span> <span class="o">=</span> <span class="mf">100.0</span>
-<span class="n">cylinder_radius_mm</span> <span class="o">=</span> <span class="mf">15.0</span>
-<span class="n">edge_buffer_mm</span> <span class="o">=</span> <span class="mf">10.0</span>
-
-<span class="n">half_h</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">cylinder_height_mm</span>
-<span class="n">span</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">half_h</span> <span class="o">-</span> <span class="n">edge_buffer_mm</span><span class="p">)</span>
-<span class="n">fuzzy_expr</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="sa">f</span><span class="s2">&quot;0.4 * clamp((z + </span><span class="si">{</span><span class="n">half_h</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">edge_buffer_mm</span><span class="si">}</span><span class="s2">) / (</span><span class="si">{</span><span class="n">span</span><span class="si">}</span><span class="s2">), 0, 1)&quot;</span>
-<span class="p">)</span>
-
-<span class="n">cylinder</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Cylinder</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">cylinder_radius_mm</span><span class="p">,</span> <span class="n">cylinder_height_mm</span><span class="p">)</span>
-<span class="n">cylinder</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
+<p><strong>Fuzzy skin cylinder (<code class="docutils literal notranslate"><span class="pre">01_fuzzy_skin_cylinder.py</span></code>)</strong>: this example applies <code class="docutils literal notranslate"><span class="pre">FUZZY_SKIN_POINT_DISTANCE</span></code> along the cylinder height and writes <strong><code class="docutils literal notranslate"><span class="pre">output/fuzzy_skin_cylinder.3mf</span></code></strong>. The generated sub-volumes carry <code class="docutils literal notranslate"><span class="pre">fuzzy_skin_point_dist</span></code> overrides, so PrusaSlicer changes the planned surface texture by region.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cylinder</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
     <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">FUZZY_SKIN_POINT_DISTANCE</span><span class="p">,</span>
     <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">fuzzy_expr</span><span class="p">),</span>
 <span class="p">)</span>
 
-<span class="n">root</span> <span class="o">=</span> <span class="n">cylinder</span>
-<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-
-<span class="n">_here</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
-<span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_here</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="p">)</span>
-<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">out_3mf</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s2">&quot;fuzzy_skin_cylinder.3mf&quot;</span><span class="p">)</span>
-
-<span class="n">regions</span> <span class="o">=</span> <span class="mi">12</span>
-<span class="n">compiler</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">SlicerProjectCompiler</span><span class="p">(</span>
+<span class="n">compiler</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">PrusaSlicerProjectCompiler</span><span class="p">(</span>
     <span class="n">root</span><span class="p">,</span>
     <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span>
     <span class="n">out_3mf</span><span class="p">,</span>
-    <span class="n">regions</span><span class="p">,</span>
+    <span class="n">num_regions</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote&quot;</span><span class="p">,</span> <span class="n">out_3mf</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>OpenVCAD</strong> preview (field used for segmentation):</p>
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
 <p class="guide-figure-label">OpenVCAD (fuzzy skin distance)</p>
 <img src="../images/slicer_project_fuzzy_skin_preview.png" alt="OpenVCAD render of fuzzy skin point distance on a cylinder" width="100%">
 </div>
 </div>
-<p><strong>PrusaSlicer</strong>:</p>
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
-<p class="guide-figure-label">Slicer Preview (left: model preview | right: g-code fuzzy skin texture preview)</p>
+<p class="guide-figure-label">PrusaSlicer preview (model and fuzzy skin G-code texture)</p>
 <img src="../images/slicer_project_fuzzy_gcode.png" alt="PrusaSlicer G-code preview showing fuzzy skin" width="100%">
 </div>
 <div class="guide-figure-cell">
@@ -592,169 +646,342 @@ Current compiler guides:
 <img src="../images/slicer_project_fuzzy_models.png" alt="PrusaSlicer models list with per-volume fuzzy skin" width="100%">
 </div>
 </div>
-</section>
-<section id="b-infill-density-gradient-on-a-bar">
-<h3>(b) Infill density gradient on a bar<a class="headerlink" href="#b-infill-density-gradient-on-a-bar" title="Link to this heading">#</a></h3>
-<p>Design (<strong><code class="docutils literal notranslate"><span class="pre">INFILL_DENSITY</span></code></strong> ramp along <strong>X</strong>): same idea as <strong><code class="docutils literal notranslate"><span class="pre">examples/applications/slicer_settings_mesh/infill_density_bar.py</span></code></strong>. Script: <strong><code class="docutils literal notranslate"><span class="pre">02_infill_density_bar.py</span></code></strong> → <strong><code class="docutils literal notranslate"><span class="pre">output/infill_density_bar.3mf</span></code></strong>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Slicer project - infill density gradient (bar)</span>
-<span class="sd">============================================</span>
-
-<span class="sd">Rectangular bar with **INFILL_DENSITY** ramping along X, compiled to a **.3mf**</span>
-<span class="sd">with per-volume **fill_density** metadata for PrusaSlicer.</span>
-
-<span class="sd">Companion to: docs/source/guides/compilers/slicer-project.md</span>
-<span class="sd">See also: examples/applications/slicer_settings_mesh/infill_density_bar.py</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_compilers</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pvc</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
-
-<span class="n">bar_size_x</span> <span class="o">=</span> <span class="mf">100.0</span>
-<span class="n">bar_size_y</span> <span class="o">=</span> <span class="mf">25.0</span>
-<span class="n">bar_size_z</span> <span class="o">=</span> <span class="mf">25.0</span>
-<span class="n">edge_buffer_mm</span> <span class="o">=</span> <span class="mf">10.0</span>
-
-<span class="n">half_x</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">bar_size_x</span>
-<span class="n">span</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">half_x</span> <span class="o">-</span> <span class="n">edge_buffer_mm</span><span class="p">)</span>
-<span class="n">infill_expr</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="sa">f</span><span class="s2">&quot;5 + 75 * clamp((x + </span><span class="si">{</span><span class="n">half_x</span><span class="si">}</span><span class="s2"> - </span><span class="si">{</span><span class="n">edge_buffer_mm</span><span class="si">}</span><span class="s2">) / (</span><span class="si">{</span><span class="n">span</span><span class="si">}</span><span class="s2">), 0, 1)&quot;</span>
+<p><strong>Infill density bar (<code class="docutils literal notranslate"><span class="pre">02_infill_density_bar.py</span></code>)</strong>: this example ramps <code class="docutils literal notranslate"><span class="pre">INFILL_DENSITY</span></code> along the bar and writes <strong><code class="docutils literal notranslate"><span class="pre">output/infill_density_bar.3mf</span></code></strong>. The generated regions carry <code class="docutils literal notranslate"><span class="pre">fill_density</span></code> metadata, so PrusaSlicer computes denser or sparser infill toolpaths in each region.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bar</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">INFILL_DENSITY</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">infill_expr</span><span class="p">),</span>
 <span class="p">)</span>
 
-<span class="n">bar</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">bar_size_x</span><span class="p">,</span> <span class="n">bar_size_y</span><span class="p">,</span> <span class="n">bar_size_z</span><span class="p">))</span>
-<span class="n">bar</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">INFILL_DENSITY</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">infill_expr</span><span class="p">))</span>
-
-<span class="n">root</span> <span class="o">=</span> <span class="n">bar</span>
-<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-
-<span class="n">_here</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
-<span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_here</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="p">)</span>
-<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">out_3mf</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s2">&quot;infill_density_bar.3mf&quot;</span><span class="p">)</span>
-
-<span class="n">regions</span> <span class="o">=</span> <span class="mi">12</span>
-<span class="n">compiler</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">SlicerProjectCompiler</span><span class="p">(</span>
+<span class="n">compiler</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">PrusaSlicerProjectCompiler</span><span class="p">(</span>
     <span class="n">root</span><span class="p">,</span>
     <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span>
     <span class="n">out_3mf</span><span class="p">,</span>
-    <span class="n">regions</span><span class="p">,</span>
+    <span class="n">num_regions</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote&quot;</span><span class="p">,</span> <span class="n">out_3mf</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>OpenVCAD</strong> preview:</p>
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
 <p class="guide-figure-label">OpenVCAD (infill density)</p>
 <img src="../images/slicer_project_infill_preview.png" alt="OpenVCAD render of infill density gradient on a bar" width="100%">
 </div>
 </div>
-<p><strong>PrusaSlicer</strong> G-code preview (cutaway to show internal infill):</p>
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
-<p class="guide-figure-label">G-code preview (infill gradient, cutaway)</p>
+<p class="guide-figure-label">PrusaSlicer G-code preview (infill gradient cutaway)</p>
 <img src="../images/slicer_project_infill_gcode.png" alt="PrusaSlicer G-code preview with infill density gradient" width="100%">
 </div>
 </div>
 </section>
-<section id="c-temperature-flow-virtual-extrusion">
-<h3>(c) Temperature + flow (virtual extrusion)<a class="headerlink" href="#c-temperature-flow-virtual-extrusion" title="Link to this heading">#</a></h3>
-<p>Similar in spirit to <strong><code class="docutils literal notranslate"><span class="pre">examples/applications/foaming_filaments/compensation_demo/compensation_pla_demo.py</span></code></strong>: <strong><code class="docutils literal notranslate"><span class="pre">TEMPERATURE</span></code></strong> field plus <strong><code class="docutils literal notranslate"><span class="pre">FLOW_RATE</span></code></strong> from a <strong>lookup table</strong> via <strong><code class="docutils literal notranslate"><span class="pre">AttributeModifier</span></code></strong>. Script: <strong><code class="docutils literal notranslate"><span class="pre">03_temperature_compensation_demo.py</span></code></strong> → <strong><code class="docutils literal notranslate"><span class="pre">output/temperature_compensation_demo.3mf</span></code></strong>, using printer/filament <strong><code class="docutils literal notranslate"><span class="pre">.ini</span></code></strong> files from <strong><code class="docutils literal notranslate"><span class="pre">examples/applications/foaming_filaments/profiles/</span></code></strong>.</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="sd">&quot;&quot;&quot;</span>
-<span class="sd">Slicer project - temperature + flow (virtual extrusion)</span>
-<span class="sd">=======================================================</span>
-
-<span class="sd">**TEMPERATURE** field with **FLOW_RATE** from a lookup (**AttributeModifier**),</span>
-<span class="sd">similar to the foaming PLA compensation demo. Requires printer and filament</span>
-<span class="sd">**.ini** profiles for virtual-extrusion G-code injection.</span>
-
-<span class="sd">Companion to: docs/source/guides/compilers/slicer-project.md</span>
-<span class="sd">See also: examples/applications/foaming_filaments/compensation_demo/compensation_pla_demo.py</span>
-<span class="sd">&quot;&quot;&quot;</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-
-<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_compilers</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pvc</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
-
-<span class="n">_here</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
-<span class="n">_profiles</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">normpath</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_here</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;..&quot;</span><span class="p">,</span> <span class="s2">&quot;applications&quot;</span><span class="p">,</span> <span class="s2">&quot;foaming_filaments&quot;</span><span class="p">,</span> <span class="s2">&quot;profiles&quot;</span><span class="p">))</span>
-<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">_profiles</span><span class="p">)</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">flow_compensation_data</span><span class="w"> </span><span class="kn">import</span> <span class="n">foaming_pla_flow_compensation</span>
-
-<span class="n">temperature_attr</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">&quot;max(min((x/3+236),256),216)&quot;</span><span class="p">)</span>
-
-<span class="n">rect_prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">200</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
-<span class="n">rect_prism</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">TEMPERATURE</span><span class="p">,</span> <span class="n">temperature_attr</span><span class="p">)</span>
-
-<span class="n">flow_entries</span> <span class="o">=</span> <span class="p">[</span><span class="n">pv</span><span class="o">.</span><span class="n">LookupTableEntry</span><span class="p">(</span><span class="n">kv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kv</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">kv</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">kv</span> <span class="ow">in</span> <span class="n">foaming_pla_flow_compensation</span><span class="p">]</span>
-<span class="n">mod_func</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">LookupTableConverter</span><span class="p">(</span>
-    <span class="p">[</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">TEMPERATURE</span><span class="p">],</span>
-    <span class="p">[</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">FLOW_RATE</span><span class="p">],</span>
-    <span class="n">flow_entries</span><span class="p">,</span>
-    <span class="n">pv</span><span class="o">.</span><span class="n">InterpolationMode</span><span class="o">.</span><span class="n">LINEAR</span><span class="p">,</span>
+<section id="virtual-extrusion">
+<h3>Virtual Extrusion<a class="headerlink" href="#virtual-extrusion" title="Link to this heading">#</a></h3>
+<p>Virtual extrusion controls <strong>machine state</strong> by taking advantage of slicer toolchange events. OpenVCAD assigns synthetic extruder indices to regions, patches the project profile to declare those logical tools, and provides toolchange G-code that applies the desired process commands when the slicer switches between regions.</p>
+<p>The logical toolhead does not need to correspond to a separate physical nozzle. On a single-tool printer, the slicer can still emit toolchange events between logical tools, and the toolchange script can update temperature, flow, or other machine state without changing filament. On a multi-tool printer, the same concept can coexist with physical tool changes if the printer profile and script are written that way.</p>
+<p>This path is intentionally different from settings meshes:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Path</p></th>
+<th class="head"><p>Controls</p></th>
+<th class="head"><p>Slicer sees it before planning?</p></th>
+<th class="head"><p>Best fit</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Settings mesh</p></td>
+<td><p>Toolpath planning settings</p></td>
+<td><p>Yes</p></td>
+<td><p>Infill, speeds, widths, layer height, perimeters</p></td>
+</tr>
+<tr class="row-odd"><td><p>Virtual extrusion</p></td>
+<td><p>Machine state commands</p></td>
+<td><p>No, it runs as G-code</p></td>
+<td><p>Temperature, flow, and process state that can be changed at region boundaries</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>In the current method, <code class="docutils literal notranslate"><span class="pre">TEMPERATURE</span></code> is the primary virtual-extrusion attribute and <code class="docutils literal notranslate"><span class="pre">FLOW_RATE</span></code> is its companion.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Attribute</p></th>
+<th class="head"><p>Role</p></th>
+<th class="head"><p>Effect</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">TEMPERATURE</span></code></p></td>
+<td><p>Primary region attribute</p></td>
+<td><p>Creates logical tools and emits <code class="docutils literal notranslate"><span class="pre">M104</span></code> temperatures through toolchange G-code</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">FLOW_RATE</span></code></p></td>
+<td><p>Companion attribute</p></td>
+<td><p>Supplies <code class="docutils literal notranslate"><span class="pre">M221</span></code> flow values for the same logical toolchange events</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The toolchange script applies commands such as:</p>
+<div class="highlight-gcode notranslate"><div class="highlight"><pre><span></span><span class="nb">M104 </span>S{temperature}
+<span class="nb">M221 </span>S{flow_rate}
+</pre></div>
+</div>
+<p><strong>Temperature and flow example (<code class="docutils literal notranslate"><span class="pre">03_temperature_compensation_demo.py</span></code>)</strong>: this example applies a <code class="docutils literal notranslate"><span class="pre">TEMPERATURE</span></code> field, derives <code class="docutils literal notranslate"><span class="pre">FLOW_RATE</span></code> from a lookup table, and writes <strong><code class="docutils literal notranslate"><span class="pre">output/temperature_compensation_demo.3mf</span></code></strong>. The compiler uses Prusa profile files from <strong><code class="docutils literal notranslate"><span class="pre">examples/applications/foaming_filaments/profiles/</span></code></strong> so the generated project can define logical tools and toolchange G-code.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rect_prism</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">TEMPERATURE</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">&quot;max(min((x/3+236),256),216)&quot;</span><span class="p">),</span>
 <span class="p">)</span>
-<span class="n">mod</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">AttributeModifier</span><span class="p">(</span><span class="n">mod_func</span><span class="p">,</span> <span class="n">rect_prism</span><span class="p">)</span>
 
-<span class="n">root</span> <span class="o">=</span> <span class="n">mod</span>
-<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
-
-<span class="n">out_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_here</span><span class="p">,</span> <span class="s2">&quot;output&quot;</span><span class="p">)</span>
-<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
-<span class="n">out_3mf</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">out_dir</span><span class="p">,</span> <span class="s2">&quot;temperature_compensation_demo.3mf&quot;</span><span class="p">)</span>
-
-<span class="n">printer_profile_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_profiles</span><span class="p">,</span> <span class="s2">&quot;prusa_xl_multitool.ini&quot;</span><span class="p">)</span>
-<span class="n">filament_profile_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">_profiles</span><span class="p">,</span> <span class="s2">&quot;ColorFabb_LW_PLA.ini&quot;</span><span class="p">)</span>
-<span class="n">regions</span> <span class="o">=</span> <span class="mi">10</span>
-
-<span class="n">compiler</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">SlicerProjectCompiler</span><span class="p">(</span>
+<span class="n">compiler</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">PrusaSlicerProjectCompiler</span><span class="p">(</span>
     <span class="n">root</span><span class="p">,</span>
     <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span>
     <span class="n">out_3mf</span><span class="p">,</span>
-    <span class="n">regions</span><span class="p">,</span>
-    <span class="n">printer_profile_path</span><span class="p">,</span>
-    <span class="n">filament_profile_path</span><span class="p">,</span>
+    <span class="n">num_regions</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">printer_profile_path</span><span class="o">=</span><span class="n">printer_profile_path</span><span class="p">,</span>
+    <span class="n">filament_profile_path</span><span class="o">=</span><span class="n">filament_profile_path</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
-<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote&quot;</span><span class="p">,</span> <span class="n">out_3mf</span><span class="p">)</span>
 </pre></div>
 </div>
-<p><strong>OpenVCAD</strong> preview (<strong>temperature</strong>):</p>
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
 <p class="guide-figure-label">OpenVCAD (temperature)</p>
 <img src="../images/slicer_project_temperature_preview.png" alt="OpenVCAD render of temperature field on a bar" width="100%">
 </div>
 </div>
-<p><strong>PrusaSlicer</strong> G-code preview (color or tooltip by temperature):</p>
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
-<p class="guide-figure-label">G-code preview (temperature)</p>
+<p class="guide-figure-label">PrusaSlicer G-code preview (temperature)</p>
 <img src="../images/slicer_project_temperature_gcode.png" alt="PrusaSlicer G-code preview colored by temperature" width="100%">
 </div>
 </div>
 </section>
+<section id="prusa-constructor-options">
+<h3>Prusa Constructor Options<a class="headerlink" href="#prusa-constructor-options" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">compiler</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">PrusaSlicerProjectCompiler</span><span class="p">(</span>
+    <span class="n">root</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span>
+    <span class="n">out_3mf</span><span class="p">,</span>
+    <span class="n">num_regions</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span>
+    <span class="n">printer_profile_path</span><span class="o">=</span><span class="n">printer_profile_path</span><span class="p">,</span>
+    <span class="n">filament_profile_path</span><span class="o">=</span><span class="n">filament_profile_path</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">root</span></code></p></td>
+<td><p>The OpenVCAD design tree to compile.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">voxel_size</span></code></p></td>
+<td><p>Sampling spacing in mm. Smaller values resolve smaller regions but cost more time and memory.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">output_file_path</span></code></p></td>
+<td><p>Destination <code class="docutils literal notranslate"><span class="pre">.3mf</span></code> project path.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">num_regions</span></code></p></td>
+<td><p>Number of value bands for each scalar attribute. More regions preserve more variation but create more sub-volumes.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">printer_profile_path</span></code></p></td>
+<td><p>PrusaSlicer printer <code class="docutils literal notranslate"><span class="pre">.ini</span></code>. Required when virtual extrusion attributes are present.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">filament_profile_path</span></code></p></td>
+<td><p>PrusaSlicer filament <code class="docutils literal notranslate"><span class="pre">.ini</span></code>. Required when virtual extrusion attributes are present.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
 </section>
-<section id="limitations">
-<h2>Limitations<a class="headerlink" href="#limitations" title="Link to this heading">#</a></h2>
+</section>
+<section id="fullspectrum">
+<h2>FullSpectrum<a class="headerlink" href="#fullspectrum" title="Link to this heading">#</a></h2>
+<p>Use the FullSpectrum compiler when your OpenVCAD design carries either <code class="docutils literal notranslate"><span class="pre">COLOR_RGB</span></code> or <code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code> and you want an Orca / Bambu-style project for the FullSpectrum workflow.</p>
+<p><strong>Full Spectrum</strong> is a slicer workflow for getting more apparent colors out of a limited set of loaded filaments. Instead of truly melting filaments together into a homogeneous mixed polymer, it creates <strong>virtual mixed-color filaments</strong> by alternating physical filaments through layer dithering or related patterns. Thin layers and partially translucent filament let light interact with multiple colors, so the eye sees an intermediate color.</p>
+<p>The achievable colors depend strongly on the actual filaments loaded in the printer, their translucency, layer height, surface orientation, and slicer settings. A <strong>CMYKW</strong> physical set, cyan, magenta, yellow, black, and white, is the recommended starting point because it gives the color-matching algorithm a broad gamut to work with.</p>
+<p>OpenVCAD targets the <a class="reference external" href="https://github.com/ratdoux/OrcaSlicer-FullSpectrum">OrcaSlicer-FullSpectrum</a> community fork for this project format. Treat this as an emerging ecosystem: the generated projects use Orca / Bambu-style metadata and FullSpectrum mixed-filament settings, and stock PrusaSlicer, stock OrcaSlicer, or stock Bambu Studio may not interpret those settings correctly.</p>
+<section id="color-rgb-workflow">
+<h3>COLOR_RGB Workflow<a class="headerlink" href="#color-rgb-workflow" title="Link to this heading">#</a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">COLOR_RGB</span></code> when the design field is an intended color. The compiler samples the RGB target field, reduces it to a bounded palette with <code class="docutils literal notranslate"><span class="pre">max_palette_size</span></code>, compares each palette color against the loaded physical filaments and possible mixed-filament recipes, and assigns each generated mesh region to a physical or virtual mixed filament.</p>
+<p>The default physical palette for <code class="docutils literal notranslate"><span class="pre">COLOR_RGB</span></code> mode is CYMKW if you do not pass <code class="docutils literal notranslate"><span class="pre">filaments</span></code>. Pass explicit filament dictionaries when your loaded spool colors differ.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">compiler</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">FullSpectrumSlicerProjectCompiler</span><span class="p">(</span>
+    <span class="n">root</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span>
+    <span class="n">out_3mf</span><span class="p">,</span>
+    <span class="p">[</span>
+        <span class="p">{</span><span class="s2">&quot;slot&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;color_hex&quot;</span><span class="p">:</span> <span class="s2">&quot;#00FFFF&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;slot&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;color_hex&quot;</span><span class="p">:</span> <span class="s2">&quot;#FF00FF&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;slot&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;color_hex&quot;</span><span class="p">:</span> <span class="s2">&quot;#FFFF00&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;slot&quot;</span><span class="p">:</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;color_hex&quot;</span><span class="p">:</span> <span class="s2">&quot;#000000&quot;</span><span class="p">},</span>
+        <span class="p">{</span><span class="s2">&quot;slot&quot;</span><span class="p">:</span> <span class="mi">5</span><span class="p">,</span> <span class="s2">&quot;color_hex&quot;</span><span class="p">:</span> <span class="s2">&quot;#FFFFFF&quot;</span><span class="p">},</span>
+    <span class="p">],</span>
+    <span class="n">max_palette_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+    <span class="n">min_component_percent</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+    <span class="n">max_recipe_components</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Color gradient example (<code class="docutils literal notranslate"><span class="pre">04_full_spectrum_color_gradient.py</span></code>)</strong>: this example applies a <code class="docutils literal notranslate"><span class="pre">COLOR_RGB</span></code> ramp from cyan toward magenta and writes <strong><code class="docutils literal notranslate"><span class="pre">output/full_spectrum_color_gradient.3mf</span></code></strong>. The compiler samples the RGB target field, reduces it to a small palette, and assigns each palette color to a physical or virtual mixed filament recipe.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bar</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGB</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec3Attribute</span><span class="p">(</span><span class="n">red_expr</span><span class="p">,</span> <span class="n">green_expr</span><span class="p">,</span> <span class="n">blue_expr</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">compiler</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">FullSpectrumSlicerProjectCompiler</span><span class="p">(</span>
+    <span class="n">root</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span>
+    <span class="n">out_3mf</span><span class="p">,</span>
+    <span class="n">max_palette_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">min_component_percent</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+    <span class="n">max_recipe_components</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">OpenVCAD (COLOR_RGB target)</p>
+<img src="../images/slicer_project_full_spectrum_color_preview.png" alt="OpenVCAD render of FullSpectrum color gradient swatch" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">OrcaSlicer-FullSpectrum g-code screenshot</p>
+<img src="../images/slicer_project_full_spectrum_color_orca.png" alt="OrcaSlicer FullSpectrum color gradient screenshot" width="100%">
+</div>
+</div>
+</section>
+<section id="volume-fractions-workflow">
+<h3>VOLUME_FRACTIONS Workflow<a class="headerlink" href="#volume-fractions-workflow" title="Link to this heading">#</a></h3>
+<p>Use <code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code> when the OpenVCAD field already describes material proportions and you want those proportions to become FullSpectrum recipe weights. This is simpler than color matching because the design says which materials should participate.</p>
+<p>The compiler maps OpenVCAD material names to physical filament slots with <code class="docutils literal notranslate"><span class="pre">volume_fraction_materials</span></code>, normalizes the mapped fractions for each sample, clusters fraction vectors into at most <code class="docutils literal notranslate"><span class="pre">max_palette_size</span></code> recipe regions, and emits physical or virtual mixed-filament recipes using representative weights for each region.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">compiler</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">FullSpectrumSlicerProjectCompiler</span><span class="p">(</span>
+    <span class="n">root</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span>
+    <span class="n">out_3mf</span><span class="p">,</span>
+    <span class="n">volume_fraction_materials</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;red&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+    <span class="n">max_palette_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">min_component_percent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">max_recipe_components</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p><strong>Volume-fraction example (<code class="docutils literal notranslate"><span class="pre">05_full_spectrum_volume_fractions.py</span></code>)</strong>: this example ramps red and blue material fractions across the bar and writes <strong><code class="docutils literal notranslate"><span class="pre">output/full_spectrum_volume_fractions.3mf</span></code></strong>. The <code class="docutils literal notranslate"><span class="pre">volume_fraction_materials={&quot;red&quot;:</span> <span class="pre">1,</span> <span class="pre">&quot;blue&quot;:</span> <span class="pre">2}</span></code> mapping sends those OpenVCAD material names directly to physical filament slots.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">bar</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">(</span>
+        <span class="p">[</span>
+            <span class="p">(</span><span class="n">red_fraction_expr</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)),</span>
+            <span class="p">(</span><span class="n">blue_fraction_expr</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">)),</span>
+        <span class="p">]</span>
+    <span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">compiler</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">FullSpectrumSlicerProjectCompiler</span><span class="p">(</span>
+    <span class="n">root</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span>
+    <span class="n">out_3mf</span><span class="p">,</span>
+    <span class="n">volume_fraction_materials</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;red&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;blue&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">},</span>
+    <span class="n">max_palette_size</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">min_component_percent</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">max_recipe_components</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">OpenVCAD (VOLUME_FRACTIONS target)</p>
+<img src="../images/slicer_project_full_spectrum_volume_fractions_preview.png" alt="OpenVCAD render of FullSpectrum volume-fraction swatch" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">OrcaSlicer-FullSpectrum g-code screenshot</p>
+<img src="../images/slicer_project_full_spectrum_volume_fractions_orca.png" alt="OrcaSlicer FullSpectrum volume-fraction screenshot" width="100%">
+</div>
+</div>
+</section>
+<section id="fullspectrum-constructor-options">
+<h3>FullSpectrum Constructor Options<a class="headerlink" href="#fullspectrum-constructor-options" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">compiler</span> <span class="o">=</span> <span class="n">pvc</span><span class="o">.</span><span class="n">FullSpectrumSlicerProjectCompiler</span><span class="p">(</span>
+    <span class="n">root</span><span class="p">,</span>
+    <span class="n">voxel_size</span><span class="p">,</span>
+    <span class="n">output_file_path</span><span class="p">,</span>
+    <span class="n">filaments</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">max_palette_size</span><span class="o">=</span><span class="mi">32</span><span class="p">,</span>
+    <span class="n">min_component_percent</span><span class="o">=</span><span class="mi">15</span><span class="p">,</span>
+    <span class="n">max_recipe_components</span><span class="o">=</span><span class="mi">5</span><span class="p">,</span>
+    <span class="n">direct_physical_delta_e</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">region_overlap_mm</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span>
+    <span class="n">base_project_settings_path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">orca_machine_profile_path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">orca_process_profile_path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">orca_default_filament_profile_path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+    <span class="n">orca_profile_search_paths</span><span class="o">=</span><span class="p">[],</span>
+    <span class="n">volume_fraction_materials</span><span class="o">=</span><span class="p">{},</span>
+    <span class="n">material_defs_path</span><span class="o">=</span><span class="s2">&quot;&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Option</p></th>
+<th class="head"><p>Meaning</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">filaments</span></code></p></td>
+<td><p>Physical filament slots and colors. Each dictionary may include <code class="docutils literal notranslate"><span class="pre">slot</span></code>, <code class="docutils literal notranslate"><span class="pre">color_hex</span></code>, <code class="docutils literal notranslate"><span class="pre">filament_settings_id</span></code>, <code class="docutils literal notranslate"><span class="pre">filament_id</span></code>, <code class="docutils literal notranslate"><span class="pre">filament_profile_path</span></code>, and <code class="docutils literal notranslate"><span class="pre">nozzle_diameter_mm</span></code>.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">max_palette_size</span></code></p></td>
+<td><p>Maximum generated <code class="docutils literal notranslate"><span class="pre">COLOR_RGB</span></code> palette size or <code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code> recipe-region count.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">min_component_percent</span></code></p></td>
+<td><p>Minimum component percentage kept in generated mixed recipes. Tiny components are dropped and the remaining weights are normalized.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">max_recipe_components</span></code></p></td>
+<td><p>Maximum physical filaments allowed in one mixed recipe.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">direct_physical_delta_e</span></code></p></td>
+<td><p>DeltaE threshold for assigning a <code class="docutils literal notranslate"><span class="pre">COLOR_RGB</span></code> target directly to a physical filament instead of creating a mixed recipe.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">region_overlap_mm</span></code></p></td>
+<td><p>Small overlap between generated FullSpectrum sub-parts to avoid visible cracks between separately meshed regions.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">base_project_settings_path</span></code></p></td>
+<td><p>Optional Orca project settings JSON to merge before compiler-controlled FullSpectrum keys are written.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">orca_machine_profile_path</span></code></p></td>
+<td><p>Optional Orca machine profile path or resolvable profile name.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">orca_process_profile_path</span></code></p></td>
+<td><p>Optional Orca process profile path or resolvable profile name.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">orca_default_filament_profile_path</span></code></p></td>
+<td><p>Optional default filament profile path or resolvable profile name.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">orca_profile_search_paths</span></code></p></td>
+<td><p>Additional directories searched for Orca JSON profiles.</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">volume_fraction_materials</span></code></p></td>
+<td><p>Material-name to physical-slot mapping for direct <code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code> export, such as <code class="docutils literal notranslate"><span class="pre">{&quot;red&quot;:</span> <span class="pre">1,</span> <span class="pre">&quot;blue&quot;:</span> <span class="pre">2}</span></code>.</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">material_defs_path</span></code></p></td>
+<td><p>Optional <code class="docutils literal notranslate"><span class="pre">MaterialDefs</span></code> JSON path. Empty uses the bundled default material definitions.</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="fullspectrum-limitations">
+<h3>FullSpectrum Limitations<a class="headerlink" href="#fullspectrum-limitations" title="Link to this heading">#</a></h3>
 <ul class="simple">
-<li><p><strong>Piecewise</strong> regions: each segment gets <strong>one</strong> representative slicer value, not a unique value per voxel in the slicer metadata.</p></li>
-<li><p><strong>Unsupported</strong> attributes on the tree are <strong>skipped</strong> (with a console message); if <strong>no</strong> supported attributes are found, <strong><code class="docutils literal notranslate"><span class="pre">compile()</span></code></strong> fails.</p></li>
-<li><p><strong>Virtual extrusion</strong> depends on bundled <strong>G-code templates</strong> and <strong><code class="docutils literal notranslate"><span class="pre">.ini</span></code></strong> inputs that must match your workflow.</p></li>
-<li><p><strong>Slicer compatibility</strong> is aimed at <strong>PrusaSlicer-style</strong> <strong>3MF</strong> projects; other slicers may require export or conversion.</p></li>
+<li><p>FullSpectrum is not true molten filament mixing. It is an optical and geometric approximation based on alternating physical filaments.</p></li>
+<li><p>The reachable color gamut depends on the loaded filaments, translucency, layer height, top/bottom shell behavior, and surface orientation.</p></li>
+<li><p>OpenVCAD emits a finite number of mesh regions. More regions can preserve more variation, but they also increase project complexity.</p></li>
+<li><p>Sloped surfaces, small details, top layers, and short regions can show different color behavior than tall vertical walls.</p></li>
+<li><p>Stock slicers may ignore or reject FullSpectrum metadata. Use the documented FullSpectrum fork unless you have verified another slicer version.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">max_recipe_components</span></code> and <code class="docutils literal notranslate"><span class="pre">min_component_percent</span></code> intentionally bound recipe complexity. Some requested colors or material blends cannot be represented within those limits.</p></li>
 </ul>
 </section>
-<section id="further-examples">
-<h2>Further examples<a class="headerlink" href="#further-examples" title="Link to this heading">#</a></h2>
-<ul class="simple">
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">examples/compilers/slicer_project/</span></code></strong> — scripts paired with this guide (<code class="docutils literal notranslate"><span class="pre">01</span></code> … <code class="docutils literal notranslate"><span class="pre">03</span></code>).</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">examples/applications/slicer_settings_mesh/</span></code></strong> — additional <strong>settings-mesh</strong> demos.</p></li>
-<li><p><strong><code class="docutils literal notranslate"><span class="pre">examples/applications/foaming_filaments/compensation_demo/</span></code></strong> — <strong>temperature</strong> / <strong>flow</strong> compensation patterns and profile assets.</p></li>
-</ul>
 </section>
 </section>
 
@@ -805,24 +1032,25 @@ Current compiler guides:
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-this-compiler-is-for">What this compiler is for</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#opening-your-project-in-prusaslicer">Opening your project in PrusaSlicer</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-it-works">How it works</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pipeline-overview">Pipeline overview</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#reference-python-api">Reference: Python API</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#constructor">Constructor</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#methods-including-compilerbase">Methods (including <strong><code class="docutils literal notranslate"><span class="pre">CompilerBase</span></code></strong>)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#intro">Intro</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#shared-3mf-concepts">Shared 3MF Concepts</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples-and-figures">Examples and figures</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#a-fuzzy-skin-gradient-on-a-cylinder">(a) Fuzzy skin gradient on a cylinder</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#b-infill-density-gradient-on-a-bar">(b) Infill density gradient on a bar</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c-temperature-flow-virtual-extrusion">(c) Temperature + flow (virtual extrusion)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prusaslicer">PrusaSlicer</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#opening-the-project">Opening The Project</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#settings-applied-to-meshes">Settings Applied To Meshes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#virtual-extrusion">Virtual Extrusion</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#prusa-constructor-options">Prusa Constructor Options</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#limitations">Limitations</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#further-examples">Further examples</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fullspectrum">FullSpectrum</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#color-rgb-workflow">COLOR_RGB Workflow</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#volume-fractions-workflow">VOLUME_FRACTIONS Workflow</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fullspectrum-constructor-options">FullSpectrum Constructor Options</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#fullspectrum-limitations">FullSpectrum Limitations</a></li>
+</ul>
+</li>
 </ul>
   </nav></div>
 
@@ -848,8 +1076,8 @@ Current compiler guides:
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -883,7 +1111,7 @@ Current compiler guides:
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
 </p></div>
       
     </div>

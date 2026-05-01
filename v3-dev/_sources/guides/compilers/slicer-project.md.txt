@@ -1,142 +1,140 @@
 (guide-compilers-slicer-project)=
-# Slicer Project Compiler
+# Slicer Project Compilers
 
 ```{include} ../_guide-sidebar-compiler-membership.md
 ```
 
-The **SlicerProjectCompiler** turns OpenVCAD designs that carry **scalar slicer attributes** (for example **`INFILL_DENSITY`**, **`FUZZY_SKIN_POINT_DISTANCE`**, or **`TEMPERATURE`**) into a **PrusaSlicer-style 3MF project** (`.3mf`). You **import that file into PrusaSlicer** (or another slicer that understands the same project layout), slice, and print on **filament / FFF** hardware.
+## Intro
 
-This page explains **how the compiler works** (by method, not line-by-line code), walks through **examples**, and documents the **Python API**. Renders show the **OpenVCAD** fields; **PrusaSlicer** screenshots show the sliced out.
+Slicer project compilers turn prepared OpenVCAD designs into slicer-native **`.3mf` project files** for filament printing workflows. Use them when you want OpenVCAD to generate geometry regions and attribute-derived assignments, while the downstream slicer still owns slicing, preview, and G-code generation.
 
-## Prerequisites
+There are two separate workflows:
 
-- OpenVCAD with **`pyvcad`** and **`pyvcad_compilers`** installed.
-- Familiarity with **scalar attributes** on geometry (see {ref}`guide-getting-started`, especially **Lesson 4: Attributes**, and the [Functional Grading Guide](../gradients.md)).
+| Workflow | Input attributes | Output project | Best fit |
+| -------- | ---------------- | -------------- | -------- |
+| **PrusaSlicer** settings meshes | Scalar planning attributes such as `INFILL_DENSITY`, `FUZZY_SKIN_POINT_DISTANCE`, `LAYER_HEIGHT`, or `PERIMETER_SPEED` | PrusaSlicer-style `.3mf` | Spatially varying slicer planning settings |
+| **PrusaSlicer** virtual extrusion | `TEMPERATURE` with optional companion `FLOW_RATE` | PrusaSlicer-style `.3mf` with logical tools and toolchange G-code | Machine-state changes at region boundaries |
+| **FullSpectrum** color | `COLOR_RGB` | Orca / Bambu-style Full Spectrum `.3mf` | Mixed-filament color approximation from design-space colors |
+| **FullSpectrum** material fractions | `VOLUME_FRACTIONS` plus `volume_fraction_materials` | Orca / Bambu-style Full Spectrum `.3mf` | Direct material-fraction to filament-slot recipes |
 
-## What this compiler is for
+For slice-image workflows instead of slicer projects, see [Material Inkjet](material-inkjet.md), [Color Inkjet](color-inkjet.md), and [VAT Photo](vat-photo.md).
 
-Use **Slicer Project** when you want **spatially varying slicer settings** derived from continuous fields on your model, exported as a **single project file** for **PrusaSlicer**, instead of **voxel PNG stacks** for inkjet workflows. For slice **images**, see the [Material Inkjet](material-inkjet.md) and [Color Inkjet](color-inkjet.md) guides.
+### Prerequisites
 
-(opening-your-project-in-prusaslicer)=
-## Opening your project in PrusaSlicer
+- OpenVCAD with **`pyvcad`**, **`pyvcad_compilers`**, and **`pyvcad_rendering`** installed.
+- Familiarity with attributes on geometry. See {ref}`guide-getting-started`, especially Lesson 4, and the [Functional Grading Guide](../gradients.md).
+- A matching slicer for the project you generate: **PrusaSlicer** for Prusa-style scalar projects, or the [OrcaSlicer-FullSpectrum](https://github.com/ratdoux/OrcaSlicer-FullSpectrum) fork for the FullSpectrum examples in this guide.
 
-The compiler **only writes** the **`.3mf`**. It does **not** launch a slicer.
+### Shared 3MF Concepts
 
-1. Run your Python script (or build the compiler in code) so **`compile()`** finishes and the **`.3mf`** path exists.
-2. Open **PrusaSlicer**, use **File → Import**, and select the generated **`.3mf`** (or drag it into the window).
-3. Inspect **sub-volumes** and **per-volume settings** in the **Plater / Models** UI, then **Slice now** and review the **G-code preview** (layer view, color by feature, etc.).
+A **3MF** file is a compressed package, not a single flat mesh file. Conceptually it behaves like a ZIP / OPC-style container with relationship files, content-type metadata, and XML model parts. The core model part stores triangle meshes as XML vertices and triangles. Slicers extend the package by adding their own project settings and per-model metadata.
 
-Printer and filament choices inside PrusaSlicer are up to you; the **`.3mf`** carries **model geometry** and **embedded project/config** produced by the compiler.
+Typical package shapes:
 
-## How it works
+```text
+generic_part.3mf
+  [Content_Types].xml
+  _rels/.rels
+  3D/3dmodel.model
 
-At a high level, **`compile()`** does the following:
+prusa_project.3mf
+  3D/3dmodel.model
+  Metadata/Slic3r_PE.config
+  Metadata/Slic3r_PE_model.config
 
-1. **Discover attributes** on your tree and **classify** each supported name using an internal **registry**. There are two families:
-   - **Settings mesh:** attributes that map to **PrusaSlicer per-volume metadata** (for example **`INFILL_DENSITY`** → **`fill_density`**, **`FUZZY_SKIN_POINT_DISTANCE`** → **`fuzzy_skin_point_dist`**). The compiler **does not** need separate **`.ini`** profiles for this mode.
-   - **Virtual extrusion:** attributes that must be driven through **G-code** (today this path is built around **`TEMPERATURE`** with a **`FLOW_RATE`** companion). This mode **requires** **`printer_profile_path`** and **`filament_profile_path`** pointing to PrusaSlicer **`.ini`** files so the compiler can **inject** toolchange-style **G-code** derived from templates. Unsupported attribute names are **printed to the console** and **ignored**.
+orca_full_spectrum_project.3mf
+  3D/3dmodel.model
+  Metadata/project_settings.config
+  Metadata/model_settings.config
+```
 
-2. **Sample** the prepared tree on a **voxel grid** over the **bounding box** using your **`voxel_size`**. For each voxel **inside** the solid, the compiler reads **double-valued** attributes it cares about.
+A very small 3MF mesh fragment looks like this:
 
-3. **Estimate ranges** for each segmented attribute over the solid, then split each range into **`num_regions`** **sub-ranges** (default **10**). Each sub-range becomes a **region** of the solid where attribute values are **similar**.
+```xml
+<model unit="millimeter" xml:lang="en-US"
+       xmlns="http://schemas.microsoft.com/3dmanufacturing/core/2015/02">
+  <resources>
+    <object id="1" type="model">
+      <mesh>
+        <vertices>
+          <vertex x="0" y="0" z="0"/>
+          <vertex x="20" y="0" z="0"/>
+          <vertex x="0" y="20" z="0"/>
+        </vertices>
+        <triangles>
+          <triangle v1="0" v2="1" v3="2"/>
+        </triangles>
+      </mesh>
+    </object>
+  </resources>
+</model>
+```
 
-4. **Build geometry** for those regions (segmented meshes), attach **Prusa-compatible metadata** (settings mesh) and/or **extruder / tool** assignments (virtual extrusion), and **package** everything into a **`.3mf`** with the expected **config** attachments.
+The extra value of slicer project 3MFs comes from the attachments around that core mesh. A PrusaSlicer project can carry Prusa project configuration and per-volume settings. An Orca / Bambu-style project can carry model settings, project settings, and component assignments that tell the slicer which extruder or virtual mixed filament belongs to each region.
 
-5. **Progress** and **cancellation** follow the usual **`CompilerBase`** behavior.
+For the 3MF container and core mesh format, see the [3MF Consortium specification page](https://3mf.io/spec/) and the [Core 3MF Specification](https://3mf.io/spec/core-v1-3-0/).
 
-The important idea: **continuous** fields in OpenVCAD become **piecewise-constant** regions in the slicer project—each region carries **one** representative setting (derived from the sub-range), not a unique value per voxel inside Prusa’s mesh-metadata model.
+## PrusaSlicer
 
-## Pipeline overview
+Use the PrusaSlicer compiler when your OpenVCAD design carries scalar process attributes and you want a PrusaSlicer-compatible project file. The compiler samples scalar attributes over the solid, partitions the sampled field into a finite number of regions, emits a mesh for each region, and writes a PrusaSlicer-style `.3mf`.
 
-**Classify** supported attributes → **sample** on a grid → **segment** by attribute ranges → **emit** meshes + metadata and/or **virtual extruders** → **write** **`.3mf`**.
+The important idea is that a continuous OpenVCAD field becomes **piecewise constant slicer regions**. Each generated region gets one representative value. More regions preserve more variation, but they also create more sub-volumes for PrusaSlicer to manage.
 
-## Reference: Python API
+### Opening The Project
 
-### Constructor
+The compiler only writes the `.3mf`. It does not launch PrusaSlicer.
 
-`SlicerProjectCompiler(root, voxel_size, output_file_path, num_regions=10, printer_profile_path="", filament_profile_path="")`
+1. Run your Python script so `compile()` finishes and the `.3mf` path exists.
+2. Open **PrusaSlicer**, use **File -> Import**, and select the generated `.3mf`.
+3. Inspect sub-volumes and per-volume settings in the **Plater / Models** UI, then slice and review the G-code preview.
 
-| Argument | Meaning |
-| -------- | ------- |
-| `root` | Root **`Node`**. |
-| `voxel_size` | **`Vec3`** sampling spacing (mm); finer values better resolve thin regions at higher cost. |
-| `output_file_path` | Full path to the output **`.3mf`** file. |
-| `num_regions` | Number of **sub-ranges** per segmented attribute (default **10**). |
-| `printer_profile_path` | PrusaSlicer **printer** **`.ini`**; **required** when **virtual extrusion** attributes (e.g. **`TEMPERATURE`**) are present. |
-| `filament_profile_path` | PrusaSlicer **filament** **`.ini`**; **required** with virtual extrusion. |
+### Settings Applied To Meshes
 
-### Methods (including **`CompilerBase`**)
+The settings-mesh path is for attributes that directly affect **slicer planning**. These settings change how PrusaSlicer computes toolpaths: infill density, layer height, perimeter counts, line widths, and feature speeds. OpenVCAD emits sub-volumes, and each sub-volume carries Prusa-compatible metadata for the selected slicer setting.
 
-| Method | Role |
-| ------ | ---- |
-| `compile()` | Build the **`.3mf`**. |
-| `supported_attributes()` | **Discovery** list: every attribute name the registry knows (settings mesh + virtual extrusion + companions). The tree does **not** need all of them; only present attributes participate. |
-| `cancel()` | Request cooperative cancellation. |
-| `set_progress_callback(fn)` | **`fn(progress)`** with **`progress`** in **\[0, 1\]**. |
+This path is appropriate when the parameter should influence slicing decisions before G-code is generated. For example, an `INFILL_DENSITY` gradient changes how dense the internal infill toolpaths are in each generated region.
 
-For autodoc signatures, see **pyvcad_compilers** (**`SlicerProjectCompiler`**, **`CompilerBase`**).
+Settings-mesh attributes are scalar fields. The Python names below are available under `pv.DefaultAttributes`.
 
-## Examples and figures
+| Attribute | PrusaSlicer setting key | Typical use |
+| --------- | ----------------------- | ----------- |
+| `INFILL_DENSITY` | `fill_density` | Spatial infill percentage |
+| `FUZZY_SKIN_POINT_DISTANCE` | `fuzzy_skin_point_dist` | Spatial fuzzy skin roughness |
+| `BRIDGE_SPEED` | `bridge_speed` | Bridge planning speed |
+| `EXTERNAL_PERIMETER_EXTRUSION_WIDTH` | `external_perimeter_extrusion_width` | Outer wall line width |
+| `EXTERNAL_PERIMETER_SPEED` | `external_perimeter_speed` | Outer wall speed |
+| `EXTRUSION_WIDTH` | `extrusion_width` | General line width |
+| `GAP_FILL_SPEED` | `gap_fill_speed` | Gap fill speed |
+| `INFILL_EXTRUSION_WIDTH` | `infill_extrusion_width` | Infill line width |
+| `INFILL_SPEED` | `infill_speed` | Infill speed |
+| `IRONING_FLOWRATE` | `ironing_flowrate` | Ironing flow |
+| `IRONING_SPEED` | `ironing_speed` | Ironing speed |
+| `LAYER_HEIGHT` | `layer_height` | Region layer height |
+| `PERIMETER_EXTRUSION_WIDTH` | `perimeter_extrusion_width` | Perimeter line width |
+| `PERIMETER_SPEED` | `perimeter_speed` | Perimeter speed |
+| `PERIMETERS` | `perimeters` | Perimeter count |
+| `SMALL_PERIMETER_SPEED` | `small_perimeter_speed` | Small-feature perimeter speed |
+| `SOLID_INFILL_EXTRUSION_WIDTH` | `solid_infill_extrusion_width` | Solid infill line width |
+| `SOLID_INFILL_SPEED` | `solid_infill_speed` | Solid infill speed |
+| `SUPPORT_MATERIAL_EXTRUSION_WIDTH` | `support_material_extrusion_width` | Support extrusion width |
+| `TOP_INFILL_EXTRUSION_WIDTH` | `top_infill_extrusion_width` | Top infill line width |
+| `TOP_SOLID_INFILL_SPEED` | `top_solid_infill_speed` | Top solid infill speed |
 
-The scripts below live under **`examples/compilers/slicer_project/`** and write **`.3mf`** files under **`output/`** next to each script. Run them from the repository with your venv, then **import the `.3mf` into PrusaSlicer** as described [above](#opening-your-project-in-prusaslicer).
-
-### (a) Fuzzy skin gradient on a cylinder
-
-Design (**`FUZZY_SKIN_POINT_DISTANCE`** ramp along **Z**): matches the idea of **`examples/applications/slicer_settings_mesh/fuzzy_skin_cylinder.py`**. Script: **`01_fuzzy_skin_cylinder.py`** → **`output/fuzzy_skin_cylinder.3mf`**.
+**Fuzzy skin cylinder (`01_fuzzy_skin_cylinder.py`)**: this example applies `FUZZY_SKIN_POINT_DISTANCE` along the cylinder height and writes **`output/fuzzy_skin_cylinder.3mf`**. The generated sub-volumes carry `fuzzy_skin_point_dist` overrides, so PrusaSlicer changes the planned surface texture by region.
 
 ```python
-"""
-Slicer project - fuzzy skin gradient (cylinder)
-==============================================
-
-Upright cylinder with **FUZZY_SKIN_POINT_DISTANCE** ramping along Z, compiled
-to a PrusaSlicer-style **.3mf** for per-volume fuzzy skin settings.
-
-Companion to: docs/source/guides/compilers/slicer-project.md
-See also: examples/applications/slicer_settings_mesh/fuzzy_skin_cylinder.py
-"""
-import os
-
-import pyvcad as pv
-import pyvcad_compilers as pvc
-import pyvcad_rendering as viz
-
-cylinder_height_mm = 100.0
-cylinder_radius_mm = 15.0
-edge_buffer_mm = 10.0
-
-half_h = 0.5 * cylinder_height_mm
-span = 2.0 * (half_h - edge_buffer_mm)
-fuzzy_expr = (
-    f"0.4 * clamp((z + {half_h} - {edge_buffer_mm}) / ({span}), 0, 1)"
-)
-
-cylinder = pv.Cylinder(pv.Vec3(0, 0, 0), cylinder_radius_mm, cylinder_height_mm)
 cylinder.set_attribute(
     pv.DefaultAttributes.FUZZY_SKIN_POINT_DISTANCE,
     pv.FloatAttribute(fuzzy_expr),
 )
 
-root = cylinder
-viz.Render(root)
-
-_here = os.path.dirname(os.path.abspath(__file__))
-out_dir = os.path.join(_here, "output")
-os.makedirs(out_dir, exist_ok=True)
-out_3mf = os.path.join(out_dir, "fuzzy_skin_cylinder.3mf")
-
-regions = 12
-compiler = pvc.SlicerProjectCompiler(
+compiler = pvc.PrusaSlicerProjectCompiler(
     root,
     pv.Vec3(0.25, 0.25, 0.25),
     out_3mf,
-    regions,
+    num_regions=12,
 )
-compiler.compile()
-print("Wrote", out_3mf)
 ```
-
-**OpenVCAD** preview (field used for segmentation):
 
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
@@ -145,11 +143,9 @@ print("Wrote", out_3mf)
 </div>
 </div>
 
-**PrusaSlicer**:
-
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
-<p class="guide-figure-label">Slicer Preview (left: model preview | right: g-code fuzzy skin texture preview)</p>
+<p class="guide-figure-label">PrusaSlicer preview (model and fuzzy skin G-code texture)</p>
 <img src="../images/slicer_project_fuzzy_gcode.png" alt="PrusaSlicer G-code preview showing fuzzy skin" width="100%">
 </div>
 <div class="guide-figure-cell">
@@ -158,61 +154,21 @@ print("Wrote", out_3mf)
 </div>
 </div>
 
-### (b) Infill density gradient on a bar
-
-Design (**`INFILL_DENSITY`** ramp along **X**): same idea as **`examples/applications/slicer_settings_mesh/infill_density_bar.py`**. Script: **`02_infill_density_bar.py`** → **`output/infill_density_bar.3mf`**.
+**Infill density bar (`02_infill_density_bar.py`)**: this example ramps `INFILL_DENSITY` along the bar and writes **`output/infill_density_bar.3mf`**. The generated regions carry `fill_density` metadata, so PrusaSlicer computes denser or sparser infill toolpaths in each region.
 
 ```python
-"""
-Slicer project - infill density gradient (bar)
-============================================
-
-Rectangular bar with **INFILL_DENSITY** ramping along X, compiled to a **.3mf**
-with per-volume **fill_density** metadata for PrusaSlicer.
-
-Companion to: docs/source/guides/compilers/slicer-project.md
-See also: examples/applications/slicer_settings_mesh/infill_density_bar.py
-"""
-import os
-
-import pyvcad as pv
-import pyvcad_compilers as pvc
-import pyvcad_rendering as viz
-
-bar_size_x = 100.0
-bar_size_y = 25.0
-bar_size_z = 25.0
-edge_buffer_mm = 10.0
-
-half_x = 0.5 * bar_size_x
-span = 2.0 * (half_x - edge_buffer_mm)
-infill_expr = (
-    f"5 + 75 * clamp((x + {half_x} - {edge_buffer_mm}) / ({span}), 0, 1)"
+bar.set_attribute(
+    pv.DefaultAttributes.INFILL_DENSITY,
+    pv.FloatAttribute(infill_expr),
 )
 
-bar = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(bar_size_x, bar_size_y, bar_size_z))
-bar.set_attribute(pv.DefaultAttributes.INFILL_DENSITY, pv.FloatAttribute(infill_expr))
-
-root = bar
-viz.Render(root)
-
-_here = os.path.dirname(os.path.abspath(__file__))
-out_dir = os.path.join(_here, "output")
-os.makedirs(out_dir, exist_ok=True)
-out_3mf = os.path.join(out_dir, "infill_density_bar.3mf")
-
-regions = 12
-compiler = pvc.SlicerProjectCompiler(
+compiler = pvc.PrusaSlicerProjectCompiler(
     root,
     pv.Vec3(0.25, 0.25, 0.25),
     out_3mf,
-    regions,
+    num_regions=12,
 )
-compiler.compile()
-print("Wrote", out_3mf)
 ```
-
-**OpenVCAD** preview:
 
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
@@ -221,81 +177,57 @@ print("Wrote", out_3mf)
 </div>
 </div>
 
-**PrusaSlicer** G-code preview (cutaway to show internal infill):
-
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
-<p class="guide-figure-label">G-code preview (infill gradient, cutaway)</p>
+<p class="guide-figure-label">PrusaSlicer G-code preview (infill gradient cutaway)</p>
 <img src="../images/slicer_project_infill_gcode.png" alt="PrusaSlicer G-code preview with infill density gradient" width="100%">
 </div>
 </div>
 
-### (c) Temperature + flow (virtual extrusion)
+### Virtual Extrusion
 
-Similar in spirit to **`examples/applications/foaming_filaments/compensation_demo/compensation_pla_demo.py`**: **`TEMPERATURE`** field plus **`FLOW_RATE`** from a **lookup table** via **`AttributeModifier`**. Script: **`03_temperature_compensation_demo.py`** → **`output/temperature_compensation_demo.3mf`**, using printer/filament **`.ini`** files from **`examples/applications/foaming_filaments/profiles/`**.
+Virtual extrusion controls **machine state** by taking advantage of slicer toolchange events. OpenVCAD assigns synthetic extruder indices to regions, patches the project profile to declare those logical tools, and provides toolchange G-code that applies the desired process commands when the slicer switches between regions.
+
+The logical toolhead does not need to correspond to a separate physical nozzle. On a single-tool printer, the slicer can still emit toolchange events between logical tools, and the toolchange script can update temperature, flow, or other machine state without changing filament. On a multi-tool printer, the same concept can coexist with physical tool changes if the printer profile and script are written that way.
+
+This path is intentionally different from settings meshes:
+
+| Path | Controls | Slicer sees it before planning? | Best fit |
+| ---- | -------- | ------------------------------- | -------- |
+| Settings mesh | Toolpath planning settings | Yes | Infill, speeds, widths, layer height, perimeters |
+| Virtual extrusion | Machine state commands | No, it runs as G-code | Temperature, flow, and process state that can be changed at region boundaries |
+
+In the current method, `TEMPERATURE` is the primary virtual-extrusion attribute and `FLOW_RATE` is its companion.
+
+| Attribute | Role | Effect |
+| --------- | ---- | ------ |
+| `TEMPERATURE` | Primary region attribute | Creates logical tools and emits `M104` temperatures through toolchange G-code |
+| `FLOW_RATE` | Companion attribute | Supplies `M221` flow values for the same logical toolchange events |
+
+The toolchange script applies commands such as:
+
+```gcode
+M104 S{temperature}
+M221 S{flow_rate}
+```
+
+**Temperature and flow example (`03_temperature_compensation_demo.py`)**: this example applies a `TEMPERATURE` field, derives `FLOW_RATE` from a lookup table, and writes **`output/temperature_compensation_demo.3mf`**. The compiler uses Prusa profile files from **`examples/applications/foaming_filaments/profiles/`** so the generated project can define logical tools and toolchange G-code.
 
 ```python
-"""
-Slicer project - temperature + flow (virtual extrusion)
-=======================================================
-
-**TEMPERATURE** field with **FLOW_RATE** from a lookup (**AttributeModifier**),
-similar to the foaming PLA compensation demo. Requires printer and filament
-**.ini** profiles for virtual-extrusion G-code injection.
-
-Companion to: docs/source/guides/compilers/slicer-project.md
-See also: examples/applications/foaming_filaments/compensation_demo/compensation_pla_demo.py
-"""
-import os
-import sys
-
-import pyvcad as pv
-import pyvcad_compilers as pvc
-import pyvcad_rendering as viz
-
-_here = os.path.dirname(os.path.abspath(__file__))
-_profiles = os.path.normpath(os.path.join(_here, "..", "..", "applications", "foaming_filaments", "profiles"))
-sys.path.insert(0, _profiles)
-from flow_compensation_data import foaming_pla_flow_compensation
-
-temperature_attr = pv.FloatAttribute("max(min((x/3+236),256),216)")
-
-rect_prism = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(200, 10, 10))
-rect_prism.set_attribute(pv.DefaultAttributes.TEMPERATURE, temperature_attr)
-
-flow_entries = [pv.LookupTableEntry(kv[0], kv[0], kv[1]) for kv in foaming_pla_flow_compensation]
-mod_func = pv.LookupTableConverter(
-    [pv.DefaultAttributes.TEMPERATURE],
-    [pv.DefaultAttributes.FLOW_RATE],
-    flow_entries,
-    pv.InterpolationMode.LINEAR,
+rect_prism.set_attribute(
+    pv.DefaultAttributes.TEMPERATURE,
+    pv.FloatAttribute("max(min((x/3+236),256),216)"),
 )
-mod = pv.AttributeModifier(mod_func, rect_prism)
 
-root = mod
-viz.Render(root)
-
-out_dir = os.path.join(_here, "output")
-os.makedirs(out_dir, exist_ok=True)
-out_3mf = os.path.join(out_dir, "temperature_compensation_demo.3mf")
-
-printer_profile_path = os.path.join(_profiles, "prusa_xl_multitool.ini")
-filament_profile_path = os.path.join(_profiles, "ColorFabb_LW_PLA.ini")
-regions = 10
-
-compiler = pvc.SlicerProjectCompiler(
+compiler = pvc.PrusaSlicerProjectCompiler(
     root,
     pv.Vec3(0.25, 0.25, 0.25),
     out_3mf,
-    regions,
-    printer_profile_path,
-    filament_profile_path,
+    num_regions=10,
+    printer_profile_path=printer_profile_path,
+    filament_profile_path=filament_profile_path,
 )
-compiler.compile()
-print("Wrote", out_3mf)
 ```
-
-**OpenVCAD** preview (**temperature**):
 
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
@@ -304,24 +236,196 @@ print("Wrote", out_3mf)
 </div>
 </div>
 
-**PrusaSlicer** G-code preview (color or tooltip by temperature):
-
 <div class="guide-figure-grid">
 <div class="guide-figure-cell">
-<p class="guide-figure-label">G-code preview (temperature)</p>
+<p class="guide-figure-label">PrusaSlicer G-code preview (temperature)</p>
 <img src="../images/slicer_project_temperature_gcode.png" alt="PrusaSlicer G-code preview colored by temperature" width="100%">
 </div>
 </div>
 
-## Limitations
+### Prusa Constructor Options
 
-- **Piecewise** regions: each segment gets **one** representative slicer value, not a unique value per voxel in the slicer metadata.
-- **Unsupported** attributes on the tree are **skipped** (with a console message); if **no** supported attributes are found, **`compile()`** fails.
-- **Virtual extrusion** depends on bundled **G-code templates** and **`.ini`** inputs that must match your workflow.
-- **Slicer compatibility** is aimed at **PrusaSlicer-style** **3MF** projects; other slicers may require export or conversion.
+```python
+compiler = pvc.PrusaSlicerProjectCompiler(
+    root,
+    pv.Vec3(0.25, 0.25, 0.25),
+    out_3mf,
+    num_regions=12,
+    printer_profile_path=printer_profile_path,
+    filament_profile_path=filament_profile_path,
+)
+compiler.compile()
+```
 
-## Further examples
+| Option | Meaning |
+| ------ | ------- |
+| `root` | The OpenVCAD design tree to compile. |
+| `voxel_size` | Sampling spacing in mm. Smaller values resolve smaller regions but cost more time and memory. |
+| `output_file_path` | Destination `.3mf` project path. |
+| `num_regions` | Number of value bands for each scalar attribute. More regions preserve more variation but create more sub-volumes. |
+| `printer_profile_path` | PrusaSlicer printer `.ini`. Required when virtual extrusion attributes are present. |
+| `filament_profile_path` | PrusaSlicer filament `.ini`. Required when virtual extrusion attributes are present. |
 
-- **`examples/compilers/slicer_project/`** — scripts paired with this guide (`01` … `03`).
-- **`examples/applications/slicer_settings_mesh/`** — additional **settings-mesh** demos.
-- **`examples/applications/foaming_filaments/compensation_demo/`** — **temperature** / **flow** compensation patterns and profile assets.
+## FullSpectrum
+
+Use the FullSpectrum compiler when your OpenVCAD design carries either `COLOR_RGB` or `VOLUME_FRACTIONS` and you want an Orca / Bambu-style project for the FullSpectrum workflow.
+
+**Full Spectrum** is a slicer workflow for getting more apparent colors out of a limited set of loaded filaments. Instead of truly melting filaments together into a homogeneous mixed polymer, it creates **virtual mixed-color filaments** by alternating physical filaments through layer dithering or related patterns. Thin layers and partially translucent filament let light interact with multiple colors, so the eye sees an intermediate color.
+
+The achievable colors depend strongly on the actual filaments loaded in the printer, their translucency, layer height, surface orientation, and slicer settings. A **CMYKW** physical set, cyan, magenta, yellow, black, and white, is the recommended starting point because it gives the color-matching algorithm a broad gamut to work with.
+
+OpenVCAD targets the [OrcaSlicer-FullSpectrum](https://github.com/ratdoux/OrcaSlicer-FullSpectrum) community fork for this project format. Treat this as an emerging ecosystem: the generated projects use Orca / Bambu-style metadata and FullSpectrum mixed-filament settings, and stock PrusaSlicer, stock OrcaSlicer, or stock Bambu Studio may not interpret those settings correctly.
+
+### COLOR_RGB Workflow
+
+Use `COLOR_RGB` when the design field is an intended color. The compiler samples the RGB target field, reduces it to a bounded palette with `max_palette_size`, compares each palette color against the loaded physical filaments and possible mixed-filament recipes, and assigns each generated mesh region to a physical or virtual mixed filament.
+
+The default physical palette for `COLOR_RGB` mode is CYMKW if you do not pass `filaments`. Pass explicit filament dictionaries when your loaded spool colors differ.
+
+```python
+compiler = pvc.FullSpectrumSlicerProjectCompiler(
+    root,
+    pv.Vec3(0.25, 0.25, 0.25),
+    out_3mf,
+    [
+        {"slot": 1, "color_hex": "#00FFFF"},
+        {"slot": 2, "color_hex": "#FF00FF"},
+        {"slot": 3, "color_hex": "#FFFF00"},
+        {"slot": 4, "color_hex": "#000000"},
+        {"slot": 5, "color_hex": "#FFFFFF"},
+    ],
+    max_palette_size=32,
+    min_component_percent=15,
+    max_recipe_components=5,
+)
+```
+
+**Color gradient example (`04_full_spectrum_color_gradient.py`)**: this example applies a `COLOR_RGB` ramp from cyan toward magenta and writes **`output/full_spectrum_color_gradient.3mf`**. The compiler samples the RGB target field, reduces it to a small palette, and assigns each palette color to a physical or virtual mixed filament recipe.
+
+```python
+bar.set_attribute(
+    pv.DefaultAttributes.COLOR_RGB,
+    pv.Vec3Attribute(red_expr, green_expr, blue_expr),
+)
+
+compiler = pvc.FullSpectrumSlicerProjectCompiler(
+    root,
+    pv.Vec3(0.25, 0.25, 0.25),
+    out_3mf,
+    max_palette_size=10,
+    min_component_percent=15,
+    max_recipe_components=5,
+)
+```
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">OpenVCAD (COLOR_RGB target)</p>
+<img src="../images/slicer_project_full_spectrum_color_preview.png" alt="OpenVCAD render of FullSpectrum color gradient swatch" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">OrcaSlicer-FullSpectrum g-code screenshot</p>
+<img src="../images/slicer_project_full_spectrum_color_orca.png" alt="OrcaSlicer FullSpectrum color gradient screenshot" width="100%">
+</div>
+</div>
+
+### VOLUME_FRACTIONS Workflow
+
+Use `VOLUME_FRACTIONS` when the OpenVCAD field already describes material proportions and you want those proportions to become FullSpectrum recipe weights. This is simpler than color matching because the design says which materials should participate.
+
+The compiler maps OpenVCAD material names to physical filament slots with `volume_fraction_materials`, normalizes the mapped fractions for each sample, clusters fraction vectors into at most `max_palette_size` recipe regions, and emits physical or virtual mixed-filament recipes using representative weights for each region.
+
+```python
+compiler = pvc.FullSpectrumSlicerProjectCompiler(
+    root,
+    pv.Vec3(0.25, 0.25, 0.25),
+    out_3mf,
+    volume_fraction_materials={"red": 1, "blue": 2},
+    max_palette_size=10,
+    min_component_percent=1,
+    max_recipe_components=5,
+)
+```
+
+**Volume-fraction example (`05_full_spectrum_volume_fractions.py`)**: this example ramps red and blue material fractions across the bar and writes **`output/full_spectrum_volume_fractions.3mf`**. The `volume_fraction_materials={"red": 1, "blue": 2}` mapping sends those OpenVCAD material names directly to physical filament slots.
+
+```python
+bar.set_attribute(
+    pv.DefaultAttributes.VOLUME_FRACTIONS,
+    pv.VolumeFractionsAttribute(
+        [
+            (red_fraction_expr, materials.id("red")),
+            (blue_fraction_expr, materials.id("blue")),
+        ]
+    ),
+)
+
+compiler = pvc.FullSpectrumSlicerProjectCompiler(
+    root,
+    pv.Vec3(0.25, 0.25, 0.25),
+    out_3mf,
+    volume_fraction_materials={"red": 1, "blue": 2},
+    max_palette_size=10,
+    min_component_percent=1,
+    max_recipe_components=5,
+)
+```
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">OpenVCAD (VOLUME_FRACTIONS target)</p>
+<img src="../images/slicer_project_full_spectrum_volume_fractions_preview.png" alt="OpenVCAD render of FullSpectrum volume-fraction swatch" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">OrcaSlicer-FullSpectrum g-code screenshot</p>
+<img src="../images/slicer_project_full_spectrum_volume_fractions_orca.png" alt="OrcaSlicer FullSpectrum volume-fraction screenshot" width="100%">
+</div>
+</div>
+
+### FullSpectrum Constructor Options
+
+```python
+compiler = pvc.FullSpectrumSlicerProjectCompiler(
+    root,
+    voxel_size,
+    output_file_path,
+    filaments=None,
+    max_palette_size=32,
+    min_component_percent=15,
+    max_recipe_components=5,
+    direct_physical_delta_e=1.0,
+    region_overlap_mm=0.2,
+    base_project_settings_path="",
+    orca_machine_profile_path="",
+    orca_process_profile_path="",
+    orca_default_filament_profile_path="",
+    orca_profile_search_paths=[],
+    volume_fraction_materials={},
+    material_defs_path="",
+)
+```
+
+| Option | Meaning |
+| ------ | ------- |
+| `filaments` | Physical filament slots and colors. Each dictionary may include `slot`, `color_hex`, `filament_settings_id`, `filament_id`, `filament_profile_path`, and `nozzle_diameter_mm`. |
+| `max_palette_size` | Maximum generated `COLOR_RGB` palette size or `VOLUME_FRACTIONS` recipe-region count. |
+| `min_component_percent` | Minimum component percentage kept in generated mixed recipes. Tiny components are dropped and the remaining weights are normalized. |
+| `max_recipe_components` | Maximum physical filaments allowed in one mixed recipe. |
+| `direct_physical_delta_e` | DeltaE threshold for assigning a `COLOR_RGB` target directly to a physical filament instead of creating a mixed recipe. |
+| `region_overlap_mm` | Small overlap between generated FullSpectrum sub-parts to avoid visible cracks between separately meshed regions. |
+| `base_project_settings_path` | Optional Orca project settings JSON to merge before compiler-controlled FullSpectrum keys are written. |
+| `orca_machine_profile_path` | Optional Orca machine profile path or resolvable profile name. |
+| `orca_process_profile_path` | Optional Orca process profile path or resolvable profile name. |
+| `orca_default_filament_profile_path` | Optional default filament profile path or resolvable profile name. |
+| `orca_profile_search_paths` | Additional directories searched for Orca JSON profiles. |
+| `volume_fraction_materials` | Material-name to physical-slot mapping for direct `VOLUME_FRACTIONS` export, such as `{"red": 1, "blue": 2}`. |
+| `material_defs_path` | Optional `MaterialDefs` JSON path. Empty uses the bundled default material definitions. |
+
+### FullSpectrum Limitations
+
+- FullSpectrum is not true molten filament mixing. It is an optical and geometric approximation based on alternating physical filaments.
+- The reachable color gamut depends on the loaded filaments, translucency, layer height, top/bottom shell behavior, and surface orientation.
+- OpenVCAD emits a finite number of mesh regions. More regions can preserve more variation, but they also increase project complexity.
+- Sloped surfaces, small details, top layers, and short regions can show different color behavior than tall vertical walls.
+- Stock slicers may ignore or reject FullSpectrum metadata. Use the documented FullSpectrum fork unless you have verified another slicer version.
+- `max_recipe_components` and `min_component_percent` intentionally bound recipe complexity. Some requested colors or material blends cannot be represented within those limits.

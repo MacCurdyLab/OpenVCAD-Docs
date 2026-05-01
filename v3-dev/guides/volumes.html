@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=7f76b32a3354e82990f2" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=55c26ed414f5f8a31ebb" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
@@ -36,10 +36,10 @@
     <link rel="stylesheet" type="text/css" href="../_static/openvcad_branding.css?v=c43e02c9" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../_static/scripts/fontawesome.js?digest=7f76b32a3354e82990f2"></script>
+  <script defer src="../_static/scripts/fontawesome.js?digest=55c26ed414f5f8a31ebb"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb" />
 
     <script src="../_static/documentation_options.js?v=110ea713"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
@@ -72,7 +72,9 @@
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
-
+  
+  
+  
   
   <dialog id="pst-search-dialog">
     
@@ -327,7 +329,7 @@
 <li class="toctree-l2"><a class="reference internal" href="compilers/material-inkjet.html">Material Inkjet Compiler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compilers/color-inkjet.html">Color Inkjet Compiler</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compilers/vat-photo.html">VAT Photo Compiler</a></li>
-<li class="toctree-l2"><a class="reference internal" href="compilers/slicer-project.html">Slicer Project Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/slicer-project.html">Slicer Project Compilers</a></li>
 <li class="toctree-l2"><a class="reference internal" href="compilers/simulation-compiler.html">Simulation Compiler</a></li>
 </ul>
 </details></li>
@@ -421,7 +423,7 @@ Current compiler guides:
 <li><p>Attach the attribute to normal OpenVCAD geometry.</p></li>
 <li><p>Visualize the sampled field directly in the renderer, or translate it into another attribute such as <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code> for a downstream compiler.</p></li>
 </ol>
-<p>That is the pattern you will see in all three lessons.</p>
+<p>That is the pattern you will see in all four lessons.</p>
 </section>
 <section id="lesson-1-load-a-density-volume-and-render-it">
 <h2>Lesson 1: Load a Density Volume and Render It<a class="headerlink" href="#lesson-1-load-a-density-volume-and-render-it" title="Link to this heading">#</a></h2>
@@ -463,8 +465,93 @@ Current compiler guides:
 </div>
 </div>
 </section>
-<section id="lesson-2-fire-volumes-to-printable-rgba">
-<h2>Lesson 2: Fire Volumes to Printable RGBA<a class="headerlink" href="#lesson-2-fire-volumes-to-printable-rgba" title="Link to this heading">#</a></h2>
+<section id="lesson-2-png-images-to-color-volumes">
+<h2>Lesson 2: PNG Images to Color Volumes<a class="headerlink" href="#lesson-2-png-images-to-color-volumes" title="Link to this heading">#</a></h2>
+<p>PNG data follows the same adapter pattern as VDB and DICOM: load sampled data, wrap it as an attribute, attach it to geometry. The difference is that PNG sources are already color fields, so you can attach <code class="docutils literal notranslate"><span class="pre">COLOR_RGB</span></code> or <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code> directly.</p>
+<p>OpenVCAD supports two PNG import modes:</p>
+<ul class="simple">
+<li><p><strong>Single image with depth</strong>: load one PNG and repeat it along z until a requested <code class="docutils literal notranslate"><span class="pre">depth_mm</span></code> is reached.</p></li>
+<li><p><strong>Image stack</strong>: load an ordered directory of PNG slices as a true 3D color volume.</p></li>
+</ul>
+<p>In both cases, physical scale comes from the user-specified <code class="docutils literal notranslate"><span class="pre">voxel_size</span></code> (<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code> in mm).</p>
+<section id="color-mode-behavior-color-rgb-vs-color-rgba">
+<h3>Color mode behavior (<code class="docutils literal notranslate"><span class="pre">COLOR_RGB</span></code> vs <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code>)<a class="headerlink" href="#color-mode-behavior-color-rgb-vs-color-rgba" title="Link to this heading">#</a></h3>
+<p>When importing PNG data, choose a target mode:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">COLOR_RGB</span></code>: if source PNG has alpha, alpha is dropped.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code>: if source PNG has no alpha channel, alpha is synthesized as fully opaque (<code class="docutils literal notranslate"><span class="pre">1.0</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code>: if source PNG has alpha, the alpha values are preserved.</p></li>
+</ul>
+</section>
+<section id="single-image-example-logo-repeated-through-depth">
+<h3>Single-image example (logo repeated through depth)<a class="headerlink" href="#single-image-example-logo-repeated-through-depth" title="Link to this heading">#</a></h3>
+<p>The example script lives in <code class="docutils literal notranslate"><span class="pre">examples/volumes/png/single_image/maclab_logo_color_rgba.py</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">script_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+<span class="n">image_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">script_dir</span><span class="p">,</span> <span class="s2">&quot;maclab_logo.png&quot;</span><span class="p">)</span>
+
+<span class="n">png_loader</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">PNGLoader</span><span class="o">.</span><span class="n">FromImage</span><span class="p">(</span>
+    <span class="n">image_path</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span>
+    <span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">PNGColorMode</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span>
+    <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">color_volume</span> <span class="o">=</span> <span class="n">png_loader</span><span class="o">.</span><span class="n">as_rgba_volume</span><span class="p">()</span>
+
+<span class="n">bbox_min</span><span class="p">,</span> <span class="n">bbox_max</span> <span class="o">=</span> <span class="n">color_volume</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">()</span>
+<span class="n">carrier</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="o">.</span><span class="n">FromMinAndMax</span><span class="p">(</span><span class="n">bbox_min</span><span class="p">,</span> <span class="n">bbox_max</span><span class="p">)</span>
+<span class="n">carrier</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec4Attribute</span><span class="p">(</span><span class="n">color_volume</span><span class="p">))</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">carrier</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="stack-example-smooth-color-transparency-pyramid">
+<h3>Stack example (smooth color + transparency pyramid)<a class="headerlink" href="#stack-example-smooth-color-transparency-pyramid" title="Link to this heading">#</a></h3>
+<p>The stack example lives in <code class="docutils literal notranslate"><span class="pre">examples/volumes/png/image_stack/pyramid_color_rgba.py</span></code>, using committed deterministic slice data under <code class="docutils literal notranslate"><span class="pre">examples/volumes/png/image_stack/pyramid_stack/</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">script_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+<span class="n">stack_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">script_dir</span><span class="p">,</span> <span class="s2">&quot;pyramid_stack&quot;</span><span class="p">)</span>
+
+<span class="n">png_loader</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">PNGLoader</span><span class="o">.</span><span class="n">FromStack</span><span class="p">(</span>
+    <span class="n">stack_dir</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.35</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">),</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">PNGColorMode</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span>
+    <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">color_volume</span> <span class="o">=</span> <span class="n">png_loader</span><span class="o">.</span><span class="n">as_rgba_volume</span><span class="p">()</span>
+
+<span class="n">bbox_min</span><span class="p">,</span> <span class="n">bbox_max</span> <span class="o">=</span> <span class="n">color_volume</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">()</span>
+<span class="n">carrier</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="o">.</span><span class="n">FromMinAndMax</span><span class="p">(</span><span class="n">bbox_min</span><span class="p">,</span> <span class="n">bbox_max</span><span class="p">)</span>
+<span class="n">carrier</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec4Attribute</span><span class="p">(</span><span class="n">color_volume</span><span class="p">))</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">carrier</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The figures below show these two workflows in volumetric rendering mode.</p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Single-image depth repeat (`COLOR_RGBA`)</p>
+<img src="images/volumes_png_logo_color_rgba.png" alt="Single PNG imported as a repeated-depth COLOR_RGBA volume" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Image stack (`COLOR_RGBA`)</p>
+<img src="images/volumes_png_pyramid_color_rgba.webp" alt="PNG image stack imported as a COLOR_RGBA volume" width="100%">
+</div>
+</div>
+</section>
+</section>
+<section id="lesson-3-fire-volumes-to-printable-rgba">
+<h2>Lesson 3: Fire Volumes to Printable RGBA<a class="headerlink" href="#lesson-3-fire-volumes-to-printable-rgba" title="Link to this heading">#</a></h2>
 <p>The fire example shows the full volume workflow that matters for fabrication: multiple sampled fields are loaded, attached to geometry, then translated into <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code> for a compiler.</p>
 <p>The full example lives in <code class="docutils literal notranslate"><span class="pre">examples/volumes/vdb/fire/</span></code>. Run <code class="docutils literal notranslate"><span class="pre">fire.py</span></code> from that directory so the local <code class="docutils literal notranslate"><span class="pre">fire.vdb</span></code> file is picked up directly.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">fire.vdb</span></code> file used here is an example dataset from the <a class="reference external" href="https://www.openvdb.org/download/">OpenVDB download page</a>. It works well for this lesson because it already contains the two named sparse grids we want to discuss: <code class="docutils literal notranslate"><span class="pre">temperature</span></code> and <code class="docutils literal notranslate"><span class="pre">density</span></code>.</p>
@@ -557,8 +644,8 @@ Current compiler guides:
 </div>
 </section>
 </section>
-<section id="lesson-3-ct-head-scan-to-color-rgba">
-<h2>Lesson 3: CT Head Scan to <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code><a class="headerlink" href="#lesson-3-ct-head-scan-to-color-rgba" title="Link to this heading">#</a></h2>
+<section id="lesson-4-ct-head-scan-to-color-rgba">
+<h2>Lesson 4: CT Head Scan to <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code><a class="headerlink" href="#lesson-4-ct-head-scan-to-color-rgba" title="Link to this heading">#</a></h2>
 <p>The tumor example uses the same overall workflow, but now the source data is a DICOM stack instead of a VDB file.</p>
 <p>The full example lives in <code class="docutils literal notranslate"><span class="pre">examples/volumes/imaging/medical/mr_brain_tumor/</span></code>. For the guide snippets, assume the <code class="docutils literal notranslate"><span class="pre">dicom/</span></code> stack folder is next to <code class="docutils literal notranslate"><span class="pre">tumor.py</span></code> and run the script from that directory. This example also differs from Lessons 1 and 2 because it imports a mesh to act as the bounding volume. In the VDB examples, we used simple boxes built from the volume bounds. Here, the outer boundary is an anatomical surface mesh created with segmentation operations in <a class="reference external" href="https://www.slicer.org/">3D Slicer</a> and exported as <code class="docutils literal notranslate"><span class="pre">MRTumor.stl</span></code>.</p>
 <section id="what-the-dicom-stack-represents">
@@ -676,12 +763,18 @@ Current compiler guides:
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mental-model">Mental Model</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-1-load-a-density-volume-and-render-it">Lesson 1: Load a Density Volume and Render It</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-2-fire-volumes-to-printable-rgba">Lesson 2: Fire Volumes to Printable RGBA</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-2-png-images-to-color-volumes">Lesson 2: PNG Images to Color Volumes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#color-mode-behavior-color-rgb-vs-color-rgba">Color mode behavior (<code class="docutils literal notranslate"><span class="pre">COLOR_RGB</span></code> vs <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#single-image-example-logo-repeated-through-depth">Single-image example (logo repeated through depth)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stack-example-smooth-color-transparency-pyramid">Stack example (smooth color + transparency pyramid)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-3-fire-volumes-to-printable-rgba">Lesson 3: Fire Volumes to Printable RGBA</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-stored-in-fire-vdb">What is stored in <code class="docutils literal notranslate"><span class="pre">fire.vdb</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#translating-the-fields-into-color-rgba">Translating the fields into <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-3-ct-head-scan-to-color-rgba">Lesson 3: CT Head Scan to <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-4-ct-head-scan-to-color-rgba">Lesson 4: CT Head Scan to <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-dicom-stack-represents">What the DICOM stack represents</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mapping-hu-to-color-rgba">Mapping HU to <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code></a></li>
 </ul>
@@ -712,8 +805,8 @@ Current compiler guides:
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=7f76b32a3354e82990f2"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=7f76b32a3354e82990f2"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=55c26ed414f5f8a31ebb"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=55c26ed414f5f8a31ebb"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -747,7 +840,7 @@ Current compiler guides:
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.17.1.
 </p></div>
       
     </div>

@@ -3,93 +3,140 @@
 ```{include} guides/_guide-sidebar-compiler-membership.md
 ```
 
-## Quick Install (pip)
+## OpenVCAD 3.0 Internal Beta
 
-OpenVCAD is available on PyPI. Supported Python versions: **3.11, 3.12, 3.13, and 3.14**
-on Windows, Linux, and macOS (Apple Silicon).
+OpenVCAD 3.0 beta is installed from internal GitHub release wheels. Do not install the beta with `pip install OpenVCAD`.
 
-```bash
-pip install OpenVCAD
+```{important}
+This is a closed internal beta. Do not share the wheel files or release ZIP files outside the approved lab group.
 ```
 
-This installs `pyvcad`, `pyvcad_compilers`, and `pyvcad_rendering`.
-The attribute resolver is distributed as a separate package.
+Supported Python versions: **3.11, 3.12, 3.13, and 3.14** on Windows, Linux, and macOS.
 
 ## Recommended Setup
 
 We **strongly recommend** using a virtual environment to keep dependencies
-clean and avoid conflicts with other Python projects.
+clean and avoid conflicts with other Python projects. Use a dedicated virtual
+environment for OpenVCAD 3.0 beta work, separate from any OpenVCAD 2.x
+environment if you still need the older version.
 
 ### 1. Create a project directory
 
 ```bash
-mkdir my_openvcad_project
-cd my_openvcad_project
+mkdir my_openvcad_3_beta_project
+cd my_openvcad_3_beta_project
 ```
 
 ### 2. Create and activate a virtual environment
 
 ```bash
 # macOS / Linux
-python3 -m venv venv
-source venv/bin/activate
+python3 -m venv openvcad3-venv
+source openvcad3-venv/bin/activate
 
 # Windows
-python -m venv venv
-venv\Scripts\activate
+python -m venv openvcad3-venv
+openvcad3-venv\Scripts\activate
 ```
 
-You should see `(venv)` at the beginning of your prompt.
+You should see `(openvcad3-venv)` at the beginning of your prompt.
 
-### 3. Install OpenVCAD
+### 3. Download the beta wheel ZIP
+
+Go to the internal OpenVCAD releases page:
+
+[https://github.com/MacCurdyLab/openvcad-internal/releases](https://github.com/MacCurdyLab/openvcad-internal/releases)
+
+Download the newest OpenVCAD 3 beta ZIP for your operating system:
+
+- `openvcad_beta_3.x.x_mac.zip`
+- `openvcad_beta_3.x.x_linux.zip`
+- `openvcad_beta_3.x.x_windows.zip`
+
+Ignore releases labeled `Dependencies`; those are for development setup.
+
+Extract the ZIP file. It contains several `.whl` files. The `openvcad` wheel is
+Python-version-specific, while the other package wheels are pure Python.
+
+### 4. Check your Python version and wheel tag
 
 ```bash
-pip install --upgrade pip
-pip install OpenVCAD
+python --version
+python -c "import sys; print(f'cp{sys.version_info.major}{sys.version_info.minor}')"
 ```
 
-### 4. Verify the installation
+For example, Python 3.11 prints `cp311`, Python 3.12 prints `cp312`, Python
+3.13 prints `cp313`, and Python 3.14 prints `cp314`.
+
+### 5. Install all beta wheels together
+
+From the extracted ZIP directory, install the matching `openvcad` wheel and the
+pure-Python package wheels in one command. They depend on each other, so install
+them together.
+
+Replace `cpYY` with the tag printed in the previous step:
+
+```bash
+python -m pip install --upgrade pip
+python -m pip install openvcad-3.x.x-cpYY-cpYY-*.whl pyvcad_attribute_resolver-*.whl pyvcad_rendering-*.whl pyvcad_medical-*.whl
+```
+
+For example, if you are using Python 3.11 on macOS, install the `openvcad`
+wheel whose filename contains `cp311-cp311`.
+
+This installs:
+
+- `pyvcad`
+- `pyvcad_compilers`
+- `pyvcad_attribute_resolver`
+- `pyvcad_rendering`
+- `pyvcad_medical`
+
+### 6. Verify the installation
 
 ```python
 import pyvcad as pv
 print(pv.version())
 ```
 
-## Optional: Install the Attribute Resolver
-
-If you want the automatic attribute-conversion workflows described in the
-[Attribute modifier and resolver](guides/attribute-resolver.md) guide, install
-the resolver package separately:
-
-```bash
-pip install pyvcad-attribute-resolver
-```
-
-Verify the import:
+You can also verify the companion packages:
 
 ```python
 import pyvcad_attribute_resolver as resolver
+import pyvcad_rendering
+import pyvcad_medical
+
 print(sorted(resolver.list_modules()))
 ```
 
-## Getting the Examples
+## Updating the Beta
 
-Clone the examples repository to get started with runnable demos:
+To update from one OpenVCAD 3.x.x beta version to another:
+
+1. Activate your dedicated OpenVCAD 3 beta virtual environment.
+2. Download and extract the newest `openvcad_beta_3.x.x_<mac/linux/windows>.zip`
+   from the internal releases page.
+3. Run the same wheel install command from the extracted ZIP directory, adding
+   `--upgrade`:
 
 ```bash
-git clone https://github.com/MacCurdyLab/OpenVCAD-Public.git
-cd OpenVCAD-Public/examples
+python -m pip install --upgrade openvcad-3.x.x-cpYY-cpYY-*.whl pyvcad_attribute_resolver-*.whl pyvcad_rendering-*.whl pyvcad_medical-*.whl
+```
+
+Keep using a separate virtual environment for OpenVCAD 3 beta if you also need
+to keep OpenVCAD 2.x installed for older projects.
+
+## Getting the Examples
+
+Clone the internal repository to get started with runnable beta examples:
+
+```bash
+git clone https://github.com/MacCurdyLab/openvcad-internal.git
+cd openvcad-internal/examples
 ```
 
 See the [Getting Started](guides/getting-started.md) guide for a walkthrough of the
 example scripts.
-
-## Getting the Source Code
-
-The OpenVCAD source code is open-source under a **non-commercial license**.
-You can request access to the source repository here:
-
-[Request Access Form](https://forms.gle/MAjCmG66xZ6p1JcE9)
 
 ## Deactivating the Virtual Environment
 
@@ -99,5 +146,5 @@ When you are done working, deactivate the environment with:
 deactivate
 ```
 
-Reactivate later with `source venv/bin/activate` (macOS/Linux) or
-`venv\Scripts\activate` (Windows).
+Reactivate later with `source openvcad3-venv/bin/activate` (macOS/Linux) or
+`openvcad3-venv\Scripts\activate` (Windows).

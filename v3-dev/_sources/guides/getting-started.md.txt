@@ -4,11 +4,9 @@
 ```{include} _guide-sidebar-compiler-membership.md
 ```
 
-This is the official getting started guide for **OpenVCAD version 3.x.x+** (Attribute Modeling). 
+This is the practical getting started guide for **OpenVCAD version 3.x.x+** (Attribute Modeling).
 
-With this release, we have introduced **Attribute Modeling**, a powerful new concept that allows users to implicitly express volumetric compositions using OpenVCAD's tree structure. This framework enables you to define virtually any object property—such as material density, color, or stiffness—as a continuous gradient.
-
-Under the hood, OpenVCAD represents your design as an implicit **`Node` tree**: leaf nodes define geometry or sampled data (e.g. primitives, meshes, or signed distance fields), while composition nodes (CSG, transforms, shells, maps, etc.) combine and manipulate those leaves. Attributes attach additional **field functions** to this same tree so that, at any point in space, the system can evaluate both the *shape* (inside/outside) and the *attributes* (e.g. modulus, color, or volume fractions) in a consistent way.
+If you are new to OpenVCAD, start with [Theory and Motivation](theory-and-motivation.md) first. That guide explains why OpenVCAD models both geometry and internal attributes. This guide turns that model into code: you will create `pyvcad` designs, attach attributes, and preview the results with `pyvcad_rendering`.
 
 ## What You Will Learn
 The lessons below provide a comprehensive overview for beginners, covering how to:
@@ -32,6 +30,37 @@ print("OpenVCAD version:", pv.version())
 
 If this prints a version string without raising an exception you are ready to run the examples below.
 
+## The Modeling Mental Model
+
+In OpenVCAD, an object is a composition of two implicit forms:
+
+1. **Implicit geometric form**: a signed distance field (SDF). Positive values are outside the object, negative values are inside, and zero is the surface.
+2. **Implicit attribute form**: a collection of named fields attached to that geometry. Attributes can represent values such as temperature, modulus, color, density, Shore hardness, or volume fractions.
+
+Attribute expressions can depend on Cartesian position (`x`, `y`, `z`) and on the signed distance `d` returned by the geometry evaluation. That means an attribute can vary across the object, along a build direction, around a radius, or relative to the surface itself.
+
+As a user, you normally model continuous fields. Sampling those fields into pixels, voxels, slicer settings, meshes, or machine files is handled later by renderers and compilers.
+
+## Workflow Overview
+
+A single `pyvcad` design can feed multiple downstream workflows. You will mostly use the renderer in this guide because it gives fast interactive feedback, but the same design tree can later go to compiler workflows.
+
+<p class="guide-figure-label">OpenVCAD workflow</p>
+
+```{image} images/getting_started_workflow.svg
+:alt: OpenVCAD workflow diagram showing one pyvcad design branching to renderer, FFF, inkjet, and simulation compilers
+:width: 82%
+:align: center
+```
+
+Detailed compiler behavior lives in the [Compilers](compilers/index.md) guide. The important idea for this tutorial is that you define geometry and attributes once, then choose the downstream consumer that needs those fields.
+
+## Attribute Resolvers
+
+Some workflows need attributes that are computed from other attributes. For example, you might model `SHORE_HARDNESS` because that is the design intent, then derive `VOLUME_FRACTIONS` for an inkjet compiler or `TEMPERATURE` and `FLOW_RATE` for a filament workflow. OpenVCAD supports that pattern through `pv.AttributeModifier` and `pyvcad_attribute_resolver`.
+
+This guide only introduces the modeling side. When you are ready to translate design-intent fields into compiler-facing fields, see the [Attribute Modifier and Resolver Guide](attribute-resolver.md).
+
 ## Running the Examples
 All scripts for this guide are located in `examples/1_getting_started`. To run a script and launch the OpenVCAD render preview, use:
 `python <SCRIPT_NAME>.py`
@@ -46,7 +75,7 @@ Internally, `pyvcad_rendering.Render(...)` creates a small GUI application and r
 
 Let's start by creating a simple geometric primitive. In OpenVCAD, models are built using `Node` trees, where the leaves are primary shapes like spheres, cones, or prisms.
 
-The `pv.Vec3` class you see below is a thin Python binding around a 3D vector type (`glm::vec3`). You can construct it from three floats (`Vec3(x, y, z)`). In these basic examples, we treat the numeric values as **arbitrary units**; in a real workflow you can decide whether they correspond to millimeters, centimeters, or any other length unit that matches your printer or simulation.
+The `pv.Vec3` class you see below is OpenVCAD's 3D vector type. You can construct it from three floats (`Vec3(x, y, z)`). In these basic examples, we treat the numeric values as **arbitrary units**; in a real workflow you can decide whether they correspond to millimeters, centimeters, or any other length unit that matches your printer or simulation.
 
 ```python
 import pyvcad as pv
@@ -757,6 +786,21 @@ Saving to `.mmd` gives you an editable Mermaid diagram, while `.svg` or `.png` u
 :align: center
 ```
 
+## Transitioning from OpenVCAD 2.x
+
+If you used the OpenVCAD 2.x main branch, the biggest change is the role of volume fractions.
+
+In the older workflow, material behavior was commonly modeled directly as volume fractions on an object. Functional grading tools existed to help define those material mixtures across space. That made sense for early multi-material workflows, but it also made volume fractions feel like the central material abstraction.
+
+In OpenVCAD 3.x attribute modeling, volume fractions are just one attribute type. You can still create `VOLUME_FRACTIONS` fields, and downstream inkjet or simulation workflows can still consume them, but they no longer need to be the first thing you model. You can attach attributes anywhere in the design tree: leaf nodes, composed objects, transformed branches, or parent wrappers.
+
+The practical shift is:
+
+- old pattern: define material volume fractions directly, often through functional grading nodes
+- new pattern: attach the attribute that expresses your intent, then derive or compile the attributes needed by the target workflow
+
+This is why the older functional grading node is obsolete in the attribute-modeling branch. Functional grading is now a general capability of every expression-based attribute. A `MODULUS` gradient, `COLOR_RGBA` gradient, `TEMPERATURE` field, and `VOLUME_FRACTIONS` blend all use the same modeling pattern: attach a field to the node where that field should live.
+
 ---
 
 ## Appendix: Attribute Expressions, Coordinate Systems, and Default Names
@@ -772,7 +816,7 @@ For spatial grading you can use:
 - **Spherical coordinates**: `r`, `theta`, `phis`
 - **Signed distance**: `d` (distance to the implicit surface; useful for boundary layers, fuzzy skins, etc.)
 
-These variables are documented in the core headers (for example in `core-lib/include/libvcad/attributes/float_attribute.h` and `core-lib/include/libvcad/attributes/attribute_modeling_architecture.md`) and are wired through consistently across all expression-based attribute types.
+These variables are available consistently across expression-based attribute types.
 
 ### Attribute Return Types vs. Named Types
 
@@ -783,6 +827,6 @@ Every attribute in OpenVCAD has:
 
 From the renderer's perspective, you can attach attributes with any user-defined names and then select among them in the attribute dropdown; as long as the return type is something the renderer knows how to visualize, it will happily display it.
 
-However, the **compiler layer** (which translates OpenVCAD designs into printable or simulation-ready formats) expects certain standardized attribute names so it can map fields into the correct channels. This is what `pv.DefaultAttributes` provides: a curated set of canonical names plus their expected return types. The full Python reference is in {ref}`Default attribute names and types <pyvcad-default-attribute-names-and-types>`. Implementation details: the Python bindings live in `core-lib/bindings/pyvcad/attributes/default_attributes.h`, and the authoritative C++ definitions (including built-ins and their `Attribute::ReturnType` enums) live in `core-lib/include/libvcad/attributes/default_attributes.h`.
+However, the **compiler layer** (which translates OpenVCAD designs into printable or simulation-ready formats) expects certain standardized attribute names so it can map fields into the correct channels. This is what `pv.DefaultAttributes` provides: a curated set of canonical names plus their expected return types. The full Python reference is in {ref}`Default attribute names and types <pyvcad-default-attribute-names-and-types>`.
 
 When authoring new designs intended for downstream compilers, prefer the names in `pv.DefaultAttributes` (e.g. `DefaultAttributes.MODULUS`, `DefaultAttributes.TEMPERATURE`, `DefaultAttributes.COLOR_RGBA`, `DefaultAttributes.VOLUME_FRACTIONS`, etc.) so that your attribute fields line up with the expectations of printers, slicers, and analysis pipelines that consume OpenVCAD output.

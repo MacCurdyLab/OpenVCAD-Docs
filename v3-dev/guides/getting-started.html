@@ -53,7 +53,7 @@
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Functional Grading Guide" href="gradients.html" />
-    <link rel="prev" title="OpenVCAD 3.0 Internal Beta Guide" href="openvcad-3-beta.html" />
+    <link rel="prev" title="Theory and Motivation" href="theory-and-motivation.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -161,6 +161,7 @@
       <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-guides">
         <li><a class="dropdown-item" href="../install.html">Installation</a></li>
         <li><a class="dropdown-item" href="openvcad-3-beta.html">OpenVCAD 3.0 Beta</a></li>
+        <li><a class="dropdown-item" href="theory-and-motivation.html">Theory and Motivation</a></li>
         <li><a class="dropdown-item active" href="#">Getting Started with OpenVCAD</a></li>
         <li><a class="dropdown-item" href="gradients.html">Functional grading</a></li>
         <li><a class="dropdown-item" href="numba-attributes.html">Python functions for attributes</a></li>
@@ -273,6 +274,7 @@
     <li class="nav-item"><span class="nav-link py-1 fw-bold text-muted small">Guides</span></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../install.html">Installation</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="openvcad-3-beta.html">OpenVCAD 3.0 Beta</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="theory-and-motivation.html">Theory and Motivation</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3 active" href="#">Getting Started with OpenVCAD</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="gradients.html">Functional grading</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="numba-attributes.html">Python functions for attributes</a></li>
@@ -326,6 +328,7 @@
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="openvcad-3-beta.html">OpenVCAD 3.0 Internal Beta Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory-and-motivation.html">Theory and Motivation</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Getting Started with OpenVCAD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="gradients.html">Functional Grading Guide</a></li>
 <li class="toctree-l1"><a class="reference internal" href="numba-attributes.html">Python Functions for Attributes</a></li>
@@ -416,9 +419,8 @@ Current compiler guides:
 - slicer-project
 - simulation-compiler
 -->
-<p>This is the official getting started guide for <strong>OpenVCAD version 3.x.x+</strong> (Attribute Modeling).</p>
-<p>With this release, we have introduced <strong>Attribute Modeling</strong>, a powerful new concept that allows users to implicitly express volumetric compositions using OpenVCAD’s tree structure. This framework enables you to define virtually any object property—such as material density, color, or stiffness—as a continuous gradient.</p>
-<p>Under the hood, OpenVCAD represents your design as an implicit <strong><code class="docutils literal notranslate"><span class="pre">Node</span></code> tree</strong>: leaf nodes define geometry or sampled data (e.g. primitives, meshes, or signed distance fields), while composition nodes (CSG, transforms, shells, maps, etc.) combine and manipulate those leaves. Attributes attach additional <strong>field functions</strong> to this same tree so that, at any point in space, the system can evaluate both the <em>shape</em> (inside/outside) and the <em>attributes</em> (e.g. modulus, color, or volume fractions) in a consistent way.</p>
+<p>This is the practical getting started guide for <strong>OpenVCAD version 3.x.x+</strong> (Attribute Modeling).</p>
+<p>If you are new to OpenVCAD, start with <a class="reference internal" href="theory-and-motivation.html"><span class="std std-doc">Theory and Motivation</span></a> first. That guide explains why OpenVCAD models both geometry and internal attributes. This guide turns that model into code: you will create <code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> designs, attach attributes, and preview the results with <code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code>.</p>
 <section id="what-you-will-learn">
 <h2>What You Will Learn<a class="headerlink" href="#what-you-will-learn" title="Link to this heading">#</a></h2>
 <p>The lessons below provide a comprehensive overview for beginners, covering how to:</p>
@@ -442,6 +444,28 @@ Current compiler guides:
 </div>
 <p>If this prints a version string without raising an exception you are ready to run the examples below.</p>
 </section>
+<section id="the-modeling-mental-model">
+<h2>The Modeling Mental Model<a class="headerlink" href="#the-modeling-mental-model" title="Link to this heading">#</a></h2>
+<p>In OpenVCAD, an object is a composition of two implicit forms:</p>
+<ol class="arabic simple">
+<li><p><strong>Implicit geometric form</strong>: a signed distance field (SDF). Positive values are outside the object, negative values are inside, and zero is the surface.</p></li>
+<li><p><strong>Implicit attribute form</strong>: a collection of named fields attached to that geometry. Attributes can represent values such as temperature, modulus, color, density, Shore hardness, or volume fractions.</p></li>
+</ol>
+<p>Attribute expressions can depend on Cartesian position (<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code>) and on the signed distance <code class="docutils literal notranslate"><span class="pre">d</span></code> returned by the geometry evaluation. That means an attribute can vary across the object, along a build direction, around a radius, or relative to the surface itself.</p>
+<p>As a user, you normally model continuous fields. Sampling those fields into pixels, voxels, slicer settings, meshes, or machine files is handled later by renderers and compilers.</p>
+</section>
+<section id="workflow-overview">
+<h2>Workflow Overview<a class="headerlink" href="#workflow-overview" title="Link to this heading">#</a></h2>
+<p>A single <code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> design can feed multiple downstream workflows. You will mostly use the renderer in this guide because it gives fast interactive feedback, but the same design tree can later go to compiler workflows.</p>
+<p class="guide-figure-label">OpenVCAD workflow</p>
+<img alt="OpenVCAD workflow diagram showing one pyvcad design branching to renderer, FFF, inkjet, and simulation compilers" class="align-center" src="../_images/getting_started_workflow.svg" style="width: 82%;" />
+<p>Detailed compiler behavior lives in the <a class="reference internal" href="compilers/index.html"><span class="std std-doc">Compilers</span></a> guide. The important idea for this tutorial is that you define geometry and attributes once, then choose the downstream consumer that needs those fields.</p>
+</section>
+<section id="attribute-resolvers">
+<h2>Attribute Resolvers<a class="headerlink" href="#attribute-resolvers" title="Link to this heading">#</a></h2>
+<p>Some workflows need attributes that are computed from other attributes. For example, you might model <code class="docutils literal notranslate"><span class="pre">SHORE_HARDNESS</span></code> because that is the design intent, then derive <code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code> for an inkjet compiler or <code class="docutils literal notranslate"><span class="pre">TEMPERATURE</span></code> and <code class="docutils literal notranslate"><span class="pre">FLOW_RATE</span></code> for a filament workflow. OpenVCAD supports that pattern through <code class="docutils literal notranslate"><span class="pre">pv.AttributeModifier</span></code> and <code class="docutils literal notranslate"><span class="pre">pyvcad_attribute_resolver</span></code>.</p>
+<p>This guide only introduces the modeling side. When you are ready to translate design-intent fields into compiler-facing fields, see the <a class="reference internal" href="attribute-resolver.html"><span class="std std-doc">Attribute Modifier and Resolver Guide</span></a>.</p>
+</section>
 <section id="running-the-examples">
 <h2>Running the Examples<a class="headerlink" href="#running-the-examples" title="Link to this heading">#</a></h2>
 <p>All scripts for this guide are located in <code class="docutils literal notranslate"><span class="pre">examples/1_getting_started</span></code>. To run a script and launch the OpenVCAD render preview, use:
@@ -455,7 +479,7 @@ Current compiler guides:
 <section id="lesson-1-hello-world">
 <h2>Lesson 1: Hello World<a class="headerlink" href="#lesson-1-hello-world" title="Link to this heading">#</a></h2>
 <p>Let’s start by creating a simple geometric primitive. In OpenVCAD, models are built using <code class="docutils literal notranslate"><span class="pre">Node</span></code> trees, where the leaves are primary shapes like spheres, cones, or prisms.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">pv.Vec3</span></code> class you see below is a thin Python binding around a 3D vector type (<code class="docutils literal notranslate"><span class="pre">glm::vec3</span></code>). You can construct it from three floats (<code class="docutils literal notranslate"><span class="pre">Vec3(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code>). In these basic examples, we treat the numeric values as <strong>arbitrary units</strong>; in a real workflow you can decide whether they correspond to millimeters, centimeters, or any other length unit that matches your printer or simulation.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">pv.Vec3</span></code> class you see below is OpenVCAD’s 3D vector type. You can construct it from three floats (<code class="docutils literal notranslate"><span class="pre">Vec3(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code>). In these basic examples, we treat the numeric values as <strong>arbitrary units</strong>; in a real workflow you can decide whether they correspond to millimeters, centimeters, or any other length unit that matches your printer or simulation.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
 
@@ -962,6 +986,18 @@ Current compiler guides:
 <p class="guide-figure-label">Master Legend</p>
 <img alt="Master legend for OpenVCAD tree diagrams" class="align-center" src="../_images/tree_visualizer_master_legend.svg" style="width: 65%;" />
 </section>
+<section id="transitioning-from-openvcad-2-x">
+<h2>Transitioning from OpenVCAD 2.x<a class="headerlink" href="#transitioning-from-openvcad-2-x" title="Link to this heading">#</a></h2>
+<p>If you used the OpenVCAD 2.x main branch, the biggest change is the role of volume fractions.</p>
+<p>In the older workflow, material behavior was commonly modeled directly as volume fractions on an object. Functional grading tools existed to help define those material mixtures across space. That made sense for early multi-material workflows, but it also made volume fractions feel like the central material abstraction.</p>
+<p>In OpenVCAD 3.x attribute modeling, volume fractions are just one attribute type. You can still create <code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code> fields, and downstream inkjet or simulation workflows can still consume them, but they no longer need to be the first thing you model. You can attach attributes anywhere in the design tree: leaf nodes, composed objects, transformed branches, or parent wrappers.</p>
+<p>The practical shift is:</p>
+<ul class="simple">
+<li><p>old pattern: define material volume fractions directly, often through functional grading nodes</p></li>
+<li><p>new pattern: attach the attribute that expresses your intent, then derive or compile the attributes needed by the target workflow</p></li>
+</ul>
+<p>This is why the older functional grading node is obsolete in the attribute-modeling branch. Functional grading is now a general capability of every expression-based attribute. A <code class="docutils literal notranslate"><span class="pre">MODULUS</span></code> gradient, <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code> gradient, <code class="docutils literal notranslate"><span class="pre">TEMPERATURE</span></code> field, and <code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code> blend all use the same modeling pattern: attach a field to the node where that field should live.</p>
+</section>
 <hr class="docutils" />
 <section id="appendix-attribute-expressions-coordinate-systems-and-default-names">
 <h2>Appendix: Attribute Expressions, Coordinate Systems, and Default Names<a class="headerlink" href="#appendix-attribute-expressions-coordinate-systems-and-default-names" title="Link to this heading">#</a></h2>
@@ -975,7 +1011,7 @@ Current compiler guides:
 <li><p><strong>Spherical coordinates</strong>: <code class="docutils literal notranslate"><span class="pre">r</span></code>, <code class="docutils literal notranslate"><span class="pre">theta</span></code>, <code class="docutils literal notranslate"><span class="pre">phis</span></code></p></li>
 <li><p><strong>Signed distance</strong>: <code class="docutils literal notranslate"><span class="pre">d</span></code> (distance to the implicit surface; useful for boundary layers, fuzzy skins, etc.)</p></li>
 </ul>
-<p>These variables are documented in the core headers (for example in <code class="docutils literal notranslate"><span class="pre">core-lib/include/libvcad/attributes/float_attribute.h</span></code> and <code class="docutils literal notranslate"><span class="pre">core-lib/include/libvcad/attributes/attribute_modeling_architecture.md</span></code>) and are wired through consistently across all expression-based attribute types.</p>
+<p>These variables are available consistently across expression-based attribute types.</p>
 </section>
 <section id="attribute-return-types-vs-named-types">
 <h3>Attribute Return Types vs. Named Types<a class="headerlink" href="#attribute-return-types-vs-named-types" title="Link to this heading">#</a></h3>
@@ -985,7 +1021,7 @@ Current compiler guides:
 <li><p>A <strong>named type</strong>: a string key that describes <em>what</em> the value represents (e.g. <code class="docutils literal notranslate"><span class="pre">&quot;modulus&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;temperature&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;color_rgba&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;volume_fractions&quot;</span></code>).</p></li>
 </ul>
 <p>From the renderer’s perspective, you can attach attributes with any user-defined names and then select among them in the attribute dropdown; as long as the return type is something the renderer knows how to visualize, it will happily display it.</p>
-<p>However, the <strong>compiler layer</strong> (which translates OpenVCAD designs into printable or simulation-ready formats) expects certain standardized attribute names so it can map fields into the correct channels. This is what <code class="docutils literal notranslate"><span class="pre">pv.DefaultAttributes</span></code> provides: a curated set of canonical names plus their expected return types. The full Python reference is in <a class="reference internal" href="../python-api/pyvcad/attributes.html#pyvcad-default-attribute-names-and-types"><span class="std std-ref">Default attribute names and types</span></a>. Implementation details: the Python bindings live in <code class="docutils literal notranslate"><span class="pre">core-lib/bindings/pyvcad/attributes/default_attributes.h</span></code>, and the authoritative C++ definitions (including built-ins and their <code class="docutils literal notranslate"><span class="pre">Attribute::ReturnType</span></code> enums) live in <code class="docutils literal notranslate"><span class="pre">core-lib/include/libvcad/attributes/default_attributes.h</span></code>.</p>
+<p>However, the <strong>compiler layer</strong> (which translates OpenVCAD designs into printable or simulation-ready formats) expects certain standardized attribute names so it can map fields into the correct channels. This is what <code class="docutils literal notranslate"><span class="pre">pv.DefaultAttributes</span></code> provides: a curated set of canonical names plus their expected return types. The full Python reference is in <a class="reference internal" href="../python-api/pyvcad/attributes.html#pyvcad-default-attribute-names-and-types"><span class="std std-ref">Default attribute names and types</span></a>.</p>
 <p>When authoring new designs intended for downstream compilers, prefer the names in <code class="docutils literal notranslate"><span class="pre">pv.DefaultAttributes</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">DefaultAttributes.MODULUS</span></code>, <code class="docutils literal notranslate"><span class="pre">DefaultAttributes.TEMPERATURE</span></code>, <code class="docutils literal notranslate"><span class="pre">DefaultAttributes.COLOR_RGBA</span></code>, <code class="docutils literal notranslate"><span class="pre">DefaultAttributes.VOLUME_FRACTIONS</span></code>, etc.) so that your attribute fields line up with the expectations of printers, slicers, and analysis pipelines that consume OpenVCAD output.</p>
 </section>
 </section>
@@ -1002,12 +1038,12 @@ Current compiler guides:
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="openvcad-3-beta.html"
+       href="theory-and-motivation.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">OpenVCAD 3.0 Internal Beta Guide</p>
+        <p class="prev-next-title">Theory and Motivation</p>
       </div>
     </a>
     <a class="right-next"
@@ -1040,6 +1076,9 @@ Current compiler guides:
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-will-learn">What You Will Learn</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites-setup">Prerequisites &amp; Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-modeling-mental-model">The Modeling Mental Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#workflow-overview">Workflow Overview</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#attribute-resolvers">Attribute Resolvers</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-examples">Running the Examples</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-1-hello-world">Lesson 1: Hello World</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-2-constructive-solid-geometry-csg">Lesson 2: Constructive Solid Geometry (CSG)</a><ul class="nav section-nav flex-column">
@@ -1062,6 +1101,7 @@ Current compiler guides:
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-8-coordinate-spaces">Lesson 8: Coordinate Spaces</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-9-bringing-it-all-together">Lesson 9: Bringing It All Together</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#visualizing-your-design-tree">Visualizing Your Design Tree</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transitioning-from-openvcad-2-x">Transitioning from OpenVCAD 2.x</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#appendix-attribute-expressions-coordinate-systems-and-default-names">Appendix: Attribute Expressions, Coordinate Systems, and Default Names</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#expression-variables-and-coordinate-systems">Expression Variables and Coordinate Systems</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#attribute-return-types-vs-named-types">Attribute Return Types vs. Named Types</a></li>

@@ -91,6 +91,15 @@ root = cube
 viz.Render(root)
 ```
 
+You can estimate the model volume directly from any node:
+
+```python
+volume_mm3 = cube.volume()
+print("Estimated volume:", volume_mm3, "mm^3")
+```
+
+`volume()` samples the node's signed distance field over its bounding box. If your model units are millimeters, the returned value is in mm^3. For tighter estimates, pass a smaller sample size such as `cube.volume(0.25)`.
+
 The diagram below introduces the basic format used throughout this guide. The dot and arrow at the top show where evaluation enters the tree, and the first example is just a single geometry leaf at the root. Later lessons will wrap that same kind of geometry in composition, transform, and attribute layers.
 
 <p class="guide-figure-label">Tree / DAG Structure</p>
@@ -325,13 +334,13 @@ viz.Render(root)
 </div>
 
 ### Scale
-Scaling multiplies the object size across x, y, and z dimensions.
+Scaling uniformly multiplies the object size across x, y, and z dimensions.
 
-The `pv.Scale` node keeps track of a scale factor per axis. During evaluation, it scales incoming query points by the inverse factor so the child sees its original local coordinate space. This allows you to resize complex subtrees without having to manually adjust attribute expressions or child geometry definitions.
+The `pv.Scale` node keeps track of one positive uniform scale factor. During evaluation, it scales incoming query points by the inverse factor so the child sees its original local coordinate space, then scales the returned signed distance back into world units. This allows you to resize complex subtrees without having to manually adjust attribute expressions or child geometry definitions.
 
 ```python
 cube = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(10, 10, 10))
-scaled_cube = pv.Scale(2.0, 2.0, 2.0, cube)
+scaled_cube = pv.Scale(2.0, cube)
 moved_scaled = pv.Translate(20.0, 0.0, 0.0, scaled_cube)
 root = pv.Union(cube, moved_scaled)
 viz.Render(root)

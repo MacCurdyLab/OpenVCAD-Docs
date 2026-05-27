@@ -74,6 +74,178 @@
     line-height: 1.35;
 }
 
+/* Gallery before/after image comparison */
+.openvcad-gallery {
+    margin: 1.25rem 0 3rem 0;
+}
+
+.openvcad-comparison {
+    --openvcad-comparison-position: 50%;
+    width: 100%;
+    max-width: 1080px;
+    margin: 1.25rem auto 2.5rem auto;
+}
+
+.openvcad-comparison figcaption {
+    margin: 0 0 0.75rem 0;
+    font-size: 1.25rem;
+    font-weight: 650;
+    line-height: 1.3;
+}
+
+.openvcad-comparison-frame {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 5425 / 3256;
+    overflow: hidden;
+    border-radius: 6px;
+    background: #111;
+}
+
+.openvcad-comparison-frame:focus-within {
+    outline: 2px solid #2980b9;
+    outline-offset: 3px;
+}
+
+.openvcad-comparison-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: none !important;
+    user-select: none;
+    pointer-events: none;
+}
+
+.openvcad-comparison-image-before {
+    position: absolute;
+    inset: 0;
+    clip-path: inset(0 calc(100% - var(--openvcad-comparison-position)) 0 0);
+}
+
+.openvcad-comparison-label {
+    position: absolute;
+    top: 0.75rem;
+    z-index: 4;
+    max-width: calc(50% - 1rem);
+    padding: 0.35rem 0.55rem;
+    border-radius: 4px;
+    background: rgba(0, 0, 0, 0.68);
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 650;
+    line-height: 1.2;
+    pointer-events: none;
+}
+
+.openvcad-comparison-label-before {
+    left: 0.75rem;
+}
+
+.openvcad-comparison-label-after {
+    right: 0.75rem;
+    text-align: right;
+}
+
+.openvcad-comparison-control {
+    position: absolute;
+    inset: 0;
+    z-index: 6;
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    opacity: 0;
+    cursor: ew-resize;
+    touch-action: pan-y;
+}
+
+.openvcad-comparison-divider {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: var(--openvcad-comparison-position);
+    z-index: 5;
+    width: 2px;
+    transform: translateX(-50%);
+    background: rgba(255, 255, 255, 0.92);
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.22);
+    pointer-events: none;
+}
+
+.openvcad-comparison-handle {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 2.5rem;
+    height: 2.5rem;
+    transform: translate(-50%, -50%);
+    border: 2px solid #fff;
+    border-radius: 50%;
+    background: rgba(22, 28, 32, 0.78);
+    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.28);
+}
+
+.openvcad-comparison-handle::before,
+.openvcad-comparison-handle::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    width: 0.45rem;
+    height: 0.45rem;
+    border-top: 2px solid #fff;
+    border-left: 2px solid #fff;
+}
+
+.openvcad-comparison-handle::before {
+    left: 0.72rem;
+    transform: translateY(-50%) rotate(-45deg);
+}
+
+.openvcad-comparison-handle::after {
+    right: 0.72rem;
+    transform: translateY(-50%) rotate(135deg);
+}
+
+@media (max-width: 640px) {
+    .openvcad-comparison figcaption {
+        font-size: 1.05rem;
+    }
+
+    .openvcad-comparison-label {
+        top: 0.5rem;
+        max-width: calc(50% - 0.75rem);
+        padding: 0.3rem 0.45rem;
+        font-size: 0.72rem;
+    }
+
+    .openvcad-comparison-label-before {
+        left: 0.5rem;
+    }
+
+    .openvcad-comparison-label-after {
+        right: 0.5rem;
+    }
+
+    .openvcad-comparison-handle {
+        width: 2rem;
+        height: 2rem;
+    }
+
+    .openvcad-comparison-handle::before,
+    .openvcad-comparison-handle::after {
+        width: 0.34rem;
+        height: 0.34rem;
+    }
+
+    .openvcad-comparison-handle::before {
+        left: 0.54rem;
+    }
+
+    .openvcad-comparison-handle::after {
+        right: 0.54rem;
+    }
+}
+
 /* Click-to-enlarge (see openvcad_lightbox.js); PyData main column is #main-content */
 #main-content img {
     cursor: zoom-in;

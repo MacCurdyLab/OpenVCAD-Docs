@@ -14,6 +14,8 @@ There are two separate workflows:
 | -------- | ---------------- | -------------- | -------- |
 | **PrusaSlicer** settings meshes | Scalar planning attributes such as `INFILL_DENSITY`, `FUZZY_SKIN_POINT_DISTANCE`, `LAYER_HEIGHT`, or `PERIMETER_SPEED` | PrusaSlicer-style `.3mf` | Spatially varying slicer planning settings |
 | **PrusaSlicer** virtual extrusion | `TEMPERATURE` with optional companion `FLOW_RATE` | PrusaSlicer-style `.3mf` with logical tools and toolchange G-code | Machine-state changes at region boundaries |
+| **PrusaSlicer** ColorMix color | `COLOR_RGB` | PrusaSlicer-style `.3mf` with ColorMix virtual extruders | Mixed-filament color approximation from design-space colors |
+| **PrusaSlicer** ColorMix material fractions | `VOLUME_FRACTIONS` plus `volume_fraction_materials` | PrusaSlicer-style `.3mf` with ColorMix virtual extruders | Direct material-fraction to filament-slot recipes |
 | **FullSpectrum** color | `COLOR_RGB` | Orca / Bambu-style Full Spectrum `.3mf` | Mixed-filament color approximation from design-space colors |
 | **FullSpectrum** material fractions | `VOLUME_FRACTIONS` plus `volume_fraction_materials` | Orca / Bambu-style Full Spectrum `.3mf` | Direct material-fraction to filament-slot recipes |
 
@@ -41,6 +43,11 @@ prusa_project.3mf
   3D/3dmodel.model
   Metadata/Slic3r_PE.config
   Metadata/Slic3r_PE_model.config
+
+prusa_colormix_project.3mf
+  3D/3dmodel.model
+  Metadata/Slic3r_PE_model.config
+  Metadata/Prusa_Slicer_full_spectrum.json
 
 orca_full_spectrum_project.3mf
   3D/3dmodel.model
@@ -243,6 +250,56 @@ compiler = pvc.PrusaSlicerProjectCompiler(
 </div>
 </div>
 
+### ColorMix
+
+PrusaSlicer ColorMix uses Prusa's FullSpectrum project metadata and `Prusa_Slicer_full_spectrum.json` to define virtual extruders whose IDs start after the physical filament slots. OpenVCAD assigns generated color/material regions to those physical or virtual extruder IDs in the normal Prusa `Slic3r_PE_model.config` metadata.
+
+ColorMix mode is mutually exclusive with the scalar settings-mesh and virtual-extrusion paths. It is selected automatically when the design contains `COLOR_RGB` or `VOLUME_FRACTIONS`, or explicitly with `enable_color_mix=True`.
+
+For `COLOR_RGB`, OpenVCAD uses a device-aware recipe selector. It generates valid Prusa ColorMix recipes from the configured physical filaments, predicts each recipe's apparent color with Prusa's mixer model, and then selects up to `max_palette_size` printable recipes that best cover the sampled design colors. `max_palette_size` counts both direct physical filament colors and virtual mixed recipes. The generated 3MF also includes `Metadata/OpenVCAD_prusa_colormix_report.json`, which records the selected recipes and DeltaE fit summary for inspection.
+
+**Color gradient example (`06_prusa_colormix_color_gradient.py`)**: this example applies a `COLOR_RGB` ramp and writes **`output/prusa_colormix_color_gradient.3mf`**.
+
+```python
+bar.set_attribute(
+    pv.DefaultAttributes.COLOR_RGB,
+    pv.Vec3Attribute(red_expr, green_expr, blue_expr),
+)
+
+compiler = pvc.PrusaSlicerProjectCompiler(
+    root,
+    pv.Vec3(0.25, 0.25, 0.25),
+    out_3mf,
+    enable_color_mix=True,
+    color_mix_recipe_preset="expanded",
+    max_palette_size=10,
+    min_component_percent=15,
+    max_recipe_components=3,
+    region_overlap_mm=0.2,
+)
+```
+
+**Volume-fraction example (`07_prusa_colormix_volume_fractions.py`)**: this example maps OpenVCAD materials directly to physical filament slots and writes **`output/prusa_colormix_volume_fractions.3mf`**.
+
+```python
+compiler = pvc.PrusaSlicerProjectCompiler(
+    root,
+    pv.Vec3(0.25, 0.25, 0.25),
+    out_3mf,
+    enable_color_mix=True,
+    total_physical_extruders=5,
+    color_mix_filaments=[
+        {"slot": 1, "color_hex": "#FF0000"},
+        {"slot": 2, "color_hex": "#0000FF"},
+    ],
+    volume_fraction_materials={"red": 1, "blue": 2},
+    max_palette_size=10,
+    min_component_percent=1,
+    max_recipe_components=3,
+    region_overlap_mm=0.0,
+)
+```
+
 ### Prusa Constructor Options
 
 ```python
@@ -253,6 +310,17 @@ compiler = pvc.PrusaSlicerProjectCompiler(
     num_regions=12,
     printer_profile_path=printer_profile_path,
     filament_profile_path=filament_profile_path,
+    enable_color_mix=False,
+    color_mix_filaments=None,
+    total_physical_extruders=5,
+    color_mix_recipe_preset="expanded",
+    max_palette_size=32,
+    min_component_percent=15,
+    max_recipe_components=3,
+    direct_physical_delta_e=1.0,
+    region_overlap_mm=0.2,
+    volume_fraction_materials={},
+    material_defs_path="",
 )
 compiler.compile()
 ```
@@ -265,6 +333,17 @@ compiler.compile()
 | `num_regions` | Number of value bands for each scalar attribute. More regions preserve more variation but create more sub-volumes. |
 | `printer_profile_path` | PrusaSlicer printer `.ini`. Required when virtual extrusion attributes are present. |
 | `filament_profile_path` | PrusaSlicer filament `.ini`. Required when virtual extrusion attributes are present. |
+| `enable_color_mix` | Explicitly enables Prusa ColorMix mode. `COLOR_RGB` or `VOLUME_FRACTIONS` also selects it automatically. |
+| `color_mix_filaments` | Physical filament slots and colors for ColorMix. Each dictionary may include `slot`, `color_hex`, and `nozzle_diameter_mm`. Empty uses Prusa CMYKW defaults for `COLOR_RGB`: `#0082ad`, `#d10f4f`, `#efd00b`, `#3d3e3d`, `#e6eaef`. |
+| `total_physical_extruders` | Total physical tool slots in PrusaSlicer. Virtual ColorMix extruders start after this count, so unused physical tool IDs can be skipped. Defaults to `5`. |
+| `color_mix_recipe_preset` | Recipe vocabulary for Prusa `COLOR_RGB` ColorMix. `conservative` uses base colors plus 25/75, 50/50, and 75/25 pair blends. `expanded` also includes 50/25/25 three-filament rotations. |
+| `max_palette_size` | Maximum generated ColorMix palette size or volume-fraction recipe-region count. For Prusa `COLOR_RGB`, this counts both physical base colors and virtual mixed recipes. |
+| `min_component_percent` | Minimum component percentage kept in generated ColorMix recipes. |
+| `max_recipe_components` | Maximum physical filaments allowed in one Prusa ColorMix recipe. Prusa ColorMix supports up to 3. |
+| `direct_physical_delta_e` | Legacy setting retained for compatibility. Prusa `COLOR_RGB` ColorMix now chooses physical colors and virtual recipes from the same device-aware candidate set. |
+| `region_overlap_mm` | Small overlap between generated ColorMix sub-parts to avoid visible cracks between separately meshed regions. |
+| `volume_fraction_materials` | Material-name to physical-slot mapping for direct `VOLUME_FRACTIONS` export, such as `{"red": 1, "blue": 2}`. |
+| `material_defs_path` | Optional `MaterialDefs` JSON path. Empty uses the bundled default material definitions. |
 
 ## FullSpectrum
 

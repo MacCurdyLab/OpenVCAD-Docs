@@ -18,6 +18,9 @@
         if (!input) {
             return;
         }
+        if (input.getAttribute('value') !== null) {
+            input.value = input.getAttribute('value');
+        }
         updateComparison(comparison, input);
         input.addEventListener('input', function () {
             updateComparison(comparison, input);

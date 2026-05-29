@@ -22,6 +22,10 @@
             input.value = input.getAttribute('value');
         }
         updateComparison(comparison, input);
+        if (input.getAttribute('data-openvcad-comparison-bound') !== null) {
+            return;
+        }
+        input.setAttribute('data-openvcad-comparison-bound', '');
         input.addEventListener('input', function () {
             updateComparison(comparison, input);
         });
@@ -37,4 +41,7 @@
     } else {
         init();
     }
+
+    window.setTimeout(init, 0);
+    window.addEventListener('pageshow', init);
 })();

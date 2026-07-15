@@ -1,0 +1,1219 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Functional Grading Guide &#8212; OpenVCAD 3.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../_static/openvcad_theme.css?v=a606c010" />
+    <link rel="stylesheet" type="text/css" href="../_static/openvcad_branding.css?v=c43e02c9" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../_static/documentation_options.js?v=110ea713"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'guides/gradients';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../_static/openvcad_lightbox.js?v=e11fca97"></script>
+    <script src="../_static/openvcad_comparison.js?v=0e3a0b21"></script>
+    <link rel="icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Python Functions for Attributes" href="numba-attributes.html" />
+    <link rel="prev" title="Getting Started with OpenVCAD" href="getting-started.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="OpenVCAD - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="OpenVCAD - Home"/>
+  
+  
+    <p class="title logo__title">OpenVCAD Documentation</p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item dropdown active">
+      <button class="btn dropdown-toggle nav-link active" type="button" id="pst-nav-dd-guides" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Guides
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-guides">
+        <li><a class="dropdown-item" href="../install.html">Installation</a></li>
+        <li><a class="dropdown-item" href="openvcad-3-beta.html">OpenVCAD 3.0 Beta</a></li>
+        <li><a class="dropdown-item" href="theory-and-motivation.html">Theory and Motivation</a></li>
+        <li><a class="dropdown-item" href="getting-started.html">Getting Started with OpenVCAD</a></li>
+        <li><a class="dropdown-item active" href="#">Functional grading</a></li>
+        <li><a class="dropdown-item" href="numba-attributes.html">Python functions for attributes</a></li>
+        <li><a class="dropdown-item" href="math-expressions.html">Math expressions</a></li>
+        <li><a class="dropdown-item" href="compilers/index.html">Compilers</a></li>
+        <li><a class="dropdown-item" href="attribute-conflicts.html">Attribute conflict resolution</a></li>
+        <li><a class="dropdown-item" href="attribute-resolver.html">Attribute modifier and resolver</a></li>
+        <li><a class="dropdown-item" href="volumes.html">Working with volumes</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../gallery.html">Gallery</a>
+    </li>
+    <li class="nav-item dropdown">
+      <button class="btn dropdown-toggle nav-link" type="button" id="pst-nav-dd-py" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Python API
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-py">
+        <li><a class="dropdown-item" href="../python-api/pyvcad/index.html">pyvcad module</a></li>
+        <li><a class="dropdown-item" href="../python-api/pyvcad_compilers/index.html">pyvcad_compilers module</a></li>
+        <li><a class="dropdown-item" href="../python-api/pyvcad_rendering/index.html">pyvcad_rendering module</a></li>
+        <li><a class="dropdown-item" href="../python-api/pyvcad_attribute_resolver/index.html">pyvcad_attribute_resolver module</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../cpp-api/index.html">C++ API</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../papers.html">Papers</a>
+    </li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item"><span class="nav-link py-1 fw-bold text-muted small">Guides</span></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../install.html">Installation</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="openvcad-3-beta.html">OpenVCAD 3.0 Beta</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="theory-and-motivation.html">Theory and Motivation</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="getting-started.html">Getting Started with OpenVCAD</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3 active" href="#">Functional grading</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="numba-attributes.html">Python functions for attributes</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="math-expressions.html">Math expressions</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="compilers/index.html">Compilers</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="attribute-conflicts.html">Attribute conflict resolution</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="attribute-resolver.html">Attribute modifier and resolver</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="volumes.html">Working with volumes</a></li>
+    <li class="nav-item"><a class="nav-link py-1" href="../gallery.html">Gallery</a></li>
+    <li class="nav-item"><span class="nav-link py-1 fw-bold text-muted small">Python API</span></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../python-api/pyvcad/index.html">pyvcad module</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../python-api/pyvcad_compilers/index.html">pyvcad_compilers module</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../python-api/pyvcad_rendering/index.html">pyvcad_rendering module</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../python-api/pyvcad_attribute_resolver/index.html">pyvcad_attribute_resolver module</a></li>
+    <li class="nav-item"><a class="nav-link py-1" href="../cpp-api/index.html">C++ API</a></li>
+    <li class="nav-item"><a class="nav-link py-1" href="../papers.html">Papers</a></li>
+  </ul>
+</nav>
+</div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="openvcad-3-beta.html">OpenVCAD 3.0 Internal Beta Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory-and-motivation.html">Theory and Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Functional Grading Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numba-attributes.html">Python Functions for Attributes</a></li>
+<li class="toctree-l1"><a class="reference internal" href="math-expressions.html">Math expressions in OpenVCAD</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="compilers/index.html">Compilers</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="compilers/material-inkjet.html">Material Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/color-inkjet.html">Color Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/vat-photo.html">VAT Photo Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/slicer-project.html">Slicer Project Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/simulation-compiler.html">Simulation Compiler</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="attribute-conflicts.html">Attribute Conflict Resolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attribute-resolver.html">Attribute Modifier and Resolver Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="volumes.html">Working with Volumes in OpenVCAD</a></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Guides</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Functional Grading Guide</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="functional-grading-guide">
+<h1>Functional Grading Guide<a class="headerlink" href="#functional-grading-guide" title="Link to this heading">#</a></h1>
+<!--
+Build dependency sentinel for guide sidebar compiler membership.
+Guide pages that render the shared Guides sidebar include this file so
+changes to the compiler-guide set force those pages to rebuild on
+incremental Sphinx runs.
+
+Current compiler guides:
+- material-inkjet
+- color-inkjet
+- vat-photo
+- slicer-project
+- simulation-compiler
+-->
+<p>This guide is a practical reference for defining <strong>spatial gradients</strong> in OpenVCAD. Gradients are the core mechanism for creating functionally graded designs — parts whose material properties, colors, or compositions change continuously through space.</p>
+<p>This guide stays focused on the <strong>expression-string</strong> workflow because it is the shortest way to build many common gradients. If you want to write gradients as Python functions instead, annotate them with <strong>Numba <code class="docutils literal notranslate"><span class="pre">&#64;cfunc</span></code></strong> and use the <a class="reference internal" href="numba-attributes.html"><span class="std std-doc">Python functions for attributes guide</span></a>.</p>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
+<p>This guide assumes you have completed the <a class="reference internal" href="getting-started.html"><span class="std std-doc">Getting Started Guide</span></a>, in particular:</p>
+<ul class="simple">
+<li><p><strong>Lesson 4</strong> (Attributes / <code class="docutils literal notranslate"><span class="pre">FloatAttribute</span></code>)</p></li>
+<li><p><strong>Lesson 5</strong> (Colors / <code class="docutils literal notranslate"><span class="pre">Vec4Attribute</span></code>)</p></li>
+<li><p><strong>Lesson 6</strong> (Volume Fractions / <code class="docutils literal notranslate"><span class="pre">VolumeFractionsAttribute</span></code>)</p></li>
+</ul>
+<p>If you have not worked through those lessons, please do so first. They introduce the attribute system and show how constant and simple gradient expressions are attached to geometry.</p>
+<p>For the canonical attribute name strings (<code class="docutils literal notranslate"><span class="pre">MODULUS</span></code>, <code class="docutils literal notranslate"><span class="pre">DENSITY</span></code>, <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code>, <code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code>, etc.) and their <code class="docutils literal notranslate"><span class="pre">*_TYPE</span></code> helpers, see <a class="reference internal" href="../python-api/pyvcad/attributes.html#pyvcad-default-attribute-names-and-types"><span class="std std-ref">Default attribute names and types</span></a> in the Python API.</p>
+</section>
+<section id="setup">
+<h2>Setup<a class="headerlink" href="#setup" title="Link to this heading">#</a></h2>
+<p>All scripts in this guide use <strong>matplotlib</strong> and <strong>numpy</strong> to plot the gradient functions alongside the 3D renders. Install them if you haven’t already:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>matplotlib<span class="w"> </span>numpy
+</pre></div>
+</div>
+</section>
+<section id="running-the-examples">
+<h2>Running the Examples<a class="headerlink" href="#running-the-examples" title="Link to this heading">#</a></h2>
+<p>Scripts are located in <code class="docutils literal notranslate"><span class="pre">examples/2_gradients/</span></code>. Run any script directly:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>01_linear_gradients.py
+</pre></div>
+</div>
+<p>Each script will:</p>
+<ol class="arabic simple">
+<li><p>Open the interactive OpenVCAD render preview (close the window to continue).</p></li>
+<li><p>Display a matplotlib plot of the gradient expressions used.</p></li>
+</ol>
+<blockquote>
+<div><p><strong>Note:</strong> To view an attribute in the render window, select it from <strong>Object -&gt; Selected Attribute</strong>.</p>
+</div></blockquote>
+</section>
+<hr class="docutils" />
+<section id="building-parametric-expressions-with-python-f-strings">
+<h2>Building Parametric Expressions with Python f-Strings<a class="headerlink" href="#building-parametric-expressions-with-python-f-strings" title="Link to this heading">#</a></h2>
+<p>All gradient expressions in OpenVCAD are <strong>strings</strong> that get compiled at runtime. To make your designs parametric, you can use Python f-strings to inject variable values into expression strings:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">slope</span> <span class="o">=</span> <span class="mf">0.18</span>
+<span class="n">offset</span> <span class="o">=</span> <span class="mf">5.5</span>
+<span class="n">expr</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">slope</span><span class="si">}</span><span class="s1"> * z + </span><span class="si">{</span><span class="n">offset</span><span class="si">}</span><span class="s1">&#39;</span>   <span class="c1"># becomes: &#39;0.18 * z + 5.5&#39;</span>
+</pre></div>
+</div>
+<p>A few tips:</p>
+<ul class="simple">
+<li><p><strong>Numeric formatting</strong>: Use <code class="docutils literal notranslate"><span class="pre">f'{val:.4f}'</span></code> to control decimal places when precision matters.</p></li>
+<li><p><strong>Curly braces</strong>: The <code class="docutils literal notranslate"><span class="pre">{variable}</span></code> syntax is replaced by the variable’s value. Everything outside braces is literal.</p></li>
+<li><p><strong>Mixing variables</strong>: You can combine Python parameters with OpenVCAD coordinate variables freely: <code class="docutils literal notranslate"><span class="pre">f'{amp}</span> <span class="pre">*</span> <span class="pre">sin({freq}</span> <span class="pre">*</span> <span class="pre">x)'</span></code>.</p></li>
+</ul>
+<p>For the full list of available math operators, functions (<code class="docutils literal notranslate"><span class="pre">sin</span></code>, <code class="docutils literal notranslate"><span class="pre">exp</span></code>, <code class="docutils literal notranslate"><span class="pre">clamp</span></code>, etc.), and coordinate variables, see <a class="reference internal" href="math-expressions.html"><span class="std std-doc">Math expressions in OpenVCAD</span></a>.</p>
+</section>
+<hr class="docutils" />
+<section id="coordinate-systems-at-a-glance">
+<h2>Coordinate Systems at a Glance<a class="headerlink" href="#coordinate-systems-at-a-glance" title="Link to this heading">#</a></h2>
+<p>Every expression can use any combination of these spatial variables:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>System</p></th>
+<th class="head"><p>Variables</p></th>
+<th class="head"><p>Description</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Cartesian</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code></p></td>
+<td><p>Standard axes</p></td>
+</tr>
+<tr class="row-odd"><td><p>Cylindrical</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">rho</span></code>, <code class="docutils literal notranslate"><span class="pre">phic</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code></p></td>
+<td><p>Distance from Z axis, azimuthal angle, height</p></td>
+</tr>
+<tr class="row-even"><td><p>Spherical</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">r</span></code>, <code class="docutils literal notranslate"><span class="pre">theta</span></code>, <code class="docutils literal notranslate"><span class="pre">phis</span></code></p></td>
+<td><p>Distance from origin, azimuthal angle, polar angle</p></td>
+</tr>
+<tr class="row-odd"><td><p>Signed Distance</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">d</span></code></p></td>
+<td><p>Distance to the object surface (negative = inside, 0 = surface, positive = outside)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>You can mix variables from different systems in a single expression. See <a class="reference internal" href="math-expressions.html"><span class="std std-doc">Math expressions in OpenVCAD</span></a> for complete definitions and all available operators.</p>
+</section>
+<hr class="docutils" />
+<section id="lesson-1-linear-gradients">
+<h2>Lesson 1: Linear Gradients<a class="headerlink" href="#lesson-1-linear-gradients" title="Link to this heading">#</a></h2>
+<p>The simplest gradient is a linear function of a single spatial variable. The general form is:</p>
+<p><strong>f(x) = slope * x + offset</strong></p>
+<p>This maps any Cartesian axis to a linearly varying attribute value. A <strong>power-law</strong> gradient uses the form <strong>(normalized_position)^n</strong> to create a non-uniform ramp where the exponent <code class="docutils literal notranslate"><span class="pre">n</span></code> controls how quickly the value grows.</p>
+<p>In this example, both gradients are attached to the same rectangular prism along the X axis:</p>
+<ul class="simple">
+<li><p><strong>Modulus</strong> (linear): maps x in [-20, +20] to [1, 10] MPa</p></li>
+<li><p><strong>Density</strong> (power law with n=3): same range, but the value stays low for most of the span and rises sharply near the end</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">length</span> <span class="o">=</span> <span class="mf">40.0</span>
+<span class="n">width</span> <span class="o">=</span> <span class="mf">10.0</span>
+<span class="n">height</span> <span class="o">=</span> <span class="mf">10.0</span>
+<span class="n">half_len</span> <span class="o">=</span> <span class="n">length</span> <span class="o">/</span> <span class="mf">2.0</span>
+
+<span class="c1"># Linear: maps x in [-20, +20] to [1, 10]</span>
+<span class="n">mod_min</span> <span class="o">=</span> <span class="mf">1.0</span>
+<span class="n">mod_max</span> <span class="o">=</span> <span class="mf">10.0</span>
+<span class="n">slope</span> <span class="o">=</span> <span class="p">(</span><span class="n">mod_max</span> <span class="o">-</span> <span class="n">mod_min</span><span class="p">)</span> <span class="o">/</span> <span class="n">length</span>
+<span class="n">offset</span> <span class="o">=</span> <span class="p">(</span><span class="n">mod_max</span> <span class="o">+</span> <span class="n">mod_min</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+<span class="n">modulus_expr</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">slope</span><span class="si">}</span><span class="s1">*x + </span><span class="si">{</span><span class="n">offset</span><span class="si">}</span><span class="s1">&#39;</span>
+
+<span class="c1"># Power law: same range, exponent n=3</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mf">3.0</span>
+<span class="n">power_law_expr</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;(</span><span class="si">{</span><span class="n">mod_min</span><span class="si">}</span><span class="s1"> + (</span><span class="si">{</span><span class="n">mod_max</span><span class="si">}</span><span class="s1"> - </span><span class="si">{</span><span class="n">mod_min</span><span class="si">}</span><span class="s1">) * ((x + </span><span class="si">{</span><span class="n">half_len</span><span class="si">}</span><span class="s1">) / </span><span class="si">{</span><span class="n">length</span><span class="si">}</span><span class="s1">) ^ </span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s1">)&#39;</span>
+
+<span class="n">prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">))</span>
+<span class="n">prism</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">modulus_expr</span><span class="p">))</span>
+<span class="n">prism</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">DENSITY</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">power_law_expr</span><span class="p">))</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">prism</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-stack">
+<div class="guide-figure-plot">
+<p class="guide-figure-label">Plot</p>
+<img src="images/01_linear_plot.png" alt="Linear vs Power Law" width="100%">
+</div>
+<div class="guide-figure-renders">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus)</p>
+<img src="images/01_linear_gradients_modulus.webp" alt="Linear Modulus" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (density)</p>
+<img src="images/01_linear_gradients_density.webp" alt="Power Law Density" width="100%">
+</div>
+</div>
+</div>
+<p>If you want to build the same linear modulus gradient with a Python function instead of an expression string, the Numba version is still short:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numba</span><span class="w"> </span><span class="kn">import</span> <span class="n">cfunc</span><span class="p">,</span> <span class="n">types</span>
+
+<span class="n">length</span> <span class="o">=</span> <span class="mf">40.0</span>
+<span class="n">half_len</span> <span class="o">=</span> <span class="n">length</span> <span class="o">/</span> <span class="mf">2.0</span>
+
+<span class="nd">@cfunc</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">modulus_gradient</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
+    <span class="k">return</span> <span class="mf">1.0</span> <span class="o">+</span> <span class="mf">9.0</span> <span class="o">*</span> <span class="p">((</span><span class="n">x</span> <span class="o">+</span> <span class="n">half_len</span><span class="p">)</span> <span class="o">/</span> <span class="n">length</span><span class="p">)</span>
+
+<span class="n">prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">prism</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">modulus_gradient</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>For a complete walkthrough covering all three attribute types, see the <a class="reference internal" href="numba-attributes.html"><span class="std std-doc">Python functions for attributes guide</span></a>.</p>
+</section>
+<hr class="docutils" />
+<section id="lesson-2-non-linear-gradients">
+<h2>Lesson 2: Non-Linear Gradients<a class="headerlink" href="#lesson-2-non-linear-gradients" title="Link to this heading">#</a></h2>
+<p>Non-linear gradients provide smooth transitions, bell-shaped profiles, and exponential falloffs that are common in engineering applications. This example attaches three different non-linear gradients to the same prism:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Gradient</p></th>
+<th class="head"><p>Expression</p></th>
+<th class="head"><p>Attribute</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Sigmoid</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">min</span> <span class="pre">+</span> <span class="pre">(max</span> <span class="pre">-</span> <span class="pre">min)</span> <span class="pre">/</span> <span class="pre">(1</span> <span class="pre">+</span> <span class="pre">exp(-k</span> <span class="pre">*</span> <span class="pre">x))</span></code></p></td>
+<td><p>Modulus</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Gaussian</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">*</span> <span class="pre">exp(-(x^2)</span> <span class="pre">/</span> <span class="pre">(2</span> <span class="pre">*</span> <span class="pre">sigma^2))</span></code></p></td>
+<td><p>Temperature</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Exponential Decay</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">A</span> <span class="pre">*</span> <span class="pre">exp(-rate</span> <span class="pre">*</span> <span class="pre">(x</span> <span class="pre">+</span> <span class="pre">half_len))</span></code></p></td>
+<td><p>Density</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The <strong>sigmoid</strong> creates a smooth step transition — useful for transitioning between two material regions without a hard boundary. The steepness parameter <code class="docutils literal notranslate"><span class="pre">k</span></code> controls how sharp the transition is.</p>
+<p>The <strong>Gaussian</strong> creates a bell-curve peak centered at the origin — useful for localized reinforcement or heating profiles.</p>
+<p>The <strong>exponential decay</strong> starts high and drops off — useful for modeling diffusion or attenuation from a surface.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">length</span> <span class="o">=</span> <span class="mf">50.0</span>
+<span class="n">half_len</span> <span class="o">=</span> <span class="n">length</span> <span class="o">/</span> <span class="mf">2.0</span>
+
+<span class="c1"># Sigmoid: smooth step along X</span>
+<span class="n">k</span> <span class="o">=</span> <span class="mf">0.2</span>
+<span class="n">sig_min</span><span class="p">,</span> <span class="n">sig_max</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">10.0</span>
+<span class="n">sigmoid_expr</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">sig_min</span><span class="si">}</span><span class="s1"> + (</span><span class="si">{</span><span class="n">sig_max</span><span class="si">}</span><span class="s1"> - </span><span class="si">{</span><span class="n">sig_min</span><span class="si">}</span><span class="s1">) / (1 + exp(-</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s1"> * x))&#39;</span>
+
+<span class="c1"># Gaussian: bell curve centered at origin</span>
+<span class="n">amplitude</span><span class="p">,</span> <span class="n">sigma</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">10.0</span>
+<span class="n">gaussian_expr</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">amplitude</span><span class="si">}</span><span class="s1"> * exp(-(x^2) / (2 * </span><span class="si">{</span><span class="n">sigma</span><span class="si">}</span><span class="s1">^2))&#39;</span>
+
+<span class="c1"># Exponential decay from left edge</span>
+<span class="n">decay_rate</span><span class="p">,</span> <span class="n">exp_amplitude</span> <span class="o">=</span> <span class="mf">0.06</span><span class="p">,</span> <span class="mf">10.0</span>
+<span class="n">exponential_expr</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">exp_amplitude</span><span class="si">}</span><span class="s1"> * exp(-</span><span class="si">{</span><span class="n">decay_rate</span><span class="si">}</span><span class="s1"> * (x + </span><span class="si">{</span><span class="n">half_len</span><span class="si">}</span><span class="s1">))&#39;</span>
+
+<span class="n">prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">prism</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">sigmoid_expr</span><span class="p">))</span>
+<span class="n">prism</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">TEMPERATURE</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">gaussian_expr</span><span class="p">))</span>
+<span class="n">prism</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">DENSITY</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">exponential_expr</span><span class="p">))</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">prism</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-stack">
+<div class="guide-figure-plot">
+<p class="guide-figure-label">Plot</p>
+<img src="images/02_nonlinear_plot.png" alt="Non-Linear Gradients" width="100%">
+</div>
+<div class="guide-figure-renders">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus — sigmoid)</p>
+<img src="images/02_nonlinear_gradients_modulus.webp" alt="Sigmoid Modulus" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (temperature — Gaussian)</p>
+<img src="images/02_nonlinear_gradients_temperature.webp" alt="Gaussian Temperature" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (density — exponential)</p>
+<img src="images/02_nonlinear_gradients_density.webp" alt="Exponential Density" width="100%">
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="lesson-3-periodic-gradients">
+<h2>Lesson 3: Periodic Gradients<a class="headerlink" href="#lesson-3-periodic-gradients" title="Link to this heading">#</a></h2>
+<p>Periodic gradients use trigonometric functions to create oscillating patterns. They are useful for alternating material layers, wave-like stiffness profiles, and decorative color bands.</p>
+<p>This example applies two periodic gradients to a rectangular prism:</p>
+<ul class="simple">
+<li><p><strong>Sinusoidal modulus</strong>: oscillates along X with a base value and amplitude</p></li>
+<li><p><strong>Color bands</strong>: uses phase-shifted sine waves on the red and blue channels to create alternating stripes</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">length</span> <span class="o">=</span> <span class="mf">50.0</span>
+<span class="n">half_len</span> <span class="o">=</span> <span class="n">length</span> <span class="o">/</span> <span class="mf">2.0</span>
+
+<span class="c1"># Sinusoidal modulus</span>
+<span class="n">frequency</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">mod_base</span><span class="p">,</span> <span class="n">mod_amplitude</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">4.0</span>
+<span class="n">sin_expr</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mod_base</span><span class="si">}</span><span class="s1"> + </span><span class="si">{</span><span class="n">mod_amplitude</span><span class="si">}</span><span class="s1"> * sin(</span><span class="si">{</span><span class="n">frequency</span><span class="si">}</span><span class="s1"> * x)&#39;</span>
+
+<span class="c1"># Color bands using phase-shifted sine</span>
+<span class="n">color_freq</span> <span class="o">=</span> <span class="mf">0.8</span>
+<span class="n">r_expr</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;0.5 * sin(</span><span class="si">{</span><span class="n">color_freq</span><span class="si">}</span><span class="s1"> * x) + 0.5&#39;</span>
+<span class="n">g_expr</span> <span class="o">=</span> <span class="s1">&#39;0.2&#39;</span>
+<span class="n">b_expr</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;0.5 * sin(</span><span class="si">{</span><span class="n">color_freq</span><span class="si">}</span><span class="s1"> * x + 3.14159) + 0.5&#39;</span>
+<span class="n">a_expr</span> <span class="o">=</span> <span class="s1">&#39;1.0&#39;</span>
+
+<span class="n">prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">length</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">prism</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">sin_expr</span><span class="p">))</span>
+<span class="n">color_attr</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec4Attribute</span><span class="p">(</span><span class="n">r_expr</span><span class="p">,</span> <span class="n">g_expr</span><span class="p">,</span> <span class="n">b_expr</span><span class="p">,</span> <span class="n">a_expr</span><span class="p">)</span>
+<span class="n">prism</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span> <span class="n">color_attr</span><span class="p">)</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">prism</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-stack">
+<div class="guide-figure-plot">
+<p class="guide-figure-label">Plot</p>
+<img src="images/03_periodic_plot.png" alt="Periodic Gradients" width="100%">
+</div>
+<div class="guide-figure-renders">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus)</p>
+<img src="images/03_periodic_gradients_modulus.webp" alt="Sinusoidal Modulus" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (color)</p>
+<img src="images/03_periodic_gradients_color_rgba.webp" alt="Periodic Color Bands" width="100%">
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="lesson-4-multi-axis-gradients">
+<h2>Lesson 4: Multi-Axis Gradients<a class="headerlink" href="#lesson-4-multi-axis-gradients" title="Link to this heading">#</a></h2>
+<p>Gradients can be functions of two or more spatial variables simultaneously. This creates 2D patterns across the surface of an object.</p>
+<p>This example uses a flat square slab and applies:</p>
+<ul class="simple">
+<li><p><strong>Diagonal color gradient</strong>: <code class="docutils literal notranslate"><span class="pre">f(x,</span> <span class="pre">y)</span> <span class="pre">=</span> <span class="pre">(x</span> <span class="pre">+</span> <span class="pre">y)</span></code> normalized to [0, 1], producing a corner-to-corner color sweep</p></li>
+<li><p><strong>Radial modulus</strong>: <code class="docutils literal notranslate"><span class="pre">sqrt(x^2</span> <span class="pre">+</span> <span class="pre">y^2)</span></code> normalized, producing a bull’s-eye pattern from center to edges</p></li>
+<li><p><strong>Radial volume fractions</strong>: two-material blend that transitions from one material at the center to another at the edges</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+
+<span class="n">side</span> <span class="o">=</span> <span class="mf">40.0</span>
+<span class="n">half_side</span> <span class="o">=</span> <span class="n">side</span> <span class="o">/</span> <span class="mf">2.0</span>
+<span class="n">max_rho</span> <span class="o">=</span> <span class="n">half_side</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+
+<span class="c1"># Diagonal color: (x + y) normalized</span>
+<span class="n">diag_r</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;clamp((x + y + </span><span class="si">{</span><span class="n">side</span><span class="si">}</span><span class="s1">) / (</span><span class="si">{</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">side</span><span class="si">}</span><span class="s1">), 0, 1)&#39;</span>
+<span class="n">diag_g</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;1.0 - clamp((x + y + </span><span class="si">{</span><span class="n">side</span><span class="si">}</span><span class="s1">) / (</span><span class="si">{</span><span class="mi">2</span><span class="w"> </span><span class="o">*</span><span class="w"> </span><span class="n">side</span><span class="si">}</span><span class="s1">), 0, 1)&#39;</span>
+
+<span class="c1"># Radial modulus from center</span>
+<span class="n">radial_expr</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;clamp(sqrt(x^2 + y^2) / </span><span class="si">{</span><span class="n">max_rho</span><span class="si">}</span><span class="s1">, 0, 1)&#39;</span>
+
+<span class="c1"># Volume fractions: radial blend</span>
+<span class="n">vf_a</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;clamp(sqrt(x^2 + y^2) / </span><span class="si">{</span><span class="n">half_side</span><span class="si">}</span><span class="s1">, 0, 1)&#39;</span>
+<span class="n">vf_b</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;1.0 - clamp(sqrt(x^2 + y^2) / </span><span class="si">{</span><span class="n">half_side</span><span class="si">}</span><span class="s1">, 0, 1)&#39;</span>
+
+<span class="n">slab</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">side</span><span class="p">,</span> <span class="n">side</span><span class="p">,</span> <span class="mi">10</span><span class="p">))</span>
+<span class="n">slab</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec4Attribute</span><span class="p">(</span><span class="n">diag_r</span><span class="p">,</span> <span class="n">diag_g</span><span class="p">,</span> <span class="s1">&#39;0.3&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0&#39;</span><span class="p">))</span>
+<span class="n">slab</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">radial_expr</span><span class="p">))</span>
+<span class="n">slab</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([</span>
+        <span class="p">(</span><span class="n">vf_a</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)),</span>
+        <span class="p">(</span><span class="n">vf_b</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">))</span>
+    <span class="p">]))</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">slab</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-stack">
+<div class="guide-figure-plot">
+<p class="guide-figure-label">Plot (2D heatmaps)</p>
+<img src="images/04_multiaxis_plot.png" alt="Multi-Axis Gradients" width="100%">
+</div>
+<div class="guide-figure-renders">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (color — diagonal)</p>
+<img src="images/04_multiaxis_gradients_color_rgba.webp" alt="Diagonal Color" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus — radial)</p>
+<img src="images/04_multiaxis_gradients_modulus.webp" alt="Radial Modulus" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (volume fractions — radial)</p>
+<img src="images/04_multiaxis_gradients_volume_fractions.webp" alt="Radial Volume Fractions" width="100%">
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="lesson-5-signed-distance-gradients">
+<h2>Lesson 5: Signed-Distance Gradients<a class="headerlink" href="#lesson-5-signed-distance-gradients" title="Link to this heading">#</a></h2>
+<p>The special variable <code class="docutils literal notranslate"><span class="pre">d</span></code> represents the <strong>signed distance</strong> to the object’s implicit surface:</p>
+<ul class="simple">
+<li><p><strong>d &lt; 0</strong>: inside the object</p></li>
+<li><p><strong>d = 0</strong>: on the surface</p></li>
+<li><p><strong>d &gt; 0</strong>: outside the object (not sampled during rendering)</p></li>
+</ul>
+<p>This makes <code class="docutils literal notranslate"><span class="pre">d</span></code> ideal for creating <strong>surface-following</strong> gradients — stiff skins, colored shells, or material transitions that conform to the object’s shape regardless of its geometry.</p>
+<p>This example applies three <code class="docutils literal notranslate"><span class="pre">d</span></code>-based gradients to a sphere:</p>
+<ul class="simple">
+<li><p><strong>Skin modulus</strong>: exponential decay from surface inward — high stiffness at the shell, soft in the core</p></li>
+<li><p><strong>Shell color</strong>: red on the surface transitioning to blue in the interior</p></li>
+<li><p><strong>Volume fractions</strong>: stiff material at the skin, soft material in the core</p></li>
+</ul>
+<blockquote>
+<div><p><strong>Note:</strong> The renders below show a clipped cross-section to reveal the internal gradient.</p>
+</div></blockquote>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">radius</span> <span class="o">=</span> <span class="mf">15.0</span>
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+
+<span class="c1"># Skin modulus: high at surface, decays inward</span>
+<span class="n">skin_thickness</span> <span class="o">=</span> <span class="mf">3.0</span>
+<span class="n">skin_min</span><span class="p">,</span> <span class="n">skin_max</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">10.0</span>
+<span class="n">skin_expr</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">skin_min</span><span class="si">}</span><span class="s1"> + (</span><span class="si">{</span><span class="n">skin_max</span><span class="si">}</span><span class="s1"> - </span><span class="si">{</span><span class="n">skin_min</span><span class="si">}</span><span class="s1">) * exp(d / </span><span class="si">{</span><span class="n">skin_thickness</span><span class="si">}</span><span class="s1">)&#39;</span>
+
+<span class="c1"># Shell color: red at surface, blue in core</span>
+<span class="n">shell_t</span> <span class="o">=</span> <span class="mf">2.0</span>
+<span class="n">shell_r</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;clamp(1.0 + d / </span><span class="si">{</span><span class="n">shell_t</span><span class="si">}</span><span class="s1">, 0, 1)&#39;</span>
+<span class="n">shell_b</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;clamp(-d / </span><span class="si">{</span><span class="n">shell_t</span><span class="si">}</span><span class="s1">, 0, 1)&#39;</span>
+
+<span class="c1"># Volume fractions: skin vs core</span>
+<span class="n">vf_skin</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;clamp(1.0 + d / </span><span class="si">{</span><span class="n">skin_thickness</span><span class="si">}</span><span class="s1">, 0, 1)&#39;</span>
+<span class="n">vf_core</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;1.0 - clamp(1.0 + d / </span><span class="si">{</span><span class="n">skin_thickness</span><span class="si">}</span><span class="s1">, 0, 1)&#39;</span>
+
+<span class="n">sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">radius</span><span class="p">)</span>
+<span class="n">sphere</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">skin_expr</span><span class="p">))</span>
+<span class="n">sphere</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec4Attribute</span><span class="p">(</span><span class="n">shell_r</span><span class="p">,</span> <span class="s1">&#39;0.1&#39;</span><span class="p">,</span> <span class="n">shell_b</span><span class="p">,</span> <span class="s1">&#39;1.0&#39;</span><span class="p">))</span>
+<span class="n">sphere</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([</span>
+        <span class="p">(</span><span class="n">vf_skin</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)),</span>
+        <span class="p">(</span><span class="n">vf_core</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">))</span>
+    <span class="p">]))</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">sphere</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-stack">
+<div class="guide-figure-plot">
+<p class="guide-figure-label">Plot</p>
+<img src="images/05_signed_distance_plot.png" alt="Signed Distance Gradients" width="100%">
+</div>
+<div class="guide-figure-renders">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus — clipped)</p>
+<img src="images/05_signed_distance_gradients_modulus.webp" alt="Skin Modulus" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (color — clipped)</p>
+<img src="images/05_signed_distance_gradients_color_rgba.webp" alt="Shell Color" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (volume fractions — clipped)</p>
+<img src="images/05_signed_distance_gradients_volume_fractions.webp" alt="Skin Volume Fractions" width="100%">
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="lesson-6-cylindrical-coordinate-gradients">
+<h2>Lesson 6: Cylindrical Coordinate Gradients<a class="headerlink" href="#lesson-6-cylindrical-coordinate-gradients" title="Link to this heading">#</a></h2>
+<p>Cylindrical coordinates are natural for objects with rotational symmetry about the Z axis. The key variables are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">rho</span></code> — radial distance from the Z axis</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">phic</span></code> — azimuthal angle (radians, -pi to +pi)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">z</span></code> — height (same as Cartesian z)</p></li>
+</ul>
+<p>This example applies gradients to a cylinder:</p>
+<ul class="simple">
+<li><p><strong>Radial modulus</strong>: stiffness increases linearly from center (<code class="docutils literal notranslate"><span class="pre">rho=0</span></code>) to edge (<code class="docutils literal notranslate"><span class="pre">rho=R</span></code>)</p></li>
+<li><p><strong>Angular color</strong>: a color sweep around the circumference using <code class="docutils literal notranslate"><span class="pre">phic</span></code></p></li>
+<li><p><strong>Radial volume fractions</strong>: two-material blend from core to edge</p></li>
+</ul>
+<blockquote>
+<div><p><strong>Note:</strong> The modulus and volume fraction renders below show a clipped cross-section to reveal the internal radial gradient.</p>
+</div></blockquote>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">cyl_radius</span> <span class="o">=</span> <span class="mf">15.0</span>
+<span class="n">cyl_height</span> <span class="o">=</span> <span class="mf">30.0</span>
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+
+<span class="c1"># Radial modulus</span>
+<span class="n">mod_min</span><span class="p">,</span> <span class="n">mod_max</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">10.0</span>
+<span class="n">radial_expr</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mod_min</span><span class="si">}</span><span class="s1"> + (</span><span class="si">{</span><span class="n">mod_max</span><span class="si">}</span><span class="s1"> - </span><span class="si">{</span><span class="n">mod_min</span><span class="si">}</span><span class="s1">) * (rho / </span><span class="si">{</span><span class="n">cyl_radius</span><span class="si">}</span><span class="s1">)&#39;</span>
+
+<span class="c1"># Angular color sweep</span>
+<span class="n">r_expr</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;clamp((phic + 3.14159) / (2 * 3.14159), 0, 1)&#39;</span>
+<span class="n">g_expr</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;clamp(1.0 - (phic + 3.14159) / (2 * 3.14159), 0, 1)&#39;</span>
+
+<span class="c1"># Volume fractions: radial blend</span>
+<span class="n">vf_edge</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;clamp(rho / </span><span class="si">{</span><span class="n">cyl_radius</span><span class="si">}</span><span class="s1">, 0, 1)&#39;</span>
+<span class="n">vf_core</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;1.0 - clamp(rho / </span><span class="si">{</span><span class="n">cyl_radius</span><span class="si">}</span><span class="s1">, 0, 1)&#39;</span>
+
+<span class="n">cylinder</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Cylinder</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">cyl_radius</span><span class="p">,</span> <span class="n">cyl_height</span><span class="p">)</span>
+<span class="n">cylinder</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">radial_expr</span><span class="p">))</span>
+<span class="n">cylinder</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec4Attribute</span><span class="p">(</span><span class="n">r_expr</span><span class="p">,</span> <span class="n">g_expr</span><span class="p">,</span> <span class="s1">&#39;0.3&#39;</span><span class="p">,</span> <span class="s1">&#39;1.0&#39;</span><span class="p">))</span>
+<span class="n">cylinder</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([</span>
+        <span class="p">(</span><span class="n">vf_edge</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)),</span>
+        <span class="p">(</span><span class="n">vf_core</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">))</span>
+    <span class="p">]))</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">cylinder</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-stack">
+<div class="guide-figure-plot">
+<p class="guide-figure-label">Plot</p>
+<img src="images/06_cylindrical_plot.png" alt="Cylindrical Gradients" width="100%">
+</div>
+<div class="guide-figure-renders">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus — clipped)</p>
+<img src="images/06_cylindrical_gradients_modulus.webp" alt="Radial Modulus" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (color — angular)</p>
+<img src="images/06_cylindrical_gradients_color_rgba.webp" alt="Angular Color" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (volume fractions — clipped)</p>
+<img src="images/06_cylindrical_gradients_volume_fractions.webp" alt="Radial Volume Fractions" width="100%">
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="lesson-7-spherical-coordinate-gradients">
+<h2>Lesson 7: Spherical Coordinate Gradients<a class="headerlink" href="#lesson-7-spherical-coordinate-gradients" title="Link to this heading">#</a></h2>
+<p>Spherical coordinates are ideal for objects with radial symmetry from a central point. The key variables are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">r</span></code> — radial distance from the origin</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">theta</span></code> — azimuthal angle in the XY plane (radians, -pi to +pi)</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">phis</span></code> — polar angle from the +Z axis (radians, 0 to pi)</p></li>
+</ul>
+<p>This example applies gradients to a sphere:</p>
+<ul class="simple">
+<li><p><strong>Radial modulus</strong>: stiffness increases from center (<code class="docutils literal notranslate"><span class="pre">r=0</span></code>) to surface (<code class="docutils literal notranslate"><span class="pre">r=R</span></code>)</p></li>
+<li><p><strong>Polar color</strong>: color varies from the north pole (<code class="docutils literal notranslate"><span class="pre">phis=0</span></code>) to the south pole (<code class="docutils literal notranslate"><span class="pre">phis=pi</span></code>)</p></li>
+<li><p><strong>Radial volume fractions</strong>: two-material blend from center to surface</p></li>
+</ul>
+<blockquote>
+<div><p><strong>Note:</strong> The modulus and volume fraction renders below show a clipped cross-section to reveal the internal radial gradient.</p>
+</div></blockquote>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">sph_radius</span> <span class="o">=</span> <span class="mf">15.0</span>
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+
+<span class="c1"># Radial modulus</span>
+<span class="n">mod_min</span><span class="p">,</span> <span class="n">mod_max</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">10.0</span>
+<span class="n">radial_expr</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">mod_min</span><span class="si">}</span><span class="s1"> + (</span><span class="si">{</span><span class="n">mod_max</span><span class="si">}</span><span class="s1"> - </span><span class="si">{</span><span class="n">mod_min</span><span class="si">}</span><span class="s1">) * (r / </span><span class="si">{</span><span class="n">sph_radius</span><span class="si">}</span><span class="s1">)&#39;</span>
+
+<span class="c1"># Polar angle color: north=blue, south=red</span>
+<span class="n">r_expr</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;clamp(phis / 3.14159, 0, 1)&#39;</span>
+<span class="n">b_expr</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;clamp(1.0 - phis / 3.14159, 0, 1)&#39;</span>
+
+<span class="c1"># Volume fractions: center vs surface</span>
+<span class="n">vf_outer</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;clamp(r / </span><span class="si">{</span><span class="n">sph_radius</span><span class="si">}</span><span class="s1">, 0, 1)&#39;</span>
+<span class="n">vf_inner</span> <span class="o">=</span> <span class="sa">f</span><span class="s1">&#39;1.0 - clamp(r / </span><span class="si">{</span><span class="n">sph_radius</span><span class="si">}</span><span class="s1">, 0, 1)&#39;</span>
+
+<span class="n">sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">sph_radius</span><span class="p">)</span>
+<span class="n">sphere</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">radial_expr</span><span class="p">))</span>
+<span class="n">sphere</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec4Attribute</span><span class="p">(</span><span class="n">r_expr</span><span class="p">,</span> <span class="s1">&#39;0.2&#39;</span><span class="p">,</span> <span class="n">b_expr</span><span class="p">,</span> <span class="s1">&#39;1.0&#39;</span><span class="p">))</span>
+<span class="n">sphere</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([</span>
+        <span class="p">(</span><span class="n">vf_outer</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;red&quot;</span><span class="p">)),</span>
+        <span class="p">(</span><span class="n">vf_inner</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">&quot;blue&quot;</span><span class="p">))</span>
+    <span class="p">]))</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">sphere</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-stack">
+<div class="guide-figure-plot">
+<p class="guide-figure-label">Plot</p>
+<img src="images/07_spherical_plot.png" alt="Spherical Gradients" width="100%">
+</div>
+<div class="guide-figure-renders">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus — clipped)</p>
+<img src="images/07_spherical_gradients_modulus.webp" alt="Radial Modulus" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (color — polar)</p>
+<img src="images/07_spherical_gradients_color_rgba.webp" alt="Polar Color" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (volume fractions — clipped)</p>
+<img src="images/07_spherical_gradients_volume_fractions.webp" alt="Radial Volume Fractions" width="100%">
+</div>
+</div>
+</div>
+</section>
+<hr class="docutils" />
+<section id="summary-gradient-toolbox">
+<h2>Summary: Gradient Toolbox<a class="headerlink" href="#summary-gradient-toolbox" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Gradient Type</p></th>
+<th class="head"><p>Expression Pattern</p></th>
+<th class="head"><p>Best For</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Linear</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">m</span> <span class="pre">*</span> <span class="pre">x</span> <span class="pre">+</span> <span class="pre">b</span></code></p></td>
+<td><p>Uniform property ramps</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Power Law</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">((x</span> <span class="pre">-</span> <span class="pre">min)</span> <span class="pre">/</span> <span class="pre">range)</span> <span class="pre">^</span> <span class="pre">n</span></code></p></td>
+<td><p>Tunable non-uniform ramps</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Sigmoid</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">1</span> <span class="pre">/</span> <span class="pre">(1</span> <span class="pre">+</span> <span class="pre">exp(-k</span> <span class="pre">*</span> <span class="pre">x))</span></code></p></td>
+<td><p>Smooth step transitions</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Gaussian</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">exp(-(x^2)</span> <span class="pre">/</span> <span class="pre">(2*s^2))</span></code></p></td>
+<td><p>Localized peaks</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Exponential</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">exp(-rate</span> <span class="pre">*</span> <span class="pre">x)</span></code></p></td>
+<td><p>Decay / attenuation</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Sinusoidal</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">sin(freq</span> <span class="pre">*</span> <span class="pre">x)</span></code></p></td>
+<td><p>Periodic layers / bands</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Multi-axis</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">f(x,</span> <span class="pre">y)</span></code></p></td>
+<td><p>2D patterns, diagonal sweeps</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Signed distance</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">f(d)</span></code></p></td>
+<td><p>Surface-following skins</p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Cylindrical</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">f(rho)</span></code>, <code class="docutils literal notranslate"><span class="pre">f(phic)</span></code></p></td>
+<td><p>Radial and angular patterns</p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Spherical</strong></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">f(r)</span></code>, <code class="docutils literal notranslate"><span class="pre">f(phis)</span></code></p></td>
+<td><p>Radial and polar patterns</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>For the complete list of available operators, functions, and coordinate variables, see <a class="reference internal" href="math-expressions.html"><span class="std std-doc">Math expressions in OpenVCAD</span></a>.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="getting-started.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Getting Started with OpenVCAD</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="numba-attributes.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Python Functions for Attributes</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#setup">Setup</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-examples">Running the Examples</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#building-parametric-expressions-with-python-f-strings">Building Parametric Expressions with Python f-Strings</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coordinate-systems-at-a-glance">Coordinate Systems at a Glance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-1-linear-gradients">Lesson 1: Linear Gradients</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-2-non-linear-gradients">Lesson 2: Non-Linear Gradients</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-3-periodic-gradients">Lesson 3: Periodic Gradients</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-4-multi-axis-gradients">Lesson 4: Multi-Axis Gradients</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-5-signed-distance-gradients">Lesson 5: Signed-Distance Gradients</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-6-cylindrical-coordinate-gradients">Lesson 6: Cylindrical Coordinate Gradients</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-7-spherical-coordinate-gradients">Lesson 7: Spherical Coordinate Gradients</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#summary-gradient-toolbox">Summary: Gradient Toolbox</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/guides/gradients.md.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Charles Wade and Robert MacCurdy.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

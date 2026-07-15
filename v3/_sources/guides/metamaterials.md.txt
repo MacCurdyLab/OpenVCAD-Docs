@@ -1,0 +1,351 @@
+# Metamaterials Guide (TPMS & Lattices)
+
+```{include} _guide-sidebar-compiler-membership.md
+```
+
+This guide covers **`pyvcad_metamaterials`**, an off-the-shelf catalog of
+**triply periodic minimal surfaces (TPMS)** and **strut lattices** for OpenVCAD.
+It is inspired by the architected-material toolkits in tools like nTopology,
+brought into OpenVCAD's fully scriptable, volumetric, multi-material workflow.
+
+Every builder returns a **ready-to-use `pyvcad` node**. You do not need to know
+that a gyroid is really a `Function` node or that an octet truss is really a
+union of `Strut`s — you get a normal node that composes with the rest of your
+design (booleans, transforms, attributes, and so on).
+
+## Prerequisites
+
+This guide assumes you have completed the [Getting Started Guide](getting-started.md)
+(in particular CSG in Lesson 2, and the attribute lessons 4–6) and the
+[Functional Grading Guide](gradients.md). Familiarity with
+[Python functions for attributes](numba-attributes.md) is helpful, since TPMS
+fields are compiled with Numba under the hood.
+
+`pyvcad_metamaterials` is bundled with OpenVCAD, so if you installed OpenVCAD you
+already have it. Import it alongside `pyvcad`:
+
+```python
+import pyvcad as pv
+import pyvcad_metamaterials as mm
+```
+
+## Running the Examples
+
+Runnable scripts live in `examples/metamaterials/`. Run any script directly:
+
+```bash
+python 01_tpms_gyroid.py
+```
+
+Each script opens the interactive OpenVCAD render preview (close the window to
+continue). Select at least the **"high"** render preset to resolve the fine
+surface and strut detail.
+
+---
+
+## Quick start
+
+A single call returns a finished node. Here is a gyroid, clipped to a sphere:
+
+```python
+import pyvcad as pv
+import pyvcad_metamaterials as mm
+
+gyroid = mm.gyroid(cell=8.0, mode="sheet", thickness=1.2, size=40.0)
+part = pv.Intersection(gyroid, pv.Sphere(pv.Vec3(0, 0, 0), 16.0))
+```
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Gyroid clipped to a sphere</p>
+<img src="images/mm_gyroid_sphere.png" alt="Gyroid infill inside a sphere" width="100%">
+</div>
+</div>
+
+Three ideas appear in that one line and recur throughout the library:
+
+- **`cell`** — the unit-cell period in millimetres.
+- **`mode` / `thickness`** — how the surface is realised (see below).
+- **`size`** (or `bounds`) — the finite block that carves a real part out of the
+  infinite pattern. Every TPMS and tiled lattice is an infinite pattern; the box
+  is what makes it a part. If you provide neither `size` nor `bounds`, a block of
+  three unit cells is used.
+
+---
+
+## TPMS surfaces
+
+`pyvcad_metamaterials` ships seven triply periodic minimal surfaces. Build any of
+them by name with `mm.tpms(name, ...)`, or use the matching shortcut
+(`mm.gyroid`, `mm.schwarz_p`, `mm.schwarz_d`, `mm.neovius`, `mm.iwp`,
+`mm.lidinoid`, `mm.split_p`). The tuple `mm.TPMS_NAMES` lists them all.
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Gyroid</p>
+<img src="images/mm_tpms_gyroid.png" alt="Gyroid" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Schwarz-P</p>
+<img src="images/mm_tpms_schwarz_p.png" alt="Schwarz P" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Schwarz-D</p>
+<img src="images/mm_tpms_schwarz_d.png" alt="Schwarz D" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Neovius</p>
+<img src="images/mm_tpms_neovius.png" alt="Neovius" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Schoen I-WP</p>
+<img src="images/mm_tpms_iwp.png" alt="I-WP" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Lidinoid</p>
+<img src="images/mm_tpms_lidinoid.png" alt="Lidinoid" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Split-P</p>
+<img src="images/mm_tpms_split_p.png" alt="Split P" width="100%">
+</div>
+</div>
+
+See `examples/metamaterials/02_tpms_gallery.py`.
+
+### Sheet vs. solid
+
+Each surface can be realised two ways with the `mode` argument:
+
+- **`mode="sheet"`** (default) — a thin double-walled surface network of the
+  given wall `thickness` (mm). This is the classic gyroid-style infill.
+- **`mode="solid"`** — one solid labyrinth network. `offset` (mm) shifts the
+  level set, and thus the solid volume fraction.
+
+```python
+sheet = mm.gyroid(cell=10.0, mode="sheet", thickness=1.6, size=30.0)
+solid = mm.gyroid(cell=10.0, mode="solid", offset=0.0, size=30.0)
+```
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Sheet (thin walls)</p>
+<img src="images/mm_gyroid_sheet.png" alt="Gyroid sheet" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Solid (labyrinth)</p>
+<img src="images/mm_gyroid_solid.png" alt="Gyroid solid" width="100%">
+</div>
+</div>
+
+See `examples/metamaterials/01_tpms_gyroid.py`.
+
+```{note}
+`thickness` and `offset` are expressed in millimetres and are approximate: a TPMS
+field is not a true distance field, so the wall thickness is calibrated per
+surface rather than exact. It is close enough for design and printing, and it
+scales intuitively.
+```
+
+---
+
+## Strut lattices
+
+Strut lattices are tiled across a domain and cropped to it. `mm.tile(name, ...)`
+fills any domain with any unit cell; the named helpers (`mm.cubic`, `mm.bcc`,
+`mm.fcc`, `mm.kelvin`, `mm.octet`, `mm.diamond`) wrap it. `mm.LATTICE_NAMES`
+lists them. Set `cell` for the unit-cell size and `radius` for the strut radius
+(both mm).
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Octet truss</p>
+<img src="images/mm_lattice_octet.png" alt="Octet lattice" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Diamond</p>
+<img src="images/mm_lattice_diamond.png" alt="Diamond lattice" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Kelvin cell</p>
+<img src="images/mm_lattice_kelvin.png" alt="Kelvin lattice" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Simple cubic</p>
+<img src="images/mm_lattice_cubic.png" alt="Cubic lattice" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Body-centered</p>
+<img src="images/mm_lattice_bcc.png" alt="BCC lattice" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Face-centered</p>
+<img src="images/mm_lattice_fcc.png" alt="FCC lattice" width="100%">
+</div>
+</div>
+
+```python
+block = mm.octet(cell=10.0, radius=0.9, size=30.0)
+```
+
+The four classic cells (`cubic`, `bcc`, `fcc`, `kelvin`) match OpenVCAD's
+built-in `GraphLattice` presets; `octet` and `diamond` are added here. See
+`examples/metamaterials/03_strut_lattices.py`.
+
+---
+
+## Using infill in a real design
+
+Because every builder returns a normal node, filling a solid shape is just an
+`Intersection`. Build the infill over a domain at least as large as the shape,
+then intersect. For an imported mesh, read the mesh's own bounding box and pass
+it as `bounds` so the infill fits automatically:
+
+```python
+benchy = pv.Mesh("../data/3d_models/3DBenchy.stl")
+benchy.prepare(pv.Vec3(0.5, 0.5, 0.5), 1.0)      # so we can query its extent
+box_min, box_max = benchy.bounding_box()
+
+gyroid = mm.gyroid(cell=6.0, mode="sheet", thickness=1.0, bounds=(box_min, box_max))
+part = pv.Intersection(benchy, gyroid)
+```
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">3DBenchy filled with a gyroid</p>
+<img src="images/mm_benchy.png" alt="Benchy with gyroid infill" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Utah teapot as an octet lattice</p>
+<img src="images/mm_teapot.png" alt="Teapot with octet lattice" width="100%">
+</div>
+</div>
+
+See `examples/metamaterials/04_lattice_in_shape.py`,
+`10_benchy_gyroid_infill.py`, and `11_teapot_lattice_infill.py`.
+
+---
+
+## Functional grading
+
+`cell`, `thickness`, `offset`, and `radius` each accept either a scalar **or** an
+`(x, y, z) -> float` callable. A callable produces a **functionally graded**
+structure — the gradient is compiled into the field, so it costs nothing at
+evaluation time. Write the gradient parametrically in terms of the block extent.
+
+```python
+block = 48.0
+half = block / 2.0
+
+def wall_thickness(x, y, z):
+    t = min(max((x + half) / block, 0.0), 1.0)   # 0 at -x face, 1 at +x face
+    return 0.6 + 2.0 * t                          # 0.6 mm -> 2.6 mm
+
+graded = mm.gyroid(cell=9.0, mode="sheet", thickness=wall_thickness,
+                   size=(block, 20.0, 20.0))
+```
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Graded wall thickness</p>
+<img src="images/mm_grade_thickness.png" alt="Graded thickness" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Graded cell size</p>
+<img src="images/mm_grade_cell.png" alt="Graded cell size" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Graded strut radius</p>
+<img src="images/mm_grade_radius.png" alt="Graded strut radius" width="100%">
+</div>
+</div>
+
+For a strut lattice, a callable `radius` builds the lattice from individual
+struts, each sized from the field at its midpoint. See
+`examples/metamaterials/05_graded_thickness_tpms.py`,
+`06_graded_cell_size.py`, and `07_graded_strut_radius.py`.
+
+```{note}
+Graded cell size warps the local frequency per point, so it is approximate for a
+minimal surface — but it reads clearly and is very useful for tuning local
+density and porosity.
+```
+
+---
+
+## Material drill-down
+
+The most interesting multi-material lattices vary material at the scale of the
+geometry itself, not as one global blend. Two helpers make this direct, each
+motivated by a real application.
+
+### Skin-core walls
+
+`mm.skin_core_tpms` gives every TPMS wall a tough **skin** material over a soft
+**core** material, decided by depth within the wall. Think of a cushioning pad or
+shoe midsole: a wear-resistant surface over a compliant, energy-absorbing
+interior. The pad shows its skin from the outside — slice it with the viewer's
+Clipping Plane (or a clipping plane in a headless render) to reveal the core.
+
+```python
+materials = pv.default_materials
+
+pad = mm.skin_core_tpms(
+    skin_material=materials.id("white"),   # tough wear skin
+    core_material=materials.id("red"),     # soft damping core
+    name="gyroid", cell=12.0, thickness=3.5, skin_ratio=0.4,
+    size=(48.0, 32.0, 24.0),
+)
+```
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Sliced: red core inside white skin</p>
+<img src="images/mm_skincore.png" alt="Skin-core gyroid, clipped" width="100%">
+</div>
+</div>
+
+### Per-strut materials
+
+`mm.per_strut_material` builds a lattice from individual struts and lets a
+per-strut rule pick each strut's material. Here the rule reads strut orientation:
+vertical load-path struts print stiff (white) and the bracing struts print
+compliant (blue) — a load-bearing scaffold with designed anisotropy.
+
+```python
+stiff = materials.id("white")
+compliant = materials.id("blue")
+
+def choose_material(start, end):
+    dx, dy, dz = abs(start.x - end.x), abs(start.y - end.y), abs(start.z - end.z)
+    return stiff if (dz > dx and dz > dy) else compliant   # vertical -> stiff
+
+scaffold = mm.per_strut_material("cubic", choose_material,
+                                 cell=10.0, radius=1.0, size=30.0)
+```
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Vertical struts stiff (white), bracing compliant (blue)</p>
+<img src="images/mm_perstrut.png" alt="Per-strut material lattice" width="100%">
+</div>
+</div>
+
+See `examples/metamaterials/08_skin_core_tpms_material.py` and
+`09_per_strut_material_lattice.py`.
+
+---
+
+## API summary
+
+| Function | Returns | Key arguments |
+| --- | --- | --- |
+| `mm.tpms(name, ...)` and `mm.gyroid`, `mm.schwarz_p`, `mm.schwarz_d`, `mm.neovius`, `mm.iwp`, `mm.lidinoid`, `mm.split_p` | A TPMS node | `cell`, `mode` (`"sheet"`/`"solid"`), `thickness`, `offset`, `size`/`bounds`/`center` |
+| `mm.tile(cell_type, ...)` and `mm.cubic`, `mm.bcc`, `mm.fcc`, `mm.kelvin`, `mm.octet`, `mm.diamond` | A strut lattice node | `cell`, `radius`, `size`/`bounds`/`center` |
+| `mm.skin_core_tpms(...)` | A TPMS node with a skin/core material attribute | `skin_material`, `core_material`, `name`, `cell`, `thickness`, `skin_ratio` |
+| `mm.per_strut_material(cell_type, selector, ...)` | A lattice with per-strut materials | `selector(start, end) -> material_id`, `cell`, `radius` |
+| `mm.TPMS_NAMES`, `mm.LATTICE_NAMES` | Tuples of available names | — |
+
+Every `cell`, `thickness`, `offset`, and `radius` accepts a scalar or an
+`(x, y, z) -> float` callable for functional grading. Extent is always given by
+`size` (+ optional `center`) or an explicit `bounds=(min, max)`.

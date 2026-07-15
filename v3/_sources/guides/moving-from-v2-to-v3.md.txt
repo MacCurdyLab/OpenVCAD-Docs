@@ -1,0 +1,43 @@
+# Moving from Version 2 to 3
+
+## Compatibility with Older OpenVCAD Versions
+
+OpenVCAD 3.0 is not directly backwards compatible with the older OpenVCAD API. Existing scripts may need to be updated before they run on the new version.
+
+The important point is that the old capabilities have not gone away. Everything you could do in the old version can be done in OpenVCAD 3.0, but some designs need to be expressed using the new attribute-modeling workflow.
+
+## What to Read First
+
+Start by reading and following along with the guides. Even if you have used OpenVCAD before, OpenVCAD 3.0 changes the modeling workflow enough that the guide sequence matters.
+
+Read these first:
+
+1. [Theory and Motivation](theory-and-motivation.md)
+2. [Getting Started with OpenVCAD](getting-started.md)
+3. [Functional Grading Guide](gradients.md)
+4. [Python Functions for Attributes](numba-attributes.md)
+5. [Math Expressions in OpenVCAD](math-expressions.md)
+6. [Attribute Conflict Resolution](attribute-conflicts.md)
+7. [Attribute Modifier and Resolver Guide](attribute-resolver.md)
+
+It is especially important to read [Theory and Motivation](theory-and-motivation.md) first, then follow along with the [Getting Started with OpenVCAD](getting-started.md) guide. Together, those guides introduce the new attribute-modeling workflow, how attributes attach to geometry, how composition affects attributes, and how coordinate spaces work.
+
+You should also scan the [Compilers](compilers/index.md) overview so you understand which guide matches your output workflow. You do not need to read every compiler guide before starting. Read the guide for the printing or export system you plan to use. For most users, that will likely be one of the inkjet guides:
+
+- [Material Inkjet](compilers/material-inkjet.md)
+- [Color Inkjet](compilers/color-inkjet.md)
+
+## Transitioning from OpenVCAD 2.x
+
+If you used the OpenVCAD 2.x main branch, the biggest change is the role of volume fractions.
+
+In the older workflow, material behavior was commonly modeled directly as volume fractions on an object. Functional grading tools existed to help define those material mixtures across space. That made sense for early multi-material workflows, but it also made volume fractions feel like the central material abstraction.
+
+In OpenVCAD 3.x attribute modeling, volume fractions are just one attribute type. You can still create `VOLUME_FRACTIONS` fields, and downstream inkjet or simulation workflows can still consume them, but they no longer need to be the first thing you model. You can attach attributes anywhere in the design tree: leaf nodes, composed objects, transformed branches, or parent wrappers.
+
+The practical shift is:
+
+- old pattern: define material volume fractions directly, often through functional grading nodes
+- new pattern: attach the attribute that expresses your intent, then derive or compile the attributes needed by the target workflow
+
+This is why the older functional grading node is obsolete in the attribute-modeling branch. Functional grading is now a general capability of every expression-based attribute. A `MODULUS` gradient, `COLOR_RGBA` gradient, `TEMPERATURE` field, and `VOLUME_FRACTIONS` blend all use the same modeling pattern: attach a field to the node where that field should live.

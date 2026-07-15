@@ -51,7 +51,7 @@
     <link rel="icon" href="_static/favicon.png"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="OpenVCAD 3.0 Internal Beta Guide" href="guides/openvcad-3-beta.html" />
+    <link rel="next" title="Moving from Version 2 to 3" href="guides/moving-from-v2-to-v3.html" />
     <link rel="prev" title="Guides" href="guides/index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -160,10 +160,11 @@
       </button>
       <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-guides">
         <li><a class="dropdown-item active" href="#">Installation</a></li>
-        <li><a class="dropdown-item" href="guides/openvcad-3-beta.html">OpenVCAD 3.0 Beta</a></li>
+        <li><a class="dropdown-item" href="guides/moving-from-v2-to-v3.html">Moving from Version 2 to 3</a></li>
         <li><a class="dropdown-item" href="guides/theory-and-motivation.html">Theory and Motivation</a></li>
         <li><a class="dropdown-item" href="guides/getting-started.html">Getting Started with OpenVCAD</a></li>
         <li><a class="dropdown-item" href="guides/gradients.html">Functional grading</a></li>
+        <li><a class="dropdown-item" href="guides/metamaterials.html">Metamaterials (TPMS & lattices)</a></li>
         <li><a class="dropdown-item" href="guides/numba-attributes.html">Python functions for attributes</a></li>
         <li><a class="dropdown-item" href="guides/math-expressions.html">Math expressions</a></li>
         <li><a class="dropdown-item" href="guides/compilers/index.html">Compilers</a></li>
@@ -284,10 +285,11 @@
   <ul class="bd-navbar-elements navbar-nav">
     <li class="nav-item"><span class="nav-link py-1 fw-bold text-muted small">Guides</span></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3 active" href="#">Installation</a></li>
-    <li class="nav-item"><a class="nav-link py-1 ps-3" href="guides/openvcad-3-beta.html">OpenVCAD 3.0 Beta</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="guides/moving-from-v2-to-v3.html">Moving from Version 2 to 3</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="guides/theory-and-motivation.html">Theory and Motivation</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="guides/getting-started.html">Getting Started with OpenVCAD</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="guides/gradients.html">Functional grading</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="guides/metamaterials.html">Metamaterials (TPMS & lattices)</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="guides/numba-attributes.html">Python functions for attributes</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="guides/math-expressions.html">Math expressions</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="guides/compilers/index.html">Compilers</a></li>
@@ -347,10 +349,11 @@
   <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
   <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Installation</a></li>
-<li class="toctree-l1"><a class="reference internal" href="guides/openvcad-3-beta.html">OpenVCAD 3.0 Internal Beta Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/moving-from-v2-to-v3.html">Moving from Version 2 to 3</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guides/theory-and-motivation.html">Theory and Motivation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guides/getting-started.html">Getting Started with OpenVCAD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guides/gradients.html">Functional Grading Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="guides/metamaterials.html">Metamaterials Guide (TPMS &amp; Lattices)</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guides/numba-attributes.html">Python Functions for Attributes</a></li>
 <li class="toctree-l1"><a class="reference internal" href="guides/math-expressions.html">Math expressions in OpenVCAD</a></li>
 <li class="toctree-l1 has-children"><a class="reference internal" href="guides/compilers/index.html">Compilers</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
@@ -439,77 +442,39 @@ Current compiler guides:
 - slicer-project
 - simulation-compiler
 -->
-<section id="openvcad-3-0-internal-beta">
-<h2>OpenVCAD 3.0 Internal Beta<a class="headerlink" href="#openvcad-3-0-internal-beta" title="Link to this heading">#</a></h2>
-<p>OpenVCAD 3.0 beta is installed from internal GitHub release wheels. Do not install the beta with <code class="docutils literal notranslate"><span class="pre">pip</span> <span class="pre">install</span> <span class="pre">OpenVCAD</span></code>.</p>
-<div class="admonition important">
-<p class="admonition-title">Important</p>
-<p>This is a closed internal beta. Do not share the wheel files or release ZIP files outside the approved lab group.</p>
-</div>
 <p>Supported Python versions: <strong>3.11, 3.12, 3.13, and 3.14</strong> on Windows, Linux, and macOS.</p>
-</section>
 <section id="recommended-setup">
 <h2>Recommended Setup<a class="headerlink" href="#recommended-setup" title="Link to this heading">#</a></h2>
 <p>We <strong>strongly recommend</strong> using a virtual environment to keep dependencies
-clean and avoid conflicts with other Python projects. Use a dedicated virtual
-environment for OpenVCAD 3.0 beta work, separate from any OpenVCAD 2.x
-environment if you still need the older version.</p>
+clean and avoid conflicts with other Python projects.</p>
 <section id="create-a-project-directory">
 <h3>1. Create a project directory<a class="headerlink" href="#create-a-project-directory" title="Link to this heading">#</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>my_openvcad_3_beta_project
-<span class="nb">cd</span><span class="w"> </span>my_openvcad_3_beta_project
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>mkdir<span class="w"> </span>my_openvcad_project
+<span class="nb">cd</span><span class="w"> </span>my_openvcad_project
 </pre></div>
 </div>
 </section>
 <section id="create-and-activate-a-virtual-environment">
 <h3>2. Create and activate a virtual environment<a class="headerlink" href="#create-and-activate-a-virtual-environment" title="Link to this heading">#</a></h3>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="c1"># macOS / Linux</span>
-python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>openvcad3-venv
-<span class="nb">source</span><span class="w"> </span>openvcad3-venv/bin/activate
+python3<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>openvcad-venv
+<span class="nb">source</span><span class="w"> </span>openvcad-venv/bin/activate
 
 <span class="c1"># Windows</span>
-python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>openvcad3-venv
-openvcad3-venv<span class="se">\S</span>cripts<span class="se">\a</span>ctivate
+python<span class="w"> </span>-m<span class="w"> </span>venv<span class="w"> </span>openvcad-venv
+openvcad-venv<span class="se">\S</span>cripts<span class="se">\a</span>ctivate
 </pre></div>
 </div>
-<p>You should see <code class="docutils literal notranslate"><span class="pre">(openvcad3-venv)</span></code> at the beginning of your prompt.</p>
+<p>You should see <code class="docutils literal notranslate"><span class="pre">(openvcad-venv)</span></code> at the beginning of your prompt.</p>
 </section>
-<section id="download-the-beta-wheel-zip">
-<h3>3. Download the beta wheel ZIP<a class="headerlink" href="#download-the-beta-wheel-zip" title="Link to this heading">#</a></h3>
-<p>Go to the internal OpenVCAD releases page:</p>
-<p><a class="github reference external" href="https://github.com/MacCurdyLab/openvcad-internal/releases">MacCurdyLab/openvcad-internal</a></p>
-<p>Download the newest OpenVCAD 3 beta ZIP for your operating system:</p>
-<ul class="simple">
-<li><p><code class="docutils literal notranslate"><span class="pre">openvcad_beta_3.x.x_mac.zip</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">openvcad_beta_3.x.x_linux.zip</span></code></p></li>
-<li><p><code class="docutils literal notranslate"><span class="pre">openvcad_beta_3.x.x_windows.zip</span></code></p></li>
-</ul>
-<p>Ignore releases labeled <code class="docutils literal notranslate"><span class="pre">Dependencies</span></code>; those are for development setup.</p>
-<p>Extract the ZIP file. It contains several <code class="docutils literal notranslate"><span class="pre">.whl</span></code> files. The <code class="docutils literal notranslate"><span class="pre">openvcad</span></code> wheel is
-Python-version-specific, while the other package wheels are pure Python.</p>
-</section>
-<section id="check-your-python-version-and-wheel-tag">
-<h3>4. Check your Python version and wheel tag<a class="headerlink" href="#check-your-python-version-and-wheel-tag" title="Link to this heading">#</a></h3>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>--version
-python<span class="w"> </span>-c<span class="w"> </span><span class="s2">&quot;import sys; print(f&#39;cp{sys.version_info.major}{sys.version_info.minor}&#39;)&quot;</span>
-</pre></div>
-</div>
-<p>For example, Python 3.11 prints <code class="docutils literal notranslate"><span class="pre">cp311</span></code>, Python 3.12 prints <code class="docutils literal notranslate"><span class="pre">cp312</span></code>, Python
-3.13 prints <code class="docutils literal notranslate"><span class="pre">cp313</span></code>, and Python 3.14 prints <code class="docutils literal notranslate"><span class="pre">cp314</span></code>.</p>
-</section>
-<section id="install-all-beta-wheels-together">
-<h3>5. Install all beta wheels together<a class="headerlink" href="#install-all-beta-wheels-together" title="Link to this heading">#</a></h3>
-<p>From the extracted ZIP directory, install the matching <code class="docutils literal notranslate"><span class="pre">openvcad</span></code> wheel and the
-pure-Python package wheels in one command. They depend on each other, so install
-them together.</p>
-<p>Replace <code class="docutils literal notranslate"><span class="pre">cpYY</span></code> with the tag printed in the previous step:</p>
+<section id="install-openvcad">
+<h3>3. Install OpenVCAD<a class="headerlink" href="#install-openvcad" title="Link to this heading">#</a></h3>
+<p>Once your virtual environment is active, install OpenVCAD using pip:</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>pip
-python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>openvcad-3.x.x-cpYY-cpYY-*.whl<span class="w"> </span>pyvcad_attribute_resolver-*.whl<span class="w"> </span>pyvcad_rendering-*.whl<span class="w"> </span>pyvcad_medical-*.whl
+python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>OpenVCAD
 </pre></div>
 </div>
-<p>For example, if you are using Python 3.11 on macOS, install the <code class="docutils literal notranslate"><span class="pre">openvcad</span></code>
-wheel whose filename contains <code class="docutils literal notranslate"><span class="pre">cp311-cp311</span></code>.</p>
-<p>This installs:</p>
+<p>This installs everything you need, including:</p>
 <ul class="simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code></p></li>
 <li><p><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code></p></li>
@@ -519,46 +484,32 @@ wheel whose filename contains <code class="docutils literal notranslate"><span c
 </ul>
 </section>
 <section id="verify-the-installation">
-<h3>6. Verify the installation<a class="headerlink" href="#verify-the-installation" title="Link to this heading">#</a></h3>
+<h3>4. Verify the installation<a class="headerlink" href="#verify-the-installation" title="Link to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">version</span><span class="p">())</span>
 </pre></div>
 </div>
-<p>You can also verify the companion packages:</p>
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_attribute_resolver</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">resolver</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_medical</span>
-
-<span class="nb">print</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="n">resolver</span><span class="o">.</span><span class="n">list_modules</span><span class="p">()))</span>
-</pre></div>
-</div>
 </section>
 </section>
-<section id="updating-the-beta">
-<h2>Updating the Beta<a class="headerlink" href="#updating-the-beta" title="Link to this heading">#</a></h2>
-<p>To update from one OpenVCAD 3.x.x beta version to another:</p>
+<section id="updating-openvcad">
+<h2>Updating OpenVCAD<a class="headerlink" href="#updating-openvcad" title="Link to this heading">#</a></h2>
+<p>To update to a newer version of OpenVCAD:</p>
 <ol class="arabic simple">
-<li><p>Activate your dedicated OpenVCAD 3 beta virtual environment.</p></li>
-<li><p>Download and extract the newest <code class="docutils literal notranslate"><span class="pre">openvcad_beta_3.x.x_&lt;mac/linux/windows&gt;.zip</span></code>
-from the internal releases page.</p></li>
-<li><p>Run the same wheel install command from the extracted ZIP directory, adding
-<code class="docutils literal notranslate"><span class="pre">--upgrade</span></code>:</p></li>
+<li><p>Activate your dedicated OpenVCAD virtual environment.</p></li>
+<li><p>Run pip install with the <code class="docutils literal notranslate"><span class="pre">--upgrade</span></code> flag:</p></li>
 </ol>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>openvcad-3.x.x-cpYY-cpYY-*.whl<span class="w"> </span>pyvcad_attribute_resolver-*.whl<span class="w"> </span>pyvcad_rendering-*.whl<span class="w"> </span>pyvcad_medical-*.whl
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>python<span class="w"> </span>-m<span class="w"> </span>pip<span class="w"> </span>install<span class="w"> </span>--upgrade<span class="w"> </span>OpenVCAD
 </pre></div>
 </div>
-<p>Keep using a separate virtual environment for OpenVCAD 3 beta if you also need
-to keep OpenVCAD 2.x installed for older projects.</p>
 </section>
 <section id="getting-the-examples">
 <h2>Getting the Examples<a class="headerlink" href="#getting-the-examples" title="Link to this heading">#</a></h2>
-<p>Clone the internal repository to get started with runnable beta examples:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/MacCurdyLab/openvcad-internal.git
-<span class="nb">cd</span><span class="w"> </span>openvcad-internal/examples
+<p>Clone the public repository to get started with runnable examples:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/MacCurdyLab/OpenVCAD-Public.git
+<span class="nb">cd</span><span class="w"> </span>OpenVCAD-Public/examples
 </pre></div>
 </div>
-<p>See the <a class="reference internal" href="guides/getting-started.html"><span class="std std-doc">Getting Started</span></a> guide for a walkthrough of the
-example scripts.</p>
+<p>See the <a class="reference internal" href="guides/getting-started.html"><span class="std std-doc">Getting Started</span></a> guide for a walkthrough of the example scripts.</p>
 </section>
 <section id="deactivating-the-virtual-environment">
 <h2>Deactivating the Virtual Environment<a class="headerlink" href="#deactivating-the-virtual-environment" title="Link to this heading">#</a></h2>
@@ -566,8 +517,8 @@ example scripts.</p>
 <div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>deactivate
 </pre></div>
 </div>
-<p>Reactivate later with <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">openvcad3-venv/bin/activate</span></code> (macOS/Linux) or
-<code class="docutils literal notranslate"><span class="pre">openvcad3-venv\Scripts\activate</span></code> (Windows).</p>
+<p>Reactivate later with <code class="docutils literal notranslate"><span class="pre">source</span> <span class="pre">openvcad-venv/bin/activate</span></code> (macOS/Linux) or
+<code class="docutils literal notranslate"><span class="pre">openvcad-venv\Scripts\activate</span></code> (Windows).</p>
 </section>
 </section>
 
@@ -591,11 +542,11 @@ example scripts.</p>
       </div>
     </a>
     <a class="right-next"
-       href="guides/openvcad-3-beta.html"
+       href="guides/moving-from-v2-to-v3.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">OpenVCAD 3.0 Internal Beta Guide</p>
+        <p class="prev-next-title">Moving from Version 2 to 3</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -618,17 +569,14 @@ example scripts.</p>
   </div>
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#openvcad-3-0-internal-beta">OpenVCAD 3.0 Internal Beta</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#recommended-setup">Recommended Setup</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-a-project-directory">1. Create a project directory</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#create-and-activate-a-virtual-environment">2. Create and activate a virtual environment</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#download-the-beta-wheel-zip">3. Download the beta wheel ZIP</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#check-your-python-version-and-wheel-tag">4. Check your Python version and wheel tag</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-all-beta-wheels-together">5. Install all beta wheels together</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-the-installation">6. Verify the installation</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#install-openvcad">3. Install OpenVCAD</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#verify-the-installation">4. Verify the installation</a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#updating-the-beta">Updating the Beta</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#updating-openvcad">Updating OpenVCAD</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#getting-the-examples">Getting the Examples</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#deactivating-the-virtual-environment">Deactivating the Virtual Environment</a></li>
 </ul>

@@ -795,21 +795,6 @@ Saving to `.mmd` gives you an editable Mermaid diagram, while `.svg` or `.png` u
 :align: center
 ```
 
-## Transitioning from OpenVCAD 2.x
-
-If you used the OpenVCAD 2.x main branch, the biggest change is the role of volume fractions.
-
-In the older workflow, material behavior was commonly modeled directly as volume fractions on an object. Functional grading tools existed to help define those material mixtures across space. That made sense for early multi-material workflows, but it also made volume fractions feel like the central material abstraction.
-
-In OpenVCAD 3.x attribute modeling, volume fractions are just one attribute type. You can still create `VOLUME_FRACTIONS` fields, and downstream inkjet or simulation workflows can still consume them, but they no longer need to be the first thing you model. You can attach attributes anywhere in the design tree: leaf nodes, composed objects, transformed branches, or parent wrappers.
-
-The practical shift is:
-
-- old pattern: define material volume fractions directly, often through functional grading nodes
-- new pattern: attach the attribute that expresses your intent, then derive or compile the attributes needed by the target workflow
-
-This is why the older functional grading node is obsolete in the attribute-modeling branch. Functional grading is now a general capability of every expression-based attribute. A `MODULUS` gradient, `COLOR_RGBA` gradient, `TEMPERATURE` field, and `VOLUME_FRACTIONS` blend all use the same modeling pattern: attach a field to the node where that field should live.
-
 ---
 
 ## Appendix: Attribute Expressions, Coordinate Systems, and Default Names

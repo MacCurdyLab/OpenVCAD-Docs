@@ -160,10 +160,11 @@
       </button>
       <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-guides">
         <li><a class="dropdown-item" href="../../install.html">Installation</a></li>
-        <li><a class="dropdown-item" href="../../guides/openvcad-3-beta.html">OpenVCAD 3.0 Beta</a></li>
+        <li><a class="dropdown-item" href="../../guides/moving-from-v2-to-v3.html">Moving from Version 2 to 3</a></li>
         <li><a class="dropdown-item" href="../../guides/theory-and-motivation.html">Theory and Motivation</a></li>
         <li><a class="dropdown-item" href="../../guides/getting-started.html">Getting Started with OpenVCAD</a></li>
         <li><a class="dropdown-item" href="../../guides/gradients.html">Functional grading</a></li>
+        <li><a class="dropdown-item" href="../../guides/metamaterials.html">Metamaterials (TPMS & lattices)</a></li>
         <li><a class="dropdown-item" href="../../guides/numba-attributes.html">Python functions for attributes</a></li>
         <li><a class="dropdown-item" href="../../guides/math-expressions.html">Math expressions</a></li>
         <li><a class="dropdown-item" href="../../guides/compilers/index.html">Compilers</a></li>
@@ -284,10 +285,11 @@
   <ul class="bd-navbar-elements navbar-nav">
     <li class="nav-item"><span class="nav-link py-1 fw-bold text-muted small">Guides</span></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../install.html">Installation</a></li>
-    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/openvcad-3-beta.html">OpenVCAD 3.0 Beta</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/moving-from-v2-to-v3.html">Moving from Version 2 to 3</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/theory-and-motivation.html">Theory and Motivation</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/getting-started.html">Getting Started with OpenVCAD</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/gradients.html">Functional grading</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/metamaterials.html">Metamaterials (TPMS & lattices)</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/numba-attributes.html">Python functions for attributes</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/math-expressions.html">Math expressions</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/compilers/index.html">Compilers</a></li>
@@ -453,9 +455,9 @@
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Function.__init__" title="Link to this definition">#</a></dt>
 <dd><p>Overloaded function.</p>
 <ol class="arabic simple">
-<li><p>__init__(self: pyvcad.pyvcad.Function, function: str, min: pyvcad.pyvcad.Vec3 = &lt;pyvcad.pyvcad.Vec3 object at 0x106f13df0&gt;, max: pyvcad.pyvcad.Vec3 = &lt;pyvcad.pyvcad.Vec3 object at 0x106f20270&gt;) -&gt; None</p></li>
+<li><p>__init__(self: pyvcad.pyvcad.Function, function: str, min: pyvcad.pyvcad.Vec3 = &lt;pyvcad.pyvcad.Vec3 object at 0x109938570&gt;, max: pyvcad.pyvcad.Vec3 = &lt;pyvcad.pyvcad.Vec3 object at 0x1099385b0&gt;) -&gt; None</p></li>
 </ol>
-<p>Constructor that takes a function to evaluate, a material, and bounding box.</p>
+<p>Constructor that takes a math expression string to evaluate and a bounding box.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -466,18 +468,39 @@
 </dd>
 </dl>
 <ol class="arabic simple" start="2">
-<li><p>__init__(self: pyvcad.pyvcad.Function, function: collections.abc.Callable[[typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat, typing.SupportsFloat], float], min: pyvcad.pyvcad.Vec3 = &lt;pyvcad.pyvcad.Vec3 object at 0x106f23bb0&gt;, max: pyvcad.pyvcad.Vec3 = &lt;pyvcad.pyvcad.Vec3 object at 0x106f23bf0&gt;) -&gt; None</p></li>
+<li><p>__init__(self: pyvcad.pyvcad.Function, function: object, min: pyvcad.pyvcad.Vec3 = &lt;pyvcad.pyvcad.Vec3 object at 0x1099386f0&gt;, max: pyvcad.pyvcad.Vec3 = &lt;pyvcad.pyvcad.Vec3 object at 0x109938730&gt;) -&gt; None</p></li>
 </ol>
-<p>Constructor that takes a native python function to evaluate, a material id, and bounding box.</p>
+<p>Constructor that takes a callable to evaluate and a bounding box.</p>
+<p>The callable must return the signed distance to the surface for a given point.
+Two kinds of callable are accepted:</p>
+<blockquote>
+<div><ul class="simple">
+<li><p>A numba.cfunc with signature float64(float64, float64, float64) -&gt; (x, y, z).
+This is dispatched through the native function pointer and is the fast path.</p></li>
+<li><p>A plain Python callable taking eight doubles (x, y, z, rho, phic, r, theta, phis).
+This is supported for convenience but is slow (a Python call per evaluation).</p></li>
+</ul>
+</div></blockquote>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>function</strong> (<em>function&lt;double</em><em>(</em><em>double x</em><em>, </em><em>double y</em><em>, </em><em>double z</em><em>, </em><em>double rho</em><em>, </em><em>double phic</em><em>, </em><em>double r</em><em>, </em><em>double theta</em><em>, </em><em>double phis</em><em>)</em><em>&gt;</em>) – The function to evaluate. This must return the signed distance to the surface. The function must take three parameters (all vec3): xyz, cylindrical coordinates, and spherical coordinates. You may use those to compute the signed distance.</p></li>
+<li><p><strong>function</strong> (<em>callable</em>) – The signed-distance callable (numba.cfunc preferred).</p></li>
 <li><p><strong>min</strong> (<em>glm::vec3</em>) – The minimum bounding box coordinates.</p></li>
 <li><p><strong>max</strong> (<em>glm::vec3</em>) – The maximum bounding box coordinates.</p></li>
 </ul>
 </dd>
 </dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="kn">from</span><span class="w"> </span><span class="nn">numba</span><span class="w"> </span><span class="kn">import</span> <span class="n">cfunc</span><span class="p">,</span> <span class="n">types</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="nd">@cfunc</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">(</span><span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">types</span><span class="o">.</span><span class="n">float64</span><span class="p">))</span>
+<span class="gp">... </span><span class="k">def</span><span class="w"> </span><span class="nf">gyroid</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span><span class="p">):</span>
+<span class="gp">... </span>    <span class="n">f</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">/</span> <span class="mf">10.0</span>
+<span class="gp">... </span>    <span class="k">return</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">f</span><span class="o">*</span><span class="n">x</span><span class="p">)</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">f</span><span class="o">*</span><span class="n">y</span><span class="p">)</span> <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">f</span><span class="o">*</span><span class="n">y</span><span class="p">)</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">f</span><span class="o">*</span><span class="n">z</span><span class="p">)</span>
+<span class="gp">... </span>            <span class="o">+</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">f</span><span class="o">*</span><span class="n">z</span><span class="p">)</span><span class="o">*</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">f</span><span class="o">*</span><span class="n">x</span><span class="p">))</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">node</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Function</span><span class="p">(</span><span class="n">gyroid</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="o">-</span><span class="mi">15</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">))</span>
+</pre></div>
+</div>
 </dd></dl>
 
 </dd></dl>

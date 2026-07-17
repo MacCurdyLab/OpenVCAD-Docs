@@ -1,0 +1,112 @@
+(guide-metamaterials-catalog)=
+# TPMS and lattice catalog
+
+```{include} ../_guide-sidebar-compiler-membership.md
+```
+
+`pyvcad_metamaterials` supplies seven periodic implicit cells and six graph cells. This guide compares those cells on the same rectangular maps, then uses ordinary CSG to fill more familiar part geometries.
+
+## Build a finite rectangular map
+
+Every catalog builder receives a `CellMap` first:
+
+```python
+import pyvcad as pv
+import pyvcad_metamaterials as mm
+
+cell_map = mm.rectangular_cell_map(
+    (pv.Vec3(-15.0, -15.0, -15.0), pv.Vec3(15.0, 15.0, 15.0)),
+    cells=(3, 3, 3),
+)
+```
+
+Use `cells=(nu, nv, nw)` when exact repetition count and phase matter. Use `cell_size=...` when approximate world spacing is more convenient. `cell_size` is converted to integer counts by rounding upward, so the requested world bounds remain exact and the realized spacing adjusts slightly to fit them.
+
+## TPMS catalog
+
+The names in `mm.TPMS_NAMES` can be passed to `mm.tpms(...)`, and each also has a named helper such as `mm.gyroid(...)` or `mm.schwarz_p(...)`.
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_tpms_gyroid.png" data-lightbox="tpms-catalog"><img src="../images/mm_tpms_gyroid.png" alt="Gyroid TPMS"></a><div class="guide-figure-label">Gyroid</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_tpms_iwp.png" data-lightbox="tpms-catalog"><img src="../images/mm_tpms_iwp.png" alt="I-WP TPMS"></a><div class="guide-figure-label">I-WP</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_tpms_lidinoid.png" data-lightbox="tpms-catalog"><img src="../images/mm_tpms_lidinoid.png" alt="Lidinoid TPMS"></a><div class="guide-figure-label">Lidinoid</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_tpms_neovius.png" data-lightbox="tpms-catalog"><img src="../images/mm_tpms_neovius.png" alt="Neovius TPMS"></a><div class="guide-figure-label">Neovius</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_tpms_schwarz_d.png" data-lightbox="tpms-catalog"><img src="../images/mm_tpms_schwarz_d.png" alt="Schwarz-D TPMS"></a><div class="guide-figure-label">Schwarz-D</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_tpms_schwarz_p.png" data-lightbox="tpms-catalog"><img src="../images/mm_tpms_schwarz_p.png" alt="Schwarz-P TPMS"></a><div class="guide-figure-label">Schwarz-P</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_tpms_split_p.png" data-lightbox="tpms-catalog"><img src="../images/mm_tpms_split_p.png" alt="Split-P TPMS"></a><div class="guide-figure-label">Split-P</div></div>
+</div>
+
+The complete interactive gallery is [`02_tpms_gallery.py`](../../../../examples/metamaterials/02_tpms_gallery.py).
+
+### Sheet and solid modes
+
+```python
+sheet = mm.gyroid(cell_map, mode="sheet", wall_thickness=1.6)
+solid = mm.gyroid(cell_map, mode="solid", level=0.0)
+```
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_gyroid_sheet.png" data-lightbox="tpms-modes"><img src="../images/mm_gyroid_sheet.png" alt="Gyroid sheet mode"></a><div class="guide-figure-label">Sheet mode: a wall around the level surface</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_gyroid_solid.png" data-lightbox="tpms-modes"><img src="../images/mm_gyroid_solid.png" alt="Gyroid solid mode"></a><div class="guide-figure-label">Solid mode: one labyrinth side of the level surface</div></div>
+</div>
+
+In sheet mode, `wall_thickness` is the requested wall thickness in millimetres. In solid mode, `level` shifts the dividing surface and changes the retained labyrinth. Standard TPMS cells use the local map metric so those controls remain world-unit quantities when the cells are deformed.
+
+See [`01_tpms_gyroid.py`](../../../../examples/metamaterials/01_tpms_gyroid.py) for the side-by-side interactive example.
+
+## Graph lattice catalog
+
+Graph lattices use normalized vertices and edges, then map each repeated segment into world space. `mm.LATTICE_NAMES` lists the built-in catalog.
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_cubic.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_cubic.png" alt="Cubic graph lattice"></a><div class="guide-figure-label">Cubic</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_bcc.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_bcc.png" alt="BCC graph lattice"></a><div class="guide-figure-label">BCC</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_fcc.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_fcc.png" alt="FCC graph lattice"></a><div class="guide-figure-label">FCC</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_kelvin.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_kelvin.png" alt="Kelvin graph lattice"></a><div class="guide-figure-label">Kelvin</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_octet.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_octet.png" alt="Octet graph lattice"></a><div class="guide-figure-label">Octet</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_diamond.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_diamond.png" alt="Diamond graph lattice"></a><div class="guide-figure-label">Diamond</div></div>
+</div>
+
+```python
+lattice = mm.octet(
+    cell_map,
+    beam_radius=0.8,
+    node_radius=0.9,
+    curve_tolerance=0.05,
+)
+```
+
+`beam_radius` controls strut radius in millimetres. `node_radius` optionally overrides the joint radius; if omitted, joints follow the beam field. `curve_tolerance` controls subdivision of beams that become curved under a non-linear map.
+
+See [`03_strut_lattices.py`](../../../../examples/metamaterials/03_strut_lattices.py) for the complete interactive catalog.
+
+## Fill ordinary geometry
+
+Mapped structures are ordinary nodes, so lattice filling is an `Intersection`. Build a map over the target's bounds, build the architected material, and clip it with the target geometry.
+
+```python
+sphere = pv.Sphere(pv.Vec3(0.0, 0.0, 0.0), 16.0)
+cell_map = mm.rectangular_cell_map(
+    (pv.Vec3(-17.0, -17.0, -17.0), pv.Vec3(17.0, 17.0, 17.0)),
+    cells=(4, 4, 4),
+)
+root = pv.Intersection(sphere, mm.gyroid(cell_map, wall_thickness=1.4))
+```
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_gyroid_sphere.png" data-lightbox="metamaterial-infill"><img src="../images/mm_gyroid_sphere.png" alt="Sphere filled with a gyroid"></a><div class="guide-figure-label">Gyroid clipped to a sphere</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_benchy.png" data-lightbox="metamaterial-infill"><img src="../images/mm_benchy.png" alt="3DBenchy filled with a gyroid"></a><div class="guide-figure-label">3DBenchy with gyroid infill</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_teapot.png" data-lightbox="metamaterial-infill"><img src="../images/mm_teapot.png" alt="Utah teapot filled with an octet lattice"></a><div class="guide-figure-label">Utah teapot with octet infill</div></div>
+</div>
+
+For imported meshes, call `prepare(...)` before querying `bounding_box()`, then construct the rectangular map from the returned bounds. The complete examples are [`04_lattice_in_shape.py`](../../../../examples/metamaterials/04_lattice_in_shape.py), [`10_benchy_gyroid_infill.py`](../../../../examples/metamaterials/10_benchy_gyroid_infill.py), and [`11_teapot_lattice_infill.py`](../../../../examples/metamaterials/11_teapot_lattice_infill.py).
+
+## Parameter summary
+
+| Structure | Topology | Primary geometric controls |
+| --- | --- | --- |
+| TPMS sheet | `ImplicitUnitCell` | `wall_thickness`, `level`, map cell count/spacing |
+| TPMS solid | `ImplicitUnitCell` | `level`, map cell count/spacing |
+| Graph lattice | `GraphUnitCell` | `beam_radius`, `node_radius`, `curve_tolerance`, map cell count/spacing |
+
+All of these scalar controls can also be fields. Continue with [Functionally graded metamaterials](functional-grading.md) for explicit world-space and cell-space grading.

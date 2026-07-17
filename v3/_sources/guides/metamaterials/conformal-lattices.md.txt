@@ -1,0 +1,254 @@
+(guide-metamaterials-conformal)=
+# Conformal lattices from CAD faces
+
+```{include} ../_guide-sidebar-compiler-membership.md
+```
+
+A conformal lattice evaluates the same normalized TPMS or graph unit cell used in the rectangular examples through a cell map derived from CAD surfaces. The map bends and stretches logical U, V, and W; the unit cell still defines topology, and wall thickness or beam radius remains a world-unit control.
+
+## Install the optional CAD authoring stack
+
+CadQuery support is optional because its CAD kernel and visualization dependencies are substantial:
+
+```bash
+pip install "OpenVCAD[cad]"
+```
+
+Importing `pyvcad_metamaterials` does not import CadQuery. The adapter loads it only when `mm.cadquery` is used.
+
+## How a face becomes a cell map
+
+For a single face, native surface coordinates provide logical U and V. Logical W follows the oriented face normal through the requested signed `height`. A positive height follows the face normal; a negative height maps inward.
+
+<div class="guide-figure-stack">
+  <div class="guide-figure-cell"><a href="../images/mm_conformal_mapping_concept.png" data-lightbox="conformal-concepts"><img src="../images/mm_conformal_mapping_concept.png" alt="Logical cells mapped through CAD surface coordinates and signed height"></a><div class="guide-figure-label">The same logical cells can occupy a block, follow one CAD face by signed height, or span between two faces.</div></div>
+</div>
+
+Logical coordinates cover `[0, nu] × [0, nv] × [0, nw]`. One integer interval is one unit cell. Periodic CAD directions preserve periodic map connectivity, and trimmed faces keep only cells that intersect the selected face when `trim_to_face=True`.
+
+Every workflow below uses one fixed orthographic camera for its CAD body, selected-face view, and mapped result. The triptychs can therefore be read as direct visual transformations rather than independently framed previews.
+
+## Author and select a CadQuery face
+
+CadQuery remains the high-level language for workplanes, sketches, solids, and face selectors. Convert exactly one selected face with `mm.cadquery.face(...)`, then construct the map.
+
+```python
+import cadquery as cq
+import pyvcad_metamaterials as mm
+import pyvcad_rendering as viz
+
+cad = cq.Workplane("XY").circle(20.0).extrude(30.0)
+surface = mm.cadquery.face(cad.faces("%CYLINDER"))
+
+cell_map = mm.cell_map_from_cad_face(
+    surface,
+    cells=(24, 10, 1),
+    height=4.0,
+    linear=False,
+)
+root = mm.gyroid(cell_map, wall_thickness=0.65)
+
+viz.Render(root)
+```
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_conformal_cylinder_cad.png" data-lightbox="conformal-cylinder"><img src="../images/mm_conformal_cylinder_cad.png" alt="CadQuery cylinder"></a><div class="guide-figure-label">CadQuery-authored cylinder</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_conformal_cylinder_selected.png" data-lightbox="conformal-cylinder"><img src="../images/mm_conformal_cylinder_selected.png" alt="Selected cylindrical CAD face"></a><div class="guide-figure-label">Selected cylindrical face</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_conformal_cylinder_gyroid.png" data-lightbox="conformal-cylinder"><img src="../images/mm_conformal_cylinder_gyroid.png" alt="Gyroid mapped onto a cylindrical face"></a><div class="guide-figure-label">Conformal gyroid</div></div>
+</div>
+
+`linear=False` retains curved midpoint samples instead of reducing every cell to a single trilinear element. The complete script is [`12_cadquery_conformal_gyroid.py`](../../../../examples/metamaterials/12_cadquery_conformal_gyroid.py).
+
+## Map between two faces
+
+Use paired faces when both sides of a curvilinear volume matter. The first and second face define the W boundaries rather than using a constant normal height.
+
+```python
+import cadquery as cq
+import pyvcad_metamaterials as mm
+import pyvcad_rendering as viz
+
+inner_cad = cq.Workplane("XY").circle(15.0).extrude(30.0)
+outer_cad = cq.Workplane("XY").circle(22.0).extrude(30.0)
+
+inner = mm.cadquery.face(inner_cad.faces("%CYLINDER"))
+outer = mm.cadquery.face(outer_cad.faces("%CYLINDER"))
+
+cell_map = mm.cell_map_between_cad_faces(
+    inner,
+    outer,
+    cells=(24, 10, 3),
+)
+
+def beam_radius(u, v, w, d):
+    return 0.15 + 0.10 * w / 3.0
+
+root = mm.octet(
+    cell_map,
+    beam_radius=mm.cell_field(cell_map, beam_radius),
+)
+
+viz.Render(root)
+```
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_conformal_paired_cad.png" data-lightbox="conformal-paired"><img src="../images/mm_conformal_paired_cad.png" alt="Inner and outer CadQuery cylindrical faces"></a><div class="guide-figure-label">Inner and outer CAD boundaries</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_conformal_paired_selected.png" data-lightbox="conformal-paired"><img src="../images/mm_conformal_paired_selected.png" alt="Selected paired cylindrical faces"></a><div class="guide-figure-label">Selected face pair</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_conformal_paired_octet.png" data-lightbox="conformal-paired"><img src="../images/mm_conformal_paired_octet.png" alt="Octet lattice mapped between cylindrical faces"></a><div class="guide-figure-label">Octet lattice between faces</div></div>
+</div>
+
+Automatic alignment searches compatible UV orientation and periodic seam choices. Explicit origins and flips are available when deterministic seam placement is required. See [`13_cadquery_paired_face_octet.py`](../../../../examples/metamaterials/13_cadquery_paired_face_octet.py).
+
+## Import STEP and select a face
+
+`pv.CADModel` parses a STEP model once and retains stable face handles. Select faces by index or geometric filters such as surface type, representative normal, area range, and bounding-box intersection.
+
+```python
+from pathlib import Path
+
+import pyvcad as pv
+import pyvcad_metamaterials as mm
+import pyvcad_rendering as viz
+
+model_path = (
+    Path(__file__).resolve().parents[1]
+    / "data"
+    / "3d_models"
+    / "conformal_loft.step"
+)
+model = pv.CADModel.from_step(str(model_path))
+
+curved_faces = model.select_faces(surface_type="bspline")
+surface = max(curved_faces, key=lambda face: face.area)
+
+cell_map = mm.cell_map_from_cad_face(
+    surface,
+    cells=(9, 7, 3),
+    height=9.0,
+)
+root = mm.cubic(cell_map, beam_radius=0.42, node_radius=0.48)
+
+viz.Render(root)
+```
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_conformal_step_cad.png" data-lightbox="conformal-step"><img src="../images/mm_conformal_step_cad.png" alt="Imported conformal loft STEP geometry"></a><div class="guide-figure-label">Imported STEP surface</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_conformal_step_selected.png" data-lightbox="conformal-step"><img src="../images/mm_conformal_step_selected.png" alt="Selected B-spline face from the STEP model"></a><div class="guide-figure-label">Selected B-spline face</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_conformal_step_cubic.png" data-lightbox="conformal-step"><img src="../images/mm_conformal_step_cubic.png" alt="Cubic lattice mapped from the selected STEP face"></a><div class="guide-figure-label">Mapped cubic lattice</div></div>
+</div>
+
+The repository example resolves the STEP path relative to its own file and is available as [`14_imported_step_face_selection.py`](../../../../examples/metamaterials/14_imported_step_face_selection.py).
+
+Passing several `CADFace` objects to `cell_map_from_cad_face(...)` returns a `CellMapCollection`. Each face contributes an independent chart, and the mapped builder combines their results into one node.
+
+## Author other surface families directly
+
+The bridge is not limited to extrusions. Any CadQuery operation that produces a selectable face can define a map.
+
+### Lofted conical surface
+
+```python
+import cadquery as cq
+import pyvcad_metamaterials as mm
+import pyvcad_rendering as viz
+
+cad = (
+    cq.Workplane("XY")
+    .circle(18.0)
+    .workplane(offset=32.0)
+    .circle(10.0)
+    .loft(combine=True, ruled=True)
+)
+surface = mm.cadquery.face(cad.faces("%CONE"))
+cell_map = mm.cell_map_from_cad_face(
+    surface,
+    cells=(24, 10, 1),
+    height=3.0,
+)
+root = mm.bcc(cell_map, beam_radius=0.22, node_radius=0.28)
+
+viz.Render(root)
+```
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_conformal_cone_cad.png" data-lightbox="conformal-cone"><img src="../images/mm_conformal_cone_cad.png" alt="CadQuery-authored conical frustum"></a><div class="guide-figure-label">CadQuery-authored frustum</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_conformal_cone_selected.png" data-lightbox="conformal-authored"><img src="../images/mm_conformal_cone_selected.png" alt="Selected conical loft face"></a><div class="guide-figure-label">Lofted conical face</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_conformal_cone_bcc.png" data-lightbox="conformal-authored"><img src="../images/mm_conformal_cone_bcc.png" alt="BCC lattice mapped onto a conical loft"></a><div class="guide-figure-label">Conformal BCC lattice</div></div>
+</div>
+
+See [`15_cadquery_conical_bcc.py`](../../../../examples/metamaterials/15_cadquery_conical_bcc.py).
+
+### Spherical band
+
+```python
+import cadquery as cq
+import pyvcad_metamaterials as mm
+import pyvcad_rendering as viz
+
+cad = cq.Workplane(
+    obj=cq.Solid.makeSphere(
+        22.0,
+        angleDegrees1=-60.0,
+        angleDegrees2=60.0,
+    )
+)
+surface = mm.cadquery.face(cad.faces("%SPHERE"))
+cell_map = mm.cell_map_from_cad_face(
+    surface,
+    cells=(14, 7, 1),
+    height=4.5,
+)
+root = mm.schwarz_p(cell_map, wall_thickness=0.45)
+
+viz.Render(root)
+```
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_conformal_sphere_cad.png" data-lightbox="conformal-sphere"><img src="../images/mm_conformal_sphere_cad.png" alt="CadQuery-authored spherical band"></a><div class="guide-figure-label">CadQuery-authored band</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_conformal_sphere_selected.png" data-lightbox="conformal-authored"><img src="../images/mm_conformal_sphere_selected.png" alt="Selected spherical band face"></a><div class="guide-figure-label">Spherical CAD face</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_conformal_sphere_schwarz_p.png" data-lightbox="conformal-authored"><img src="../images/mm_conformal_sphere_schwarz_p.png" alt="Schwarz-P mapped over a spherical band"></a><div class="guide-figure-label">Conformal Schwarz-P</div></div>
+</div>
+
+[`16_cadquery_spherical_band_schwarz_p.py`](../../../../examples/metamaterials/16_cadquery_spherical_band_schwarz_p.py) starts from `cq.Solid.makeSphere(...)`, selects its spherical face, and maps a one-cell-thick TPMS layer over the band.
+
+### Parametric freeform surface
+
+```python
+import math
+
+import cadquery as cq
+import pyvcad_metamaterials as mm
+import pyvcad_rendering as viz
+
+def saddle(u, v):
+    x = 42.0 * (u - 0.5)
+    y = 34.0 * (v - 0.5)
+    z = 7.0 * math.sin(math.pi * (u - 0.5)) * math.sin(math.pi * (v - 0.5))
+    return x, y, z
+
+cad = cq.Workplane("XY").parametricSurface(
+    saddle,
+    N=20,
+    tol=0.02,
+    smoothing=None,
+)
+surface = mm.cadquery.face(cad)
+cell_map = mm.cell_map_from_cad_face(
+    surface,
+    cells=(12, 10, 1),
+    height=2.5,
+)
+root = mm.diamond(cell_map, beam_radius=0.24, node_radius=0.3)
+
+viz.Render(root)
+```
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_conformal_freeform_cad.png" data-lightbox="conformal-freeform"><img src="../images/mm_conformal_freeform_cad.png" alt="CadQuery-authored parametric saddle"></a><div class="guide-figure-label">CadQuery-authored saddle</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_conformal_freeform_selected.png" data-lightbox="conformal-authored"><img src="../images/mm_conformal_freeform_selected.png" alt="Selected CadQuery parametric saddle face"></a><div class="guide-figure-label">Parametric saddle face</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_conformal_freeform_diamond.png" data-lightbox="conformal-authored"><img src="../images/mm_conformal_freeform_diamond.png" alt="Diamond lattice mapped over a freeform saddle"></a><div class="guide-figure-label">Conformal diamond lattice</div></div>
+</div>
+
+[`17_cadquery_freeform_diamond.py`](../../../../examples/metamaterials/17_cadquery_freeform_diamond.py) uses `parametricSurface(...)`, demonstrating that the same workflow applies to a surface authored from a Python function.
+
+Once constructed, these mapped lattices are ordinary OpenVCAD nodes. They can carry the graded fields from the previous guide and can be sent to any compatible [compiler](../compilers/index.md).

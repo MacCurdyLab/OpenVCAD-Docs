@@ -164,7 +164,7 @@
         <li><a class="dropdown-item" href="../../guides/theory-and-motivation.html">Theory and Motivation</a></li>
         <li><a class="dropdown-item" href="../../guides/getting-started.html">Getting Started with OpenVCAD</a></li>
         <li><a class="dropdown-item" href="../../guides/gradients.html">Functional grading</a></li>
-        <li><a class="dropdown-item" href="../../guides/metamaterials.html">Metamaterials (TPMS & lattices)</a></li>
+        <li><a class="dropdown-item" href="../../guides/metamaterials/index.html">Metamaterials</a></li>
         <li><a class="dropdown-item" href="../../guides/numba-attributes.html">Python functions for attributes</a></li>
         <li><a class="dropdown-item" href="../../guides/math-expressions.html">Math expressions</a></li>
         <li><a class="dropdown-item" href="../../guides/compilers/index.html">Compilers</a></li>
@@ -289,7 +289,7 @@
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/theory-and-motivation.html">Theory and Motivation</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/getting-started.html">Getting Started with OpenVCAD</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/gradients.html">Functional grading</a></li>
-    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/metamaterials.html">Metamaterials (TPMS & lattices)</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/metamaterials/index.html">Metamaterials</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/numba-attributes.html">Python functions for attributes</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/math-expressions.html">Math expressions</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/compilers/index.html">Compilers</a></li>
@@ -455,7 +455,7 @@
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Function.__init__" title="Link to this definition">#</a></dt>
 <dd><p>Overloaded function.</p>
 <ol class="arabic simple">
-<li><p>__init__(self: pyvcad.pyvcad.Function, function: str, min: pyvcad.pyvcad.Vec3 = &lt;pyvcad.pyvcad.Vec3 object at 0x109938570&gt;, max: pyvcad.pyvcad.Vec3 = &lt;pyvcad.pyvcad.Vec3 object at 0x1099385b0&gt;) -&gt; None</p></li>
+<li><p>__init__(self: pyvcad.pyvcad.Function, function: str, min: pyvcad.pyvcad.Vec3 = &lt;pyvcad.pyvcad.Vec3 object at 0x106db0830&gt;, max: pyvcad.pyvcad.Vec3 = &lt;pyvcad.pyvcad.Vec3 object at 0x106dc8870&gt;) -&gt; None</p></li>
 </ol>
 <p>Constructor that takes a math expression string to evaluate and a bounding box.</p>
 <dl class="field-list simple">
@@ -468,7 +468,7 @@
 </dd>
 </dl>
 <ol class="arabic simple" start="2">
-<li><p>__init__(self: pyvcad.pyvcad.Function, function: object, min: pyvcad.pyvcad.Vec3 = &lt;pyvcad.pyvcad.Vec3 object at 0x1099386f0&gt;, max: pyvcad.pyvcad.Vec3 = &lt;pyvcad.pyvcad.Vec3 object at 0x109938730&gt;) -&gt; None</p></li>
+<li><p>__init__(self: pyvcad.pyvcad.Function, function: object, min: pyvcad.pyvcad.Vec3 = &lt;pyvcad.pyvcad.Vec3 object at 0x106dc89f0&gt;, max: pyvcad.pyvcad.Vec3 = &lt;pyvcad.pyvcad.Vec3 object at 0x106dc8a30&gt;) -&gt; None</p></li>
 </ol>
 <p>Constructor that takes a callable to evaluate and a bounding box.</p>
 <p>The callable must return the signed distance to the surface for a given point.
@@ -823,6 +823,89 @@ This is supported for convenience but is slow (a Python call per evaluation).</p
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.MappedImplicitLattice">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">MappedImplicitLattice</span></span><a class="headerlink" href="#pyvcad.MappedImplicitLattice" title="Link to this definition">#</a></dt>
+<dd><p>A metric-corrected periodic implicit lattice evaluated through a CellMap.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.MappedImplicitLattice.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.MappedImplicitLattice" title="pyvcad.pyvcad.MappedImplicitLattice"><span class="pre">pyvcad.pyvcad.MappedImplicitLattice</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="geometry.html#pyvcad.CellMap" title="pyvcad.pyvcad.CellMap"><span class="pre">pyvcad.pyvcad.CellMap</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_cell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="geometry.html#pyvcad.ImplicitUnitCell" title="pyvcad.pyvcad.ImplicitUnitCell"><span class="pre">pyvcad.pyvcad.ImplicitUnitCell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sheet'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wall_thickness</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="geometry.html#pyvcad.MappedScalarField" title="pyvcad.pyvcad.MappedScalarField"><span class="pre">pyvcad.pyvcad.MappedScalarField</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="geometry.html#pyvcad.MappedScalarField" title="pyvcad.pyvcad.MappedScalarField"><span class="pre">pyvcad.pyvcad.MappedScalarField</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.MappedImplicitLattice.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Construct a mapped implicit lattice node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cell_map</strong> (<a class="reference internal" href="geometry.html#pyvcad.CellMap" title="pyvcad.CellMap"><em>CellMap</em></a>) – Immutable coordinate map.</p></li>
+<li><p><strong>unit_cell</strong> (<a class="reference internal" href="geometry.html#pyvcad.ImplicitUnitCell" title="pyvcad.ImplicitUnitCell"><em>ImplicitUnitCell</em></a>) – Periodic scalar unit cell.</p></li>
+<li><p><strong>mode</strong> (<em>str</em>) – ‘sheet’ or ‘solid’.</p></li>
+<li><p><strong>wall_thickness</strong> (<a class="reference internal" href="geometry.html#pyvcad.MappedScalarField" title="pyvcad.MappedScalarField"><em>MappedScalarField</em></a>) – World-unit sheet thickness.</p></li>
+<li><p><strong>level</strong> (<a class="reference internal" href="geometry.html#pyvcad.MappedScalarField" title="pyvcad.MappedScalarField"><em>MappedScalarField</em></a>) – World-unit solid level offset.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">node</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">MappedImplicitLattice</span><span class="p">(</span><span class="n">cell_map</span><span class="p">,</span> <span class="n">cell</span><span class="p">,</span> <span class="s1">&#39;sheet&#39;</span><span class="p">,</span> <span class="n">thickness</span><span class="p">,</span> <span class="n">level</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.MappedImplicitLattice.cell_map">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cell_map</span></span><a class="headerlink" href="#pyvcad.MappedImplicitLattice.cell_map" title="Link to this definition">#</a></dt>
+<dd><p>Immutable coordinate map.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.MappedImplicitLattice.unit_cell">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">unit_cell</span></span><a class="headerlink" href="#pyvcad.MappedImplicitLattice.unit_cell" title="Link to this definition">#</a></dt>
+<dd><p>Periodic implicit unit cell.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.MappedGraphLattice">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">MappedGraphLattice</span></span><a class="headerlink" href="#pyvcad.MappedGraphLattice" title="Link to this definition">#</a></dt>
+<dd><p>A compact graph unit cell tiled and curved through a CellMap.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.MappedGraphLattice.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.MappedGraphLattice" title="pyvcad.pyvcad.MappedGraphLattice"><span class="pre">pyvcad.pyvcad.MappedGraphLattice</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="geometry.html#pyvcad.CellMap" title="pyvcad.pyvcad.CellMap"><span class="pre">pyvcad.pyvcad.CellMap</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_cell</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="geometry.html#pyvcad.GraphUnitCell" title="pyvcad.pyvcad.GraphUnitCell"><span class="pre">pyvcad.pyvcad.GraphUnitCell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="geometry.html#pyvcad.MappedScalarField" title="pyvcad.pyvcad.MappedScalarField"><span class="pre">pyvcad.pyvcad.MappedScalarField</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_radius</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="geometry.html#pyvcad.MappedScalarField" title="pyvcad.pyvcad.MappedScalarField"><span class="pre">pyvcad.pyvcad.MappedScalarField</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">curve_tolerance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.MappedGraphLattice.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Construct a mapped graph lattice node.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>cell_map</strong> (<a class="reference internal" href="geometry.html#pyvcad.CellMap" title="pyvcad.CellMap"><em>CellMap</em></a>) – Immutable coordinate map.</p></li>
+<li><p><strong>unit_cell</strong> (<a class="reference internal" href="geometry.html#pyvcad.GraphUnitCell" title="pyvcad.GraphUnitCell"><em>GraphUnitCell</em></a>) – Normalized graph unit cell.</p></li>
+<li><p><strong>beam_radius</strong> (<a class="reference internal" href="geometry.html#pyvcad.MappedScalarField" title="pyvcad.MappedScalarField"><em>MappedScalarField</em></a>) – World-unit beam radius.</p></li>
+<li><p><strong>node_radius</strong> (<a class="reference internal" href="geometry.html#pyvcad.MappedScalarField" title="pyvcad.MappedScalarField"><em>MappedScalarField</em></a><em> | </em><em>None</em>) – Optional world-unit node radius.</p></li>
+<li><p><strong>curve_tolerance</strong> (<em>float</em>) – Maximum mapped chord error in millimetres.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">node</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">MappedGraphLattice</span><span class="p">(</span><span class="n">cell_map</span><span class="p">,</span> <span class="n">cell</span><span class="p">,</span> <span class="n">radius</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.MappedGraphLattice.segment_info">
+<span class="sig-name descname"><span class="pre">segment_info</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.MappedGraphLattice" title="pyvcad.pyvcad.MappedGraphLattice"><span class="pre">pyvcad.pyvcad.MappedGraphLattice</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="headerlink" href="#pyvcad.MappedGraphLattice.segment_info" title="Link to this definition">#</a></dt>
+<dd><p>Return provenance for the nearest prepared beam segment inside the mapped domain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>world</strong> (<a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a>) – World coordinate to inspect.</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.MappedGraphSegmentInfo">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">MappedGraphSegmentInfo</span></span><a class="headerlink" href="#pyvcad.MappedGraphSegmentInfo" title="Link to this definition">#</a></dt>
+<dd><p>Unit-cell provenance for the nearest prepared mapped graph segment.</p>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="pyvcad.Text">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Text</span></span><a class="headerlink" href="#pyvcad.Text" title="Link to this definition">#</a></dt>
 <dd><p>A text leaf node which generates a 3D text object by extruding the text along the Z-axis. The node takes a string, height, depth, material id, font aspect, font name, and alignment options. The CAD part is created from the provided text.</p>
@@ -981,26 +1064,6 @@ generation.</p></li>
 
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="pyvcad.Map">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Map</span></span><a class="headerlink" href="#pyvcad.Map" title="Link to this definition">#</a></dt>
-<dd><p>Maps a surface parameterization onto a closed mesh.</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="pyvcad.Map.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Map" title="pyvcad.pyvcad.Map"><span class="pre">pyvcad.pyvcad.Map</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">closed_mesh_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Map.__init__" title="Link to this definition">#</a></dt>
-<dd><p>Constructor with surface and closed mesh paths.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>surface_path</strong> (<em>str</em>) – Path to the surface file.</p></li>
-<li><p><strong>closed_mesh_path</strong> (<em>str</em>) – Path to the closed mesh file.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
 </section>
 
 
@@ -1091,6 +1154,18 @@ generation.</p></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.GraphLattice.__init__"><code class="docutils literal notranslate"><span class="pre">GraphLattice.__init__()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.MappedImplicitLattice"><code class="docutils literal notranslate"><span class="pre">MappedImplicitLattice</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.MappedImplicitLattice.__init__"><code class="docutils literal notranslate"><span class="pre">MappedImplicitLattice.__init__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.MappedImplicitLattice.cell_map"><code class="docutils literal notranslate"><span class="pre">MappedImplicitLattice.cell_map</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.MappedImplicitLattice.unit_cell"><code class="docutils literal notranslate"><span class="pre">MappedImplicitLattice.unit_cell</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.MappedGraphLattice"><code class="docutils literal notranslate"><span class="pre">MappedGraphLattice</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.MappedGraphLattice.__init__"><code class="docutils literal notranslate"><span class="pre">MappedGraphLattice.__init__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.MappedGraphLattice.segment_info"><code class="docutils literal notranslate"><span class="pre">MappedGraphLattice.segment_info()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.MappedGraphSegmentInfo"><code class="docutils literal notranslate"><span class="pre">MappedGraphSegmentInfo</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Text"><code class="docutils literal notranslate"><span class="pre">Text</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Text.__init__"><code class="docutils literal notranslate"><span class="pre">Text.__init__()</span></code></a></li>
 </ul>
@@ -1107,10 +1182,6 @@ generation.</p></li>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.PolygonExtrude"><code class="docutils literal notranslate"><span class="pre">PolygonExtrude</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.PolygonExtrude.__init__"><code class="docutils literal notranslate"><span class="pre">PolygonExtrude.__init__()</span></code></a></li>
-</ul>
-</li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Map"><code class="docutils literal notranslate"><span class="pre">Map</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Map.__init__"><code class="docutils literal notranslate"><span class="pre">Map.__init__()</span></code></a></li>
 </ul>
 </li>
 </ul>

@@ -164,7 +164,7 @@
         <li><a class="dropdown-item" href="../../guides/theory-and-motivation.html">Theory and Motivation</a></li>
         <li><a class="dropdown-item" href="../../guides/getting-started.html">Getting Started with OpenVCAD</a></li>
         <li><a class="dropdown-item" href="../../guides/gradients.html">Functional grading</a></li>
-        <li><a class="dropdown-item" href="../../guides/metamaterials.html">Metamaterials (TPMS & lattices)</a></li>
+        <li><a class="dropdown-item" href="../../guides/metamaterials/index.html">Metamaterials</a></li>
         <li><a class="dropdown-item" href="../../guides/numba-attributes.html">Python functions for attributes</a></li>
         <li><a class="dropdown-item" href="../../guides/math-expressions.html">Math expressions</a></li>
         <li><a class="dropdown-item" href="../../guides/compilers/index.html">Compilers</a></li>
@@ -289,7 +289,7 @@
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/theory-and-motivation.html">Theory and Motivation</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/getting-started.html">Getting Started with OpenVCAD</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/gradients.html">Functional grading</a></li>
-    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/metamaterials.html">Metamaterials (TPMS & lattices)</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/metamaterials/index.html">Metamaterials</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/numba-attributes.html">Python functions for attributes</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/math-expressions.html">Math expressions</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../../guides/compilers/index.html">Compilers</a></li>
@@ -1047,6 +1047,776 @@
 
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.CADModel">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">CADModel</span></span><a class="headerlink" href="#pyvcad.CADModel" title="Link to this definition">#</a></dt>
+<dd><p>A topology-preserving CAD model shared by selected faces and implicit CAD nodes.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CADModel.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.CADModel.__init__" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CADModel.face">
+<span class="sig-name descname"><span class="pre">face</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CADModel" title="pyvcad.pyvcad.CADModel"><span class="pre">pyvcad.pyvcad.CADModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.CADFace" title="pyvcad.pyvcad.CADFace"><span class="pre">pyvcad.pyvcad.CADFace</span></a></span></span><a class="headerlink" href="#pyvcad.CADModel.face" title="Link to this definition">#</a></dt>
+<dd><p>Return one face by stable index.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – Zero-based face index.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">face</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">face</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CADModel.faces">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">faces</span></span><a class="headerlink" href="#pyvcad.CADModel.faces" title="Link to this definition">#</a></dt>
+<dd><p>All faces in stable model order.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CADModel.from_brep">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_brep</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.CADModel" title="pyvcad.pyvcad.CADModel"><span class="pre">pyvcad.pyvcad.CADModel</span></a></span></span><a class="headerlink" href="#pyvcad.CADModel.from_brep" title="Link to this definition">#</a></dt>
+<dd><p>Load an ASCII BREP model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – BREP file path.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CADModel</span><span class="o">.</span><span class="n">from_brep</span><span class="p">(</span><span class="s1">&#39;part.brep&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CADModel.from_brep_bytes">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_brep_bytes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.CADModel" title="pyvcad.pyvcad.CADModel"><span class="pre">pyvcad.pyvcad.CADModel</span></a></span></span><a class="headerlink" href="#pyvcad.CADModel.from_brep_bytes" title="Link to this definition">#</a></dt>
+<dd><p>Load in-memory ASCII BREP bytes.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<em>bytes</em>) – ASCII BREP stream contents.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CADModel</span><span class="o">.</span><span class="n">from_brep_bytes</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CADModel.from_iges">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_iges</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.CADModel" title="pyvcad.pyvcad.CADModel"><span class="pre">pyvcad.pyvcad.CADModel</span></a></span></span><a class="headerlink" href="#pyvcad.CADModel.from_iges" title="Link to this definition">#</a></dt>
+<dd><p>Load an IGES model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – IGES or IGS file path.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CADModel</span><span class="o">.</span><span class="n">from_iges</span><span class="p">(</span><span class="s1">&#39;part.iges&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CADModel.from_step">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_step</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.CADModel" title="pyvcad.pyvcad.CADModel"><span class="pre">pyvcad.pyvcad.CADModel</span></a></span></span><a class="headerlink" href="#pyvcad.CADModel.from_step" title="Link to this definition">#</a></dt>
+<dd><p>Load a STEP model.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – STEP or STP file path.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">model</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CADModel</span><span class="o">.</span><span class="n">from_step</span><span class="p">(</span><span class="s1">&#39;part.step&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CADModel.select_faces">
+<span class="sig-name descname"><span class="pre">select_faces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CADModel" title="pyvcad.pyvcad.CADModel"><span class="pre">pyvcad.pyvcad.CADModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">indices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsInt</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_dot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">-1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">area_range</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounding_box_intersection</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.CADFace" title="pyvcad.pyvcad.CADFace"><span class="pre">pyvcad.pyvcad.CADFace</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.CADModel.select_faces" title="Link to this definition">#</a></dt>
+<dd><p>Select imported CAD faces using stable geometric filters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>indices</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – Optional stable indices.</p></li>
+<li><p><strong>surface_type</strong> (<em>str</em><em> | </em><em>None</em>) – Canonical surface type.</p></li>
+<li><p><strong>normal</strong> (<a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a><em> | </em><em>None</em>) – Requested representative direction.</p></li>
+<li><p><strong>min_dot</strong> (<em>float</em>) – Minimum normal-direction dot product.</p></li>
+<li><p><strong>area_range</strong> (<em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>] </em><em>| </em><em>None</em>) – Inclusive area limits.</p></li>
+<li><p><strong>bounding_box_intersection</strong> (<em>tuple</em><em>[</em><a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a><em>, </em><a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a><em>] </em><em>| </em><em>None</em>) – Required box overlap.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">upward</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">select_faces</span><span class="p">(</span><span class="n">normal</span><span class="o">=</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="n">min_dot</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CADModel.to_node">
+<span class="sig-name descname"><span class="pre">to_node</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CADModel" title="pyvcad.pyvcad.CADModel"><span class="pre">pyvcad.pyvcad.CADModel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">use_fast_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="leaves.html#pyvcad.CAD" title="pyvcad.CAD"><span class="pre">CAD</span></a></span></span><a class="headerlink" href="#pyvcad.CADModel.to_node" title="Link to this definition">#</a></dt>
+<dd><p>Convert the retained CAD model into an implicit CAD node without reparsing.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>use_fast_mode</strong> (<em>bool</em>) – Build a discretized accelerated SDF during prepare.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">node</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">to_node</span><span class="p">(</span><span class="n">use_fast_mode</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.CADFace">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">CADFace</span></span><a class="headerlink" href="#pyvcad.CADFace" title="Link to this definition">#</a></dt>
+<dd><p>A stable topology-preserving face selected from a CADModel.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CADFace.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.CADFace.__init__" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CADFace.area">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">area</span></span><a class="headerlink" href="#pyvcad.CADFace.area" title="Link to this definition">#</a></dt>
+<dd><p>Face area in square millimetres.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CADFace.boundary_loop_count">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">boundary_loop_count</span></span><a class="headerlink" href="#pyvcad.CADFace.boundary_loop_count" title="Link to this definition">#</a></dt>
+<dd><p>Number of trimming boundary loops.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CADFace.bounding_box">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">bounding_box</span></span><a class="headerlink" href="#pyvcad.CADFace.bounding_box" title="Link to this definition">#</a></dt>
+<dd><p>World-coordinate face bounding box.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CADFace.centroid">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">centroid</span></span><a class="headerlink" href="#pyvcad.CADFace.centroid" title="Link to this definition">#</a></dt>
+<dd><p>Area centroid in world coordinates.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CADFace.contains">
+<span class="sig-name descname"><span class="pre">contains</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CADFace" title="pyvcad.pyvcad.CADFace"><span class="pre">pyvcad.pyvcad.CADFace</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-07</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#pyvcad.CADFace.contains" title="Link to this definition">#</a></dt>
+<dd><p>Test the trimmed face domain at native UV coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>float</em>) – Native U coordinate.</p></li>
+<li><p><strong>v</strong> (<em>float</em>) – Native V coordinate.</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em>) – CAD classifier tolerance.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">inside</span> <span class="o">=</span> <span class="n">face</span><span class="o">.</span><span class="n">contains</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CADFace.index">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">index</span></span><a class="headerlink" href="#pyvcad.CADFace.index" title="Link to this definition">#</a></dt>
+<dd><p>Stable zero-based face index within the parent model.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CADFace.is_trimmed">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">is_trimmed</span></span><a class="headerlink" href="#pyvcad.CADFace.is_trimmed" title="Link to this definition">#</a></dt>
+<dd><p>Whether the face has nontrivial trimming.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CADFace.normal">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">normal</span></span><a class="headerlink" href="#pyvcad.CADFace.normal" title="Link to this definition">#</a></dt>
+<dd><p>Representative oriented unit normal.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CADFace.normal_at">
+<span class="sig-name descname"><span class="pre">normal_at</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CADFace" title="pyvcad.pyvcad.CADFace"><span class="pre">pyvcad.pyvcad.CADFace</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></span><a class="headerlink" href="#pyvcad.CADFace.normal_at" title="Link to this definition">#</a></dt>
+<dd><p>Evaluate the oriented CAD surface normal.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>float</em>) – Native U coordinate.</p></li>
+<li><p><strong>v</strong> (<em>float</em>) – Native V coordinate.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">direction</span> <span class="o">=</span> <span class="n">face</span><span class="o">.</span><span class="n">normal_at</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CADFace.point">
+<span class="sig-name descname"><span class="pre">point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CADFace" title="pyvcad.pyvcad.CADFace"><span class="pre">pyvcad.pyvcad.CADFace</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></span><a class="headerlink" href="#pyvcad.CADFace.point" title="Link to this definition">#</a></dt>
+<dd><p>Evaluate the exact CAD surface.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>u</strong> (<em>float</em>) – Native U coordinate.</p></li>
+<li><p><strong>v</strong> (<em>float</em>) – Native V coordinate.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">point</span> <span class="o">=</span> <span class="n">face</span><span class="o">.</span><span class="n">point</span><span class="p">(</span><span class="n">face</span><span class="o">.</span><span class="n">uv_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="n">face</span><span class="o">.</span><span class="n">uv_bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">y</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CADFace.surface_type">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">surface_type</span></span><a class="headerlink" href="#pyvcad.CADFace.surface_type" title="Link to this definition">#</a></dt>
+<dd><p>Canonical CAD surface type name.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CADFace.u_periodic">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">u_periodic</span></span><a class="headerlink" href="#pyvcad.CADFace.u_periodic" title="Link to this definition">#</a></dt>
+<dd><p>Whether the native U direction is periodic.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CADFace.uv_bounds">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">uv_bounds</span></span><a class="headerlink" href="#pyvcad.CADFace.uv_bounds" title="Link to this definition">#</a></dt>
+<dd><p>Restricted native CAD UV bounds.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CADFace.v_periodic">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">v_periodic</span></span><a class="headerlink" href="#pyvcad.CADFace.v_periodic" title="Link to this definition">#</a></dt>
+<dd><p>Whether the native V direction is periodic.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.CellMap">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">CellMap</span></span><a class="headerlink" href="#pyvcad.CellMap" title="Link to this definition">#</a></dt>
+<dd><p>An immutable structured curvilinear coordinate map.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CellMap.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.CellMap.__init__" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CellMap.between_cad_faces">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">between_cad_faces</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">first</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CADFace" title="pyvcad.pyvcad.CADFace"><span class="pre">pyvcad.pyvcad.CADFace</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">second</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CADFace" title="pyvcad.pyvcad.CADFace"><span class="pre">pyvcad.pyvcad.CADFace</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cells</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsInt</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'FixedSize(3)'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_align</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flip_u</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">flip_v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exchange_uv</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">first_origin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'FixedSize(2)'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">second_origin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'FixedSize(2)'</span></span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.CellMap" title="pyvcad.pyvcad.CellMap"><span class="pre">pyvcad.pyvcad.CellMap</span></a></span></span><a class="headerlink" href="#pyvcad.CellMap.between_cad_faces" title="Link to this definition">#</a></dt>
+<dd><p>Construct a curvilinear volume between two CAD faces.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>first</strong> (<a class="reference internal" href="#pyvcad.CADFace" title="pyvcad.CADFace"><em>CADFace</em></a>) – First boundary face.</p></li>
+<li><p><strong>second</strong> (<a class="reference internal" href="#pyvcad.CADFace" title="pyvcad.CADFace"><em>CADFace</em></a>) – Second boundary face.</p></li>
+<li><p><strong>cells</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – Positive U/V/W counts.</p></li>
+<li><p><strong>linear</strong> (<em>bool</em>) – Use linear rather than midpoint-sampled curved cells.</p></li>
+<li><p><strong>auto_align</strong> (<em>bool</em>) – Search compatible UV symmetries.</p></li>
+<li><p><strong>flip_u</strong> (<em>bool</em>) – Flip the second U direction in advanced mode.</p></li>
+<li><p><strong>flip_v</strong> (<em>bool</em>) – Flip the second V direction in advanced mode.</p></li>
+<li><p><strong>exchange_uv</strong> (<em>bool</em>) – Exchange second-face U and V in advanced mode.</p></li>
+<li><p><strong>first_origin</strong> (<em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>] </em><em>| </em><em>None</em>) – Normalized periodic UV origin shift.</p></li>
+<li><p><strong>second_origin</strong> (<em>tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>] </em><em>| </em><em>None</em>) – Normalized periodic UV origin shift.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cell_map</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CellMap</span><span class="o">.</span><span class="n">between_cad_faces</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">,</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">3</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CellMap.bounds">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">bounds</span></span><a class="headerlink" href="#pyvcad.CellMap.bounds" title="Link to this definition">#</a></dt>
+<dd><p>World-coordinate bounding box.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CellMap.cells">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cells</span></span><a class="headerlink" href="#pyvcad.CellMap.cells" title="Link to this definition">#</a></dt>
+<dd><p>Positive logical U/V/W cell counts.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CellMap.domain_signed_distance">
+<span class="sig-name descname"><span class="pre">domain_signed_distance</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CellMap" title="pyvcad.pyvcad.CellMap"><span class="pre">pyvcad.pyvcad.CellMap</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pyvcad.CellMap.domain_signed_distance" title="Link to this definition">#</a></dt>
+<dd><p>Return signed distance to the finite active CellMap domain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>world</strong> (<a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a>) – World-coordinate query point.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">distance</span> <span class="o">=</span> <span class="n">cell_map</span><span class="o">.</span><span class="n">domain_signed_distance</span><span class="p">(</span><span class="n">world</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CellMap.forward">
+<span class="sig-name descname"><span class="pre">forward</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CellMap" title="pyvcad.pyvcad.CellMap"><span class="pre">pyvcad.pyvcad.CellMap</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logical</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></span><a class="headerlink" href="#pyvcad.CellMap.forward" title="Link to this definition">#</a></dt>
+<dd><p>Map a logical point into world space.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>logical</strong> (<a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a>) – Logical U/V/W coordinate.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">world</span> <span class="o">=</span> <span class="n">cell_map</span><span class="o">.</span><span class="n">forward</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CellMap.from_cad_face">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_cad_face</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">face</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CADFace" title="pyvcad.pyvcad.CADFace"><span class="pre">pyvcad.pyvcad.CADFace</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cells</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsInt</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'FixedSize(3)'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">trim_to_face</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.CellMap" title="pyvcad.pyvcad.CellMap"><span class="pre">pyvcad.pyvcad.CellMap</span></a></span></span><a class="headerlink" href="#pyvcad.CellMap.from_cad_face" title="Link to this definition">#</a></dt>
+<dd><p>Construct a signed-height map from one CAD face.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>face</strong> (<a class="reference internal" href="#pyvcad.CADFace" title="pyvcad.CADFace"><em>CADFace</em></a>) – Source CAD face.</p></li>
+<li><p><strong>cells</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – Positive U/V/W counts.</p></li>
+<li><p><strong>height</strong> (<em>float</em>) – Total signed normal height in millimetres.</p></li>
+<li><p><strong>linear</strong> (<em>bool</em>) – Use linear rather than midpoint-sampled curved cells.</p></li>
+<li><p><strong>trim_to_face</strong> (<em>bool</em>) – Retain only elements intersecting the trimmed face.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cell_map</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CellMap</span><span class="o">.</span><span class="n">from_cad_face</span><span class="p">(</span><span class="n">face</span><span class="p">,</span> <span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span> <span class="mf">2.0</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CellMap.inverse">
+<span class="sig-name descname"><span class="pre">inverse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CellMap" title="pyvcad.pyvcad.CellMap"><span class="pre">pyvcad.pyvcad.CellMap</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">world</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-06</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_iterations</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">24</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="headerlink" href="#pyvcad.CellMap.inverse" title="Link to this definition">#</a></dt>
+<dd><p>Invert a world point into logical coordinates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>world</strong> (<a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a>) – World-coordinate point.</p></li>
+<li><p><strong>tolerance</strong> (<em>float</em>) – Requested Newton convergence tolerance; a scale-aware numerical floor is applied.</p></li>
+<li><p><strong>max_iterations</strong> (<em>int</em>) – Maximum damped Newton iterations.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">logical</span> <span class="o">=</span> <span class="n">cell_map</span><span class="o">.</span><span class="n">inverse</span><span class="p">(</span><span class="n">world</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CellMap.jacobian">
+<span class="sig-name descname"><span class="pre">jacobian</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CellMap" title="pyvcad.pyvcad.CellMap"><span class="pre">pyvcad.pyvcad.CellMap</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logical</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'FixedSize(3)'</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.CellMap.jacobian" title="Link to this definition">#</a></dt>
+<dd><p>Return world derivatives with respect to U, V, and W.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>logical</strong> (<a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a>) – Logical U/V/W coordinate.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">du</span><span class="p">,</span> <span class="n">dv</span><span class="p">,</span> <span class="n">dw</span> <span class="o">=</span> <span class="n">cell_map</span><span class="o">.</span><span class="n">jacobian</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CellMap.jacobian_determinant">
+<span class="sig-name descname"><span class="pre">jacobian_determinant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CellMap" title="pyvcad.pyvcad.CellMap"><span class="pre">pyvcad.pyvcad.CellMap</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logical</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pyvcad.CellMap.jacobian_determinant" title="Link to this definition">#</a></dt>
+<dd><p>Evaluate the local map Jacobian determinant.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>logical</strong> (<a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a>) – Logical U/V/W coordinate.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">determinant</span> <span class="o">=</span> <span class="n">cell_map</span><span class="o">.</span><span class="n">jacobian_determinant</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CellMap.jacobian_determinant_field">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">jacobian_determinant_field</span></span><a class="headerlink" href="#pyvcad.CellMap.jacobian_determinant_field" title="Link to this definition">#</a></dt>
+<dd><p>Jacobian determinant as a world-sampled float attribute.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CellMap.maximum_principal_stretch_field">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">maximum_principal_stretch_field</span></span><a class="headerlink" href="#pyvcad.CellMap.maximum_principal_stretch_field" title="Link to this definition">#</a></dt>
+<dd><p>Maximum principal stretch as a world-sampled float attribute.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CellMap.middle_principal_stretch_field">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">middle_principal_stretch_field</span></span><a class="headerlink" href="#pyvcad.CellMap.middle_principal_stretch_field" title="Link to this definition">#</a></dt>
+<dd><p>Middle principal stretch as a world-sampled float attribute.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CellMap.minimum_principal_stretch_field">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">minimum_principal_stretch_field</span></span><a class="headerlink" href="#pyvcad.CellMap.minimum_principal_stretch_field" title="Link to this definition">#</a></dt>
+<dd><p>Minimum principal stretch as a world-sampled float attribute.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CellMap.periodic_axes">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">periodic_axes</span></span><a class="headerlink" href="#pyvcad.CellMap.periodic_axes" title="Link to this definition">#</a></dt>
+<dd><p>Periodic U/V/W connectivity flags.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CellMap.principal_stretches">
+<span class="sig-name descname"><span class="pre">principal_stretches</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CellMap" title="pyvcad.pyvcad.CellMap"><span class="pre">pyvcad.pyvcad.CellMap</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">logical</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></span><a class="headerlink" href="#pyvcad.CellMap.principal_stretches" title="Link to this definition">#</a></dt>
+<dd><p>Return ascending directional stretch estimates.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>logical</strong> (<a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a>) – Logical U/V/W coordinate.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">stretches</span> <span class="o">=</span> <span class="n">cell_map</span><span class="o">.</span><span class="n">principal_stretches</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CellMap.rectangular">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">rectangular</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">minimum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cells</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Annotated</span><span class="p"><span class="pre">[</span></span><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsInt</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="s"><span class="pre">'FixedSize(3)'</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">linear</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.CellMap" title="pyvcad.pyvcad.CellMap"><span class="pre">pyvcad.pyvcad.CellMap</span></a></span></span><a class="headerlink" href="#pyvcad.CellMap.rectangular" title="Link to this definition">#</a></dt>
+<dd><p>Construct a rectangular map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>minimum</strong> (<a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a>) – Lower world bounds.</p></li>
+<li><p><strong>maximum</strong> (<a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a>) – Upper world bounds.</p></li>
+<li><p><strong>cells</strong> (<em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>, </em><em>int</em><em>]</em>) – Positive U/V/W counts.</p></li>
+<li><p><strong>linear</strong> (<em>bool</em>) – Use one trilinear element per cell.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cell_map</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CellMap</span><span class="o">.</span><span class="n">rectangular</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">10</span><span class="p">),</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CellMap.u_field">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">u_field</span></span><a class="headerlink" href="#pyvcad.CellMap.u_field" title="Link to this definition">#</a></dt>
+<dd><p>Logical U coordinate as a float attribute.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CellMap.v_field">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">v_field</span></span><a class="headerlink" href="#pyvcad.CellMap.v_field" title="Link to this definition">#</a></dt>
+<dd><p>Logical V coordinate as a float attribute.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CellMap.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CellMap" title="pyvcad.pyvcad.CellMap"><span class="pre">pyvcad.pyvcad.CellMap</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.CellMapDiagnostics" title="pyvcad.pyvcad.CellMapDiagnostics"><span class="pre">pyvcad.pyvcad.CellMapDiagnostics</span></a></span></span><a class="headerlink" href="#pyvcad.CellMap.validate" title="Link to this definition">#</a></dt>
+<dd><p>Validate Jacobians, inverse lookup, trim statistics, and aspect ratio.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">diagnostics</span> <span class="o">=</span> <span class="n">cell_map</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CellMap.w_field">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">w_field</span></span><a class="headerlink" href="#pyvcad.CellMap.w_field" title="Link to this definition">#</a></dt>
+<dd><p>Logical W coordinate as a float attribute.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CellMap.warp">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">warp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CellMap" title="pyvcad.pyvcad.CellMap"><span class="pre">pyvcad.pyvcad.CellMap</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">u_scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.MappedScalarField" title="pyvcad.pyvcad.MappedScalarField"><span class="pre">pyvcad.pyvcad.MappedScalarField</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v_scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.MappedScalarField" title="pyvcad.pyvcad.MappedScalarField"><span class="pre">pyvcad.pyvcad.MappedScalarField</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w_scale</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.MappedScalarField" title="pyvcad.pyvcad.MappedScalarField"><span class="pre">pyvcad.pyvcad.MappedScalarField</span></a></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lock_u_bounds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lock_v_bounds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">lock_w_bounds</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.CellMap" title="pyvcad.pyvcad.CellMap"><span class="pre">pyvcad.pyvcad.CellMap</span></a></span></span><a class="headerlink" href="#pyvcad.CellMap.warp" title="Link to this definition">#</a></dt>
+<dd><p>Warp relative cell spacing while retaining an immutable map.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>base</strong> (<a class="reference internal" href="#pyvcad.CellMap" title="pyvcad.CellMap"><em>CellMap</em></a>) – Base map.</p></li>
+<li><p><strong>u_scale</strong> (<a class="reference internal" href="#pyvcad.MappedScalarField" title="pyvcad.MappedScalarField"><em>MappedScalarField</em></a><em> | </em><em>None</em>) – Relative U spacing weights.</p></li>
+<li><p><strong>v_scale</strong> (<a class="reference internal" href="#pyvcad.MappedScalarField" title="pyvcad.MappedScalarField"><em>MappedScalarField</em></a><em> | </em><em>None</em>) – Relative V spacing weights.</p></li>
+<li><p><strong>w_scale</strong> (<a class="reference internal" href="#pyvcad.MappedScalarField" title="pyvcad.MappedScalarField"><em>MappedScalarField</em></a><em> | </em><em>None</em>) – Relative W spacing weights.</p></li>
+<li><p><strong>lock_u_bounds</strong> (<em>bool</em>) – Preserve opposite U boundaries.</p></li>
+<li><p><strong>lock_v_bounds</strong> (<em>bool</em>) – Preserve opposite V boundaries.</p></li>
+<li><p><strong>lock_w_bounds</strong> (<em>bool</em>) – Preserve opposite W boundaries.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">warped</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CellMap</span><span class="o">.</span><span class="n">warp</span><span class="p">(</span><span class="n">cell_map</span><span class="p">,</span> <span class="n">u_scale</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.CellMapCollection">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">CellMapCollection</span></span><a class="headerlink" href="#pyvcad.CellMapCollection" title="Link to this definition">#</a></dt>
+<dd><p>A collection of independently parameterized CAD-face maps.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CellMapCollection.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CellMapCollection" title="pyvcad.pyvcad.CellMapCollection"><span class="pre">pyvcad.pyvcad.CellMapCollection</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">maps</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.CellMap" title="pyvcad.pyvcad.CellMap"><span class="pre">pyvcad.pyvcad.CellMap</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.CellMapCollection.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Construct a map collection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>maps</strong> (<em>list</em><em>[</em><a class="reference internal" href="#pyvcad.CellMap" title="pyvcad.CellMap"><em>CellMap</em></a><em>]</em>) – Independent cell maps.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">collection</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CellMapCollection</span><span class="p">([</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CellMapCollection.maps">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">maps</span></span><a class="headerlink" href="#pyvcad.CellMapCollection.maps" title="Link to this definition">#</a></dt>
+<dd><p>Independent maps in collection order.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CellMapCollection.validate">
+<span class="sig-name descname"><span class="pre">validate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CellMapCollection" title="pyvcad.pyvcad.CellMapCollection"><span class="pre">pyvcad.pyvcad.CellMapCollection</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">list</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.CellMapDiagnostics" title="pyvcad.pyvcad.CellMapDiagnostics"><span class="pre">pyvcad.pyvcad.CellMapDiagnostics</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#pyvcad.CellMapCollection.validate" title="Link to this definition">#</a></dt>
+<dd><p>Validate every independent map.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">diagnostics</span> <span class="o">=</span> <span class="n">collection</span><span class="o">.</span><span class="n">validate</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.CellMapDiagnostics">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">CellMapDiagnostics</span></span><a class="headerlink" href="#pyvcad.CellMapDiagnostics" title="Link to this definition">#</a></dt>
+<dd><p>Validation evidence for a structured curvilinear cell map.</p>
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CellMapDiagnostics.active_element_count">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">active_element_count</span></span><a class="headerlink" href="#pyvcad.CellMapDiagnostics.active_element_count" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CellMapDiagnostics.inverse_solver_failures">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">inverse_solver_failures</span></span><a class="headerlink" href="#pyvcad.CellMapDiagnostics.inverse_solver_failures" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CellMapDiagnostics.inverted_cell_count">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">inverted_cell_count</span></span><a class="headerlink" href="#pyvcad.CellMapDiagnostics.inverted_cell_count" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CellMapDiagnostics.maximum_aspect_ratio">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">maximum_aspect_ratio</span></span><a class="headerlink" href="#pyvcad.CellMapDiagnostics.maximum_aspect_ratio" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CellMapDiagnostics.maximum_jacobian_determinant">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">maximum_jacobian_determinant</span></span><a class="headerlink" href="#pyvcad.CellMapDiagnostics.maximum_jacobian_determinant" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CellMapDiagnostics.minimum_jacobian_determinant">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">minimum_jacobian_determinant</span></span><a class="headerlink" href="#pyvcad.CellMapDiagnostics.minimum_jacobian_determinant" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CellMapDiagnostics.non_neighbor_overlap_count">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">non_neighbor_overlap_count</span></span><a class="headerlink" href="#pyvcad.CellMapDiagnostics.non_neighbor_overlap_count" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CellMapDiagnostics.trimmed_element_count">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">trimmed_element_count</span></span><a class="headerlink" href="#pyvcad.CellMapDiagnostics.trimmed_element_count" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.CellMapDiagnostics.valid">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">valid</span></span><a class="headerlink" href="#pyvcad.CellMapDiagnostics.valid" title="Link to this definition">#</a></dt>
+<dd><p>Whether all mandatory validation checks passed.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.MappedScalarField">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">MappedScalarField</span></span><a class="headerlink" href="#pyvcad.MappedScalarField" title="Link to this definition">#</a></dt>
+<dd><p>A native constant or numba callback with explicit world/cell coordinate semantics.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.MappedScalarField.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.MappedScalarField" title="pyvcad.pyvcad.MappedScalarField"><span class="pre">pyvcad.pyvcad.MappedScalarField</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">definition</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">space</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">pyvcad.pyvcad.MappedFieldSpace</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">&lt;MappedFieldSpace.world:</span> <span class="pre">0&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.MappedScalarField.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Construct a mapped scalar field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>definition</strong> (<em>float</em><em> | </em><em>numba.cfunc</em>) – Constant or float64(x, y, z, d) callback.</p></li>
+<li><p><strong>space</strong> (<em>MappedFieldSpace</em>) – Explicit callback coordinate space.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">field</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">MappedScalarField</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">MappedFieldSpace</span><span class="o">.</span><span class="n">cell</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.MappedScalarField.space">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">space</span></span><a class="headerlink" href="#pyvcad.MappedScalarField.space" title="Link to this definition">#</a></dt>
+<dd><p>Explicit coordinate space.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.ImplicitUnitCell">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">ImplicitUnitCell</span></span><a class="headerlink" href="#pyvcad.ImplicitUnitCell" title="Link to this definition">#</a></dt>
+<dd><p>A custom periodic implicit unit cell in normalized coordinates.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.ImplicitUnitCell.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.ImplicitUnitCell" title="pyvcad.pyvcad.ImplicitUnitCell"><span class="pre">pyvcad.pyvcad.ImplicitUnitCell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">gradient</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'custom'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.ImplicitUnitCell.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Construct a custom periodic implicit unit cell.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>value</strong> (<em>callable</em>) – Scalar callback over normalized u, v, w; numba.cfunc is the native fast path.</p></li>
+<li><p><strong>gradient</strong> (<em>callable</em><em> | </em><em>None</em>) – Optional analytic Vec3 callback.</p></li>
+<li><p><strong>name</strong> (<em>str</em>) – Diagram and inspection name.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cell</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">ImplicitUnitCell</span><span class="p">(</span><span class="k">lambda</span> <span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">:</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">u</span><span class="p">))</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.ImplicitUnitCell.name">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">name</span></span><a class="headerlink" href="#pyvcad.ImplicitUnitCell.name" title="Link to this definition">#</a></dt>
+<dd><p>Inspection name.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.ImplicitUnitCell.standard">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">standard</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.ImplicitUnitCell" title="pyvcad.pyvcad.ImplicitUnitCell"><span class="pre">pyvcad.pyvcad.ImplicitUnitCell</span></a></span></span><a class="headerlink" href="#pyvcad.ImplicitUnitCell.standard" title="Link to this definition">#</a></dt>
+<dd><p>Return a standard TPMS unit cell by name.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Standard TPMS name.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cell</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">ImplicitUnitCell</span><span class="o">.</span><span class="n">standard</span><span class="p">(</span><span class="s1">&#39;gyroid&#39;</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.ImplicitUnitCell.validate_periodicity">
+<span class="sig-name descname"><span class="pre">validate_periodicity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.ImplicitUnitCell" title="pyvcad.pyvcad.ImplicitUnitCell"><span class="pre">pyvcad.pyvcad.ImplicitUnitCell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">tolerance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1e-06</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#pyvcad.ImplicitUnitCell.validate_periodicity" title="Link to this definition">#</a></dt>
+<dd><p>Compare opposite unit-cell boundaries.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>tolerance</strong> (<em>float</em>) – Maximum scalar mismatch.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">cell</span><span class="o">.</span><span class="n">validate_periodicity</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.GraphUnitCell">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">GraphUnitCell</span></span><a class="headerlink" href="#pyvcad.GraphUnitCell" title="Link to this definition">#</a></dt>
+<dd><p>A normalized indexed graph unit cell with optional tags.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.GraphUnitCell.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.GraphUnitCell" title="pyvcad.pyvcad.GraphUnitCell"><span class="pre">pyvcad.pyvcad.GraphUnitCell</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertices</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edges</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsInt</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsInt</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertex_tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsInt</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">edge_tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsInt</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">orientation_tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsInt</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">material_tags</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsInt</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.GraphUnitCell.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Construct a normalized graph unit cell.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>vertices</strong> (<em>list</em><em>[</em><a class="reference internal" href="#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a><em>]</em>) – Normalized vertices in [0, 1].</p></li>
+<li><p><strong>edges</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em>) – Indexed edges.</p></li>
+<li><p><strong>vertex_tags</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – Optional per-vertex tags.</p></li>
+<li><p><strong>edge_tags</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – Optional per-edge tags.</p></li>
+<li><p><strong>orientation_tags</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – Optional per-edge orientation tags.</p></li>
+<li><p><strong>material_tags</strong> (<em>list</em><em>[</em><em>int</em><em>]</em>) – Optional per-edge material tags.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">cell</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">GraphUnitCell</span><span class="p">([</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">)],</span> <span class="p">[(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">)])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.GraphUnitCell.edge_tags">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">edge_tags</span></span><a class="headerlink" href="#pyvcad.GraphUnitCell.edge_tags" title="Link to this definition">#</a></dt>
+<dd><p>Per-edge tags.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.GraphUnitCell.edges">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">edges</span></span><a class="headerlink" href="#pyvcad.GraphUnitCell.edges" title="Link to this definition">#</a></dt>
+<dd><p>Indexed edges.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.GraphUnitCell.material_tags">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">material_tags</span></span><a class="headerlink" href="#pyvcad.GraphUnitCell.material_tags" title="Link to this definition">#</a></dt>
+<dd><p>Per-edge material tags.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.GraphUnitCell.orientation_tags">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">orientation_tags</span></span><a class="headerlink" href="#pyvcad.GraphUnitCell.orientation_tags" title="Link to this definition">#</a></dt>
+<dd><p>Per-edge orientation tags.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.GraphUnitCell.vertex_tags">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">vertex_tags</span></span><a class="headerlink" href="#pyvcad.GraphUnitCell.vertex_tags" title="Link to this definition">#</a></dt>
+<dd><p>Per-vertex tags.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.GraphUnitCell.vertices">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">vertices</span></span><a class="headerlink" href="#pyvcad.GraphUnitCell.vertices" title="Link to this definition">#</a></dt>
+<dd><p>Normalized vertices.</p>
+</dd></dl>
+
+</dd></dl>
+
 </section>
 
 
@@ -1183,6 +1953,101 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.HexahedralMesh.number_of_elements"><code class="docutils literal notranslate"><span class="pre">HexahedralMesh.number_of_elements()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.HexahedralMesh.number_of_nodes"><code class="docutils literal notranslate"><span class="pre">HexahedralMesh.number_of_nodes()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.HexahedralMesh.voxel_size"><code class="docutils literal notranslate"><span class="pre">HexahedralMesh.voxel_size()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADModel"><code class="docutils literal notranslate"><span class="pre">CADModel</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADModel.__init__"><code class="docutils literal notranslate"><span class="pre">CADModel.__init__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADModel.face"><code class="docutils literal notranslate"><span class="pre">CADModel.face()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADModel.faces"><code class="docutils literal notranslate"><span class="pre">CADModel.faces</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADModel.from_brep"><code class="docutils literal notranslate"><span class="pre">CADModel.from_brep()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADModel.from_brep_bytes"><code class="docutils literal notranslate"><span class="pre">CADModel.from_brep_bytes()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADModel.from_iges"><code class="docutils literal notranslate"><span class="pre">CADModel.from_iges()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADModel.from_step"><code class="docutils literal notranslate"><span class="pre">CADModel.from_step()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADModel.select_faces"><code class="docutils literal notranslate"><span class="pre">CADModel.select_faces()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADModel.to_node"><code class="docutils literal notranslate"><span class="pre">CADModel.to_node()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADFace"><code class="docutils literal notranslate"><span class="pre">CADFace</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADFace.__init__"><code class="docutils literal notranslate"><span class="pre">CADFace.__init__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADFace.area"><code class="docutils literal notranslate"><span class="pre">CADFace.area</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADFace.boundary_loop_count"><code class="docutils literal notranslate"><span class="pre">CADFace.boundary_loop_count</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADFace.bounding_box"><code class="docutils literal notranslate"><span class="pre">CADFace.bounding_box</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADFace.centroid"><code class="docutils literal notranslate"><span class="pre">CADFace.centroid</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADFace.contains"><code class="docutils literal notranslate"><span class="pre">CADFace.contains()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADFace.index"><code class="docutils literal notranslate"><span class="pre">CADFace.index</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADFace.is_trimmed"><code class="docutils literal notranslate"><span class="pre">CADFace.is_trimmed</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADFace.normal"><code class="docutils literal notranslate"><span class="pre">CADFace.normal</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADFace.normal_at"><code class="docutils literal notranslate"><span class="pre">CADFace.normal_at()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADFace.point"><code class="docutils literal notranslate"><span class="pre">CADFace.point()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADFace.surface_type"><code class="docutils literal notranslate"><span class="pre">CADFace.surface_type</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADFace.u_periodic"><code class="docutils literal notranslate"><span class="pre">CADFace.u_periodic</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADFace.uv_bounds"><code class="docutils literal notranslate"><span class="pre">CADFace.uv_bounds</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CADFace.v_periodic"><code class="docutils literal notranslate"><span class="pre">CADFace.v_periodic</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap"><code class="docutils literal notranslate"><span class="pre">CellMap</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.__init__"><code class="docutils literal notranslate"><span class="pre">CellMap.__init__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.between_cad_faces"><code class="docutils literal notranslate"><span class="pre">CellMap.between_cad_faces()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.bounds"><code class="docutils literal notranslate"><span class="pre">CellMap.bounds</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.cells"><code class="docutils literal notranslate"><span class="pre">CellMap.cells</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.domain_signed_distance"><code class="docutils literal notranslate"><span class="pre">CellMap.domain_signed_distance()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.forward"><code class="docutils literal notranslate"><span class="pre">CellMap.forward()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.from_cad_face"><code class="docutils literal notranslate"><span class="pre">CellMap.from_cad_face()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.inverse"><code class="docutils literal notranslate"><span class="pre">CellMap.inverse()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.jacobian"><code class="docutils literal notranslate"><span class="pre">CellMap.jacobian()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.jacobian_determinant"><code class="docutils literal notranslate"><span class="pre">CellMap.jacobian_determinant()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.jacobian_determinant_field"><code class="docutils literal notranslate"><span class="pre">CellMap.jacobian_determinant_field</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.maximum_principal_stretch_field"><code class="docutils literal notranslate"><span class="pre">CellMap.maximum_principal_stretch_field</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.middle_principal_stretch_field"><code class="docutils literal notranslate"><span class="pre">CellMap.middle_principal_stretch_field</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.minimum_principal_stretch_field"><code class="docutils literal notranslate"><span class="pre">CellMap.minimum_principal_stretch_field</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.periodic_axes"><code class="docutils literal notranslate"><span class="pre">CellMap.periodic_axes</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.principal_stretches"><code class="docutils literal notranslate"><span class="pre">CellMap.principal_stretches()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.rectangular"><code class="docutils literal notranslate"><span class="pre">CellMap.rectangular()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.u_field"><code class="docutils literal notranslate"><span class="pre">CellMap.u_field</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.v_field"><code class="docutils literal notranslate"><span class="pre">CellMap.v_field</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.validate"><code class="docutils literal notranslate"><span class="pre">CellMap.validate()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.w_field"><code class="docutils literal notranslate"><span class="pre">CellMap.w_field</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMap.warp"><code class="docutils literal notranslate"><span class="pre">CellMap.warp()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMapCollection"><code class="docutils literal notranslate"><span class="pre">CellMapCollection</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMapCollection.__init__"><code class="docutils literal notranslate"><span class="pre">CellMapCollection.__init__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMapCollection.maps"><code class="docutils literal notranslate"><span class="pre">CellMapCollection.maps</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMapCollection.validate"><code class="docutils literal notranslate"><span class="pre">CellMapCollection.validate()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMapDiagnostics"><code class="docutils literal notranslate"><span class="pre">CellMapDiagnostics</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMapDiagnostics.active_element_count"><code class="docutils literal notranslate"><span class="pre">CellMapDiagnostics.active_element_count</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMapDiagnostics.inverse_solver_failures"><code class="docutils literal notranslate"><span class="pre">CellMapDiagnostics.inverse_solver_failures</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMapDiagnostics.inverted_cell_count"><code class="docutils literal notranslate"><span class="pre">CellMapDiagnostics.inverted_cell_count</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMapDiagnostics.maximum_aspect_ratio"><code class="docutils literal notranslate"><span class="pre">CellMapDiagnostics.maximum_aspect_ratio</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMapDiagnostics.maximum_jacobian_determinant"><code class="docutils literal notranslate"><span class="pre">CellMapDiagnostics.maximum_jacobian_determinant</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMapDiagnostics.minimum_jacobian_determinant"><code class="docutils literal notranslate"><span class="pre">CellMapDiagnostics.minimum_jacobian_determinant</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMapDiagnostics.non_neighbor_overlap_count"><code class="docutils literal notranslate"><span class="pre">CellMapDiagnostics.non_neighbor_overlap_count</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMapDiagnostics.trimmed_element_count"><code class="docutils literal notranslate"><span class="pre">CellMapDiagnostics.trimmed_element_count</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellMapDiagnostics.valid"><code class="docutils literal notranslate"><span class="pre">CellMapDiagnostics.valid</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.MappedScalarField"><code class="docutils literal notranslate"><span class="pre">MappedScalarField</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.MappedScalarField.__init__"><code class="docutils literal notranslate"><span class="pre">MappedScalarField.__init__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.MappedScalarField.space"><code class="docutils literal notranslate"><span class="pre">MappedScalarField.space</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.ImplicitUnitCell"><code class="docutils literal notranslate"><span class="pre">ImplicitUnitCell</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.ImplicitUnitCell.__init__"><code class="docutils literal notranslate"><span class="pre">ImplicitUnitCell.__init__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.ImplicitUnitCell.name"><code class="docutils literal notranslate"><span class="pre">ImplicitUnitCell.name</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.ImplicitUnitCell.standard"><code class="docutils literal notranslate"><span class="pre">ImplicitUnitCell.standard()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.ImplicitUnitCell.validate_periodicity"><code class="docutils literal notranslate"><span class="pre">ImplicitUnitCell.validate_periodicity()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.GraphUnitCell"><code class="docutils literal notranslate"><span class="pre">GraphUnitCell</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.GraphUnitCell.__init__"><code class="docutils literal notranslate"><span class="pre">GraphUnitCell.__init__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.GraphUnitCell.edge_tags"><code class="docutils literal notranslate"><span class="pre">GraphUnitCell.edge_tags</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.GraphUnitCell.edges"><code class="docutils literal notranslate"><span class="pre">GraphUnitCell.edges</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.GraphUnitCell.material_tags"><code class="docutils literal notranslate"><span class="pre">GraphUnitCell.material_tags</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.GraphUnitCell.orientation_tags"><code class="docutils literal notranslate"><span class="pre">GraphUnitCell.orientation_tags</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.GraphUnitCell.vertex_tags"><code class="docutils literal notranslate"><span class="pre">GraphUnitCell.vertex_tags</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.GraphUnitCell.vertices"><code class="docutils literal notranslate"><span class="pre">GraphUnitCell.vertices</span></code></a></li>
 </ul>
 </li>
 </ul>

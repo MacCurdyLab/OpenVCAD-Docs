@@ -19,6 +19,8 @@ Read these first:
 5. [Math Expressions in OpenVCAD](math-expressions.md)
 6. [Attribute Conflict Resolution](attribute-conflicts.md)
 7. [Attribute Modifier and Resolver Guide](attribute-resolver.md)
+8. [Metamaterials](metamaterials/index.md)
+9. [Conformal Lattices from CAD Faces](metamaterials/conformal-lattices.md)
 
 It is especially important to read [Theory and Motivation](theory-and-motivation.md) first, then follow along with the [Getting Started with OpenVCAD](getting-started.md) guide. Together, those guides introduce the new attribute-modeling workflow, how attributes attach to geometry, how composition affects attributes, and how coordinate spaces work.
 
@@ -41,3 +43,23 @@ The practical shift is:
 - new pattern: attach the attribute that expresses your intent, then derive or compile the attributes needed by the target workflow
 
 This is why the older functional grading node is obsolete in the attribute-modeling branch. Functional grading is now a general capability of every expression-based attribute. A `MODULUS` gradient, `COLOR_RGBA` gradient, `TEMPERATURE` field, and `VOLUME_FRACTIONS` blend all use the same modeling pattern: attach a field to the node where that field should live.
+
+## Migrating lattice and TPMS scripts within version 3
+
+The attribute-modeling line also replaces the experimental conformal-mapping prototypes and the earlier Cartesian metamaterials builders. Spatial layout now belongs to an explicit `CellMap`; the TPMS or graph-cell builder receives that map as its first argument.
+
+```python
+# Earlier builder style
+root = mm.gyroid(cell=10.0, thickness=1.2, size=30.0)
+
+# Version 3 map-first style
+cell_map = mm.rectangular_cell_map(
+    (pv.Vec3(-15.0, -15.0, -15.0), pv.Vec3(15.0, 15.0, 15.0)),
+    cells=(3, 3, 3),
+)
+root = mm.gyroid(cell_map, wall_thickness=1.2)
+```
+
+The equivalent graph-lattice rename is `radius` to `beam_radius`. Builder arguments named `cell`, `size`, `bounds`, and `center` have been removed. For CAD-conformal geometry, construct the map with `cell_map_from_cad_face` or `cell_map_between_cad_faces`; the old `Map`, `ConformalMap`, and `SurfaceParamerterizer` prototypes no longer exist.
+
+Geometry callbacks now declare their coordinate system explicitly with `world_field` or `cell_field`. Use `cell_attribute` when an output attribute should be evaluated in logical cell coordinates. All returned lattice objects remain ordinary `pv.Node` instances and continue through the normal attribute and compiler pipelines.

@@ -1,0 +1,102 @@
+(guide-metamaterials-concepts)=
+# Concepts and representation
+
+```{include} ../_guide-sidebar-compiler-membership.md
+```
+
+OpenVCAD's metamaterial model has two independent parts:
+
+1. a normalized unit cell that defines the repeating topology, and
+2. a `CellMap` that says how many copies exist and where their logical coordinates lie in world space.
+
+This separation is the key difference from APIs that bake cell size, bounds, and geometry into one lattice builder. It lets one cell definition survive rectangular tiling, functional grading, and conformal deformation.
+
+<div class="guide-figure-stack">
+  <div class="guide-figure-cell">
+    <a href="../images/mm_cell_map_concept.png" data-lightbox="metamaterials-concepts">
+      <img src="../images/mm_cell_map_concept.png" alt="Unit cell, logical tiling, cell map, and mapped lattice workflow">
+    </a>
+    <div class="guide-figure-label">A unit cell is repeated in logical coordinates, then the cell map places that finite logical domain in world space.</div>
+  </div>
+</div>
+
+## Unit cells describe topology
+
+A unit cell occupies the normalized interval `[0, 1]` along each logical axis. Repetition happens across opposite boundaries, so cells intended to tile continuously must agree at those boundaries.
+
+OpenVCAD supports two representations.
+
+### Implicit unit cells
+
+An `ImplicitUnitCell` is a periodic scalar field. TPMS cells use this representation: a sheet is a finite-thickness neighborhood around a level surface, while solid mode keeps one side of the level surface.
+
+```python
+import pyvcad as pv
+
+gyroid_cell = pv.ImplicitUnitCell.standard("gyroid")
+assert gyroid_cell.validate_periodicity()
+```
+
+The metamaterials package supplies named helpers for the standard catalog, but `mm.tpms(...)` also accepts a custom `ImplicitUnitCell`. The cell owns the periodic field; it does not own a world-space size or bounding box.
+
+### Graph unit cells
+
+A `GraphUnitCell` stores normalized vertices and indexed edges. Optional vertex, edge, orientation, and material tags preserve semantic information without expanding the final design into thousands of public strut nodes.
+
+```python
+import pyvcad as pv
+
+cell = pv.GraphUnitCell(
+    [pv.Vec3(0.0, 0.0, 0.0), pv.Vec3(1.0, 1.0, 1.0)],
+    [(0, 1)],
+    edge_tags=[10],
+)
+```
+
+The mapped graph node tiles that indexed graph, curves its segments when necessary, and applies beam and node radii in millimetres.
+
+## Cell maps describe layout
+
+A `CellMap` has a finite logical domain:
+
+```text
+[0, nu] × [0, nv] × [0, nw]
+```
+
+Each integer interval is one unit cell. For example, `cells=(4, 3, 2)` creates four repetitions along logical U, three along V, and two along W. The map's forward transform places every logical coordinate in world space; its inverse transform lets mapped fields and attributes recover logical coordinates from a world-space sample.
+
+For a rectangular domain:
+
+```python
+import pyvcad as pv
+import pyvcad_metamaterials as mm
+
+cell_map = mm.rectangular_cell_map(
+    (pv.Vec3(-20.0, -15.0, -10.0), pv.Vec3(20.0, 15.0, 10.0)),
+    cells=(4, 3, 2),
+)
+```
+
+The same logical domain can instead follow a CAD surface or span the space between two CAD faces. Cell topology remains unchanged; only the logical-to-world map changes.
+
+## Mapped cells become ordinary OpenVCAD nodes
+
+The high-level builders combine a unit cell and a map:
+
+```python
+gyroid = mm.gyroid(cell_map, wall_thickness=1.2)
+octet = mm.octet(cell_map, beam_radius=0.7)
+```
+
+The results are normal OpenVCAD nodes. They can participate in booleans and transforms, carry attributes, render interactively, and pass through the existing compiler pipeline.
+
+```python
+part = pv.Intersection(
+    gyroid,
+    pv.Sphere(pv.Vec3(0.0, 0.0, 0.0), 12.0),
+)
+```
+
+The unit cell controls **what repeats**. The cell map controls **where and how it repeats**. Geometry fields and attributes then control **how the mapped structure varies**.
+
+Continue with the [TPMS and lattice catalog](catalog.md) to choose an off-the-shelf cell.

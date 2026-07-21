@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>Conformal lattices from CAD faces &#8212; OpenVCAD 3.0 documentation</title>
+    <title>Conformal mapping CAD surfaces &#8212; OpenVCAD 3.0 documentation</title>
   
   
   
@@ -44,14 +44,14 @@
     <script src="../../_static/documentation_options.js?v=110ea713"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
     <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'guides/metamaterials/conformal-lattices';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'guides/metamaterials/conformal-cad';</script>
     <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
     <script src="../../_static/openvcad_lightbox.js?v=e11fca97"></script>
     <script src="../../_static/openvcad_comparison.js?v=0e3a0b21"></script>
     <link rel="icon" href="../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Python Functions for Attributes" href="../numba-attributes.html" />
+    <link rel="next" title="Conformal mapping triangle meshes" href="conformal-meshes.html" />
     <link rel="prev" title="Functionally graded metamaterials" href="functional-grading.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -164,6 +164,7 @@
         <li><a class="dropdown-item" href="../theory-and-motivation.html">Theory and Motivation</a></li>
         <li><a class="dropdown-item" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
         <li><a class="dropdown-item" href="../gradients.html">Functional grading</a></li>
+        <li><a class="dropdown-item" href="../cadquery.html">CAD with CadQuery</a></li>
         <li><a class="dropdown-item active" href="index.html">Metamaterials</a></li>
         <li><a class="dropdown-item" href="../numba-attributes.html">Python functions for attributes</a></li>
         <li><a class="dropdown-item" href="../math-expressions.html">Math expressions</a></li>
@@ -289,6 +290,7 @@
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../theory-and-motivation.html">Theory and Motivation</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../gradients.html">Functional grading</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../cadquery.html">CAD with CadQuery</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3 active" href="index.html">Metamaterials</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../numba-attributes.html">Python functions for attributes</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../math-expressions.html">Math expressions</a></li>
@@ -353,11 +355,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../theory-and-motivation.html">Theory and Motivation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../gradients.html">Functional Grading Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cadquery.html">Authoring CAD with CadQuery</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Metamaterials</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="concepts.html">Concepts and representation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="catalog.html">TPMS and lattice catalog</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functional-grading.html">Functionally graded metamaterials</a></li>
-<li class="toctree-l2 current active"><a class="current reference internal" href="#">Conformal lattices from CAD faces</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Conformal mapping CAD surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conformal-meshes.html">Conformal mapping triangle meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../numba-attributes.html">Python Functions for Attributes</a></li>
@@ -419,7 +424,7 @@
     
     <li class="breadcrumb-item"><a href="index.html" class="nav-link">Metamaterials</a></li>
     
-    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Conformal lattices from CAD faces</span></li>
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Conformal mapping CAD surfaces</span></li>
   </ul>
 </nav>
 </div>
@@ -436,8 +441,8 @@
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="conformal-lattices-from-cad-faces">
-<span id="guide-metamaterials-conformal"></span><h1>Conformal lattices from CAD faces<a class="headerlink" href="#conformal-lattices-from-cad-faces" title="Link to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="conformal-mapping-cad-surfaces">
+<span id="guide-metamaterials-conformal"></span><h1>Conformal mapping CAD surfaces<a class="headerlink" href="#conformal-mapping-cad-surfaces" title="Link to this heading">#</a></h1>
 <!--
 Build dependency sentinel for guide sidebar compiler membership.
 Guide pages that render the shared Guides sidebar include this file so
@@ -451,14 +456,15 @@ Current compiler guides:
 - slicer-project
 - simulation-compiler
 -->
-<p>A conformal lattice evaluates the same normalized TPMS or graph unit cell used in the rectangular examples through a cell map derived from CAD surfaces. The map bends and stretches logical U, V, and W; the unit cell still defines topology, and wall thickness or beam radius remains a world-unit control.</p>
+<p>A conformal lattice evaluates the same normalized TPMS or graph unit cell used in the rectangular examples through a cell map derived from a surface. The map bends and stretches logical U, V, and W; the unit cell still defines topology, and wall thickness or beam radius remains a world-unit control.</p>
+<p>This guide covers maps built from <strong>exact CAD faces</strong>, whose native surface coordinates provide the map directly. When the surface exists only as a triangle mesh — an STL region, a scan, or a procedurally generated patch — the companion guide, <a class="reference internal" href="conformal-meshes.html"><span class="std std-doc">Conformal mapping triangle meshes</span></a>, builds the same maps from a <code class="docutils literal notranslate"><span class="pre">TriangleMeshSurface</span></code>. Both satisfy one <code class="docutils literal notranslate"><span class="pre">ParametricSurface</span></code> contract, so <code class="docutils literal notranslate"><span class="pre">mm.cell_map_from_surface(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">mm.cell_map_between_surfaces(...)</span></code> accept either type in any combination; the CAD-named helpers used below are thin wrappers over the same factories.</p>
 <section id="install-the-optional-cad-authoring-stack">
 <h2>Install the optional CAD authoring stack<a class="headerlink" href="#install-the-optional-cad-authoring-stack" title="Link to this heading">#</a></h2>
 <p>CadQuery support is optional because its CAD kernel and visualization dependencies are substantial:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;OpenVCAD[cad]&quot;</span>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pyvcad-metamaterials[cad]&quot;</span>
 </pre></div>
 </div>
-<p>Importing <code class="docutils literal notranslate"><span class="pre">pyvcad_metamaterials</span></code> does not import CadQuery. The adapter loads it only when <code class="docutils literal notranslate"><span class="pre">mm.cadquery</span></code> is used.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> loads CadQuery only when <code class="docutils literal notranslate"><span class="pre">pv.CADModel.from_cadquery(...)</span></code> is called.</p>
 </section>
 <section id="how-a-face-becomes-a-cell-map">
 <h2>How a face becomes a cell map<a class="headerlink" href="#how-a-face-becomes-a-cell-map" title="Link to this heading">#</a></h2>
@@ -471,13 +477,14 @@ Current compiler guides:
 </section>
 <section id="author-and-select-a-cadquery-face">
 <h2>Author and select a CadQuery face<a class="headerlink" href="#author-and-select-a-cadquery-face" title="Link to this heading">#</a></h2>
-<p>CadQuery remains the high-level language for workplanes, sketches, solids, and face selectors. Convert exactly one selected face with <code class="docutils literal notranslate"><span class="pre">mm.cadquery.face(...)</span></code>, then construct the map.</p>
+<p>CadQuery remains the high-level language for workplanes, sketches, solids, and face selectors. Convert exactly one selected face with <code class="docutils literal notranslate"><span class="pre">pv.CADModel.from_cadquery(...).faces[0]</span></code>, then construct the map.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cadquery</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cq</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_metamaterials</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mm</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
 
 <span class="n">cad</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">(</span><span class="s2">&quot;XY&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="mf">20.0</span><span class="p">)</span><span class="o">.</span><span class="n">extrude</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)</span>
-<span class="n">surface</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">cadquery</span><span class="o">.</span><span class="n">face</span><span class="p">(</span><span class="n">cad</span><span class="o">.</span><span class="n">faces</span><span class="p">(</span><span class="s2">&quot;%CYLINDER&quot;</span><span class="p">))</span>
+<span class="n">surface</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CADModel</span><span class="o">.</span><span class="n">from_cadquery</span><span class="p">(</span><span class="n">cad</span><span class="o">.</span><span class="n">faces</span><span class="p">(</span><span class="s2">&quot;%CYLINDER&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">faces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="n">cell_map</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">cell_map_from_cad_face</span><span class="p">(</span>
     <span class="n">surface</span><span class="p">,</span>
@@ -501,14 +508,15 @@ Current compiler guides:
 <h2>Map between two faces<a class="headerlink" href="#map-between-two-faces" title="Link to this heading">#</a></h2>
 <p>Use paired faces when both sides of a curvilinear volume matter. The first and second face define the W boundaries rather than using a constant normal height.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cadquery</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cq</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_metamaterials</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mm</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
 
 <span class="n">inner_cad</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">(</span><span class="s2">&quot;XY&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="mf">15.0</span><span class="p">)</span><span class="o">.</span><span class="n">extrude</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)</span>
 <span class="n">outer_cad</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">(</span><span class="s2">&quot;XY&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="mf">22.0</span><span class="p">)</span><span class="o">.</span><span class="n">extrude</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)</span>
 
-<span class="n">inner</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">cadquery</span><span class="o">.</span><span class="n">face</span><span class="p">(</span><span class="n">inner_cad</span><span class="o">.</span><span class="n">faces</span><span class="p">(</span><span class="s2">&quot;%CYLINDER&quot;</span><span class="p">))</span>
-<span class="n">outer</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">cadquery</span><span class="o">.</span><span class="n">face</span><span class="p">(</span><span class="n">outer_cad</span><span class="o">.</span><span class="n">faces</span><span class="p">(</span><span class="s2">&quot;%CYLINDER&quot;</span><span class="p">))</span>
+<span class="n">inner</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CADModel</span><span class="o">.</span><span class="n">from_cadquery</span><span class="p">(</span><span class="n">inner_cad</span><span class="o">.</span><span class="n">faces</span><span class="p">(</span><span class="s2">&quot;%CYLINDER&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">faces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">outer</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CADModel</span><span class="o">.</span><span class="n">from_cadquery</span><span class="p">(</span><span class="n">outer_cad</span><span class="o">.</span><span class="n">faces</span><span class="p">(</span><span class="s2">&quot;%CYLINDER&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">faces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
 <span class="n">cell_map</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">cell_map_between_cad_faces</span><span class="p">(</span>
     <span class="n">inner</span><span class="p">,</span>
@@ -578,6 +586,7 @@ Current compiler guides:
 <section id="lofted-conical-surface">
 <h3>Lofted conical surface<a class="headerlink" href="#lofted-conical-surface" title="Link to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cadquery</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cq</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_metamaterials</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mm</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
 
@@ -588,7 +597,7 @@ Current compiler guides:
     <span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="mf">10.0</span><span class="p">)</span>
     <span class="o">.</span><span class="n">loft</span><span class="p">(</span><span class="n">combine</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ruled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="p">)</span>
-<span class="n">surface</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">cadquery</span><span class="o">.</span><span class="n">face</span><span class="p">(</span><span class="n">cad</span><span class="o">.</span><span class="n">faces</span><span class="p">(</span><span class="s2">&quot;%CONE&quot;</span><span class="p">))</span>
+<span class="n">surface</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CADModel</span><span class="o">.</span><span class="n">from_cadquery</span><span class="p">(</span><span class="n">cad</span><span class="o">.</span><span class="n">faces</span><span class="p">(</span><span class="s2">&quot;%CONE&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">faces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">cell_map</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">cell_map_from_cad_face</span><span class="p">(</span>
     <span class="n">surface</span><span class="p">,</span>
     <span class="n">cells</span><span class="o">=</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
@@ -609,6 +618,7 @@ Current compiler guides:
 <section id="spherical-band">
 <h3>Spherical band<a class="headerlink" href="#spherical-band" title="Link to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cadquery</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cq</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_metamaterials</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mm</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
 
@@ -619,7 +629,7 @@ Current compiler guides:
         <span class="n">angleDegrees2</span><span class="o">=</span><span class="mf">60.0</span><span class="p">,</span>
     <span class="p">)</span>
 <span class="p">)</span>
-<span class="n">surface</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">cadquery</span><span class="o">.</span><span class="n">face</span><span class="p">(</span><span class="n">cad</span><span class="o">.</span><span class="n">faces</span><span class="p">(</span><span class="s2">&quot;%SPHERE&quot;</span><span class="p">))</span>
+<span class="n">surface</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CADModel</span><span class="o">.</span><span class="n">from_cadquery</span><span class="p">(</span><span class="n">cad</span><span class="o">.</span><span class="n">faces</span><span class="p">(</span><span class="s2">&quot;%SPHERE&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">faces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">cell_map</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">cell_map_from_cad_face</span><span class="p">(</span>
     <span class="n">surface</span><span class="p">,</span>
     <span class="n">cells</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
@@ -642,6 +652,7 @@ Current compiler guides:
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">cadquery</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cq</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_metamaterials</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mm</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
 
@@ -657,7 +668,7 @@ Current compiler guides:
     <span class="n">tol</span><span class="o">=</span><span class="mf">0.02</span><span class="p">,</span>
     <span class="n">smoothing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">surface</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">cadquery</span><span class="o">.</span><span class="n">face</span><span class="p">(</span><span class="n">cad</span><span class="p">)</span>
+<span class="n">surface</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CADModel</span><span class="o">.</span><span class="n">from_cadquery</span><span class="p">(</span><span class="n">cad</span><span class="p">)</span><span class="o">.</span><span class="n">faces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">cell_map</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">cell_map_from_cad_face</span><span class="p">(</span>
     <span class="n">surface</span><span class="p">,</span>
     <span class="n">cells</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
@@ -674,8 +685,16 @@ Current compiler guides:
   <div class="guide-figure-cell"><a href="../images/mm_conformal_freeform_diamond.png" data-lightbox="conformal-authored"><img src="../images/mm_conformal_freeform_diamond.png" alt="Diamond lattice mapped over a freeform saddle"></a><div class="guide-figure-label">Conformal diamond lattice</div></div>
 </div>
 <p><a class="reference download internal" download="" href="../../_downloads/8a910086ad817ffa77cd83ab4f04c748/17_cadquery_freeform_diamond.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">17_cadquery_freeform_diamond.py</span></code></span></a> uses <code class="docutils literal notranslate"><span class="pre">parametricSurface(...)</span></code>, demonstrating that the same workflow applies to a surface authored from a Python function.</p>
-<p>Once constructed, these mapped lattices are ordinary OpenVCAD nodes. They can carry the graded fields from the previous guide and can be sent to any compatible <a class="reference internal" href="../compilers/index.html"><span class="std std-doc">compiler</span></a>.</p>
 </section>
+</section>
+<section id="validation-is-always-final">
+<h2>Validation is always final<a class="headerlink" href="#validation-is-always-final" title="Link to this heading">#</a></h2>
+<p>Constructing a map runs <code class="docutils literal notranslate"><span class="pre">CellMap</span></code>’s Jacobian validation, which is the authoritative check on the extruded or interpolated volume:</p>
+<ul class="simple">
+<li><p>A <code class="docutils literal notranslate"><span class="pre">height</span></code> larger than a concave face’s curvature radius folds the offset — <em>“Surface CellMap is folded or singular.”</em></p></li>
+<li><p>Pairing faces whose parameterizations cannot be brought into correspondence raises <em>“No valid paired-surface correspondence was found,”</em> with per-candidate Jacobian diagnostics.</p></li>
+</ul>
+<p>Once constructed, these mapped lattices are ordinary OpenVCAD nodes. They can carry the graded fields from the previous guide, combine with the mesh-derived maps of <a class="reference internal" href="conformal-meshes.html"><span class="std std-doc">Conformal mapping triangle meshes</span></a>, and can be sent to any compatible <a class="reference internal" href="../compilers/index.html"><span class="std std-doc">compiler</span></a>.</p>
 </section>
 </section>
 
@@ -699,11 +718,11 @@ Current compiler guides:
       </div>
     </a>
     <a class="right-next"
-       href="../numba-attributes.html"
+       href="conformal-meshes.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Python Functions for Attributes</p>
+        <p class="prev-next-title">Conformal mapping triangle meshes</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -737,13 +756,14 @@ Current compiler guides:
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametric-freeform-surface">Parametric freeform surface</a></li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validation-is-always-final">Validation is always final</a></li>
 </ul>
   </nav></div>
 
   <div class="sidebar-secondary-item">
 
   <div class="tocsection sourcelink">
-    <a href="../../_sources/guides/metamaterials/conformal-lattices.md.txt">
+    <a href="../../_sources/guides/metamaterials/conformal-cad.md.txt">
       <i class="fa-solid fa-file-lines"></i> Show Source
     </a>
   </div>

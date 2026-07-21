@@ -3,7 +3,7 @@ Tree — attribute nodes
 
 **Attribute nodes** are :class:`Unary` scene nodes: each wraps a **child** subtree and changes how **continuous attributes** are produced or post-processed for that geometry. They are not the same thing as attaching an :class:`Attribute` with :meth:`Node.set_attribute`—that API defines field values on a node (see :doc:`attributes`). Attribute nodes instead implement **attribute-side operators** in the tree: converters, lookup tables, or spatial filters that sit between evaluation and the rest of the pipeline.
 
-:class:`AttributeModifier` applies an **attribute converter** (for example, mapping one named field into another, such as HU to RGBA via a lookup table). :class:`Convolve` applies a **convolution kernel** over attribute samples in a neighborhood so you can smooth, blend, or emphasize material or color distributions **without** altering the signed-distance geometry of the child.
+:class:`AttributeModifier` applies an **attribute converter** (for example, mapping one named field into another, such as HU to RGBA via a lookup table). :class:`Convolve` and :class:`Blend` spatially filter attribute samples **without** altering the signed-distance geometry of the child.
 
 Unary attribute nodes
 ---------------------
@@ -19,6 +19,11 @@ Unary attribute nodes
    :members:
    :undoc-members:
    :special-members: __init__
+
+.. py:class:: Blend(child, attributes, physical_radius, num_passes=1, override_voxel_size=None)
+
+   Precompute selected child attributes on a voxel grid and apply a masked,
+   separable box blur. This node leaves the child's signed-distance geometry unchanged.
 
 Convolution kernels
 -------------------

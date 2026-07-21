@@ -2,6 +2,7 @@
 
 import cadquery as cq
 
+import pyvcad as pv
 import pyvcad_metamaterials as mm
 import pyvcad_rendering as viz
 
@@ -13,7 +14,7 @@ cad = (
     .circle(10.0)
     .loft(combine=True, ruled=True)
 )
-surface = mm.cadquery.face(cad.faces("%CONE"))
+surface = pv.CADModel.from_cadquery(cad.faces("%CONE")).faces[0]
 cell_map = mm.cell_map_from_cad_face(
     surface,
     cells=(24, 10, 1),

@@ -161,6 +161,7 @@
         <li><a class="dropdown-item" href="guides/theory-and-motivation.html">Theory and Motivation</a></li>
         <li><a class="dropdown-item" href="guides/getting-started.html">Getting Started with OpenVCAD</a></li>
         <li><a class="dropdown-item" href="guides/gradients.html">Functional grading</a></li>
+        <li><a class="dropdown-item" href="guides/cadquery.html">CAD with CadQuery</a></li>
         <li><a class="dropdown-item" href="guides/metamaterials/index.html">Metamaterials</a></li>
         <li><a class="dropdown-item" href="guides/numba-attributes.html">Python functions for attributes</a></li>
         <li><a class="dropdown-item" href="guides/math-expressions.html">Math expressions</a></li>
@@ -284,6 +285,7 @@
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="guides/theory-and-motivation.html">Theory and Motivation</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="guides/getting-started.html">Getting Started with OpenVCAD</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="guides/gradients.html">Functional grading</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="guides/cadquery.html">CAD with CadQuery</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="guides/metamaterials/index.html">Metamaterials</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="guides/numba-attributes.html">Python functions for attributes</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="guides/math-expressions.html">Math expressions</a></li>
@@ -657,7 +659,7 @@
 </li>
       <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N9Attribute10ReturnType7vfm_ptrE">Attribute::ReturnType::vfm_ptr (C++ enumerator)</a>
 </li>
-      <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N9Attribute6sampleEdddd">Attribute::sample (C++ function)</a>
+      <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N9Attribute6sampleERK22AttributeSampleContext">Attribute::sample (C++ function)</a>, <a href="cpp-api/libvcad-attributes.html#_CPPv4N9Attribute6sampleEdddd">[1]</a>
 </li>
       <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N9Attribute5ValueE">Attribute::Value (C++ type)</a>
 </li>
@@ -667,8 +669,6 @@
 </li>
       <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N9AttributeD0Ev">Attribute::~Attribute (C++ function)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="python-api/pyvcad/tree.html#pyvcad.Binary.attribute_conflict_resolvers">attribute_conflict_resolvers() (pyvcad.Binary method)</a>
 
       <ul>
@@ -680,6 +680,10 @@
       <li><a href="cpp-api/libvcad-attributes.html#_CPPv420AttributeCombination">AttributeCombination (C++ type)</a>
 </li>
       <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N20AttributeCombination23intersection_attributesERKNSt6vectorI16AttributeSamplesEERKNSt13unordered_mapINSt6stringENSt10shared_ptrI25AttributeConflictResolverEEEE">AttributeCombination::intersection_attributes (C++ function)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N20AttributeCombination14mix_attributesERK16AttributeSamplesRK16AttributeSamplesdRKNSt13unordered_mapINSt6stringE18AttributeMixPolicyEERKNSt13unordered_mapINSt6stringENSt10shared_ptrI25AttributeConflictResolverEEEE">AttributeCombination::mix_attributes (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N20AttributeCombination16union_attributesERKNSt6vectorI16AttributeSamplesEERKNSt13unordered_mapINSt6stringENSt10shared_ptrI25AttributeConflictResolverEEEE">AttributeCombination::union_attributes (C++ function)</a>
 </li>
@@ -700,6 +704,12 @@
       <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N22AttributeConverterBase19required_attributesEv">AttributeConverterBase::required_attributes (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N22AttributeConverterBaseD0Ev">AttributeConverterBase::~AttributeConverterBase (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-attributes.html#_CPPv418AttributeMixPolicy">AttributeMixPolicy (C++ enum)</a>
+</li>
+      <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N18AttributeMixPolicy8dominantE">AttributeMixPolicy::dominant (C++ enumerator)</a>
+</li>
+      <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N18AttributeMixPolicy8weightedE">AttributeMixPolicy::weighted (C++ enumerator)</a>
 </li>
       <li><a href="cpp-api/libvcad-tree-attribute.html#_CPPv417AttributeModifier">AttributeModifier (C++ class)</a>
 
@@ -730,6 +740,18 @@
       <li><a href="cpp-api/libvcad-compilers-utilities.html#_CPPv417AttributeResolver">AttributeResolver (C++ type)</a>
 </li>
       <li><a href="cpp-api/libvcad-compilers-utilities.html#_CPPv4N17AttributeResolver8validateERKNSt10shared_ptrI4NodeEERKNSt6vectorINSt6stringEEE">AttributeResolver::validate (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-attributes.html#_CPPv422AttributeSampleContext">AttributeSampleContext (C++ struct)</a>
+</li>
+      <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N22AttributeSampleContext8cell_mapE">AttributeSampleContext::cell_map (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N22AttributeSampleContext7logicalE">AttributeSampleContext::logical (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N22AttributeSampleContext18logical_cell_indexE">AttributeSampleContext::logical_cell_index (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N22AttributeSampleContext15signed_distanceE">AttributeSampleContext::signed_distance (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N22AttributeSampleContext5worldE">AttributeSampleContext::world (C++ member)</a>
 </li>
       <li><a href="cpp-api/libvcad-attributes.html#_CPPv416AttributeSamples">AttributeSamples (C++ class)</a>
 
@@ -771,7 +793,7 @@
 </li>
       <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N12AttributeSet12m_attributesE">AttributeSet::m_attributes (C++ member)</a>
 </li>
-      <li><a href="cpp-api/libvcad-attributes.html#_CPPv4NK12AttributeSet6sampleEdddd">AttributeSet::sample (C++ function)</a>
+      <li><a href="cpp-api/libvcad-attributes.html#_CPPv4NK12AttributeSet6sampleERK22AttributeSampleContext">AttributeSet::sample (C++ function)</a>, <a href="cpp-api/libvcad-attributes.html#_CPPv4NK12AttributeSet6sampleEdddd">[1]</a>
 </li>
       <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N12AttributeSet13set_attributeERKNSt6stringERKNSt10shared_ptrI9AttributeEE">AttributeSet::set_attribute (C++ function)</a>
 </li>
@@ -845,6 +867,8 @@
 </li>
       <li><a href="python-api/pyvcad/geometry.html#pyvcad.CellMap.between_cad_faces">between_cad_faces() (pyvcad.CellMap static method)</a>
 </li>
+      <li><a href="python-api/pyvcad/geometry.html#pyvcad.CellMap.between_surfaces">between_surfaces() (pyvcad.CellMap static method)</a>
+</li>
       <li><a href="cpp-api/libvcad-tree-core.html#_CPPv46Binary">Binary (C++ class)</a>
 
       <ul>
@@ -880,6 +904,8 @@
       <li><a href="cpp-api/libvcad-tree-core.html#_CPPv4N6Binary12setLeftChildENSt10shared_ptrI4NodeEE">Binary::setLeftChild (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-tree-core.html#_CPPv4N6Binary13setRightChildENSt10shared_ptrI4NodeEE">Binary::setRightChild (C++ function)</a>
+</li>
+      <li><a href="python-api/pyvcad/attribute_nodes.html#pyvcad.Blend">Blend (class in pyvcad)</a>
 </li>
       <li><a href="python-api/pyvcad/geometry.html#pyvcad.CADFace.boundary_loop_count">boundary_loop_count (pyvcad.CADFace property)</a>
 </li>
@@ -1127,7 +1153,7 @@
 </li>
       <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N13CellAttribute11return_typeEv">CellAttribute::return_type (C++ function)</a>
 </li>
-      <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N13CellAttribute6sampleEdddd">CellAttribute::sample (C++ function)</a>
+      <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N13CellAttribute6sampleERK22AttributeSampleContext">CellAttribute::sample (C++ function)</a>, <a href="cpp-api/libvcad-attributes.html#_CPPv4N13CellAttribute6sampleEdddd">[1]</a>
 </li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv47CellMap">CellMap (C++ class)</a>
 
@@ -1140,6 +1166,8 @@
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N7CellMap20append_boundary_faceEiiiii">CellMap::append_boundary_face (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N7CellMap17between_cad_facesERKNSt10shared_ptrI7CADFaceEERKNSt10shared_ptrI7CADFaceEERKN3glm5ivec3EbbbbbRKNSt8optionalIN3glm4vec2EEERKNSt8optionalIN3glm4vec2EEE">CellMap::between_cad_faces (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N7CellMap16between_surfacesERKNSt10shared_ptrI17ParametricSurfaceEERKNSt10shared_ptrI17ParametricSurfaceEERKN3glm5ivec3EbbbbbRKNSt8optionalIN3glm4vec2EEERKNSt8optionalIN3glm4vec2EEE">CellMap::between_surfaces (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N7CellMap15BoundaryBVHNodeE">CellMap::BoundaryBVHNode (C++ struct)</a>
 </li>
@@ -1201,6 +1229,8 @@
 </li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK7CellMap22domain_signed_distanceERKN3glm4vec3E">CellMap::domain_signed_distance (C++ function)</a>
 </li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK7CellMap24domain_unsigned_distanceERKN3glm4vec3E">CellMap::domain_unsigned_distance (C++ function)</a>
+</li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK7CellMap14element_boundsE6size_t">CellMap::element_bounds (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK7CellMap14element_countsEv">CellMap::element_counts (C++ function)</a>
@@ -1213,7 +1243,13 @@
 </li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK7CellMap7forwardERKN3glm4vec3E">CellMap::forward (C++ function)</a>
 </li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK7CellMap26forward_extended_referenceERKN3glm4vec3E">CellMap::forward_extended_reference (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK7CellMap17forward_referenceERKN3glm4vec3E">CellMap::forward_reference (C++ function)</a>
+</li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N7CellMap13from_cad_faceERKNSt10shared_ptrI7CADFaceEERKN3glm5ivec3Edbb">CellMap::from_cad_face (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N7CellMap12from_surfaceERKNSt10shared_ptrI17ParametricSurfaceEERKN3glm5ivec3Edbb">CellMap::from_surface (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK7CellMap11interpolateEiiiRKN3glm4vec3E">CellMap::interpolate (C++ function)</a>
 </li>
@@ -1224,6 +1260,8 @@
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK7CellMap20jacobian_determinantERKN3glm4vec3E">CellMap::jacobian_determinant (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK7CellMap14local_jacobianEiiiRKN3glm4vec3E">CellMap::local_jacobian (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK7CellMap6locateERKN3glm4vec3Ed6size_t">CellMap::locate (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK7CellMap18logical_to_elementERKN3glm4vec3E">CellMap::logical_to_element (C++ function)</a>
 </li>
@@ -1242,6 +1280,8 @@
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N7CellMap7m_cellsE">CellMap::m_cells (C++ member)</a>
 </li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N7CellMap16m_control_pointsE">CellMap::m_control_points (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N7CellMap16m_element_boundsE">CellMap::m_element_bounds (C++ member)</a>
 </li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N7CellMap16m_element_countsE">CellMap::m_element_counts (C++ member)</a>
 </li>
@@ -1264,8 +1304,6 @@
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK7CellMap19principal_stretchesERKN3glm4vec3E">CellMap::principal_stretches (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK7CellMap18query_boundary_bvhEiRKN3glm4vec3ERd">CellMap::query_boundary_bvh (C++ function)</a>
-</li>
-      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK7CellMap9query_bvhEiRKN3glm4vec3EdRNSt6vectorI6size_tEE">CellMap::query_bvh (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N7CellMap11rectangularERKN3glm4vec3ERKN3glm4vec3ERKN3glm5ivec3Eb">CellMap::rectangular (C++ function)</a>
 </li>
@@ -1319,10 +1357,20 @@
 </li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK18CellMapDiagnostics5validEv">CellMapDiagnostics::valid (C++ function)</a>
 </li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv415CellMapLocation">CellMapLocation (C++ struct)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N15CellMapLocation7logicalE">CellMapLocation::logical (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N15CellMapLocation18logical_cell_indexE">CellMapLocation::logical_cell_index (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N15CellMapLocation24structured_element_indexE">CellMapLocation::structured_element_index (C++ member)</a>
+</li>
       <li><a href="python-api/pyvcad/geometry.html#pyvcad.CellMap.cells">cells (pyvcad.CellMap property)</a>
 </li>
       <li><a href="python-api/pyvcad/geometry.html#pyvcad.CADFace.centroid">centroid (pyvcad.CADFace property)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="python-api/pyvcad/tree.html#pyvcad.NAry.child">child() (pyvcad.NAry method)</a>
 
       <ul>
@@ -1337,8 +1385,6 @@
 </li>
       <li><a href="python-api/pyvcad/geometry.html#pyvcad.Polygon2.Clip">Clip() (pyvcad.Polygon2 static method)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="python-api/pyvcad/attributes.html#pyvcad.Attribute.clone">clone() (pyvcad.Attribute method)</a>
 
       <ul>
@@ -1627,12 +1673,8 @@
 </li>
       <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N4Cone20prepare_bounding_boxEv">Cone::prepare_bounding_box (C++ function)</a>
 </li>
-      <li><a href="python-api/pyvcad/geometry.html#pyvcad.CADFace.contains">contains() (pyvcad.CADFace method)</a>
-
-      <ul>
-        <li><a href="python-api/pyvcad/utilities.html#pyvcad.MaterialDefs.contains">(pyvcad.MaterialDefs method)</a>
+      <li><a href="python-api/pyvcad/utilities.html#pyvcad.MaterialDefs.contains">contains() (pyvcad.MaterialDefs method)</a>
 </li>
-      </ul></li>
       <li><a href="python-api/pyvcad_attribute_resolver/api.html#pyvcad_attribute_resolver.ConversionEntry">ConversionEntry (class in pyvcad_attribute_resolver)</a>
 </li>
       <li><a href="python-api/pyvcad/attributes.html#pyvcad.AttributeConverterBase.convert">convert() (pyvcad.AttributeConverterBase method)</a>
@@ -2215,6 +2257,56 @@
 </li>
       <li><a href="python-api/pyvcad/geometry.html#pyvcad.CADModel.faces">faces (pyvcad.CADModel property)</a>
 </li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv412FaceUnitCell">FaceUnitCell (C++ class)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK12FaceUnitCell10emit_facesERKN3glm5ivec3ERK7CellMap">FaceUnitCell::emit_faces (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK12FaceUnitCell18extends_map_domainEv">FaceUnitCell::extends_map_domain (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK12FaceUnitCell9face_tagsEv">FaceUnitCell::face_tags (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK12FaceUnitCell5facesEv">FaceUnitCell::faces (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N12FaceUnitCell12FaceUnitCellERKNSt6vectorIN3glm4vec3EEERKNSt6vectorINSt6vectorI6size_tEEEERKNSt6vectorIiEERKNSt6vectorIiEERKNSt6vectorIiEERKNSt6vectorIiEE">FaceUnitCell::FaceUnitCell (C++ function)</a>, <a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N12FaceUnitCell12FaceUnitCellEv">[1]</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N12FaceUnitCell11m_face_tagsE">FaceUnitCell::m_face_tags (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N12FaceUnitCell7m_facesE">FaceUnitCell::m_faces (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N12FaceUnitCell15m_material_tagsE">FaceUnitCell::m_material_tags (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N12FaceUnitCell18m_orientation_tagsE">FaceUnitCell::m_orientation_tags (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N12FaceUnitCell13m_vertex_tagsE">FaceUnitCell::m_vertex_tags (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N12FaceUnitCell10m_verticesE">FaceUnitCell::m_vertices (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK12FaceUnitCell13material_tagsEv">FaceUnitCell::material_tags (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK12FaceUnitCell16orientation_tagsEv">FaceUnitCell::orientation_tags (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK12FaceUnitCell6periodEv">FaceUnitCell::period (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK12FaceUnitCell11vertex_tagsEv">FaceUnitCell::vertex_tags (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK12FaceUnitCell8verticesEv">FaceUnitCell::vertices (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N12FaceUnitCellD0Ev">FaceUnitCell::~FaceUnitCell (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv417FaceUnitCellPatch">FaceUnitCellPatch (C++ struct)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N17FaceUnitCellPatch8face_tagE">FaceUnitCellPatch::face_tag (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N17FaceUnitCellPatch12material_tagE">FaceUnitCellPatch::material_tag (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N17FaceUnitCellPatch15orientation_tagE">FaceUnitCellPatch::orientation_tag (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N17FaceUnitCellPatch17unit_cell_face_idE">FaceUnitCellPatch::unit_cell_face_id (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N17FaceUnitCellPatch11vertex_tagsE">FaceUnitCellPatch::vertex_tags (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N17FaceUnitCellPatch8verticesE">FaceUnitCellPatch::vertices (C++ member)</a>
+</li>
       <li><a href="cpp-api/libvcad-attributes.html#_CPPv414FloatAttribute">FloatAttribute (C++ class)</a>
 
       <ul>
@@ -2285,9 +2377,13 @@
 </li>
       <li><a href="python-api/pyvcad/geometry.html#pyvcad.CellMap.from_cad_face">from_cad_face() (pyvcad.CellMap static method)</a>
 </li>
+      <li><a href="python-api/pyvcad/geometry.html#pyvcad.CADModel.from_cadquery">from_cadquery() (pyvcad.CADModel static method)</a>
+</li>
       <li><a href="python-api/pyvcad/geometry.html#pyvcad.CADModel.from_iges">from_iges() (pyvcad.CADModel static method)</a>
 </li>
       <li><a href="python-api/pyvcad/geometry.html#pyvcad.CADModel.from_step">from_step() (pyvcad.CADModel static method)</a>
+</li>
+      <li><a href="python-api/pyvcad/geometry.html#pyvcad.CellMap.from_surface">from_surface() (pyvcad.CellMap static method)</a>
 </li>
       <li><a href="python-api/pyvcad/geometry.html#pyvcad.HexahedralMesh.from_tree">from_tree() (pyvcad.HexahedralMesh static method)</a>
 </li>
@@ -2303,6 +2399,8 @@
 </li>
       <li><a href="cpp-api/libvcad-compilers-compilers.html#_CPPv4NK33FullSpectrumSlicerProjectCompiler27build_full_spectrum_paletteEv">FullSpectrumSlicerProjectCompiler::build_full_spectrum_palette (C++ function)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cpp-api/libvcad-compilers-compilers.html#_CPPv4NK33FullSpectrumSlicerProjectCompiler34build_full_spectrum_project_configERKNSt6vectorI24FullSpectrumPaletteEntryEE">FullSpectrumSlicerProjectCompiler::build_full_spectrum_project_config (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-compilers-compilers.html#_CPPv4N33FullSpectrumSlicerProjectCompiler27build_full_spectrum_regionsERKNSt6vectorI24FullSpectrumPaletteEntryEE">FullSpectrumSlicerProjectCompiler::build_full_spectrum_regions (C++ function)</a>
@@ -2331,8 +2429,6 @@
 </li>
       <li><a href="cpp-api/libvcad-compilers-compilers.html#_CPPv4N33FullSpectrumSlicerProjectCompiler24FullSpectrumPaletteEntry12sample_countE">FullSpectrumSlicerProjectCompiler::FullSpectrumPaletteEntry::sample_count (C++ member)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cpp-api/libvcad-compilers-compilers.html#_CPPv4N33FullSpectrumSlicerProjectCompiler24FullSpectrumPaletteEntry12target_colorE">FullSpectrumSlicerProjectCompiler::FullSpectrumPaletteEntry::target_color (C++ member)</a>
 </li>
       <li><a href="cpp-api/libvcad-compilers-compilers.html#_CPPv4N33FullSpectrumSlicerProjectCompiler24FullSpectrumPaletteEntry10target_labE">FullSpectrumSlicerProjectCompiler::FullSpectrumPaletteEntry::target_lab (C++ member)</a>
@@ -2709,13 +2805,19 @@
 </li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N16ImplicitUnitCell6m_nameE">ImplicitUnitCell::m_name (C++ member)</a>
 </li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N16ImplicitUnitCell20m_periodicity_exemptE">ImplicitUnitCell::m_periodicity_exempt (C++ member)</a>
+</li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N16ImplicitUnitCell7m_valueE">ImplicitUnitCell::m_value (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N16ImplicitUnitCell5mixedERKNSt10shared_ptrI16ImplicitUnitCellEERKNSt10shared_ptrI16ImplicitUnitCellEERKNSt10shared_ptrI17MappedScalarFieldEE">ImplicitUnitCell::mixed (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK16ImplicitUnitCell4nameEv">ImplicitUnitCell::name (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N16ImplicitUnitCell8standardERKNSt6stringE">ImplicitUnitCell::standard (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK16ImplicitUnitCell20validate_periodicityEd">ImplicitUnitCell::validate_periodicity (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK16ImplicitUnitCell18value_and_gradientERKN3glm4vec3E">ImplicitUnitCell::value_and_gradient (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N16ImplicitUnitCell13ValueFunctionE">ImplicitUnitCell::ValueFunction (C++ type)</a>
 </li>
@@ -2725,12 +2827,12 @@
 </li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N16Indexed_Triangle2p1E">Indexed_Triangle::p1 (C++ member)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N16Indexed_Triangle2p2E">Indexed_Triangle::p2 (C++ member)</a>
 </li>
       <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N16Indexed_Triangle2p3E">Indexed_Triangle::p3 (C++ member)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="python-api/pyvcad/attributes.html#pyvcad.DefaultAttributes.INFILL_DENSITY">INFILL_DENSITY (in module pyvcad.DefaultAttributes)</a>
 </li>
       <li><a href="python-api/pyvcad/attributes.html#pyvcad.DefaultAttributes.INFILL_DENSITY_TYPE">INFILL_DENSITY_TYPE (in module pyvcad.DefaultAttributes)</a>
@@ -2931,7 +3033,7 @@
         <li><a href="python-api/pyvcad/leaves.html#pyvcad.MappedGraphLattice">(class in pyvcad)</a>
 </li>
       </ul></li>
-      <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N18MappedGraphLattice12append_curveERKN3glm4vec3ERKN3glm4vec3ERK22MappedGraphSegmentInfoi">MappedGraphLattice::append_curve (C++ function)</a>
+      <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N18MappedGraphLattice12append_curveERKN3glm4vec3ERKN3glm4vec3ERK22MappedGraphSegmentInfoi">MappedGraphLattice::append_curve (C++ function)</a>, <a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N18MappedGraphLattice12append_curveERKN3glm4vec3ERKN3glm4vec3ERKN3glm4vec3ERKN3glm4vec3EddRK22MappedGraphSegmentInfoi">[1]</a>
 </li>
       <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N18MappedGraphLattice14attribute_listEv">MappedGraphLattice::attribute_list (C++ function)</a>
 </li>
@@ -2969,17 +3071,13 @@
 </li>
       <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N18MappedGraphLattice13m_beam_radiusE">MappedGraphLattice::m_beam_radius (C++ member)</a>
 </li>
-      <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N18MappedGraphLattice11m_bvh_nodesE">MappedGraphLattice::m_bvh_nodes (C++ member)</a>
-</li>
       <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N18MappedGraphLattice10m_cell_mapE">MappedGraphLattice::m_cell_map (C++ member)</a>
 </li>
       <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N18MappedGraphLattice17m_curve_toleranceE">MappedGraphLattice::m_curve_tolerance (C++ member)</a>
 </li>
       <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N18MappedGraphLattice13m_node_radiusE">MappedGraphLattice::m_node_radius (C++ member)</a>
 </li>
-      <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N18MappedGraphLattice17m_segment_indicesE">MappedGraphLattice::m_segment_indices (C++ member)</a>
-</li>
-      <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N18MappedGraphLattice18m_segment_metadataE">MappedGraphLattice::m_segment_metadata (C++ member)</a>
+      <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N18MappedGraphLattice10m_preparedE">MappedGraphLattice::m_prepared (C++ member)</a>
 </li>
       <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N18MappedGraphLattice11m_unit_cellE">MappedGraphLattice::m_unit_cell (C++ member)</a>
 </li>
@@ -2988,6 +3086,16 @@
       <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N18MappedGraphLattice20prepare_bounding_boxEv">MappedGraphLattice::prepare_bounding_box (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N18MappedGraphLattice12prepare_implERKN3glm4vec3Ed">MappedGraphLattice::prepare_impl (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N18MappedGraphLattice12PreparedDataE">MappedGraphLattice::PreparedData (C++ struct)</a>
+</li>
+      <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N18MappedGraphLattice12PreparedData9bvh_nodesE">MappedGraphLattice::PreparedData::bvh_nodes (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N18MappedGraphLattice12PreparedData14segment_boundsE">MappedGraphLattice::PreparedData::segment_bounds (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N18MappedGraphLattice12PreparedData15segment_indicesE">MappedGraphLattice::PreparedData::segment_indices (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N18MappedGraphLattice12PreparedData16segment_metadataE">MappedGraphLattice::PreparedData::segment_metadata (C++ member)</a>
 </li>
       <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N18MappedGraphLattice11sample_implEddd">MappedGraphLattice::sample_impl (C++ function)</a>
 </li>
@@ -3047,6 +3155,8 @@
 </li>
       <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N21MappedImplicitLattice13evaluate_implEddd">MappedImplicitLattice::evaluate_impl (C++ function)</a>
 </li>
+      <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4NK21MappedImplicitLattice16evaluate_locatedERKN3glm4vec3ERK15CellMapLocation">MappedImplicitLattice::evaluate_located (C++ function)</a>
+</li>
       <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N21MappedImplicitLattice10m_cell_mapE">MappedImplicitLattice::m_cell_map (C++ member)</a>
 </li>
       <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N21MappedImplicitLattice7m_levelE">MappedImplicitLattice::m_level (C++ member)</a>
@@ -3062,6 +3172,8 @@
       <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N21MappedImplicitLattice20prepare_bounding_boxEv">MappedImplicitLattice::prepare_bounding_box (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N21MappedImplicitLattice12prepare_implERKN3glm4vec3Ed">MappedImplicitLattice::prepare_impl (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N21MappedImplicitLattice11sample_implEddd">MappedImplicitLattice::sample_impl (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4NK21MappedImplicitLattice9unit_cellEv">MappedImplicitLattice::unit_cell (C++ function)</a>
 </li>
@@ -3109,6 +3221,8 @@
 </li>
       <li><a href="python-api/pyvcad/geometry.html#pyvcad.GraphUnitCell.material_tags">material_tags (pyvcad.GraphUnitCell property)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="python-api/pyvcad_compilers/compilers.html#pyvcad_compilers.MaterialInkjetCompiler.material_voxel_counts">material_voxel_counts() (pyvcad_compilers.MaterialInkjetCompiler method)</a>
 </li>
       <li><a href="cpp-api/libvcad-utils.html#_CPPv412MaterialDefs">MaterialDefs (C++ class)</a>
@@ -3117,8 +3231,6 @@
         <li><a href="python-api/pyvcad/utilities.html#pyvcad.MaterialDefs">(class in pyvcad)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cpp-api/libvcad-utils.html#_CPPv4NK12MaterialDefs5colorE7uint8_t">MaterialDefs::color (C++ function)</a>, <a href="cpp-api/libvcad-utils.html#_CPPv4NK12MaterialDefs5colorERKNSt6stringE">[1]</a>
 </li>
       <li><a href="cpp-api/libvcad-utils.html#_CPPv4NK12MaterialDefs8containsERKNSt6stringE">MaterialDefs::contains (C++ function)</a>
@@ -3287,6 +3399,8 @@
 </li>
       <li><a href="python-api/pyvcad/geometry.html#pyvcad.CellMap.minimum_principal_stretch_field">minimum_principal_stretch_field (pyvcad.CellMap property)</a>
 </li>
+      <li><a href="python-api/pyvcad/geometry.html#pyvcad.ImplicitUnitCell.mixed">mixed() (pyvcad.ImplicitUnitCell static method)</a>
+</li>
       <li>
     module
 
@@ -3406,10 +3520,10 @@
 </li>
       <li><a href="cpp-api/libvcad-tree-core.html#_CPPv4N4Node13get_attributeERKNSt6stringE">Node::get_attribute (C++ function)</a>
 </li>
-      <li><a href="cpp-api/libvcad-tree-core.html#_CPPv4N4Node8gradientERKN3glm4vec3E">Node::gradient (C++ function)</a>, <a href="cpp-api/libvcad-tree-core.html#_CPPv4N4Node8gradientEddd">[1]</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="cpp-api/libvcad-tree-core.html#_CPPv4N4Node8gradientERKN3glm4vec3E">Node::gradient (C++ function)</a>, <a href="cpp-api/libvcad-tree-core.html#_CPPv4N4Node8gradientEddd">[1]</a>
+</li>
       <li><a href="cpp-api/libvcad-tree-core.html#_CPPv4NK4Node15gradientEpsilonEv">Node::gradientEpsilon (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-tree-core.html#_CPPv4N4Node10is_in_bboxEddd">Node::is_in_bbox (C++ function)</a>
@@ -3491,8 +3605,6 @@
       <li><a href="python-api/pyvcad_attribute_resolver/api.html#pyvcad_attribute_resolver.NoPathError">NoPathError</a>
 </li>
       <li><a href="python-api/pyvcad/geometry.html#pyvcad.CADFace.normal">normal (pyvcad.CADFace property)</a>
-</li>
-      <li><a href="python-api/pyvcad/geometry.html#pyvcad.CADFace.normal_at">normal_at() (pyvcad.CADFace method)</a>
 </li>
       <li><a href="python-api/pyvcad/tree.html#pyvcad.NAry.num_children">num_children() (pyvcad.NAry method)</a>
 </li>
@@ -3576,7 +3688,23 @@
 </li>
       <li><a href="python-api/pyvcad/geometry.html#pyvcad.CellMap.periodic_axes">periodic_axes (pyvcad.CellMap property)</a>
 </li>
-      <li><a href="python-api/pyvcad/geometry.html#pyvcad.CADFace.point">point() (pyvcad.CADFace method)</a>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv413PlateUnitCell">PlateUnitCell (C++ class)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N13PlateUnitCell20convert_eccentricityEd">PlateUnitCell::convert_eccentricity (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK13PlateUnitCell12eccentricityEv">PlateUnitCell::eccentricity (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK13PlateUnitCell10emit_facesERKN3glm5ivec3ERK7CellMap">PlateUnitCell::emit_faces (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK13PlateUnitCell18extends_map_domainEv">PlateUnitCell::extends_map_domain (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N13PlateUnitCell14m_eccentricityE">PlateUnitCell::m_eccentricity (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK13PlateUnitCell6periodEv">PlateUnitCell::period (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4N13PlateUnitCell13PlateUnitCellERKNSt10shared_ptrI17MappedScalarFieldEE">PlateUnitCell::PlateUnitCell (C++ function)</a>
+</li>
+      <li><a href="cpp-api/libvcad-geometry-3d.html#_CPPv4NK13PlateUnitCell19sample_eccentricityERKN3glm5ivec3ERK7CellMap">PlateUnitCell::sample_eccentricity (C++ function)</a>
 </li>
       <li><a href="python-api/pyvcad/geometry.html#pyvcad.Point2">Point2 (class in pyvcad)</a>
 </li>
@@ -3690,6 +3818,8 @@
 </li>
       <li><a href="cpp-api/libvcad-tree-leaves.html#_CPPv4N14PolygonExtrude20prepare_bounding_boxEv">PolygonExtrude::prepare_bounding_box (C++ function)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cpp-api/libvcad-geometry-2d.html#_CPPv49Polyline2">Polyline2 (C++ class)</a>
 
       <ul>
@@ -3700,8 +3830,6 @@
 </li>
       <li><a href="cpp-api/libvcad-geometry-2d.html#_CPPv4N9Polyline28DistanceERK7Point_2RK7Point_2">Polyline2::Distance (C++ function)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cpp-api/libvcad-geometry-2d.html#_CPPv4NK9Polyline26lengthEv">Polyline2::length (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-geometry-2d.html#_CPPv4NK9Polyline26pointsEv">Polyline2::points (C++ function)</a>
@@ -4957,8 +5085,6 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="python-api/pyvcad/geometry.html#pyvcad.CellMap.u_field">u_field (pyvcad.CellMap property)</a>
 </li>
-      <li><a href="python-api/pyvcad/geometry.html#pyvcad.CADFace.u_periodic">u_periodic (pyvcad.CADFace property)</a>
-</li>
       <li><a href="cpp-api/libvcad-tree-core.html#_CPPv45Unary">Unary (C++ class)</a>
 
       <ul>
@@ -5019,8 +5145,6 @@
 </li>
       <li><a href="python-api/pyvcad/utilities.html#pyvcad.MaterialDefs.update_color">update_color() (pyvcad.MaterialDefs method)</a>
 </li>
-      <li><a href="python-api/pyvcad/geometry.html#pyvcad.CADFace.uv_bounds">uv_bounds (pyvcad.CADFace property)</a>
-</li>
   </ul></td>
 </tr></table>
 
@@ -5028,8 +5152,6 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="python-api/pyvcad/geometry.html#pyvcad.CellMap.v_field">v_field (pyvcad.CellMap property)</a>
-</li>
-      <li><a href="python-api/pyvcad/geometry.html#pyvcad.CADFace.v_periodic">v_periodic (pyvcad.CADFace property)</a>
 </li>
       <li><a href="python-api/pyvcad/geometry.html#pyvcad.CellMapDiagnostics.valid">valid (pyvcad.CellMapDiagnostics property)</a>
 </li>
@@ -5187,10 +5309,10 @@
 </li>
       <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N13Vec4Attribute12m_g_functionE">Vec4Attribute::m_g_function (C++ member)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N13Vec4Attribute6m_modeE">Vec4Attribute::m_mode (C++ member)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N13Vec4Attribute6m_phicE">Vec4Attribute::m_phic (C++ member)</a>
 </li>
       <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N13Vec4Attribute6m_phisE">Vec4Attribute::m_phis (C++ member)</a>
@@ -5298,6 +5420,8 @@
       <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N24VolumeFractionsAttribute3m_yE">VolumeFractionsAttribute::m_y (C++ member)</a>
 </li>
       <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N24VolumeFractionsAttribute3m_zE">VolumeFractionsAttribute::m_z (C++ member)</a>
+</li>
+      <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N24VolumeFractionsAttribute11mix_samplesERK20VolumeFractionMapPtrRK20VolumeFractionMapPtrd">VolumeFractionsAttribute::mix_samples (C++ function)</a>
 </li>
       <li><a href="cpp-api/libvcad-attributes.html#_CPPv4N24VolumeFractionsAttribute11return_typeEv">VolumeFractionsAttribute::return_type (C++ function)</a>
 </li>

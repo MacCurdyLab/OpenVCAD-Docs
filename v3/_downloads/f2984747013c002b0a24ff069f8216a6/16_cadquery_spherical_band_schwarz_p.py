@@ -2,6 +2,7 @@
 
 import cadquery as cq
 
+import pyvcad as pv
 import pyvcad_metamaterials as mm
 import pyvcad_rendering as viz
 
@@ -13,7 +14,7 @@ cad = cq.Workplane(
         angleDegrees2=60.0,
     )
 )
-surface = mm.cadquery.face(cad.faces("%SPHERE"))
+surface = pv.CADModel.from_cadquery(cad.faces("%SPHERE")).faces[0]
 cell_map = mm.cell_map_from_cad_face(
     surface,
     cells=(14, 7, 1),

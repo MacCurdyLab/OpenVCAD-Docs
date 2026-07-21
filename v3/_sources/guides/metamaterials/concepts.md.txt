@@ -11,15 +11,6 @@ OpenVCAD's metamaterial model has two independent parts:
 
 This separation is the key difference from APIs that bake cell size, bounds, and geometry into one lattice builder. It lets one cell definition survive rectangular tiling, functional grading, and conformal deformation.
 
-<div class="guide-figure-stack">
-  <div class="guide-figure-cell">
-    <a href="../images/mm_cell_map_concept.png" data-lightbox="metamaterials-concepts">
-      <img src="../images/mm_cell_map_concept.png" alt="Unit cell, logical tiling, cell map, and mapped lattice workflow">
-    </a>
-    <div class="guide-figure-label">A unit cell is repeated in logical coordinates, then the cell map places that finite logical domain in world space.</div>
-  </div>
-</div>
-
 ## Unit cells describe topology
 
 A unit cell occupies the normalized interval `[0, 1]` along each logical axis. Repetition happens across opposite boundaries, so cells intended to tile continuously must agree at those boundaries.
@@ -87,6 +78,8 @@ The high-level builders combine a unit cell and a map:
 gyroid = mm.gyroid(cell_map, wall_thickness=1.2)
 octet = mm.octet(cell_map, beam_radius=0.7)
 ```
+
+Several topology bodies may intentionally share the same `CellMap`. Ordinary Boolean intersections can clip those bodies into sharp regions without making the map own TPMS-, graph-, or face-specific assignments. See [Heterogeneous conformal lattices](heterogeneous-lattices.md).
 
 The results are normal OpenVCAD nodes. They can participate in booleans and transforms, carry attributes, render interactively, and pass through the existing compiler pipeline.
 

@@ -1,20 +1,22 @@
 (guide-metamaterials-conformal)=
-# Conformal lattices from CAD faces
+# Conformal mapping CAD surfaces
 
 ```{include} ../_guide-sidebar-compiler-membership.md
 ```
 
-A conformal lattice evaluates the same normalized TPMS or graph unit cell used in the rectangular examples through a cell map derived from CAD surfaces. The map bends and stretches logical U, V, and W; the unit cell still defines topology, and wall thickness or beam radius remains a world-unit control.
+A conformal lattice evaluates the same normalized TPMS or graph unit cell used in the rectangular examples through a cell map derived from a surface. The map bends and stretches logical U, V, and W; the unit cell still defines topology, and wall thickness or beam radius remains a world-unit control.
+
+This guide covers maps built from **exact CAD faces**, whose native surface coordinates provide the map directly. When the surface exists only as a triangle mesh — an STL region, a scan, or a procedurally generated patch — the companion guide, [Conformal mapping triangle meshes](conformal-meshes.md), builds the same maps from a `TriangleMeshSurface`. Both satisfy one `ParametricSurface` contract, so `mm.cell_map_from_surface(...)` and `mm.cell_map_between_surfaces(...)` accept either type in any combination; the CAD-named helpers used below are thin wrappers over the same factories.
 
 ## Install the optional CAD authoring stack
 
 CadQuery support is optional because its CAD kernel and visualization dependencies are substantial:
 
 ```bash
-pip install "OpenVCAD[cad]"
+pip install "pyvcad-metamaterials[cad]"
 ```
 
-Importing `pyvcad_metamaterials` does not import CadQuery. The adapter loads it only when `mm.cadquery` is used.
+`pyvcad` loads CadQuery only when `pv.CADModel.from_cadquery(...)` is called.
 
 ## How a face becomes a cell map
 
@@ -30,15 +32,16 @@ Every workflow below uses one fixed orthographic camera for its CAD body, select
 
 ## Author and select a CadQuery face
 
-CadQuery remains the high-level language for workplanes, sketches, solids, and face selectors. Convert exactly one selected face with `mm.cadquery.face(...)`, then construct the map.
+CadQuery remains the high-level language for workplanes, sketches, solids, and face selectors. Convert exactly one selected face with `pv.CADModel.from_cadquery(...).faces[0]`, then construct the map.
 
 ```python
 import cadquery as cq
+import pyvcad as pv
 import pyvcad_metamaterials as mm
 import pyvcad_rendering as viz
 
 cad = cq.Workplane("XY").circle(20.0).extrude(30.0)
-surface = mm.cadquery.face(cad.faces("%CYLINDER"))
+surface = pv.CADModel.from_cadquery(cad.faces("%CYLINDER")).faces[0]
 
 cell_map = mm.cell_map_from_cad_face(
     surface,
@@ -65,14 +68,15 @@ Use paired faces when both sides of a curvilinear volume matter. The first and s
 
 ```python
 import cadquery as cq
+import pyvcad as pv
 import pyvcad_metamaterials as mm
 import pyvcad_rendering as viz
 
 inner_cad = cq.Workplane("XY").circle(15.0).extrude(30.0)
 outer_cad = cq.Workplane("XY").circle(22.0).extrude(30.0)
 
-inner = mm.cadquery.face(inner_cad.faces("%CYLINDER"))
-outer = mm.cadquery.face(outer_cad.faces("%CYLINDER"))
+inner = pv.CADModel.from_cadquery(inner_cad.faces("%CYLINDER")).faces[0]
+outer = pv.CADModel.from_cadquery(outer_cad.faces("%CYLINDER")).faces[0]
 
 cell_map = mm.cell_map_between_cad_faces(
     inner,
@@ -149,6 +153,7 @@ The bridge is not limited to extrusions. Any CadQuery operation that produces a 
 
 ```python
 import cadquery as cq
+import pyvcad as pv
 import pyvcad_metamaterials as mm
 import pyvcad_rendering as viz
 
@@ -159,7 +164,7 @@ cad = (
     .circle(10.0)
     .loft(combine=True, ruled=True)
 )
-surface = mm.cadquery.face(cad.faces("%CONE"))
+surface = pv.CADModel.from_cadquery(cad.faces("%CONE")).faces[0]
 cell_map = mm.cell_map_from_cad_face(
     surface,
     cells=(24, 10, 1),
@@ -182,6 +187,7 @@ See [`15_cadquery_conical_bcc.py`](../../../../examples/metamaterials/15_cadquer
 
 ```python
 import cadquery as cq
+import pyvcad as pv
 import pyvcad_metamaterials as mm
 import pyvcad_rendering as viz
 
@@ -192,7 +198,7 @@ cad = cq.Workplane(
         angleDegrees2=60.0,
     )
 )
-surface = mm.cadquery.face(cad.faces("%SPHERE"))
+surface = pv.CADModel.from_cadquery(cad.faces("%SPHERE")).faces[0]
 cell_map = mm.cell_map_from_cad_face(
     surface,
     cells=(14, 7, 1),
@@ -217,6 +223,7 @@ viz.Render(root)
 import math
 
 import cadquery as cq
+import pyvcad as pv
 import pyvcad_metamaterials as mm
 import pyvcad_rendering as viz
 
@@ -232,7 +239,7 @@ cad = cq.Workplane("XY").parametricSurface(
     tol=0.02,
     smoothing=None,
 )
-surface = mm.cadquery.face(cad)
+surface = pv.CADModel.from_cadquery(cad).faces[0]
 cell_map = mm.cell_map_from_cad_face(
     surface,
     cells=(12, 10, 1),
@@ -251,4 +258,11 @@ viz.Render(root)
 
 [`17_cadquery_freeform_diamond.py`](../../../../examples/metamaterials/17_cadquery_freeform_diamond.py) uses `parametricSurface(...)`, demonstrating that the same workflow applies to a surface authored from a Python function.
 
-Once constructed, these mapped lattices are ordinary OpenVCAD nodes. They can carry the graded fields from the previous guide and can be sent to any compatible [compiler](../compilers/index.md).
+## Validation is always final
+
+Constructing a map runs `CellMap`'s Jacobian validation, which is the authoritative check on the extruded or interpolated volume:
+
+- A `height` larger than a concave face's curvature radius folds the offset — *"Surface CellMap is folded or singular."*
+- Pairing faces whose parameterizations cannot be brought into correspondence raises *"No valid paired-surface correspondence was found,"* with per-candidate Jacobian diagnostics.
+
+Once constructed, these mapped lattices are ordinary OpenVCAD nodes. They can carry the graded fields from the previous guide, combine with the mesh-derived maps of [Conformal mapping triangle meshes](conformal-meshes.md), and can be sent to any compatible [compiler](../compilers/index.md).

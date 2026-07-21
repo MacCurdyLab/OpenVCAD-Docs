@@ -164,6 +164,7 @@
         <li><a class="dropdown-item" href="../theory-and-motivation.html">Theory and Motivation</a></li>
         <li><a class="dropdown-item" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
         <li><a class="dropdown-item" href="../gradients.html">Functional grading</a></li>
+        <li><a class="dropdown-item" href="../cadquery.html">CAD with CadQuery</a></li>
         <li><a class="dropdown-item active" href="index.html">Metamaterials</a></li>
         <li><a class="dropdown-item" href="../numba-attributes.html">Python functions for attributes</a></li>
         <li><a class="dropdown-item" href="../math-expressions.html">Math expressions</a></li>
@@ -289,6 +290,7 @@
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../theory-and-motivation.html">Theory and Motivation</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../gradients.html">Functional grading</a></li>
+    <li class="nav-item"><a class="nav-link py-1 ps-3" href="../cadquery.html">CAD with CadQuery</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3 active" href="index.html">Metamaterials</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../numba-attributes.html">Python functions for attributes</a></li>
     <li class="nav-item"><a class="nav-link py-1 ps-3" href="../math-expressions.html">Math expressions</a></li>
@@ -353,11 +355,14 @@
 <li class="toctree-l1"><a class="reference internal" href="../theory-and-motivation.html">Theory and Motivation</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../gradients.html">Functional Grading Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../cadquery.html">Authoring CAD with CadQuery</a></li>
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Metamaterials</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Concepts and representation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="catalog.html">TPMS and lattice catalog</a></li>
 <li class="toctree-l2"><a class="reference internal" href="functional-grading.html">Functionally graded metamaterials</a></li>
-<li class="toctree-l2"><a class="reference internal" href="conformal-lattices.html">Conformal lattices from CAD faces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conformal-cad.html">Conformal mapping CAD surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conformal-meshes.html">Conformal mapping triangle meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
 </ul>
 </details></li>
 <li class="toctree-l1"><a class="reference internal" href="../numba-attributes.html">Python Functions for Attributes</a></li>
@@ -457,14 +462,6 @@ Current compiler guides:
 <li><p>a <code class="docutils literal notranslate"><span class="pre">CellMap</span></code> that says how many copies exist and where their logical coordinates lie in world space.</p></li>
 </ol>
 <p>This separation is the key difference from APIs that bake cell size, bounds, and geometry into one lattice builder. It lets one cell definition survive rectangular tiling, functional grading, and conformal deformation.</p>
-<div class="guide-figure-stack">
-  <div class="guide-figure-cell">
-    <a href="../images/mm_cell_map_concept.png" data-lightbox="metamaterials-concepts">
-      <img src="../images/mm_cell_map_concept.png" alt="Unit cell, logical tiling, cell map, and mapped lattice workflow">
-    </a>
-    <div class="guide-figure-label">A unit cell is repeated in logical coordinates, then the cell map places that finite logical domain in world space.</div>
-  </div>
-</div>
 <section id="unit-cells-describe-topology">
 <h2>Unit cells describe topology<a class="headerlink" href="#unit-cells-describe-topology" title="Link to this heading">#</a></h2>
 <p>A unit cell occupies the normalized interval <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code> along each logical axis. Repetition happens across opposite boundaries, so cells intended to tile continuously must agree at those boundaries.</p>
@@ -521,6 +518,7 @@ Current compiler guides:
 <span class="n">octet</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">octet</span><span class="p">(</span><span class="n">cell_map</span><span class="p">,</span> <span class="n">beam_radius</span><span class="o">=</span><span class="mf">0.7</span><span class="p">)</span>
 </pre></div>
 </div>
+<p>Several topology bodies may intentionally share the same <code class="docutils literal notranslate"><span class="pre">CellMap</span></code>. Ordinary Boolean intersections can clip those bodies into sharp regions without making the map own TPMS-, graph-, or face-specific assignments. See <a class="reference internal" href="heterogeneous-lattices.html"><span class="std std-doc">Heterogeneous conformal lattices</span></a>.</p>
 <p>The results are normal OpenVCAD nodes. They can participate in booleans and transforms, carry attributes, render interactively, and pass through the existing compiler pipeline.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">part</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Intersection</span><span class="p">(</span>
     <span class="n">gyroid</span><span class="p">,</span>

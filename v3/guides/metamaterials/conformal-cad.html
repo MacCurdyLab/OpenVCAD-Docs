@@ -51,8 +51,8 @@
     <link rel="icon" href="../../_static/favicon.png"/>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
-    <link rel="next" title="Conformal mapping triangle meshes" href="conformal-meshes.html" />
-    <link rel="prev" title="Functionally graded metamaterials" href="functional-grading.html" />
+    <link rel="next" title="Map lattices onto triangle meshes" href="conformal-meshes.html" />
+    <link rel="prev" title="Attribute-driven metamaterials" href="attribute-driven.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -359,9 +359,9 @@
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Metamaterials</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
 <li class="toctree-l2"><a class="reference internal" href="concepts.html">Concepts and representation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="catalog.html">TPMS and lattice catalog</a></li>
-<li class="toctree-l2"><a class="reference internal" href="functional-grading.html">Functionally graded metamaterials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="attribute-driven.html">Attribute-driven metamaterials</a></li>
 <li class="toctree-l2 current active"><a class="current reference internal" href="#">Conformal mapping CAD surfaces</a></li>
-<li class="toctree-l2"><a class="reference internal" href="conformal-meshes.html">Conformal mapping triangle meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conformal-meshes.html">Map lattices onto triangle meshes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
 </ul>
 </details></li>
@@ -456,95 +456,108 @@ Current compiler guides:
 - slicer-project
 - simulation-compiler
 -->
-<p>A conformal lattice evaluates the same normalized TPMS or graph unit cell used in the rectangular examples through a cell map derived from a surface. The map bends and stretches logical U, V, and W; the unit cell still defines topology, and wall thickness or beam radius remains a world-unit control.</p>
-<p>This guide covers maps built from <strong>exact CAD faces</strong>, whose native surface coordinates provide the map directly. When the surface exists only as a triangle mesh — an STL region, a scan, or a procedurally generated patch — the companion guide, <a class="reference internal" href="conformal-meshes.html"><span class="std std-doc">Conformal mapping triangle meshes</span></a>, builds the same maps from a <code class="docutils literal notranslate"><span class="pre">TriangleMeshSurface</span></code>. Both satisfy one <code class="docutils literal notranslate"><span class="pre">ParametricSurface</span></code> contract, so <code class="docutils literal notranslate"><span class="pre">mm.cell_map_from_surface(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">mm.cell_map_between_surfaces(...)</span></code> accept either type in any combination; the CAD-named helpers used below are thin wrappers over the same factories.</p>
+<p>A conformal lattice lets a repeated structure follow a curved surface instead of a rectangular block. You still choose the lattice pattern — for example, a gyroid sheet or an octet beam network — and the cell map decides where each cell sits in the finished shape. Beam radii and wall thicknesses remain millimetre-based controls.</p>
+<p>This guide uses <strong>exact CAD faces</strong>: the surface information already stored in a CAD model supplies the map. If your starting surface is a triangle mesh, such as an STL, a scan, or a generated mesh patch, use <a class="reference internal" href="conformal-meshes.html"><span class="std std-doc">Conformal mapping triangle meshes</span></a> instead. Both workflows can be combined because they use the same surface interface; the general <code class="docutils literal notranslate"><span class="pre">mm.cell_map_from_surface(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">mm.cell_map_between_surfaces(...)</span></code> functions accept either surface type. The CAD-specific functions below are convenient names for the same operations.</p>
 <section id="install-the-optional-cad-authoring-stack">
 <h2>Install the optional CAD authoring stack<a class="headerlink" href="#install-the-optional-cad-authoring-stack" title="Link to this heading">#</a></h2>
-<p>CadQuery support is optional because its CAD kernel and visualization dependencies are substantial:</p>
-<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;pyvcad-metamaterials[cad]&quot;</span>
+<p>You only need CadQuery when authoring surfaces in Python. It is optional because its CAD engine and display dependencies are sizeable:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s2">&quot;OpenVCAD[cad]&quot;</span>
 </pre></div>
 </div>
-<p><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> loads CadQuery only when <code class="docutils literal notranslate"><span class="pre">pv.CADModel.from_cadquery(...)</span></code> is called.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> imports CadQuery only when you call <code class="docutils literal notranslate"><span class="pre">pv.CADModel.from_cadquery(...)</span></code>.</p>
 </section>
 <section id="how-a-face-becomes-a-cell-map">
 <h2>How a face becomes a cell map<a class="headerlink" href="#how-a-face-becomes-a-cell-map" title="Link to this heading">#</a></h2>
-<p>For a single face, native surface coordinates provide logical U and V. Logical W follows the oriented face normal through the requested signed <code class="docutils literal notranslate"><span class="pre">height</span></code>. A positive height follows the face normal; a negative height maps inward.</p>
+<p>For one face, the map uses U and V to move across the surface, and W to move away from it. W follows the face’s direction (its normal) for the requested signed <code class="docutils literal notranslate"><span class="pre">height</span></code>: a positive height extends in the normal direction, while a negative height extends inward.</p>
 <div class="guide-figure-stack">
-  <div class="guide-figure-cell"><a href="../images/mm_conformal_mapping_concept.png" data-lightbox="conformal-concepts"><img src="../images/mm_conformal_mapping_concept.png" alt="Logical cells mapped through CAD surface coordinates and signed height"></a><div class="guide-figure-label">The same logical cells can occupy a block, follow one CAD face by signed height, or span between two faces.</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_conformal_mapping_concept.png" data-lightbox="conformal-concepts"><img src="../images/mm_conformal_mapping_concept.png" alt="Logical grid of cells, the grid bent over one CAD face, and the grid spanning two CAD faces"></a><div class="guide-figure-label">The left grid is the reusable cell layout. The middle strip bends it over one face, and the right strip fills the gap between two faces.</div></div>
 </div>
-<p>Logical coordinates cover <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">nu]</span> <span class="pre">×</span> <span class="pre">[0,</span> <span class="pre">nv]</span> <span class="pre">×</span> <span class="pre">[0,</span> <span class="pre">nw]</span></code>. One integer interval is one unit cell. Periodic CAD directions preserve periodic map connectivity, and trimmed faces keep only cells that intersect the selected face when <code class="docutils literal notranslate"><span class="pre">trim_to_face=True</span></code>.</p>
-<p>Every workflow below uses one fixed orthographic camera for its CAD body, selected-face view, and mapped result. The triptychs can therefore be read as direct visual transformations rather than independently framed previews.</p>
+<p>Logical coordinates run from <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">nu]</span> <span class="pre">×</span> <span class="pre">[0,</span> <span class="pre">nv]</span> <span class="pre">×</span> <span class="pre">[0,</span> <span class="pre">nw]</span></code>; each whole-number interval is one cell. A periodic direction, such as the wraparound direction of a cylinder, stays connected at its seam. For trimmed faces, <code class="docutils literal notranslate"><span class="pre">trim</span></code> controls how the map meets the real boundary: the default <code class="docutils literal notranslate"><span class="pre">trim=&quot;boundary&quot;</span></code> clips smoothly to the edge curve, <code class="docutils literal notranslate"><span class="pre">trim=&quot;cells&quot;</span></code> keeps or removes whole cells, and <code class="docutils literal notranslate"><span class="pre">trim=&quot;none&quot;</span></code> leaves the map untrimmed. See the <a class="reference internal" href="conformal-meshes.html#guide-metamaterials-conformal-meshes-trimming"><span class="std std-ref">three trimming modes</span></a> for a visual comparison.</p>
+<p>Each comparison below uses one fixed orthographic camera. Slide the handle: the left image shows the CAD face that was selected, and the right image shows the lattice created from it.</p>
 </section>
 <section id="author-and-select-a-cadquery-face">
 <h2>Author and select a CadQuery face<a class="headerlink" href="#author-and-select-a-cadquery-face" title="Link to this heading">#</a></h2>
-<p>CadQuery remains the high-level language for workplanes, sketches, solids, and face selectors. Convert exactly one selected face with <code class="docutils literal notranslate"><span class="pre">pv.CADModel.from_cadquery(...).faces[0]</span></code>, then construct the map.</p>
+<p>Start with a cylinder, because its curved side makes the effect easy to see. CadQuery creates the cylinder; the <code class="docutils literal notranslate"><span class="pre">%CYLINDER</span></code> selector keeps its side face rather than either flat end. Converting that selected CadQuery face gives OpenVCAD the surface used to place the lattice.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cadquery</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cq</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_metamaterials</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mm</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
 
+<span class="c1"># Make a cylinder, then keep its curved side face as the mapping surface.</span>
 <span class="n">cad</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">(</span><span class="s2">&quot;XY&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="mf">20.0</span><span class="p">)</span><span class="o">.</span><span class="n">extrude</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)</span>
 <span class="n">surface</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CADModel</span><span class="o">.</span><span class="n">from_cadquery</span><span class="p">(</span><span class="n">cad</span><span class="o">.</span><span class="n">faces</span><span class="p">(</span><span class="s2">&quot;%CYLINDER&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">faces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
+<span class="c1"># Wrap a 24-by-10 gyroid sheet around the face, 4 mm along its normal.</span>
 <span class="n">cell_map</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">cell_map_from_cad_face</span><span class="p">(</span>
     <span class="n">surface</span><span class="p">,</span>
     <span class="n">cells</span><span class="o">=</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="n">height</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span>
     <span class="n">linear</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="c1"># The gyroid is the repeated open-sheet structure placed by the cell map.</span>
 <span class="n">root</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">gyroid</span><span class="p">(</span><span class="n">cell_map</span><span class="p">,</span> <span class="n">wall_thickness</span><span class="o">=</span><span class="mf">0.65</span><span class="p">)</span>
 
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="guide-figure-grid">
-  <div class="guide-figure-cell"><a href="../images/mm_conformal_cylinder_cad.png" data-lightbox="conformal-cylinder"><img src="../images/mm_conformal_cylinder_cad.png" alt="CadQuery cylinder"></a><div class="guide-figure-label">CadQuery-authored cylinder</div></div>
-  <div class="guide-figure-cell"><a href="../images/mm_conformal_cylinder_selected.png" data-lightbox="conformal-cylinder"><img src="../images/mm_conformal_cylinder_selected.png" alt="Selected cylindrical CAD face"></a><div class="guide-figure-label">Selected cylindrical face</div></div>
-  <div class="guide-figure-cell"><a href="../images/mm_conformal_cylinder_gyroid.png" data-lightbox="conformal-cylinder"><img src="../images/mm_conformal_cylinder_gyroid.png" alt="Gyroid mapped onto a cylindrical face"></a><div class="guide-figure-label">Conformal gyroid</div></div>
-</div>
-<p><code class="docutils literal notranslate"><span class="pre">linear=False</span></code> retains curved midpoint samples instead of reducing every cell to a single trilinear element. The complete script is <a class="reference download internal" download="" href="../../_downloads/02d09ec0af40b18aee1514e328ccc274/12_cadquery_conformal_gyroid.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">12_cadquery_conformal_gyroid.py</span></code></span></a>.</p>
+<figure class="openvcad-comparison" data-openvcad-comparison style="--openvcad-comparison-position: 50%; --openvcad-comparison-aspect-ratio: 45 / 32;">
+  <figcaption>Conformal gyroid mapped onto a cylindrical face</figcaption>
+  <div class="openvcad-comparison-frame">
+    <img class="openvcad-comparison-image openvcad-comparison-image-after" src="../images/mm_conformal_cylinder_gyroid.png" alt="Gyroid mapped onto a cylindrical face" decoding="async" data-no-lightbox draggable="false">
+    <img class="openvcad-comparison-image openvcad-comparison-image-before" src="../images/mm_conformal_cylinder_selected.png" alt="Selected cylindrical CAD face" decoding="async" data-no-lightbox draggable="false">
+    <span class="openvcad-comparison-label openvcad-comparison-label-before">Selected cylindrical face</span>
+    <span class="openvcad-comparison-label openvcad-comparison-label-after">Conformal gyroid</span>
+    <input class="openvcad-comparison-control" type="range" min="0" max="100" value="50" autocomplete="off" aria-label="Compare selected cylindrical face to conformal gyroid">
+    <span class="openvcad-comparison-divider" aria-hidden="true"><span class="openvcad-comparison-handle"></span></span>
+  </div>
+</figure>
+<p>The selected-face view is the plain cylindrical wall; the mapped view is a 24-by-10 gyroid sheet wrapped around it. <code class="docutils literal notranslate"><span class="pre">linear=False</span></code> keeps extra samples within curved cells, which preserves the cylinder more faithfully than a straight-sided approximation. Run the complete script: <a class="reference download internal" download="" href="../../_downloads/c4ce56adedb50c666ea8cee819123e4c/12_cadquery_conformal_gyroid.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">12_cadquery_conformal_gyroid.py</span></code></span></a>.</p>
 </section>
 <section id="map-between-two-faces">
 <h2>Map between two faces<a class="headerlink" href="#map-between-two-faces" title="Link to this heading">#</a></h2>
-<p>Use paired faces when both sides of a curvilinear volume matter. The first and second face define the W boundaries rather than using a constant normal height.</p>
+<p>Use two faces when the lattice must fill a curved shell and both sides matter. Here the inner and outer cylinder walls become the two W boundaries, rather than extending a fixed distance from one face.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cadquery</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cq</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_metamaterials</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mm</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
 
+<span class="c1"># These two cylindrical side faces bound the shell that will contain the lattice.</span>
 <span class="n">inner_cad</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">(</span><span class="s2">&quot;XY&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="mf">15.0</span><span class="p">)</span><span class="o">.</span><span class="n">extrude</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)</span>
 <span class="n">outer_cad</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">(</span><span class="s2">&quot;XY&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="mf">22.0</span><span class="p">)</span><span class="o">.</span><span class="n">extrude</span><span class="p">(</span><span class="mf">30.0</span><span class="p">)</span>
 
 <span class="n">inner</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CADModel</span><span class="o">.</span><span class="n">from_cadquery</span><span class="p">(</span><span class="n">inner_cad</span><span class="o">.</span><span class="n">faces</span><span class="p">(</span><span class="s2">&quot;%CYLINDER&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">faces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">outer</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CADModel</span><span class="o">.</span><span class="n">from_cadquery</span><span class="p">(</span><span class="n">outer_cad</span><span class="o">.</span><span class="n">faces</span><span class="p">(</span><span class="s2">&quot;%CYLINDER&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">faces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 
+<span class="c1"># Fill the gap with 24-by-10-by-3 octet cells instead of offsetting one face.</span>
 <span class="n">cell_map</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">cell_map_between_cad_faces</span><span class="p">(</span>
     <span class="n">inner</span><span class="p">,</span>
     <span class="n">outer</span><span class="p">,</span>
     <span class="n">cells</span><span class="o">=</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
 <span class="p">)</span>
 
-<span class="k">def</span><span class="w"> </span><span class="nf">beam_radius</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="n">w</span><span class="p">,</span> <span class="n">d</span><span class="p">):</span>
-    <span class="k">return</span> <span class="mf">0.15</span> <span class="o">+</span> <span class="mf">0.10</span> <span class="o">*</span> <span class="n">w</span> <span class="o">/</span> <span class="mf">3.0</span>
-
-<span class="n">root</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">octet</span><span class="p">(</span>
-    <span class="n">cell_map</span><span class="p">,</span>
-    <span class="n">beam_radius</span><span class="o">=</span><span class="n">mm</span><span class="o">.</span><span class="n">cell_field</span><span class="p">(</span><span class="n">cell_map</span><span class="p">,</span> <span class="n">beam_radius</span><span class="p">),</span>
-<span class="p">)</span>
+<span class="c1"># Grow the octet beams from the inner face (0.15 mm) to the outer face (0.25 mm).</span>
+<span class="n">beam_radius</span> <span class="o">=</span> <span class="n">cell_map</span><span class="o">.</span><span class="n">logical_position</span><span class="o">.</span><span class="n">z</span><span class="o">.</span><span class="n">map_range</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span>
+<span class="n">root</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">octet</span><span class="p">(</span><span class="n">cell_map</span><span class="p">,</span> <span class="n">beam_radius</span><span class="o">=</span><span class="n">beam_radius</span><span class="p">)</span>
 
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="guide-figure-grid">
-  <div class="guide-figure-cell"><a href="../images/mm_conformal_paired_cad.png" data-lightbox="conformal-paired"><img src="../images/mm_conformal_paired_cad.png" alt="Inner and outer CadQuery cylindrical faces"></a><div class="guide-figure-label">Inner and outer CAD boundaries</div></div>
-  <div class="guide-figure-cell"><a href="../images/mm_conformal_paired_selected.png" data-lightbox="conformal-paired"><img src="../images/mm_conformal_paired_selected.png" alt="Selected paired cylindrical faces"></a><div class="guide-figure-label">Selected face pair</div></div>
-  <div class="guide-figure-cell"><a href="../images/mm_conformal_paired_octet.png" data-lightbox="conformal-paired"><img src="../images/mm_conformal_paired_octet.png" alt="Octet lattice mapped between cylindrical faces"></a><div class="guide-figure-label">Octet lattice between faces</div></div>
-</div>
-<p>Automatic alignment searches compatible UV orientation and periodic seam choices. Explicit origins and flips are available when deterministic seam placement is required. See <a class="reference download internal" download="" href="../../_downloads/434f9776c79e45777d80e5c446945817/13_cadquery_paired_face_octet.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">13_cadquery_paired_face_octet.py</span></code></span></a>.</p>
+<figure class="openvcad-comparison" data-openvcad-comparison style="--openvcad-comparison-position: 50%; --openvcad-comparison-aspect-ratio: 45 / 32;">
+  <figcaption>Octet lattice mapped between inner and outer cylindrical faces</figcaption>
+  <div class="openvcad-comparison-frame">
+    <img class="openvcad-comparison-image openvcad-comparison-image-after" src="../images/mm_conformal_paired_octet.png" alt="Octet lattice mapped between cylindrical faces" decoding="async" data-no-lightbox draggable="false">
+    <img class="openvcad-comparison-image openvcad-comparison-image-before" src="../images/mm_conformal_paired_selected.png" alt="Selected paired cylindrical faces" decoding="async" data-no-lightbox draggable="false">
+    <span class="openvcad-comparison-label openvcad-comparison-label-before">Selected face pair</span>
+    <span class="openvcad-comparison-label openvcad-comparison-label-after">Octet lattice between faces</span>
+    <input class="openvcad-comparison-control" type="range" min="0" max="100" value="50" autocomplete="off" aria-label="Compare selected face pair to octet lattice between faces">
+    <span class="openvcad-comparison-divider" aria-hidden="true"><span class="openvcad-comparison-handle"></span></span>
+  </div>
+</figure>
+<p>The selected-face view shows the orange inner wall and blue outer wall. The mapped view fills their gap with an octet beam network; its beams grow from 0.15 mm at the inner wall to 0.25 mm at the outer wall. OpenVCAD normally finds a compatible surface direction and cylinder seam automatically. Use explicit origins and flips only when you need an exact, repeatable seam location. See <a class="reference download internal" download="" href="../../_downloads/6bd26d214193be40c3fe788635be4c77/13_cadquery_paired_face_octet.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">13_cadquery_paired_face_octet.py</span></code></span></a>.</p>
 </section>
 <section id="import-step-and-select-a-face">
 <h2>Import STEP and select a face<a class="headerlink" href="#import-step-and-select-a-face" title="Link to this heading">#</a></h2>
-<p><code class="docutils literal notranslate"><span class="pre">pv.CADModel</span></code> parses a STEP model once and retains stable face handles. Select faces by index or geometric filters such as surface type, representative normal, area range, and bounding-box intersection.</p>
+<p>Use a STEP model when the surface was made elsewhere. <code class="docutils literal notranslate"><span class="pre">pv.CADModel</span></code> loads it once and keeps stable face references. You can select a face by index, or filter by properties such as surface type, approximate direction, area, or bounding-box overlap.</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
@@ -552,16 +565,17 @@ Current compiler guides:
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
 
 <span class="n">model_path</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">resolve</span><span class="p">()</span><span class="o">.</span><span class="n">parents</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span>
     <span class="o">/</span> <span class="s2">&quot;data&quot;</span>
     <span class="o">/</span> <span class="s2">&quot;3d_models&quot;</span>
     <span class="o">/</span> <span class="s2">&quot;conformal_loft.step&quot;</span>
 <span class="p">)</span>
+<span class="c1"># Find the largest smooth B-spline face in the imported part to use as the surface.</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CADModel</span><span class="o">.</span><span class="n">from_step</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">model_path</span><span class="p">))</span>
-
 <span class="n">curved_faces</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">select_faces</span><span class="p">(</span><span class="n">surface_type</span><span class="o">=</span><span class="s2">&quot;bspline&quot;</span><span class="p">)</span>
 <span class="n">surface</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">curved_faces</span><span class="p">,</span> <span class="n">key</span><span class="o">=</span><span class="k">lambda</span> <span class="n">face</span><span class="p">:</span> <span class="n">face</span><span class="o">.</span><span class="n">area</span><span class="p">)</span>
 
+<span class="c1"># Place a three-cell-thick cubic lattice along the selected freeform face.</span>
 <span class="n">cell_map</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">cell_map_from_cad_face</span><span class="p">(</span>
     <span class="n">surface</span><span class="p">,</span>
     <span class="n">cells</span><span class="o">=</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span>
@@ -572,17 +586,23 @@ Current compiler guides:
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="guide-figure-grid">
-  <div class="guide-figure-cell"><a href="../images/mm_conformal_step_cad.png" data-lightbox="conformal-step"><img src="../images/mm_conformal_step_cad.png" alt="Imported conformal loft STEP geometry"></a><div class="guide-figure-label">Imported STEP surface</div></div>
-  <div class="guide-figure-cell"><a href="../images/mm_conformal_step_selected.png" data-lightbox="conformal-step"><img src="../images/mm_conformal_step_selected.png" alt="Selected B-spline face from the STEP model"></a><div class="guide-figure-label">Selected B-spline face</div></div>
-  <div class="guide-figure-cell"><a href="../images/mm_conformal_step_cubic.png" data-lightbox="conformal-step"><img src="../images/mm_conformal_step_cubic.png" alt="Cubic lattice mapped from the selected STEP face"></a><div class="guide-figure-label">Mapped cubic lattice</div></div>
-</div>
-<p>The repository example resolves the STEP path relative to its own file and is available as <a class="reference download internal" download="" href="../../_downloads/a208441f9fff3c197776b6685419f6e9/14_imported_step_face_selection.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">14_imported_step_face_selection.py</span></code></span></a>.</p>
-<p>Passing several <code class="docutils literal notranslate"><span class="pre">CADFace</span></code> objects to <code class="docutils literal notranslate"><span class="pre">cell_map_from_cad_face(...)</span></code> returns a <code class="docutils literal notranslate"><span class="pre">CellMapCollection</span></code>. Each face contributes an independent chart, and the mapped builder combines their results into one node.</p>
+<figure class="openvcad-comparison" data-openvcad-comparison style="--openvcad-comparison-position: 50%; --openvcad-comparison-aspect-ratio: 45 / 32;">
+  <figcaption>Cubic lattice mapped from a selected STEP face</figcaption>
+  <div class="openvcad-comparison-frame">
+    <img class="openvcad-comparison-image openvcad-comparison-image-after" src="../images/mm_conformal_step_cubic.png" alt="Cubic lattice mapped from the selected STEP face" decoding="async" data-no-lightbox draggable="false">
+    <img class="openvcad-comparison-image openvcad-comparison-image-before" src="../images/mm_conformal_step_selected.png" alt="Selected B-spline face from the STEP model" decoding="async" data-no-lightbox draggable="false">
+    <span class="openvcad-comparison-label openvcad-comparison-label-before">Selected B-spline face</span>
+    <span class="openvcad-comparison-label openvcad-comparison-label-after">Mapped cubic lattice</span>
+    <input class="openvcad-comparison-control" type="range" min="0" max="100" value="50" autocomplete="off" aria-label="Compare selected B-spline face to mapped cubic lattice">
+    <span class="openvcad-comparison-divider" aria-hidden="true"><span class="openvcad-comparison-handle"></span></span>
+  </div>
+</figure>
+<p>The selected-face view is the largest B-spline face — a smooth freeform patch — from the imported part. The mapped view uses it as a three-cell-thick cubic lattice volume. The repository example resolves the STEP path relative to its own file: <a class="reference download internal" download="" href="../../_downloads/0335b7c2bf64f8abfee454a79b5cd559/14_imported_step_face_selection.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">14_imported_step_face_selection.py</span></code></span></a>.</p>
+<p>Passing several <code class="docutils literal notranslate"><span class="pre">CADFace</span></code> objects to <code class="docutils literal notranslate"><span class="pre">cell_map_from_cad_face(...)</span></code> returns a <code class="docutils literal notranslate"><span class="pre">CellMapCollection</span></code>. Each face supplies one separately mapped patch, and the lattice builder combines those patches into one node.</p>
 </section>
-<section id="author-other-surface-families-directly">
-<h2>Author other surface families directly<a class="headerlink" href="#author-other-surface-families-directly" title="Link to this heading">#</a></h2>
-<p>The bridge is not limited to extrusions. Any CadQuery operation that produces a selectable face can define a map.</p>
+<section id="create-other-surface-shapes">
+<h2>Create other surface shapes<a class="headerlink" href="#create-other-surface-shapes" title="Link to this heading">#</a></h2>
+<p>The workflow is not limited to cylinders or imported files. Any CadQuery operation that produces a selectable face can supply a map. These examples show how the same lattice-placement steps behave on several familiar surface shapes.</p>
 <section id="lofted-conical-surface">
 <h3>Lofted conical surface<a class="headerlink" href="#lofted-conical-surface" title="Link to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">cadquery</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cq</span>
@@ -590,6 +610,7 @@ Current compiler guides:
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_metamaterials</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mm</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
 
+<span class="c1"># Loft two circles to make a tapered wall, then select that conical face.</span>
 <span class="n">cad</span> <span class="o">=</span> <span class="p">(</span>
     <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">(</span><span class="s2">&quot;XY&quot;</span><span class="p">)</span>
     <span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="mf">18.0</span><span class="p">)</span>
@@ -598,6 +619,7 @@ Current compiler guides:
     <span class="o">.</span><span class="n">loft</span><span class="p">(</span><span class="n">combine</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">ruled</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="p">)</span>
 <span class="n">surface</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CADModel</span><span class="o">.</span><span class="n">from_cadquery</span><span class="p">(</span><span class="n">cad</span><span class="o">.</span><span class="n">faces</span><span class="p">(</span><span class="s2">&quot;%CONE&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">faces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1"># Bend one BCC layer over the tapered wall, extending 3 mm from the face.</span>
 <span class="n">cell_map</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">cell_map_from_cad_face</span><span class="p">(</span>
     <span class="n">surface</span><span class="p">,</span>
     <span class="n">cells</span><span class="o">=</span><span class="p">(</span><span class="mi">24</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
@@ -608,12 +630,18 @@ Current compiler guides:
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="guide-figure-grid">
-  <div class="guide-figure-cell"><a href="../images/mm_conformal_cone_cad.png" data-lightbox="conformal-cone"><img src="../images/mm_conformal_cone_cad.png" alt="CadQuery-authored conical frustum"></a><div class="guide-figure-label">CadQuery-authored frustum</div></div>
-  <div class="guide-figure-cell"><a href="../images/mm_conformal_cone_selected.png" data-lightbox="conformal-authored"><img src="../images/mm_conformal_cone_selected.png" alt="Selected conical loft face"></a><div class="guide-figure-label">Lofted conical face</div></div>
-  <div class="guide-figure-cell"><a href="../images/mm_conformal_cone_bcc.png" data-lightbox="conformal-authored"><img src="../images/mm_conformal_cone_bcc.png" alt="BCC lattice mapped onto a conical loft"></a><div class="guide-figure-label">Conformal BCC lattice</div></div>
-</div>
-<p>See <a class="reference download internal" download="" href="../../_downloads/cbfe06560081e7357698a8478d467c2b/15_cadquery_conical_bcc.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">15_cadquery_conical_bcc.py</span></code></span></a>.</p>
+<figure class="openvcad-comparison" data-openvcad-comparison style="--openvcad-comparison-position: 50%; --openvcad-comparison-aspect-ratio: 45 / 32;">
+  <figcaption>BCC lattice mapped onto a lofted conical face</figcaption>
+  <div class="openvcad-comparison-frame">
+    <img class="openvcad-comparison-image openvcad-comparison-image-after" src="../images/mm_conformal_cone_bcc.png" alt="BCC lattice mapped onto a conical loft" decoding="async" data-no-lightbox draggable="false">
+    <img class="openvcad-comparison-image openvcad-comparison-image-before" src="../images/mm_conformal_cone_selected.png" alt="Selected conical loft face" decoding="async" data-no-lightbox draggable="false">
+    <span class="openvcad-comparison-label openvcad-comparison-label-before">Lofted conical face</span>
+    <span class="openvcad-comparison-label openvcad-comparison-label-after">Conformal BCC lattice</span>
+    <input class="openvcad-comparison-control" type="range" min="0" max="100" value="50" autocomplete="off" aria-label="Compare lofted conical face to conformal BCC lattice">
+    <span class="openvcad-comparison-divider" aria-hidden="true"><span class="openvcad-comparison-handle"></span></span>
+  </div>
+</figure>
+<p>The selected face is the tapered wall made by lofting two circles. The mapped view shows a single BCC (body-centred cubic) beam layer following that wall. Run <a class="reference download internal" download="" href="../../_downloads/32505218d72edf0f68909bfa7c577b4e/15_cadquery_conical_bcc.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">15_cadquery_conical_bcc.py</span></code></span></a>.</p>
 </section>
 <section id="spherical-band">
 <h3>Spherical band<a class="headerlink" href="#spherical-band" title="Link to this heading">#</a></h3>
@@ -622,6 +650,7 @@ Current compiler guides:
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_metamaterials</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mm</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
 
+<span class="c1"># Limit the sphere to an open band so its spherical face can carry the lattice.</span>
 <span class="n">cad</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">(</span>
     <span class="n">obj</span><span class="o">=</span><span class="n">cq</span><span class="o">.</span><span class="n">Solid</span><span class="o">.</span><span class="n">makeSphere</span><span class="p">(</span>
         <span class="mf">22.0</span><span class="p">,</span>
@@ -630,6 +659,7 @@ Current compiler guides:
     <span class="p">)</span>
 <span class="p">)</span>
 <span class="n">surface</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CADModel</span><span class="o">.</span><span class="n">from_cadquery</span><span class="p">(</span><span class="n">cad</span><span class="o">.</span><span class="n">faces</span><span class="p">(</span><span class="s2">&quot;%SPHERE&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">faces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1"># Map one Schwarz-P sheet layer across the band, 4.5 mm along the face normal.</span>
 <span class="n">cell_map</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">cell_map_from_cad_face</span><span class="p">(</span>
     <span class="n">surface</span><span class="p">,</span>
     <span class="n">cells</span><span class="o">=</span><span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
@@ -640,15 +670,21 @@ Current compiler guides:
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="guide-figure-grid">
-  <div class="guide-figure-cell"><a href="../images/mm_conformal_sphere_cad.png" data-lightbox="conformal-sphere"><img src="../images/mm_conformal_sphere_cad.png" alt="CadQuery-authored spherical band"></a><div class="guide-figure-label">CadQuery-authored band</div></div>
-  <div class="guide-figure-cell"><a href="../images/mm_conformal_sphere_selected.png" data-lightbox="conformal-authored"><img src="../images/mm_conformal_sphere_selected.png" alt="Selected spherical band face"></a><div class="guide-figure-label">Spherical CAD face</div></div>
-  <div class="guide-figure-cell"><a href="../images/mm_conformal_sphere_schwarz_p.png" data-lightbox="conformal-authored"><img src="../images/mm_conformal_sphere_schwarz_p.png" alt="Schwarz-P mapped over a spherical band"></a><div class="guide-figure-label">Conformal Schwarz-P</div></div>
-</div>
-<p><a class="reference download internal" download="" href="../../_downloads/f2984747013c002b0a24ff069f8216a6/16_cadquery_spherical_band_schwarz_p.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">16_cadquery_spherical_band_schwarz_p.py</span></code></span></a> starts from <code class="docutils literal notranslate"><span class="pre">cq.Solid.makeSphere(...)</span></code>, selects its spherical face, and maps a one-cell-thick TPMS layer over the band.</p>
+<figure class="openvcad-comparison" data-openvcad-comparison style="--openvcad-comparison-position: 50%; --openvcad-comparison-aspect-ratio: 45 / 32;">
+  <figcaption>Schwarz-P mapped over a spherical band CAD face</figcaption>
+  <div class="openvcad-comparison-frame">
+    <img class="openvcad-comparison-image openvcad-comparison-image-after" src="../images/mm_conformal_sphere_schwarz_p.png" alt="Schwarz-P mapped over a spherical band" decoding="async" data-no-lightbox draggable="false">
+    <img class="openvcad-comparison-image openvcad-comparison-image-before" src="../images/mm_conformal_sphere_selected.png" alt="Selected spherical band face" decoding="async" data-no-lightbox draggable="false">
+    <span class="openvcad-comparison-label openvcad-comparison-label-before">Spherical CAD face</span>
+    <span class="openvcad-comparison-label openvcad-comparison-label-after">Conformal Schwarz-P</span>
+    <input class="openvcad-comparison-control" type="range" min="0" max="100" value="50" autocomplete="off" aria-label="Compare spherical CAD face to conformal Schwarz-P lattice">
+    <span class="openvcad-comparison-divider" aria-hidden="true"><span class="openvcad-comparison-handle"></span></span>
+  </div>
+</figure>
+<p>The selected face is an open spherical band: the top and bottom caps are omitted. The mapped view is one Schwarz-P layer, a smooth porous sheet, stretched over that band. <a class="reference download internal" download="" href="../../_downloads/83aa1ee308a5d9982aec48c00b32f585/16_cadquery_spherical_band_schwarz_p.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">16_cadquery_spherical_band_schwarz_p.py</span></code></span></a> starts from <code class="docutils literal notranslate"><span class="pre">cq.Solid.makeSphere(...)</span></code>, selects its spherical face, and maps the layer over it.</p>
 </section>
-<section id="parametric-freeform-surface">
-<h3>Parametric freeform surface<a class="headerlink" href="#parametric-freeform-surface" title="Link to this heading">#</a></h3>
+<section id="freeform-surface-from-a-python-function">
+<h3>Freeform surface from a Python function<a class="headerlink" href="#freeform-surface-from-a-python-function" title="Link to this heading">#</a></h3>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">cadquery</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">cq</span>
@@ -657,11 +693,13 @@ Current compiler guides:
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
 
 <span class="k">def</span><span class="w"> </span><span class="nf">saddle</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+    <span class="c1"># Describe the freeform surface in ordinary Python coordinates.</span>
     <span class="n">x</span> <span class="o">=</span> <span class="mf">42.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">u</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
     <span class="n">y</span> <span class="o">=</span> <span class="mf">34.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">)</span>
     <span class="n">z</span> <span class="o">=</span> <span class="mf">7.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">u</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">))</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="p">(</span><span class="n">v</span> <span class="o">-</span> <span class="mf">0.5</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span>
 
+<span class="c1"># Turn the Python function into a CAD face, then use it as the mapping surface.</span>
 <span class="n">cad</span> <span class="o">=</span> <span class="n">cq</span><span class="o">.</span><span class="n">Workplane</span><span class="p">(</span><span class="s2">&quot;XY&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">parametricSurface</span><span class="p">(</span>
     <span class="n">saddle</span><span class="p">,</span>
     <span class="n">N</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
@@ -669,6 +707,7 @@ Current compiler guides:
     <span class="n">smoothing</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span>
 <span class="n">surface</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CADModel</span><span class="o">.</span><span class="n">from_cadquery</span><span class="p">(</span><span class="n">cad</span><span class="p">)</span><span class="o">.</span><span class="n">faces</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="c1"># Follow the saddle with one diamond-beam layer, 2.5 mm thick.</span>
 <span class="n">cell_map</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">cell_map_from_cad_face</span><span class="p">(</span>
     <span class="n">surface</span><span class="p">,</span>
     <span class="n">cells</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
@@ -679,22 +718,28 @@ Current compiler guides:
 <span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
 </pre></div>
 </div>
-<div class="guide-figure-grid">
-  <div class="guide-figure-cell"><a href="../images/mm_conformal_freeform_cad.png" data-lightbox="conformal-freeform"><img src="../images/mm_conformal_freeform_cad.png" alt="CadQuery-authored parametric saddle"></a><div class="guide-figure-label">CadQuery-authored saddle</div></div>
-  <div class="guide-figure-cell"><a href="../images/mm_conformal_freeform_selected.png" data-lightbox="conformal-authored"><img src="../images/mm_conformal_freeform_selected.png" alt="Selected CadQuery parametric saddle face"></a><div class="guide-figure-label">Parametric saddle face</div></div>
-  <div class="guide-figure-cell"><a href="../images/mm_conformal_freeform_diamond.png" data-lightbox="conformal-authored"><img src="../images/mm_conformal_freeform_diamond.png" alt="Diamond lattice mapped over a freeform saddle"></a><div class="guide-figure-label">Conformal diamond lattice</div></div>
-</div>
-<p><a class="reference download internal" download="" href="../../_downloads/8a910086ad817ffa77cd83ab4f04c748/17_cadquery_freeform_diamond.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">17_cadquery_freeform_diamond.py</span></code></span></a> uses <code class="docutils literal notranslate"><span class="pre">parametricSurface(...)</span></code>, demonstrating that the same workflow applies to a surface authored from a Python function.</p>
+<figure class="openvcad-comparison" data-openvcad-comparison style="--openvcad-comparison-position: 50%; --openvcad-comparison-aspect-ratio: 45 / 32;">
+  <figcaption>Diamond lattice mapped over a freeform parametric saddle face</figcaption>
+  <div class="openvcad-comparison-frame">
+    <img class="openvcad-comparison-image openvcad-comparison-image-after" src="../images/mm_conformal_freeform_diamond.png" alt="Diamond lattice mapped over a freeform saddle" decoding="async" data-no-lightbox draggable="false">
+    <img class="openvcad-comparison-image openvcad-comparison-image-before" src="../images/mm_conformal_freeform_selected.png" alt="Selected CadQuery parametric saddle face" decoding="async" data-no-lightbox draggable="false">
+    <span class="openvcad-comparison-label openvcad-comparison-label-before">Parametric saddle face</span>
+    <span class="openvcad-comparison-label openvcad-comparison-label-after">Conformal diamond lattice</span>
+    <input class="openvcad-comparison-control" type="range" min="0" max="100" value="50" autocomplete="off" aria-label="Compare parametric saddle face to conformal diamond lattice">
+    <span class="openvcad-comparison-divider" aria-hidden="true"><span class="openvcad-comparison-handle"></span></span>
+  </div>
+</figure>
+<p>The selected-face view is the wavy saddle produced by the Python function. The mapped view lays a diamond beam network across the same rises and dips. <a class="reference download internal" download="" href="../../_downloads/5380e6e09af808921a7aa7d6a0bc15d7/17_cadquery_freeform_diamond.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">17_cadquery_freeform_diamond.py</span></code></span></a> uses <code class="docutils literal notranslate"><span class="pre">parametricSurface(...)</span></code>, showing that a surface authored from a Python function follows the same workflow.</p>
 </section>
 </section>
 <section id="validation-is-always-final">
 <h2>Validation is always final<a class="headerlink" href="#validation-is-always-final" title="Link to this heading">#</a></h2>
-<p>Constructing a map runs <code class="docutils literal notranslate"><span class="pre">CellMap</span></code>’s Jacobian validation, which is the authoritative check on the extruded or interpolated volume:</p>
+<p>Creating a map checks that its cells do not collapse or turn inside out. This final validation is the reliable check for the resulting curved volume:</p>
 <ul class="simple">
-<li><p>A <code class="docutils literal notranslate"><span class="pre">height</span></code> larger than a concave face’s curvature radius folds the offset — <em>“Surface CellMap is folded or singular.”</em></p></li>
-<li><p>Pairing faces whose parameterizations cannot be brought into correspondence raises <em>“No valid paired-surface correspondence was found,”</em> with per-candidate Jacobian diagnostics.</p></li>
+<li><p>A <code class="docutils literal notranslate"><span class="pre">height</span></code> larger than the tightest inside bend of a concave face can fold the offset — <em>“Surface CellMap is folded or singular.”</em></p></li>
+<li><p>Pairing faces that cannot be matched consistently raises <em>“No valid paired-surface correspondence was found,”</em> with details for each attempted match.</p></li>
 </ul>
-<p>Once constructed, these mapped lattices are ordinary OpenVCAD nodes. They can carry the graded fields from the previous guide, combine with the mesh-derived maps of <a class="reference internal" href="conformal-meshes.html"><span class="std std-doc">Conformal mapping triangle meshes</span></a>, and can be sent to any compatible <a class="reference internal" href="../compilers/index.html"><span class="std std-doc">compiler</span></a>.</p>
+<p>If validation fails, reduce the height or choose faces that describe the same region. Once the map is valid, its lattice is an ordinary OpenVCAD node: it can use the graded fields from the previous guide, combine with maps from <a class="reference internal" href="conformal-meshes.html"><span class="std std-doc">Conformal mapping triangle meshes</span></a>, and go to any compatible <a class="reference internal" href="../compilers/index.html"><span class="std std-doc">compiler</span></a>.</p>
 </section>
 </section>
 
@@ -709,12 +754,12 @@ Current compiler guides:
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="functional-grading.html"
+       href="attribute-driven.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Functionally graded metamaterials</p>
+        <p class="prev-next-title">Attribute-driven metamaterials</p>
       </div>
     </a>
     <a class="right-next"
@@ -722,7 +767,7 @@ Current compiler guides:
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Conformal mapping triangle meshes</p>
+        <p class="prev-next-title">Map lattices onto triangle meshes</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -750,10 +795,10 @@ Current compiler guides:
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#author-and-select-a-cadquery-face">Author and select a CadQuery face</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#map-between-two-faces">Map between two faces</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-step-and-select-a-face">Import STEP and select a face</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#author-other-surface-families-directly">Author other surface families directly</a><ul class="nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#create-other-surface-shapes">Create other surface shapes</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#lofted-conical-surface">Lofted conical surface</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#spherical-band">Spherical band</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#parametric-freeform-surface">Parametric freeform surface</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#freeform-surface-from-a-python-function">Freeform surface from a Python function</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#validation-is-always-final">Validation is always final</a></li>

@@ -359,9 +359,9 @@
 <li class="toctree-l1 has-children"><a class="reference internal" href="metamaterials/index.html">Metamaterials</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l2"><a class="reference internal" href="metamaterials/concepts.html">Concepts and representation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="metamaterials/catalog.html">TPMS and lattice catalog</a></li>
-<li class="toctree-l2"><a class="reference internal" href="metamaterials/functional-grading.html">Functionally graded metamaterials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/attribute-driven.html">Attribute-driven metamaterials</a></li>
 <li class="toctree-l2"><a class="reference internal" href="metamaterials/conformal-cad.html">Conformal mapping CAD surfaces</a></li>
-<li class="toctree-l2"><a class="reference internal" href="metamaterials/conformal-meshes.html">Conformal mapping triangle meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/conformal-meshes.html">Map lattices onto triangle meshes</a></li>
 <li class="toctree-l2"><a class="reference internal" href="metamaterials/heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
 </ul>
 </details></li>
@@ -442,12 +442,12 @@
 <h1>Moving from Version 2 to 3<a class="headerlink" href="#moving-from-version-2-to-3" title="Link to this heading">#</a></h1>
 <section id="compatibility-with-older-openvcad-versions">
 <h2>Compatibility with Older OpenVCAD Versions<a class="headerlink" href="#compatibility-with-older-openvcad-versions" title="Link to this heading">#</a></h2>
-<p>OpenVCAD 3.0 is not directly backwards compatible with the older OpenVCAD API. Existing scripts may need to be updated before they run on the new version.</p>
+<p>OpenVCAD 3.X.X is not directly backwards compatible with the older OpenVCAD API. Existing scripts may need to be updated before they run on the new version.</p>
 <p>The important point is that the old capabilities have not gone away. Everything you could do in the old version can be done in OpenVCAD 3.0, but some designs need to be expressed using the new attribute-modeling workflow.</p>
 </section>
 <section id="what-to-read-first">
 <h2>What to Read First<a class="headerlink" href="#what-to-read-first" title="Link to this heading">#</a></h2>
-<p>Start by reading and following along with the guides. Even if you have used OpenVCAD before, OpenVCAD 3.0 changes the modeling workflow enough that the guide sequence matters.</p>
+<p>Start by reading and following along with the guides. Even if you have used OpenVCAD before, OpenVCAD 3.X.X changes the modeling workflow enough that the guide sequence matters.</p>
 <p>Read these first:</p>
 <ol class="arabic simple">
 <li><p><a class="reference internal" href="theory-and-motivation.html"><span class="std std-doc">Theory and Motivation</span></a></p></li>
@@ -494,7 +494,7 @@
 </pre></div>
 </div>
 <p>The equivalent graph-lattice rename is <code class="docutils literal notranslate"><span class="pre">radius</span></code> to <code class="docutils literal notranslate"><span class="pre">beam_radius</span></code>. Builder arguments named <code class="docutils literal notranslate"><span class="pre">cell</span></code>, <code class="docutils literal notranslate"><span class="pre">size</span></code>, <code class="docutils literal notranslate"><span class="pre">bounds</span></code>, and <code class="docutils literal notranslate"><span class="pre">center</span></code> have been removed. For CAD-conformal geometry, construct the map with <code class="docutils literal notranslate"><span class="pre">cell_map_from_cad_face</span></code> or <code class="docutils literal notranslate"><span class="pre">cell_map_between_cad_faces</span></code>; the old <code class="docutils literal notranslate"><span class="pre">Map</span></code>, <code class="docutils literal notranslate"><span class="pre">ConformalMap</span></code>, and <code class="docutils literal notranslate"><span class="pre">SurfaceParamerterizer</span></code> prototypes no longer exist.</p>
-<p>Geometry callbacks now declare their coordinate system explicitly with <code class="docutils literal notranslate"><span class="pre">world_field</span></code> or <code class="docutils literal notranslate"><span class="pre">cell_field</span></code>. Use <code class="docutils literal notranslate"><span class="pre">cell_attribute</span></code> when an output attribute should be evaluated in logical cell coordinates. All returned lattice objects remain ordinary <code class="docutils literal notranslate"><span class="pre">pv.Node</span></code> instances and continue through the normal attribute and compiler pipelines.</p>
+<p>Lattice geometry controls are ordinary typed attributes. Cartesian attributes are evaluated in the consuming node’s coordinates; use <code class="docutils literal notranslate"><span class="pre">cell_map.logical_position</span></code>, <code class="docutils literal notranslate"><span class="pre">cell_map.unit_cell_phase</span></code>, or <code class="docutils literal notranslate"><span class="pre">cell_map.cell_index</span></code> for explicit lattice coordinates. All returned lattice objects remain ordinary <code class="docutils literal notranslate"><span class="pre">pv.Node</span></code> instances and continue through the normal attribute and compiler pipelines.</p>
 </section>
 </section>
 

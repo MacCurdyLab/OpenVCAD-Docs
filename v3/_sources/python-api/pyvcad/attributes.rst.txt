@@ -1,7 +1,7 @@
 Attributes
 ==========
 
-In **attribute modeling**, attributes are named spatial fields attached to nodes in your ``Node`` tree. They describe quantities that vary through the interior of a part—modulus, color, material volume fractions, and more—using the same sampling idea as implicit geometry: at each point, the engine evaluates whether you are inside the solid and, when you are, evaluates the attached fields at that location.
+In **attribute modeling**, attributes are typed spatial fields. They acquire a name only when attached to a node in your ``Node`` tree. They describe quantities that vary through the interior of a part—modulus, color, material volume fractions, and more—using the same sampling idea as implicit geometry: at each point, the engine evaluates whether you are inside the solid and, when you are, evaluates the attached fields at that location.
 
 Conceptually, each attribute implements a **sample** at ``(x, y, z)`` together with the signed distance ``d`` to the surface. Expression strings (see the math expressions guide) can use coordinates and ``d``; results are aggregated under string names so renderers and compilers can pick them up consistently.
 
@@ -10,6 +10,7 @@ Conceptually, each attribute implements a **sample** at ``(x, y, z)`` together w
 * Attach fields to geometry with ``node.set_attribute(name, attribute)``.
 * Use **canonical names** from ``DefaultAttributes`` (e.g. ``MODULUS``, ``COLOR_RGBA``, ``VOLUME_FRACTIONS``) so downstream tools know which field to read.
 * **``FloatAttribute``** — one scalar per point (physical scalars, temperatures, etc.).
+* **``Vec3Attribute``** — three components per point, with composition methods for directions and displacements.
 * **``Vec4Attribute``** — four components per point (typical use: linear RGBA in ``[0, 1]``).
 * **``VolumeFractionsAttribute``** — maps material IDs to fractions at each point; fractions should sum to 1 where mixtures apply.
 * Python function support is **Numba-only**. Use ``numba.cfunc`` with the signature ``float64(float64, float64, float64, float64)``.
@@ -94,6 +95,11 @@ Core types
    :undoc-members:
    :special-members: __init__
 
+.. autoclass:: Vec3Attribute
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
 .. autoclass:: Vec4Attribute
    :members:
    :undoc-members:
@@ -104,7 +110,7 @@ Core types
    :undoc-members:
    :special-members: __init__
 
-.. autoclass:: CellAttribute
+.. autoclass:: DerivedFloatAttribute
    :members:
    :undoc-members:
    :special-members: __init__

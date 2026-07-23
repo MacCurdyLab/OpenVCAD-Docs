@@ -4,13 +4,13 @@
 ```{include} ../_guide-sidebar-compiler-membership.md
 ```
 
-A single `CellMap` can drive several lattice bodies with different unit-cell topologies. Because every body uses the same logical U/V/W coordinates, TPMS, graph, and plate-like cells retain one coherent conformal layout.
+A single `CellMap` can lay out several kinds of lattice in one part. The map is the shared grid: it tells every cell where to sit in the finished shape. You can then use a smooth TPMS sheet in one area and a beam-based graph lattice in another without losing that shared layout.
 
-`CellMap` remains responsible only for logical-to-world mapping. Topology belongs to `MappedImplicitLattice`, `MappedGraphLattice`, or `MappedFaceLattice`; region selection is ordinary OpenVCAD composition.
+This guide shows three ways to join those areas: make a clean cut, blend two similar TPMS patterns, or let two unlike patterns overlap. It assumes you have worked through the [metamaterial concepts](concepts.md) and [attribute-driven metamaterials](attribute-driven.md) guides.
 
 ## Build sharp topology regions
 
-Build each lattice over the full shared map, intersect it with its assigned region, and combine the clipped bodies with an ordinary `Union`:
+**Goal:** put one topology on each side of a chosen boundary. Build each lattice across the full shared map, keep the required portion with `Intersection`, then combine the portions with `Union`:
 
 ```python
 import pyvcad as pv
@@ -37,16 +37,18 @@ root = pv.Union(
 )
 ```
 
-The region solids meet at one sharp boundary. They can be boxes, imported CAD bodies, or any other OpenVCAD geometry. Each lattice remains authored from the same immutable `CellMap`; the clipping geometry only selects which topology is retained in each area.
+`left_region` and `right_region` are simple box-shaped cutters. They meet at `x = 0`, so the two lattices meet there with no transition zone. A region can also be an imported CAD body or any other OpenVCAD shape. The shared `CellMap` still controls cell placement; the region merely decides which lattice is visible at each point.
+
+The first render below has a gyroid on one side and Schwarz-D on the other. The second uses straight cubic beams and body-centred-cubic (BCC) beams. In both, the visible change is an immediate cut at the boundary.
 
 <div class="guide-figure-grid">
-  <div class="guide-figure-cell"><a href="../images/mm_heterogeneous_01_tpms_tpms_sharp.png" data-lightbox="heterogeneous"><img src="../images/mm_heterogeneous_01_tpms_tpms_sharp.png" alt="Sharp gyroid and Schwarz-D topology regions"></a><div class="guide-figure-label">Gyroid and Schwarz-D share one rectangular conformal layout and meet at a sharp boundary.</div></div>
-  <div class="guide-figure-cell"><a href="../images/mm_heterogeneous_05_graph_graph.png" data-lightbox="heterogeneous"><img src="../images/mm_heterogeneous_05_graph_graph.png" alt="Sharp cubic and BCC graph-lattice regions"></a><div class="guide-figure-label">Cubic and BCC graphs meet at shared logical vertices along an integer cell boundary.</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_heterogeneous_01_tpms_tpms_sharp.png" data-lightbox="heterogeneous"><img src="../images/mm_heterogeneous_01_tpms_tpms_sharp.png" alt="Rectangular lattice block with gyroid sheets on one side and Schwarz-D sheets on the other"></a><div class="guide-figure-label">A gyroid sheet changes directly to a Schwarz-D sheet at the center plane.</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_heterogeneous_05_graph_graph.png" data-lightbox="heterogeneous"><img src="../images/mm_heterogeneous_05_graph_graph.png" alt="Rectangular beam lattice block with cubic beams on one side and BCC beams on the other"></a><div class="guide-figure-label">Cubic and BCC beam networks use the same cell grid, then meet at one whole-cell boundary.</div></div>
 </div>
 
 ## Mix compatible topology fields smoothly
 
-Use `mm.mix` when the transition should morph between the two scalar fields instead of clipping them. The same region solid can drive a native signed-distance ramp, so changing an existing sharp construction is mechanical:
+**Goal:** change gradually from one compatible pattern to another. Use `mm.mix` when a clean cut would look or behave too abrupt. Instead of keeping only one shape at each point, it blends the two underlying shape values across a band. The same region box can define that band:
 
 ```python
 root = mm.mix(
@@ -57,7 +59,7 @@ root = mm.mix(
 )
 ```
 
-The region surface is the midpoint of the transition. The left field is used unchanged one `half_width` inside the region, the right field is used unchanged one `half_width` outside it, and a smoothstep profile interpolates between them. The complete transition band is therefore twice `half_width`; for an 8 mm cell, `half_width=4.0` produces one full cell of transition.
+The region surface is the middle of the transition. `gyroid` remains unchanged for one `half_width` inside `left_region`; `schwarz_d` remains unchanged for the same distance outside it. Between those limits, OpenVCAD changes smoothly from one to the other. The total blend width is twice `half_width`, so `half_width=4.0` makes an 8 mm-wide transition band.
 
 For coordinate-driven transitions, pass a weight field instead:
 
@@ -66,21 +68,26 @@ weight = mm.ramp(-8.0, 8.0, axis="x", smooth=True)
 root = mm.mix(gyroid, schwarz_d, weight)
 ```
 
-Cell-space ramps are also supported when the map is supplied explicitly:
+For a transition that follows cell positions rather than millimetres, use the map's logical coordinates explicitly:
 
 ```python
-weight = mm.ramp(2.0, 4.0, axis="u", space="cell")
-root = mm.mix(gyroid, schwarz_d, weight, cell_map=cell_map)
+weight = mm.ramp(2.0, 4.0, axis="u", coordinates=cell_map.logical_position)
+root = mm.mix(gyroid, schwarz_d, weight)
 ```
 
-`mm.idw_weight` authors inverse-distance weights from seed points, and `mm.mix_many` folds several bodies into a binary `Mix` tree using normalized partial weights. Build every body over the same `CellMap`; different domains are allowed, but a field jump may occur where only one child's domain remains defined.
+`mm.idw_weight` can create a weight from the distance to chosen seed points, and `mm.mix_many` can combine more than two bodies. Keep the bodies on the same `CellMap`. They may have different outer boundaries, but expect an abrupt change where only one body exists.
 
-Float, `Vec3`, `Vec4`, and material volume-fraction attributes interpolate with the same weight by default. Volume fractions merge over all material IDs and renormalize, producing a continuous digital-alloy transition. Use `pv.Mix.AttributePolicy.dominant` for discrete labels, or install an ordinary attribute conflict resolver when a weight-independent rule such as average, minimum, or maximum is required.
+Number, vector, and material volume-fraction attributes blend with the same weight by default. Material fractions are combined and normalized, which gives a continuous material transition. If an attribute is a discrete label rather than a value that should blend, choose an appropriate `pv.Mix` attribute policy or conflict resolver.
 
-For TPMS-to-TPMS transitions, `ImplicitUnitCell.mixed` provides the highest-fidelity path because it mixes the raw periodic fields before sheet or solid shaping, thickness offsets, and map-metric correction. This is the approach used by `01_tpms_to_tpms.py`:
+For two TPMS patterns, `ImplicitUnitCell.mixed` is the preferred approach. It blends the repeating unit-cell patterns before OpenVCAD turns them into walls and maps them into the part. [`01_tpms_to_tpms.py`](../../../../examples/metamaterials/heterogeneous/01_tpms_to_tpms.py) uses that approach:
 
 ```python
-cell_weight = mm.ramp(2.5, 3.5, axis="u", space="cell")
+cell_weight = mm.ramp(
+    2.5,
+    3.5,
+    axis="u",
+    coordinates=cell_map.logical_position,
+)
 mixed_cell = pv.ImplicitUnitCell.mixed(
     pv.ImplicitUnitCell.standard("gyroid"),
     pv.ImplicitUnitCell.standard("schwarz_d"),
@@ -89,11 +96,11 @@ mixed_cell = pv.ImplicitUnitCell.mixed(
 root = mm.tpms(cell_map, mixed_cell, wall_thickness=1.2)
 ```
 
-A mixed field is continuous but is not an exact signed-distance field, and continuity does not imply that its solid region remains connected. Components can pinch off or appear when the source features do not correspond. This is especially likely when mixing topology families such as a TPMS sheet and a graph lattice, whose field magnitudes and structural members have different meanings. Treat generic `mm.mix` results as geometry that requires connectivity inspection rather than as structurally validated transitions.
+Even a smooth blend needs inspection. Its geometry can pinch apart, create small isolated pieces, or close a passage when the two source patterns do not line up. This is most likely when blending unlike families, such as a TPMS sheet and a beam lattice. Treat a general `mm.mix` result as a design to inspect for connected material, thin features, and enclosed voids—not as a mechanically validated connector.
 
 ## Connect incompatible topologies with overlap
 
-For a TPMS-to-graph interface, retain both source structures through an overlap band instead of crossfading their fields. Each structure stays attached to its original side, while their intersections provide explicit connections. The rectangular `03_tpms_to_graph_overlap.py` example uses one full 8 mm cell of overlap:
+**Goal:** join unlike patterns, such as a TPMS sheet and a beam lattice. Rather than blending shapes that mean different things, keep both structures in a shared overlap band. Their physical intersections make the connection. [`03_tpms_to_graph_overlap.py`](../../../../examples/metamaterials/heterogeneous/03_tpms_to_graph_overlap.py) uses a one-cell-wide, 8 mm overlap:
 
 ```python
 OVERLAP_HALF_WIDTH = 4.0
@@ -112,9 +119,9 @@ root = pv.Union(
 )
 ```
 
-Overlap is intentionally heavier than a morph and is not a substitute for mechanical validation. It does, however, avoid the free-floating intermediate components produced by crossfading unrelated fields. Adjust beam radii, wall thickness, and overlap extent so the two retained structures intersect with sufficient printable area.
+Overlap uses more material than a blend and still needs mechanical validation. It avoids inventing an in-between shape, though: each source remains recognizable and can intersect the other across the whole band. Adjust the beam radius, wall thickness, and band width until those intersections have enough area to print and carry load.
 
-Drag the divider over this close-up to compare the boundary treatments at the same scale and camera angle:
+Drag the divider in this close-up. The left image shows a hard cut between the gyroid and Schwarz-D sheets; the right image shows the same two sheets changing through a blend band. The matching camera makes the difference easy to see.
 
 <figure class="openvcad-comparison" data-openvcad-comparison style="--openvcad-comparison-position: 50%; --openvcad-comparison-aspect-ratio: 45 / 32;">
   <figcaption>Sharp clipping and field mixing at the gyroid–Schwarz-D boundary</figcaption>
@@ -129,24 +136,26 @@ Drag the divider over this close-up to compare the boundary treatments at the sa
 </figure>
 
 <div class="guide-figure-grid">
-  <div class="guide-figure-cell"><a href="../images/mm_heterogeneous_03_tpms_graph.png" data-lightbox="heterogeneous-comparison"><img src="../images/mm_heterogeneous_03_tpms_graph.png" alt="Overlapping Schwarz-P and octet transition"></a><div class="guide-figure-label">Schwarz-P and octet remain intact through a one-cell overlap band, providing connected intersections without floating crossfade geometry.</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_heterogeneous_03_tpms_graph.png" data-lightbox="heterogeneous-comparison"><img src="../images/mm_heterogeneous_03_tpms_graph.png" alt="Schwarz-P sheet lattice and octet beam lattice crossing through a shared overlap band"></a><div class="guide-figure-label">The Schwarz-P sheet and octet beams both continue through the central band, where their intersections form the join.</div></div>
 </div>
 
 ## Keep the shared layout on CAD surfaces
 
-The same construction works after conformal mapping. Align simple clipping solids with a suitable world-space direction, or use CAD region bodies that follow the intended design boundary.
+The same choices work on a curved part. The examples below create a shared map from cylindrical CAD faces, then divide it with simple horizontal boxes. On a more complex part, the dividing region can instead be a CAD body that follows the intended boundary.
+
+[`02_tpms_to_tpms_surface_conformal.py`](../../../../examples/metamaterials/heterogeneous/02_tpms_to_tpms_surface_conformal.py) wraps a gyroid and Schwarz-P sheet around one cylinder. [`04_tpms_to_graph_between_surfaces.py`](../../../../examples/metamaterials/heterogeneous/04_tpms_to_graph_between_surfaces.py) fills the gap between two cylinders, using a Schwarz-P sheet below the mid-height cut and octet beams above it.
 
 <div class="guide-figure-grid">
-  <div class="guide-figure-cell"><a href="../images/mm_heterogeneous_02_tpms_tpms_surface.png" data-lightbox="heterogeneous"><img src="../images/mm_heterogeneous_02_tpms_tpms_surface.png" alt="Two sharp TPMS regions on a surface-conformal cylinder"></a><div class="guide-figure-label">Two TPMS bodies share a CellMap generated from one cylindrical CAD face.</div></div>
-  <div class="guide-figure-cell"><a href="../images/mm_heterogeneous_04_tpms_graph_paired.png" data-lightbox="heterogeneous"><img src="../images/mm_heterogeneous_04_tpms_graph_paired.png" alt="Sharp TPMS and graph regions between paired CAD faces"></a><div class="guide-figure-label">TPMS and graph cells share a CellMap constructed between two cylindrical CAD faces.</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_heterogeneous_02_tpms_tpms_surface.png" data-lightbox="heterogeneous"><img src="../images/mm_heterogeneous_02_tpms_tpms_surface.png" alt="Cylindrical sheet lattice with a gyroid region below a Schwarz-P region"></a><div class="guide-figure-label">A gyroid and a Schwarz-P sheet follow the same cylindrical surface and meet at mid-height.</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_heterogeneous_04_tpms_graph_paired.png" data-lightbox="heterogeneous"><img src="../images/mm_heterogeneous_04_tpms_graph_paired.png" alt="Cylindrical shell with Schwarz-P sheet lattice below and octet beam lattice above"></a><div class="guide-figure-label">Inside one curved shell, a lower Schwarz-P sheet changes sharply to upper octet beams.</div></div>
 </div>
 
 ## Choose sharp clipping, field mixing, or overlap
 
-Sharp clipping preserves exact topology on either side and an exact authored boundary, but it may cap, disconnect, or abruptly terminate members. Align sharp boundaries with shared logical vertices when possible, enlarge deliberate graph nodes, or add explicit connector geometry where load transfer matters.
+Use **sharp clipping** when the boundary location matters most and you want both patterns unchanged right up to it. It can leave beams or sheets abruptly cut off, so align the boundary with cell vertices where possible, enlarge important beam joints, or add a deliberate connector where the load must cross.
 
-Smooth mixing guarantees field continuity when both child fields and the weight are continuous, but it does not guarantee geometric or structural connectivity. It works best for compatible fields with corresponding features. Prefer `ImplicitUnitCell.mixed` for TPMS pairs and inspect every generic node-level mix for islands, thin necks, and enclosed voids.
+Use **smooth mixing** for compatible patterns with matching features, especially two TPMS patterns. `ImplicitUnitCell.mixed` is the best choice for that case. A continuous change in the underlying shape values does not promise one connected, printable solid, so inspect the result for islands, thin necks, and trapped voids.
 
-Overlap preserves both source structures through a finite band and is the safer default for incompatible families such as TPMS-to-graph. The result uses more material and still requires load-path and manufacturability checks, but it can be tested directly for connected components.
+Use **overlap** as the safer starting point for unlike families such as TPMS-to-graph. It keeps both source structures through a finite band, which costs material but gives their connections a clear physical form. Check connected components, load paths, and manufacturability before relying on any transition.
 
-All five examples are in `examples/metamaterials/heterogeneous_lattices/`.
+The complete interactive examples are [`01_tpms_to_tpms.py`](../../../../examples/metamaterials/heterogeneous/01_tpms_to_tpms.py), [`02_tpms_to_tpms_surface_conformal.py`](../../../../examples/metamaterials/heterogeneous/02_tpms_to_tpms_surface_conformal.py), [`03_tpms_to_graph_overlap.py`](../../../../examples/metamaterials/heterogeneous/03_tpms_to_graph_overlap.py), [`04_tpms_to_graph_between_surfaces.py`](../../../../examples/metamaterials/heterogeneous/04_tpms_to_graph_between_surfaces.py), and [`05_graph_to_graph.py`](../../../../examples/metamaterials/heterogeneous/05_graph_to_graph.py).

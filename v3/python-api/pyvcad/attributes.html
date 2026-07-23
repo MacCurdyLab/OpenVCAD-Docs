@@ -446,13 +446,14 @@
                   
   <section id="attributes">
 <h1>Attributes<a class="headerlink" href="#attributes" title="Link to this heading">#</a></h1>
-<p>In <strong>attribute modeling</strong>, attributes are named spatial fields attached to nodes in your <code class="docutils literal notranslate"><span class="pre">Node</span></code> tree. They describe quantities that vary through the interior of a part—modulus, color, material volume fractions, and more—using the same sampling idea as implicit geometry: at each point, the engine evaluates whether you are inside the solid and, when you are, evaluates the attached fields at that location.</p>
+<p>In <strong>attribute modeling</strong>, attributes are typed spatial fields. They acquire a name only when attached to a node in your <code class="docutils literal notranslate"><span class="pre">Node</span></code> tree. They describe quantities that vary through the interior of a part—modulus, color, material volume fractions, and more—using the same sampling idea as implicit geometry: at each point, the engine evaluates whether you are inside the solid and, when you are, evaluates the attached fields at that location.</p>
 <p>Conceptually, each attribute implements a <strong>sample</strong> at <code class="docutils literal notranslate"><span class="pre">(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code> together with the signed distance <code class="docutils literal notranslate"><span class="pre">d</span></code> to the surface. Expression strings (see the math expressions guide) can use coordinates and <code class="docutils literal notranslate"><span class="pre">d</span></code>; results are aggregated under string names so renderers and compilers can pick them up consistently.</p>
 <p><strong>Interface you use in Python</strong></p>
 <ul class="simple">
 <li><p>Attach fields to geometry with <code class="docutils literal notranslate"><span class="pre">node.set_attribute(name,</span> <span class="pre">attribute)</span></code>.</p></li>
 <li><p>Use <strong>canonical names</strong> from <code class="docutils literal notranslate"><span class="pre">DefaultAttributes</span></code> (e.g. <code class="docutils literal notranslate"><span class="pre">MODULUS</span></code>, <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code>, <code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code>) so downstream tools know which field to read.</p></li>
 <li><p><strong>``FloatAttribute``</strong> — one scalar per point (physical scalars, temperatures, etc.).</p></li>
+<li><p><strong>``Vec3Attribute``</strong> — three components per point, with composition methods for directions and displacements.</p></li>
 <li><p><strong>``Vec4Attribute``</strong> — four components per point (typical use: linear RGBA in <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code>).</p></li>
 <li><p><strong>``VolumeFractionsAttribute``</strong> — maps material IDs to fractions at each point; fractions should sum to 1 where mixtures apply.</p></li>
 <li><p>Python function support is <strong>Numba-only</strong>. Use <code class="docutils literal notranslate"><span class="pre">numba.cfunc</span></code> with the signature <code class="docutils literal notranslate"><span class="pre">float64(float64,</span> <span class="pre">float64,</span> <span class="pre">float64,</span> <span class="pre">float64)</span></code>.</p></li>
@@ -625,9 +626,65 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.FloatAttribute.clamp">
+<span class="sig-name descname"><span class="pre">clamp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.FloatAttribute" title="pyvcad.pyvcad.FloatAttribute"><span class="pre">pyvcad.pyvcad.FloatAttribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.FloatAttribute" title="pyvcad.pyvcad.FloatAttribute"><span class="pre">pyvcad.pyvcad.FloatAttribute</span></a></span></span><a class="headerlink" href="#pyvcad.FloatAttribute.clamp" title="Link to this definition">#</a></dt>
+<dd><p>Clamp this scalar attribute to explicit bounds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>minimum</strong> (<em>float</em>) – Inclusive lower bound.</p></li>
+<li><p><strong>maximum</strong> (<em>float</em>) – Inclusive upper bound.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">bounded</span> <span class="o">=</span> <span class="n">attribute</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="pyvcad.FloatAttribute.clone">
 <span class="sig-name descname"><span class="pre">clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.FloatAttribute" title="pyvcad.pyvcad.FloatAttribute"><span class="pre">pyvcad.pyvcad.FloatAttribute</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.Attribute" title="pyvcad.pyvcad.Attribute"><span class="pre">pyvcad.pyvcad.Attribute</span></a></span></span><a class="headerlink" href="#pyvcad.FloatAttribute.clone" title="Link to this definition">#</a></dt>
 <dd><p>Clones the attribute and returns a pointer to the new attribute.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.FloatAttribute.map_range">
+<span class="sig-name descname"><span class="pre">map_range</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.FloatAttribute" title="pyvcad.pyvcad.FloatAttribute"><span class="pre">pyvcad.pyvcad.FloatAttribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_minimum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_maximum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_minimum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_maximum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.FloatAttribute" title="pyvcad.pyvcad.FloatAttribute"><span class="pre">pyvcad.pyvcad.FloatAttribute</span></a></span></span><a class="headerlink" href="#pyvcad.FloatAttribute.map_range" title="Link to this definition">#</a></dt>
+<dd><p>Map this scalar attribute between explicit input and output ranges.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_minimum</strong> (<em>float</em>) – Input value mapped to output_minimum.</p></li>
+<li><p><strong>input_maximum</strong> (<em>float</em>) – Input value mapped to output_maximum.</p></li>
+<li><p><strong>output_minimum</strong> (<em>float</em>) – Output at input_minimum.</p></li>
+<li><p><strong>output_maximum</strong> (<em>float</em>) – Output at input_maximum.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">radius</span> <span class="o">=</span> <span class="n">control</span><span class="o">.</span><span class="n">map_range</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.FloatAttribute.normalize">
+<span class="sig-name descname"><span class="pre">normalize</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.FloatAttribute" title="pyvcad.pyvcad.FloatAttribute"><span class="pre">pyvcad.pyvcad.FloatAttribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.FloatAttribute" title="pyvcad.pyvcad.FloatAttribute"><span class="pre">pyvcad.pyvcad.FloatAttribute</span></a></span></span><a class="headerlink" href="#pyvcad.FloatAttribute.normalize" title="Link to this definition">#</a></dt>
+<dd><p>Normalize this scalar attribute with required explicit input bounds.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>minimum</strong> (<em>float</em>) – Input value mapped to zero.</p></li>
+<li><p><strong>maximum</strong> (<em>float</em>) – Input value mapped to one.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">normalized</span> <span class="o">=</span> <span class="n">attribute</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">)</span>
+</pre></div>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -677,6 +734,174 @@
 <dd><p>Sets the attribute to be sampled from a VDB volume.</p>
 <p>:param volume : A FloatVDBVolume to sample the attribute from.
 :type volume : FloatVDBVolume</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Vec3Attribute">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Vec3Attribute</span></span><a class="headerlink" href="#pyvcad.Vec3Attribute" title="Link to this definition">#</a></dt>
+<dd><p>An attribute that stores a function for spatial grading that returns a vec3.</p>
+<p>When used for representing color, the components should be in the range [0, 1].</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec3Attribute.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#pyvcad.Vec3Attribute.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Overloaded function.</p>
+<ol class="arabic simple">
+<li><p>__init__(self: pyvcad.pyvcad.Vec3Attribute) -&gt; None</p></li>
+</ol>
+<p>Default constructor.</p>
+<ol class="arabic simple" start="2">
+<li><p>__init__(self: pyvcad.pyvcad.Vec3Attribute, volume: VDBVolume&lt;openvdb::v13_0::Grid&lt;openvdb::v13_0::tree::Tree&lt;openvdb::v13_0::tree::RootNode&lt;openvdb::v13_0::tree::InternalNode&lt;openvdb::v13_0::tree::InternalNode&lt;openvdb::v13_0::tree::LeafNode&lt;openvdb::v13_0::math::Vec3&lt;float&gt;, 3u&gt;, 4u&gt;, 5u&gt;&gt;&gt;&gt;&gt;) -&gt; None</p></li>
+</ol>
+<p>Constructor that samples a Vec3s VDB volume.</p>
+<p>:param volume : A Vec3s VDB volume to sample.
+:type volume : Vec3sVolume</p>
+<ol class="arabic simple" start="3">
+<li><p>__init__(self: pyvcad.pyvcad.Vec3Attribute, x: object, y: object, z: object) -&gt; None</p></li>
+</ol>
+<p>Constructor that takes math expression strings, constant values, or numba.cfunc callbacks for each component.</p>
+<p>:param x : X component definition.
+:type x : str | float | numba.cfunc:param y : Y component definition.
+:type y : str | float | numba.cfunc:param z : Z component definition.
+:type z : str | float | numba.cfunc</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec3Attribute.clone">
+<span class="sig-name descname"><span class="pre">clone</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3Attribute" title="pyvcad.pyvcad.Vec3Attribute"><span class="pre">pyvcad.pyvcad.Vec3Attribute</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.Attribute" title="pyvcad.pyvcad.Attribute"><span class="pre">pyvcad.pyvcad.Attribute</span></a></span></span><a class="headerlink" href="#pyvcad.Vec3Attribute.clone" title="Link to this definition">#</a></dt>
+<dd><p>Clones the attribute and returns a pointer to the new object.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec3Attribute.component">
+<span class="sig-name descname"><span class="pre">component</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3Attribute" title="pyvcad.pyvcad.Vec3Attribute"><span class="pre">pyvcad.pyvcad.Vec3Attribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.FloatAttribute" title="pyvcad.pyvcad.FloatAttribute"><span class="pre">pyvcad.pyvcad.FloatAttribute</span></a></span></span><a class="headerlink" href="#pyvcad.Vec3Attribute.component" title="Link to this definition">#</a></dt>
+<dd><p>Extract one vector component as a scalar attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>index</strong> (<em>int</em>) – Component index 0, 1, or 2.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">x_field</span> <span class="o">=</span> <span class="n">direction</span><span class="o">.</span><span class="n">component</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec3Attribute.dot">
+<span class="sig-name descname"><span class="pre">dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3Attribute" title="pyvcad.pyvcad.Vec3Attribute"><span class="pre">pyvcad.pyvcad.Vec3Attribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3Attribute" title="pyvcad.pyvcad.Vec3Attribute"><span class="pre">pyvcad.pyvcad.Vec3Attribute</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.FloatAttribute" title="pyvcad.pyvcad.FloatAttribute"><span class="pre">pyvcad.pyvcad.FloatAttribute</span></a></span></span><a class="headerlink" href="#pyvcad.Vec3Attribute.dot" title="Link to this definition">#</a></dt>
+<dd><p>Return the dot product with another vector attribute.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> (<a class="reference internal" href="#pyvcad.Vec3Attribute" title="pyvcad.Vec3Attribute"><em>Vec3Attribute</em></a>) – Other vector dependency.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">alignment</span> <span class="o">=</span> <span class="n">first</span><span class="o">.</span><span class="n">dot</span><span class="p">(</span><span class="n">second</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec3Attribute.is_volume_backed">
+<span class="sig-name descname"><span class="pre">is_volume_backed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3Attribute" title="pyvcad.pyvcad.Vec3Attribute"><span class="pre">pyvcad.pyvcad.Vec3Attribute</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#pyvcad.Vec3Attribute.is_volume_backed" title="Link to this definition">#</a></dt>
+<dd><p>Returns True if this attribute samples a VDB volume.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec3Attribute.magnitude">
+<span class="sig-name descname"><span class="pre">magnitude</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3Attribute" title="pyvcad.pyvcad.Vec3Attribute"><span class="pre">pyvcad.pyvcad.Vec3Attribute</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.FloatAttribute" title="pyvcad.pyvcad.FloatAttribute"><span class="pre">pyvcad.pyvcad.FloatAttribute</span></a></span></span><a class="headerlink" href="#pyvcad.Vec3Attribute.magnitude" title="Link to this definition">#</a></dt>
+<dd><p>Return vector magnitude as a scalar attribute.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">radius</span> <span class="o">=</span> <span class="n">vectors</span><span class="o">.</span><span class="n">magnitude</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec3Attribute.normalized">
+<span class="sig-name descname"><span class="pre">normalized</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3Attribute" title="pyvcad.pyvcad.Vec3Attribute"><span class="pre">pyvcad.pyvcad.Vec3Attribute</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.Vec3Attribute" title="pyvcad.pyvcad.Vec3Attribute"><span class="pre">pyvcad.pyvcad.Vec3Attribute</span></a></span></span><a class="headerlink" href="#pyvcad.Vec3Attribute.normalized" title="Link to this definition">#</a></dt>
+<dd><p>Normalize this vector attribute at every sample.</p>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">direction</span> <span class="o">=</span> <span class="n">vectors</span><span class="o">.</span><span class="n">normalized</span><span class="p">()</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec3Attribute.return_type">
+<span class="sig-name descname"><span class="pre">return_type</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3Attribute" title="pyvcad.pyvcad.Vec3Attribute"><span class="pre">pyvcad.pyvcad.Vec3Attribute</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.Attribute.ReturnType" title="pyvcad.pyvcad.Attribute.ReturnType"><span class="pre">pyvcad.pyvcad.Attribute.ReturnType</span></a></span></span><a class="headerlink" href="#pyvcad.Vec3Attribute.return_type" title="Link to this definition">#</a></dt>
+<dd><p>Returns the return type of the attribute.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec3Attribute.sample">
+<span class="sig-name descname"><span class="pre">sample</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3Attribute" title="pyvcad.pyvcad.Vec3Attribute"><span class="pre">pyvcad.pyvcad.Vec3Attribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">object</span></span></span><a class="headerlink" href="#pyvcad.Vec3Attribute.sample" title="Link to this definition">#</a></dt>
+<dd><p>Samples the attribute at the given point.</p>
+<p>:param x : The x-coordinate.
+:type x : double:param y : The y-coordinate.
+:type y : double:param z : The z-coordinate.
+:type z : double:param d : The signed distance.
+:type d : double</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec3Attribute.set_expression">
+<span class="sig-name descname"><span class="pre">set_expression</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3Attribute" title="pyvcad.pyvcad.Vec3Attribute"><span class="pre">pyvcad.pyvcad.Vec3Attribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Vec3Attribute.set_expression" title="Link to this definition">#</a></dt>
+<dd><p>Sets the math expressions for the attribute.</p>
+<p>:param x_expression : Expression for the x component.
+:type x_expression : str:param y_expression : Expression for the y component.
+:type y_expression : str:param z_expression : Expression for the z component.
+:type z_expression : str</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec3Attribute.set_function">
+<span class="sig-name descname"><span class="pre">set_function</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3Attribute" title="pyvcad.pyvcad.Vec3Attribute"><span class="pre">pyvcad.pyvcad.Vec3Attribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z_function</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Vec3Attribute.set_function" title="Link to this definition">#</a></dt>
+<dd><p>Sets numba.cfunc callbacks for each component of the attribute.</p>
+<p>:param x_function : X component callback with signature float64(float64, float64, float64, float64).
+:type x_function : numba.cfunc:param y_function : Y component callback with signature float64(float64, float64, float64, float64).
+:type y_function : numba.cfunc:param z_function : Z component callback with signature float64(float64, float64, float64, float64).
+:type z_function : numba.cfunc</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec3Attribute.set_value">
+<span class="sig-name descname"><span class="pre">set_value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3Attribute" title="pyvcad.pyvcad.Vec3Attribute"><span class="pre">pyvcad.pyvcad.Vec3Attribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">z</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Vec3Attribute.set_value" title="Link to this definition">#</a></dt>
+<dd><p>Sets constant values for the attribute (no spatial grading).</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec3Attribute.set_volume">
+<span class="sig-name descname"><span class="pre">set_volume</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3Attribute" title="pyvcad.pyvcad.Vec3Attribute"><span class="pre">pyvcad.pyvcad.Vec3Attribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">volume</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">VDBVolume&lt;openvdb::v13_0::Grid&lt;openvdb::v13_0::tree::Tree&lt;openvdb::v13_0::tree::RootNode&lt;openvdb::v13_0::tree::InternalNode&lt;openvdb::v13_0::tree::InternalNode&lt;openvdb::v13_0::tree::LeafNode&lt;openvdb::v13_0::math::Vec3&lt;float&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">3u&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">4u&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">5u&gt;&gt;&gt;&gt;&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.Vec3Attribute.set_volume" title="Link to this definition">#</a></dt>
+<dd><p>Sets the attribute to be sampled from a VDB volume.</p>
+<p>:param volume : A Vec3s VDB volume to sample.
+:type volume : Vec3sVolume</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.Vec3Attribute.volume_type_name">
+<span class="sig-name descname"><span class="pre">volume_type_name</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Vec3Attribute" title="pyvcad.pyvcad.Vec3Attribute"><span class="pre">pyvcad.pyvcad.Vec3Attribute</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#pyvcad.Vec3Attribute.volume_type_name" title="Link to this definition">#</a></dt>
+<dd><p>Returns the backing volume type name for diagrams.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.Vec3Attribute.x">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">x</span></span><a class="headerlink" href="#pyvcad.Vec3Attribute.x" title="Link to this definition">#</a></dt>
+<dd><p>X component as a scalar attribute.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.Vec3Attribute.y">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">y</span></span><a class="headerlink" href="#pyvcad.Vec3Attribute.y" title="Link to this definition">#</a></dt>
+<dd><p>Y component as a scalar attribute.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.Vec3Attribute.z">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">z</span></span><a class="headerlink" href="#pyvcad.Vec3Attribute.z" title="Link to this definition">#</a></dt>
+<dd><p>Z component as a scalar attribute.</p>
 </dd></dl>
 
 </dd></dl>
@@ -872,25 +1097,13 @@
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="pyvcad.CellAttribute">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">CellAttribute</span></span><a class="headerlink" href="#pyvcad.CellAttribute" title="Link to this definition">#</a></dt>
-<dd><p>An attribute adapter that evaluates an existing attribute in logical cell coordinates.</p>
+<dt class="sig sig-object py" id="pyvcad.DerivedFloatAttribute">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">DerivedFloatAttribute</span></span><a class="headerlink" href="#pyvcad.DerivedFloatAttribute" title="Link to this definition">#</a></dt>
+<dd><p>An immutable named expression over scalar attribute dependencies.</p>
 <dl class="py method">
-<dt class="sig sig-object py" id="pyvcad.CellAttribute.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CellAttribute" title="pyvcad.pyvcad.CellAttribute"><span class="pre">pyvcad.pyvcad.CellAttribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_map</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="geometry.html#pyvcad.CellMap" title="pyvcad.pyvcad.CellMap"><span class="pre">pyvcad.pyvcad.CellMap</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">attribute</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.Attribute" title="pyvcad.pyvcad.Attribute"><span class="pre">pyvcad.pyvcad.Attribute</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.CellAttribute.__init__" title="Link to this definition">#</a></dt>
-<dd><p>Construct a cell-coordinate attribute adapter.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>cell_map</strong> (<a class="reference internal" href="geometry.html#pyvcad.CellMap" title="pyvcad.CellMap"><em>CellMap</em></a>) – Map used to invert world coordinates.</p></li>
-<li><p><strong>attribute</strong> (<a class="reference internal" href="#pyvcad.Attribute" title="pyvcad.Attribute"><em>Attribute</em></a>) – Existing float, vector, color, or volume-fraction attribute.</p></li>
-</ul>
-</dd>
-</dl>
-<p class="rubric">Example</p>
-<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mapped</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">CellAttribute</span><span class="p">(</span><span class="n">cell_map</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s1">&#39;x&#39;</span><span class="p">))</span>
-</pre></div>
-</div>
+<dt class="sig sig-object py" id="pyvcad.DerivedFloatAttribute.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.DerivedFloatAttribute" title="pyvcad.pyvcad.DerivedFloatAttribute"><span class="pre">pyvcad.pyvcad.DerivedFloatAttribute</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">expression</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.DerivedFloatAttribute.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Construct a named multi-input scalar expression. The expression uses keys from inputs, which maps names to FloatAttribute objects or numeric constants.</p>
 </dd></dl>
 
 </dd></dl>
@@ -1446,13 +1659,36 @@ and your own code agree on which field is which. Each <code class="docutils lite
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FloatAttribute"><code class="docutils literal notranslate"><span class="pre">FloatAttribute</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FloatAttribute.__init__"><code class="docutils literal notranslate"><span class="pre">FloatAttribute.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FloatAttribute.clamp"><code class="docutils literal notranslate"><span class="pre">FloatAttribute.clamp()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FloatAttribute.clone"><code class="docutils literal notranslate"><span class="pre">FloatAttribute.clone()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FloatAttribute.map_range"><code class="docutils literal notranslate"><span class="pre">FloatAttribute.map_range()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FloatAttribute.normalize"><code class="docutils literal notranslate"><span class="pre">FloatAttribute.normalize()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FloatAttribute.return_type"><code class="docutils literal notranslate"><span class="pre">FloatAttribute.return_type()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FloatAttribute.sample"><code class="docutils literal notranslate"><span class="pre">FloatAttribute.sample()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FloatAttribute.set_expression"><code class="docutils literal notranslate"><span class="pre">FloatAttribute.set_expression()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FloatAttribute.set_function"><code class="docutils literal notranslate"><span class="pre">FloatAttribute.set_function()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FloatAttribute.set_value"><code class="docutils literal notranslate"><span class="pre">FloatAttribute.set_value()</span></code></a></li>
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FloatAttribute.set_volume"><code class="docutils literal notranslate"><span class="pre">FloatAttribute.set_volume()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3Attribute"><code class="docutils literal notranslate"><span class="pre">Vec3Attribute</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3Attribute.__init__"><code class="docutils literal notranslate"><span class="pre">Vec3Attribute.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3Attribute.clone"><code class="docutils literal notranslate"><span class="pre">Vec3Attribute.clone()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3Attribute.component"><code class="docutils literal notranslate"><span class="pre">Vec3Attribute.component()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3Attribute.dot"><code class="docutils literal notranslate"><span class="pre">Vec3Attribute.dot()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3Attribute.is_volume_backed"><code class="docutils literal notranslate"><span class="pre">Vec3Attribute.is_volume_backed()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3Attribute.magnitude"><code class="docutils literal notranslate"><span class="pre">Vec3Attribute.magnitude()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3Attribute.normalized"><code class="docutils literal notranslate"><span class="pre">Vec3Attribute.normalized()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3Attribute.return_type"><code class="docutils literal notranslate"><span class="pre">Vec3Attribute.return_type()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3Attribute.sample"><code class="docutils literal notranslate"><span class="pre">Vec3Attribute.sample()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3Attribute.set_expression"><code class="docutils literal notranslate"><span class="pre">Vec3Attribute.set_expression()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3Attribute.set_function"><code class="docutils literal notranslate"><span class="pre">Vec3Attribute.set_function()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3Attribute.set_value"><code class="docutils literal notranslate"><span class="pre">Vec3Attribute.set_value()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3Attribute.set_volume"><code class="docutils literal notranslate"><span class="pre">Vec3Attribute.set_volume()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3Attribute.volume_type_name"><code class="docutils literal notranslate"><span class="pre">Vec3Attribute.volume_type_name()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3Attribute.x"><code class="docutils literal notranslate"><span class="pre">Vec3Attribute.x</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3Attribute.y"><code class="docutils literal notranslate"><span class="pre">Vec3Attribute.y</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3Attribute.z"><code class="docutils literal notranslate"><span class="pre">Vec3Attribute.z</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec4Attribute"><code class="docutils literal notranslate"><span class="pre">Vec4Attribute</span></code></a><ul class="nav section-nav flex-column">
@@ -1479,8 +1715,8 @@ and your own code agree on which field is which. Each <code class="docutils lite
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.VolumeFractionsAttribute.sample"><code class="docutils literal notranslate"><span class="pre">VolumeFractionsAttribute.sample()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellAttribute"><code class="docutils literal notranslate"><span class="pre">CellAttribute</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CellAttribute.__init__"><code class="docutils literal notranslate"><span class="pre">CellAttribute.__init__()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.DerivedFloatAttribute"><code class="docutils literal notranslate"><span class="pre">DerivedFloatAttribute</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.DerivedFloatAttribute.__init__"><code class="docutils literal notranslate"><span class="pre">DerivedFloatAttribute.__init__()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.AttributeSamples"><code class="docutils literal notranslate"><span class="pre">AttributeSamples</span></code></a><ul class="nav section-nav flex-column">

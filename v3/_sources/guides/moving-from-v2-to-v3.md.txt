@@ -2,13 +2,13 @@
 
 ## Compatibility with Older OpenVCAD Versions
 
-OpenVCAD 3.0 is not directly backwards compatible with the older OpenVCAD API. Existing scripts may need to be updated before they run on the new version.
+OpenVCAD 3.X.X is not directly backwards compatible with the older OpenVCAD API. Existing scripts may need to be updated before they run on the new version.
 
 The important point is that the old capabilities have not gone away. Everything you could do in the old version can be done in OpenVCAD 3.0, but some designs need to be expressed using the new attribute-modeling workflow.
 
 ## What to Read First
 
-Start by reading and following along with the guides. Even if you have used OpenVCAD before, OpenVCAD 3.0 changes the modeling workflow enough that the guide sequence matters.
+Start by reading and following along with the guides. Even if you have used OpenVCAD before, OpenVCAD 3.X.X changes the modeling workflow enough that the guide sequence matters.
 
 Read these first:
 
@@ -62,4 +62,4 @@ root = mm.gyroid(cell_map, wall_thickness=1.2)
 
 The equivalent graph-lattice rename is `radius` to `beam_radius`. Builder arguments named `cell`, `size`, `bounds`, and `center` have been removed. For CAD-conformal geometry, construct the map with `cell_map_from_cad_face` or `cell_map_between_cad_faces`; the old `Map`, `ConformalMap`, and `SurfaceParamerterizer` prototypes no longer exist.
 
-Geometry callbacks now declare their coordinate system explicitly with `world_field` or `cell_field`. Use `cell_attribute` when an output attribute should be evaluated in logical cell coordinates. All returned lattice objects remain ordinary `pv.Node` instances and continue through the normal attribute and compiler pipelines.
+Lattice geometry controls are ordinary typed attributes. Cartesian attributes are evaluated in the consuming node's coordinates; use `cell_map.logical_position`, `cell_map.unit_cell_phase`, or `cell_map.cell_index` for explicit lattice coordinates. All returned lattice objects remain ordinary `pv.Node` instances and continue through the normal attribute and compiler pipelines.

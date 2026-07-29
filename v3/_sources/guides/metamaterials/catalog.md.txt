@@ -4,7 +4,9 @@
 ```{include} ../_guide-sidebar-compiler-membership.md
 ```
 
-`pyvcad_metamaterials` supplies seven periodic implicit cells and six graph cells. This guide compares those cells on the same rectangular maps, then uses ordinary CSG to fill more familiar part geometries.
+`pyvcad_metamaterials` supplies nine periodic implicit cells, ten graph cells, and
+seven face/plate cells. This guide compares those cells on consistent rectangular
+maps, then uses ordinary CSG to fill more familiar part geometries.
 
 ## Build a finite rectangular map
 
@@ -28,6 +30,8 @@ The names in `mm.TPMS_NAMES` can be passed to `mm.tpms(...)`, and each also has 
 
 <div class="guide-figure-grid">
   <div class="guide-figure-cell"><a href="../images/mm_tpms_gyroid.png" data-lightbox="tpms-catalog"><img src="../images/mm_tpms_gyroid.png" alt="Gyroid TPMS"></a><div class="guide-figure-label">Gyroid</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_tpms_fischer_koch_s.png" data-lightbox="tpms-catalog"><img src="../images/mm_tpms_fischer_koch_s.png" alt="Fischer-Koch S TPMS"></a><div class="guide-figure-label">Fischer-Koch S</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_tpms_frd.png" data-lightbox="tpms-catalog"><img src="../images/mm_tpms_frd.png" alt="F-RD TPMS"></a><div class="guide-figure-label">F-RD</div></div>
   <div class="guide-figure-cell"><a href="../images/mm_tpms_iwp.png" data-lightbox="tpms-catalog"><img src="../images/mm_tpms_iwp.png" alt="I-WP TPMS"></a><div class="guide-figure-label">I-WP</div></div>
   <div class="guide-figure-cell"><a href="../images/mm_tpms_lidinoid.png" data-lightbox="tpms-catalog"><img src="../images/mm_tpms_lidinoid.png" alt="Lidinoid TPMS"></a><div class="guide-figure-label">Lidinoid</div></div>
   <div class="guide-figure-cell"><a href="../images/mm_tpms_neovius.png" data-lightbox="tpms-catalog"><img src="../images/mm_tpms_neovius.png" alt="Neovius TPMS"></a><div class="guide-figure-label">Neovius</div></div>
@@ -35,6 +39,15 @@ The names in `mm.TPMS_NAMES` can be passed to `mm.tpms(...)`, and each also has 
   <div class="guide-figure-cell"><a href="../images/mm_tpms_schwarz_p.png" data-lightbox="tpms-catalog"><img src="../images/mm_tpms_schwarz_p.png" alt="Schwarz-P TPMS"></a><div class="guide-figure-label">Schwarz-P</div></div>
   <div class="guide-figure-cell"><a href="../images/mm_tpms_split_p.png" data-lightbox="tpms-catalog"><img src="../images/mm_tpms_split_p.png" alt="Split-P TPMS"></a><div class="guide-figure-label">Split-P</div></div>
 </div>
+
+These cells are periodic trigonometric level-set approximations. They provide
+repeatable engineering surfaces, but the approximation itself is not a proof of
+zero mean curvature everywhere.
+
+Fischer-Koch S and F-RD use the published level-set definitions summarized by
+[Abdelaal and Eldesouky](https://doi.org/10.1007/s40964-025-01142-0). The
+catalog provides geometry; it does not attach a topology-independent stiffness,
+strength, Poisson ratio, or energy-absorption claim.
 
 The complete interactive gallery is [`02_tpms_gallery.py`](../../../../examples/metamaterials/basics/02_tpms_gallery.py).
 
@@ -65,6 +78,10 @@ Graph lattices use normalized vertices and edges, then map each repeated segment
   <div class="guide-figure-cell"><a href="../images/mm_lattice_kelvin.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_kelvin.png" alt="Kelvin graph lattice"></a><div class="guide-figure-label">Kelvin</div></div>
   <div class="guide-figure-cell"><a href="../images/mm_lattice_octet.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_octet.png" alt="Octet graph lattice"></a><div class="guide-figure-label">Octet</div></div>
   <div class="guide-figure-cell"><a href="../images/mm_lattice_diamond.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_diamond.png" alt="Diamond graph lattice"></a><div class="guide-figure-label">Diamond</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_isotruss.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_isotruss.png" alt="Isotruss graph lattice"></a><div class="guide-figure-label">Isotruss (SC+BCC+SCC)</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_fluorite.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_fluorite.png" alt="Fluorite graph lattice"></a><div class="guide-figure-label">Fluorite</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_hex_prism_edge.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_hex_prism_edge.png" alt="Hexagonal prism edge lattice"></a><div class="guide-figure-label">Hex-prism edge</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_reentrant_hex_prism.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_reentrant_hex_prism.png" alt="Re-entrant hexagonal prism lattice"></a><div class="guide-figure-label">Re-entrant hex prism</div></div>
 </div>
 
 ```python
@@ -79,6 +96,111 @@ lattice = mm.octet(
 `beam_radius` controls strut radius in millimetres. `node_radius` optionally overrides the joint radius; if omitted, joints follow the beam field. `curve_tolerance` controls subdivision of beams that become curved under a non-linear map.
 
 See [`03_strut_lattices.py`](../../../../examples/metamaterials/basics/03_strut_lattices.py) for the complete interactive catalog.
+To define your own normalized vertices and edges, continue with
+[Custom unit cells](custom-unit-cells.md).
+
+`isotruss` names the SC+BCC+SCC graph. Equal beam radii do not by themselves
+guarantee an isotropic effective material. That claim requires an appropriate
+member-radius ratio and mechanical characterization.
+
+The new graph presets retain explicit junctions:
+
+| Name | Vertices | Edges | Construction |
+| --- | ---: | ---: | --- |
+| `isotruss` | 15 | 26 | cube edges + center-to-corner + center-to-face-center |
+| `fluorite` | 22 | 32 | FCC sites joined to eight tetrahedral sites |
+| `hex_prism_edge` | 32 | 48 | extruded regular-hexagonal edge network |
+| `reentrant_hex_prism` | 32 | 48 | extruded re-entrant hexagonal edge network |
+
+The counts describe one authored cell before neighboring periodic vertices are
+welded.
+
+The two prism cells use a rectangular honeycomb supercell. For regular hexagons
+or the default re-entrant geometry, preserve the reference U/V pitch ratio:
+
+```python
+ratio = mm.hex_prism_reference_aspect_ratio()
+cell_map = mm.rectangular_cell_map(
+    (pv.Vec3(0.0, 0.0, 0.0), pv.Vec3(30.0 * ratio, 30.0, 18.0)),
+    cells=(3, 3, 3),
+)
+root = mm.hex_prism_edge(cell_map, beam_radius=0.6)
+```
+
+Changing that map ratio deliberately stretches the cell. For a parameterized
+re-entrant cell, use `mm.reentrant_hex_prism_reference_aspect_ratio(...)` with
+the same angle and rib ratio. The default \(h/l=2\), \(-30^\circ\) geometry
+follows the conventional re-entrant hexagonal parameterization described by
+[Zhang and Yang](https://doi.org/10.3390/ma9110900).
+
+## Face and plate lattice catalog
+
+Face lattices thicken tiled center surfaces into walls. This is geometrically
+different from replacing the same diagram with beams.
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_face_plate.png" data-lightbox="face-catalog"><img src="../images/mm_face_plate.png" alt="Folded plate lattice"></a><div class="guide-figure-label">Folded plate (legacy `plate`)</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_face_simple_cubic_plate.png" data-lightbox="face-catalog"><img src="../images/mm_face_simple_cubic_plate.png" alt="Simple cubic plate lattice"></a><div class="guide-figure-label">Simple-cubic plate</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_face_body_centered_cubic_plate.png" data-lightbox="face-catalog"><img src="../images/mm_face_body_centered_cubic_plate.png" alt="Body-centered cubic plate lattice"></a><div class="guide-figure-label">Body-centered-cubic plate</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_face_face_centered_cubic_plate.png" data-lightbox="face-catalog"><img src="../images/mm_face_face_centered_cubic_plate.png" alt="Face-centered cubic plate lattice"></a><div class="guide-figure-label">Face-centered-cubic / octet plate</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_face_cubic_octet_plate.png" data-lightbox="face-catalog"><img src="../images/mm_face_cubic_octet_plate.png" alt="Cubic and octet hybrid plate lattice"></a><div class="guide-figure-label">Cubic+octet plate</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_face_hexagonal_honeycomb.png" data-lightbox="face-catalog"><img src="../images/mm_face_hexagonal_honeycomb.png" alt="Hexagonal wall honeycomb"></a><div class="guide-figure-label">Hexagonal wall honeycomb</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_face_reentrant_honeycomb.png" data-lightbox="face-catalog"><img src="../images/mm_face_reentrant_honeycomb.png" alt="Re-entrant wall honeycomb"></a><div class="guide-figure-label">Re-entrant wall honeycomb</div></div>
+</div>
+
+The crystallographic plate cells use the conventional plane families:
+
+| Name | Plate family |
+| --- | --- |
+| `simple_cubic_plate` | three orthogonal {100} families |
+| `body_centered_cubic_plate` | six {110} families |
+| `face_centered_cubic_plate` | four {111} families |
+| `cubic_octet_plate` | combined {100}+{111} families |
+
+`mm.octet_plate(...)` is a documented alias for
+`mm.face_centered_cubic_plate(...)`. The cubic+octet helper keeps the two wall
+thicknesses independent:
+
+```python
+root = mm.cubic_octet_plate(
+    cell_map,
+    cubic_wall_thickness=0.75,  # mm
+    octet_wall_thickness=0.55,  # mm
+)
+```
+
+The independent thicknesses are important: cubic+octet plate studies use the
+family ratio as a mechanical design variable rather than treating the hybrid as
+one uniformly thick sheet. See
+[Crook et al.](https://doi.org/10.1038/s41467-020-15434-2) for an experimental
+cubic+octet system and its manufacturing considerations.
+
+The re-entrant honeycomb exposes its geometric controls directly:
+
+```python
+ratio = mm.reentrant_hex_prism_reference_aspect_ratio(
+    angle_degrees=-30.0,
+    rib_ratio=2.0,
+)
+root = mm.reentrant_honeycomb(
+    cell_map,
+    wall_thickness=0.7,  # mm
+    angle_degrees=-30.0,
+    rib_ratio=2.0,       # h/l
+)
+```
+
+Use the returned ratio when constructing the map if the requested member angle
+must be preserved. See
+[`05_face_lattices.py`](../../../../examples/metamaterials/basics/05_face_lattices.py)
+for a runnable comparison.
+
+```{warning}
+Three-dimensional plate lattices can create closed cells that trap resin,
+powder, or support material. Confirm drainage and cleaning access for the
+intended manufacturing process. The catalog topologies do not add drain holes
+automatically.
+```
 
 ## Fill ordinary geometry
 
@@ -108,5 +230,10 @@ For imported meshes, call `prepare(...)` before querying `bounding_box()`, then 
 | TPMS sheet | `ImplicitUnitCell` | `wall_thickness`, `level`, map cell count/spacing |
 | TPMS solid | `ImplicitUnitCell` | `level`, map cell count/spacing |
 | Graph lattice | `GraphUnitCell` | `beam_radius`, `node_radius`, `curve_tolerance`, map cell count/spacing |
+| Plate or wall lattice | `FaceUnitCell` | `wall_thickness`, `surface_mode`, map pitch/aspect ratio |
+| Re-entrant honeycomb | `FaceUnitCell` | `wall_thickness`, `angle_degrees`, `rib_ratio`, map pitch/aspect ratio |
 
-All of these scalar controls can also change across a design. Continue with [Attribute-driven metamaterials](attribute-driven.md) to grade geometry, cell spacing, and material distribution.
+All of these scalar controls can also change across a design. Continue with
+[Functionally graded metamaterial geometry](geometry-grading.md) for thickness, radius,
+spacing, and topology, or [Attribute modeling](attribute-modeling.md) for named material
+and process fields.

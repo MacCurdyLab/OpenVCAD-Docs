@@ -1,0 +1,1293 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Creating a Compiler in Python &#8212; OpenVCAD 3.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../_static/openvcad_theme.css?v=84becb00" />
+    <link rel="stylesheet" type="text/css" href="../_static/openvcad_branding.css?v=c43e02c9" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../_static/documentation_options.js?v=110ea713"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'guides/custom-python-compiler';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../_static/openvcad_lightbox.js?v=e11fca97"></script>
+    <script src="../_static/openvcad_comparison.js?v=0e3a0b21"></script>
+    <link rel="icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Gallery" href="../gallery.html" />
+    <link rel="prev" title="Math expressions in OpenVCAD" href="math-expressions.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="OpenVCAD - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="OpenVCAD - Home"/>
+  
+  
+    <p class="title logo__title">
+      <span class="logo__title-full">OpenVCAD Documentation</span>
+      <span class="logo__title-compact" aria-hidden="true">Documentation</span>
+      <span class="logo__title-short" aria-hidden="true">Docs</span>
+    </p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item dropdown active">
+      <button class="btn dropdown-toggle nav-link active" type="button" id="pst-nav-dd-guides" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Guides
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-guides">
+        <li><a class="dropdown-item" href="../install.html">Installation</a></li>
+        <li><a class="dropdown-item" href="theory-and-motivation.html">Theory and Motivation</a></li>
+        <li><a class="dropdown-item" href="getting-started.html">Getting Started with OpenVCAD</a></li>
+        <li><a class="dropdown-item" href="gradients.html">Functional grading</a></li>
+        <li><a class="dropdown-item" href="metamaterials/index.html">Metamaterials</a></li>
+        <li><a class="dropdown-item" href="compilers/index.html">Compilers</a></li>
+        <li><a class="dropdown-item" href="attribute-resolver.html">Attribute modifier and resolver</a></li>
+        <li><a class="dropdown-item" href="attribute-conflicts.html">Attribute conflict resolution</a></li>
+        <li><a class="dropdown-item" href="numba-attributes.html">Python functions for attributes</a></li>
+        <li><a class="dropdown-item active" href="advanced.html">Advanced</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../gallery.html">Gallery</a>
+    </li>
+    <li class="nav-item dropdown">
+      <button class="btn dropdown-toggle nav-link" type="button" id="pst-nav-dd-py" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Python API
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-py">
+        <li><a class="dropdown-item" href="../python-api/pyvcad/index.html">pyvcad module</a></li>
+        <li><a class="dropdown-item" href="../python-api/pyvcad_compilers/index.html">pyvcad_compilers module</a></li>
+        <li><a class="dropdown-item" href="../python-api/pyvcad_rendering/index.html">pyvcad_rendering module</a></li>
+        <li><a class="dropdown-item" href="../python-api/pyvcad_attribute_resolver/index.html">pyvcad_attribute_resolver module</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../cpp-api/index.html">C++ API</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../papers.html">Papers</a>
+    </li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+
+<nav class="openvcad-mobile-nav" aria-label="Site navigation">
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+    <li class="nav-item">
+      <details class="openvcad-mobile-nav__group">
+        <summary>Guides</summary>
+        <ul>
+          <li><a class="nav-link" href="../install.html">Installation</a></li>
+          <li><a class="nav-link" href="moving-from-v2-to-v3.html">Moving from Version 2 to 3</a></li>
+          <li><a class="nav-link" href="theory-and-motivation.html">Theory and Motivation</a></li>
+          <li><a class="nav-link" href="getting-started.html">Getting Started with OpenVCAD</a></li>
+          <li><a class="nav-link" href="gradients.html">Functional grading</a></li>
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Metamaterials</summary>
+              <ul>
+                <li><a class="nav-link" href="metamaterials/index.html">Overview</a></li>
+                <li><a class="nav-link" href="metamaterials/concepts.html">Concepts and representation</a></li>
+                <li><a class="nav-link" href="metamaterials/catalog.html">TPMS and lattice catalog</a></li>
+                <li><a class="nav-link" href="metamaterials/custom-unit-cells.html">Custom unit cells</a></li>
+                <li><a class="nav-link" href="metamaterials/geometry-grading.html">Functionally graded geometry</a></li>
+                <li><a class="nav-link" href="metamaterials/attribute-modeling.html">Attribute modeling</a></li>
+                <li><a class="nav-link" href="metamaterials/cylindrical-spherical-cell-maps.html">Cylindrical and spherical cell maps</a></li>
+                <li><a class="nav-link" href="metamaterials/conformal-cad.html">Conformal mapping CAD surfaces</a></li>
+                <li><a class="nav-link" href="metamaterials/conformal-meshes.html">Conformal mapping triangle meshes</a></li>
+                <li><a class="nav-link" href="metamaterials/heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
+                <li><a class="nav-link" href="metamaterials/properties.html">Geometric characterization</a></li>
+              </ul>
+            </details>
+          </li>
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Compilers</summary>
+              <ul>
+                <li><a class="nav-link" href="compilers/index.html">Overview</a></li>
+                <li><a class="nav-link" href="compilers/material-inkjet.html">Material Inkjet</a></li>
+                <li><a class="nav-link" href="compilers/color-inkjet.html">Color Inkjet</a></li>
+                <li><a class="nav-link" href="compilers/vat-photo.html">VAT Photo</a></li>
+                <li><a class="nav-link" href="compilers/slicer-project.html">Slicer Project</a></li>
+                <li><a class="nav-link" href="compilers/simulation-compiler.html">Simulation Compiler</a></li>
+              </ul>
+            </details>
+          </li>
+          <li><a class="nav-link" href="attribute-resolver.html">Attribute modifier and resolver</a></li>
+          <li><a class="nav-link" href="attribute-conflicts.html">Attribute conflict resolution</a></li>
+          <li><a class="nav-link" href="numba-attributes.html">Python functions for attributes</a></li>
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Advanced</summary>
+              <ul>
+                <li><a class="nav-link" href="advanced.html">Overview</a></li>
+                <li><a class="nav-link" href="cadquery.html">CAD with CadQuery</a></li>
+                <li><a class="nav-link" href="surface-relief.html">Physical surface relief</a></li>
+                <li><a class="nav-link" href="volumes.html">Working with volumes</a></li>
+                <li><a class="nav-link" href="math-expressions.html">Math expressions</a></li>
+                <li><a class="nav-link active" href="#">Creating a compiler in Python</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </details>
+    </li>
+    <li class="nav-item"><a class="nav-link" href="../gallery.html">Gallery</a></li>
+    <li class="nav-item"><a class="nav-link" href="../python-api/index.html">Python API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../cpp-api/index.html">C++ API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../papers.html">Papers</a></li>
+  </ul>
+</nav>
+</div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory-and-motivation.html">Theory and Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gradients.html">Functional Grading Guide</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="metamaterials/index.html">Metamaterials</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/concepts.html">Concepts and representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/catalog.html">TPMS and lattice catalog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/custom-unit-cells.html">Custom unit cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/geometry-grading.html">Functionally graded metamaterial geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/attribute-modeling.html">Attribute modeling for metamaterials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/cylindrical-spherical-cell-maps.html">Cylindrical and spherical cell maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/conformal-cad.html">Conformal mapping CAD surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/conformal-meshes.html">Map lattices onto triangle meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/properties.html">Geometric characterization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="compilers/index.html">Compilers</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="compilers/material-inkjet.html">Material Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/color-inkjet.html">Color Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/vat-photo.html">VAT Photo Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/slicer-project.html">Slicer Project Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/simulation-compiler.html">Simulation Compiler</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="attribute-resolver.html">Attribute Modifier and Resolver Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attribute-conflicts.html">Attribute Conflict Resolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numba-attributes.html">Python Functions for Attributes</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="advanced.html">Advanced</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cadquery.html">Authoring CAD with CadQuery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="surface-relief.html">Physical surface relief</a></li>
+<li class="toctree-l2"><a class="reference internal" href="volumes.html">Working with Volumes in OpenVCAD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math-expressions.html">Math expressions in OpenVCAD</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Creating a Compiler in Python</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Guides</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="advanced.html" class="nav-link">Advanced</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Creating a Compiler in Python</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="creating-a-compiler-in-python">
+<span id="guide-custom-python-compiler"></span><h1>Creating a Compiler in Python<a class="headerlink" href="#creating-a-compiler-in-python" title="Link to this heading">#</a></h1>
+<p>An OpenVCAD <strong>compiler</strong> translates a reusable design tree into the lower-level
+representation understood by a machine. The design describes geometry and
+spatial attributes; the compiler decides where to sample them, validates the
+result, and writes the machine-facing files.</p>
+<p>This guide builds a small compiler entirely in Python for a hypothetical vat
+photopolymerization printer. The printer accepts a stack of full-bed,
+8-bit grayscale PNG images:</p>
+<ul class="simple">
+<li><p>black (<code class="docutils literal notranslate"><span class="pre">0</span></code>) means no exposure;</p></li>
+<li><p>white (<code class="docutils literal notranslate"><span class="pre">255</span></code>) means maximum exposure; and</p></li>
+<li><p>intermediate values request an intermediate exposure time or light
+intensity.</p></li>
+</ul>
+<p>Some grayscale-capable vat systems use exposure dose to change cure state and,
+in turn, mechanical response. That is the motivation for this example. The
+built-in <a class="reference internal" href="compilers/vat-photo.html"><span class="std std-doc">VAT Photo Compiler</span></a> solves a similar problem
+with OpenVCAD’s standard <code class="docutils literal notranslate"><span class="pre">INTENSITY</span></code> attribute and BMP output. Here, we will
+write a simpler PNG compiler ourselves and deliberately use a custom scalar
+attribute named <strong><code class="docutils literal notranslate"><span class="pre">exposure</span></code></strong>.</p>
+<section id="prerequisites-and-project-files">
+<h2>Prerequisites and project files<a class="headerlink" href="#prerequisites-and-project-files" title="Link to this heading">#</a></h2>
+<p>This is an advanced guide, but it assumes only the Python concepts introduced
+in <a class="reference internal" href="getting-started.html#guide-getting-started"><span class="std std-ref">Getting Started with OpenVCAD</span></a> and the
+<a class="reference internal" href="gradients.html"><span class="std std-doc">Functional Grading Guide</span></a>. All dimensions in this guide are in
+<strong>millimetres</strong>.</p>
+<p>The complete project is in
+<code class="docutils literal notranslate"><span class="pre">examples/compilers/custom_python_vat/</span></code></p>
+<div class="highlight-text notranslate"><div class="highlight"><pre><span></span>custom_python_vat/
+├── .gitignore
+├── README.md
+├── design.py
+├── grayscale_vat_compiler.py
+├── compile_design.py
+└── preview_design.py
+</pre></div>
+</div>
+<p>The separation is intentional. <code class="docutils literal notranslate"><span class="pre">grayscale_vat_compiler.py</span></code> is reusable and
+accepts any compatible OpenVCAD root object. <code class="docutils literal notranslate"><span class="pre">design.py</span></code> is only one test
+design, while <code class="docutils literal notranslate"><span class="pre">compile_design.py</span></code> supplies the settings for one printer.</p>
+</section>
+<section id="a-practical-compiler-contract">
+<h2>A practical compiler contract<a class="headerlink" href="#a-practical-compiler-contract" title="Link to this heading">#</a></h2>
+<p>You do not need a custom compiler for every design, and a small Python
+compiler does not need a complicated framework. A useful compiler should:</p>
+<ol class="arabic simple">
+<li><p>accept any OpenVCAD root object that carries the field it consumes;</p></li>
+<li><p>name and validate its required attribute;</p></li>
+<li><p>define the machine’s sampling domain and resolution;</p></li>
+<li><p>check that the object fits within the machine;</p></li>
+<li><p>sample geometry and attributes in bulk;</p></li>
+<li><p>define behavior for missing or invalid values;</p></li>
+<li><p>convert valid samples into the machine’s representation; and</p></li>
+<li><p>report actionable errors and progress.</p></li>
+</ol>
+<p>The lowest-level attribute should be as close as practical to something the
+machine understands. Our printer understands grayscale exposure, so
+<code class="docutils literal notranslate"><span class="pre">exposure</span></code> is a better compiler input than a high-level property such as
+modulus. A different workflow could convert modulus into exposure before this
+compiler runs via
+<a class="reference internal" href="attribute-resolver.html"><span class="std std-doc">Attribute Translation in the Attribute Modifier and Resolver Guide</span></a>.</p>
+</section>
+<section id="prepare-before-querying-a-tree">
+<h2>Prepare before querying a tree<a class="headerlink" href="#prepare-before-querying-a-tree" title="Link to this heading">#</a></h2>
+<p>OpenVCAD design roots provide three central query methods:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">bounding_box()</span></code> returns the minimum and maximum authored coordinates;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">evaluate(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code> queries geometry; and</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sample(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code> queries geometry and attributes together.</p></li>
+</ul>
+<p>Call <code class="docutils literal notranslate"><span class="pre">prepare(voxel_size,</span> <span class="pre">bandwidth)</span></code> on a root before calling <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code> or
+<code class="docutils literal notranslate"><span class="pre">sample()</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">voxel_size</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.254</span><span class="p">,</span> <span class="mf">0.254</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">bandwidth</span> <span class="o">=</span> <span class="mf">6.0</span>
+
+<span class="n">root</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span><span class="n">voxel_size</span><span class="p">,</span> <span class="n">bandwidth</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">voxel_size</span></code> tells the tree the intended sampling pitch in X, Y, and Z.
+<code class="docutils literal notranslate"><span class="pre">bandwidth</span></code> is a physical distance around the zero level set—the surface where
+the signed distance equals zero. Some nodes use these values to load data,
+construct an internal distance field, or initialize state needed for later
+queries.</p>
+<p>Within the <strong>narrow band</strong>, the signed-distance magnitude describes distance
+to the surface. Away from it, many workflows need only the sign: negative or
+zero is inside and positive is outside. Depending on the node, a query far
+outside its prepared domain may instead return <code class="docutils literal notranslate"><span class="pre">None</span></code>. Analytic primitives may
+provide an exact distance over a wider region, but a compiler should not
+depend on far-field distance magnitude when an inside/outside test is enough.</p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Signed distance and the narrow band</p>
+<img src="images/custom_python_compiler_narrow_band.png" alt="Diagram showing a surface, its narrow band, and the signed-distance sign inside and outside">
+</div>
+</div>
+<section id="evaluate-geometry-only">
+<h3><code class="docutils literal notranslate"><span class="pre">evaluate()</span></code>: geometry only<a class="headerlink" href="#evaluate-geometry-only" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">evaluate()</span></code> returns a signed-distance value or <code class="docutils literal notranslate"><span class="pre">None</span></code>:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">signed_distance</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">signed_distance</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Outside the prepared query domain&quot;</span><span class="p">)</span>
+<span class="k">elif</span> <span class="n">signed_distance</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Inside or on the object&quot;</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Outside the object&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This is enough for a compiler that cares only about occupancy or surface
+geometry.</p>
+</section>
+<section id="sample-geometry-and-attributes">
+<h3><code class="docutils literal notranslate"><span class="pre">sample()</span></code>: geometry and attributes<a class="headerlink" href="#sample-geometry-and-attributes" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">sample()</span></code> accepts the same X, Y, and Z coordinates but returns two values:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">signed_distance</span><span class="p">,</span> <span class="n">attributes</span> <span class="o">=</span> <span class="n">root</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+
+<span class="k">if</span> <span class="n">signed_distance</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">signed_distance</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">attributes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">attributes</span><span class="o">.</span><span class="n">has_sample</span><span class="p">(</span><span class="s2">&quot;exposure&quot;</span><span class="p">):</span>
+        <span class="n">exposure</span> <span class="o">=</span> <span class="n">attributes</span><span class="o">.</span><span class="n">get_sample</span><span class="p">(</span><span class="s2">&quot;exposure&quot;</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Exposure:&quot;</span><span class="p">,</span> <span class="n">exposure</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The first value follows <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code>. The second is an <code class="docutils literal notranslate"><span class="pre">AttributeSamples</span></code>
+container holding whatever named fields are defined at that location. Use
+<code class="docutils literal notranslate"><span class="pre">has_sample(name)</span></code> before <code class="docutils literal notranslate"><span class="pre">get_sample(name)</span></code>.</p>
+<p>To check which names occur anywhere in a design tree:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">root</span><span class="o">.</span><span class="n">attribute_list</span><span class="p">())</span>
+
+<span class="k">if</span> <span class="s2">&quot;exposure&quot;</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">root</span><span class="o">.</span><span class="n">attribute_list</span><span class="p">():</span>
+    <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;The design does not contain an &#39;exposure&#39; attribute.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This is a useful preflight check, but it is not proof that the attribute exists
+at every interior point. We will handle that distinction explicitly.</p>
+</section>
+</section>
+<section id="build-a-design-with-a-custom-attribute">
+<h2>Build a design with a custom attribute<a class="headerlink" href="#build-a-design-with-a-custom-attribute" title="Link to this heading">#</a></h2>
+<p>Attribute names do not need to come from <code class="docutils literal notranslate"><span class="pre">pv.DefaultAttributes</span></code>. This example
+uses the ordinary Python string <code class="docutils literal notranslate"><span class="pre">&quot;exposure&quot;</span></code> and a floating-point field from
+<code class="docutils literal notranslate"><span class="pre">0.1</span></code> to <code class="docutils literal notranslate"><span class="pre">1.0</span></code> along the 30 mm X length:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+
+<span class="n">EXPOSURE</span> <span class="o">=</span> <span class="s2">&quot;exposure&quot;</span>
+
+<span class="n">length_mm</span> <span class="o">=</span> <span class="mf">30.0</span>
+<span class="n">width_mm</span> <span class="o">=</span> <span class="mf">16.0</span>
+<span class="n">height_mm</span> <span class="o">=</span> <span class="mf">6.0</span>
+
+<span class="n">prism</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">length_mm</span><span class="p">,</span> <span class="n">width_mm</span><span class="p">,</span> <span class="n">height_mm</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="c1"># x spans -15 to +15 mm:</span>
+<span class="c1"># 0.03(-15) + 0.55 = 0.1</span>
+<span class="c1"># 0.03(+15) + 0.55 = 1.0</span>
+<span class="n">exposure_gradient</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">&quot;0.03 * x + 0.55&quot;</span><span class="p">)</span>
+<span class="n">prism</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">EXPOSURE</span><span class="p">,</span> <span class="n">exposure_gradient</span><span class="p">)</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">prism</span>
+</pre></div>
+</div>
+<p>This definition is also available in <code class="docutils literal notranslate"><span class="pre">design.py</span></code>. The compiler does not know
+that it is receiving a rectangular prism; it only knows that <code class="docutils literal notranslate"><span class="pre">root</span></code> is an
+OpenVCAD object with geometry and, somewhere in its tree, an <code class="docutils literal notranslate"><span class="pre">exposure</span></code>
+attribute.</p>
+<p>The render below visualizes that custom attribute with a black-to-white
+palette. Dark values are near exposure <code class="docutils literal notranslate"><span class="pre">0.1</span></code>, and white reaches exposure
+<code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Demo object with its exposure gradient</p>
+<img src="images/custom_python_compiler_design.png" alt="Rendered rectangular prism with a black-to-white exposure gradient along its length">
+</div>
+</div>
+</section>
+<section id="scale-up-with-treesampler">
+<h2>Scale up with <code class="docutils literal notranslate"><span class="pre">TreeSampler</span></code><a class="headerlink" href="#scale-up-with-treesampler" title="Link to this heading">#</a></h2>
+<p>Calling <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code> or <code class="docutils literal notranslate"><span class="pre">sample()</span></code> in a Python loop works for a few inspection
+points, but printer grids can contain billions of samples. Repeated
+single-point calls add unnecessary Python overhead.</p>
+<p><a class="reference internal" href="../python-api/pyvcad/utilities.html#pyvcad.TreeSampler" title="pyvcad.TreeSampler"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyvcad.TreeSampler</span></code></a> provides ordered, parallel bulk queries:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">points</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">sampler</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">TreeSampler</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">)</span>
+
+<span class="n">distances</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">evaluate_points</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+<span class="n">samples</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_points</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+</pre></div>
+</div>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">evaluate_points(points)</span></code> performs the equivalent of <code class="docutils literal notranslate"><span class="pre">evaluate()</span></code> for every
+point.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">sample_points(points)</span></code> performs the equivalent of <code class="docutils literal notranslate"><span class="pre">sample()</span></code> for every
+point.</p></li>
+<li><p>Both methods preserve the input order, run the work in parallel, and accept
+an optional progress callback receiving integers from <code class="docutils literal notranslate"><span class="pre">0</span></code> through <code class="docutils literal notranslate"><span class="pre">100</span></code>.</p></li>
+</ul>
+<p>Constructing <code class="docutils literal notranslate"><span class="pre">TreeSampler</span></code> prepares the root automatically using the supplied
+voxel size and a bandwidth six times the largest voxel dimension. The earlier
+explicit <code class="docutils literal notranslate"><span class="pre">prepare()</span></code> example remains important whenever you query a root
+directly.</p>
+<p>The grid-oriented <code class="docutils literal notranslate"><span class="pre">TreeSampler</span></code> methods sample the object’s bounding-box
+domain with sampler padding. Our machine instead needs a full-printer image,
+so the compiler builds one layer of printer-space XYZ points and passes those
+points to <code class="docutils literal notranslate"><span class="pre">sample_points()</span></code>.</p>
+</section>
+<section id="define-the-printer-and-the-two-bounding-boxes">
+<h2>Define the printer and the two bounding boxes<a class="headerlink" href="#define-the-printer-and-the-two-bounding-boxes" title="Link to this heading">#</a></h2>
+<p>The example machine is described by:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">printer_size_mm</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">60.0</span><span class="p">,</span> <span class="mf">40.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">)</span>
+<span class="n">dpi</span> <span class="o">=</span> <span class="mf">100.0</span>
+<span class="n">layer_height_mm</span> <span class="o">=</span> <span class="mf">1.0</span>
+</pre></div>
+</div>
+<p>There are two bounding boxes:</p>
+<ol class="arabic simple">
+<li><p>The <strong>printer bounding box</strong> runs from <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">0)</span></code> to
+<code class="docutils literal notranslate"><span class="pre">(60,</span> <span class="pre">40,</span> <span class="pre">20)</span></code> mm.</p></li>
+<li><p>The <strong>object bounding box</strong> comes from <code class="docutils literal notranslate"><span class="pre">root.bounding_box()</span></code>.</p></li>
+</ol>
+<p>The object must not exceed the printer in X, Y, or Z. The compiler centers its
+bounding box in the printer’s XY image and places its lowest Z coordinate on
+the build plane. It preserves the design’s orientation and does not modify the
+caller’s tree.</p>
+<p>The lower-left corner of every displayed PNG is the lower-left corner of the
+print bed. The physical pixel pitch is:</p>
+<div class="math notranslate nohighlight">
+\[
+p_{xy} = \frac{25.4\ \mathrm{mm/in}}{\mathrm{DPI}}
+\]</div>
+<p>At 100 DPI, <span class="math notranslate nohighlight">\(p_{xy}=0.254\)</span> mm. The 60 × 40 mm bed becomes a 236 × 157
+pixel image after rounding to whole pixels.</p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Printer and object bounding boxes</p>
+<img src="images/custom_python_compiler_bounding_boxes.png" alt="Printer bounding box with a smaller exposure-gradient object bounding box centered in XY">
+</div>
+</div>
+</section>
+<section id="implement-the-reusable-compiler">
+<h2>Implement the reusable compiler<a class="headerlink" href="#implement-the-reusable-compiler" title="Link to this heading">#</a></h2>
+<p>The class constructor stores the design and machine settings. It computes the
+pixel pitch and full-bed image dimensions, but it does not assume a particular
+geometry:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">class</span><span class="w"> </span><span class="nc">GrayscaleVatCompiler</span><span class="p">:</span>
+    <span class="n">exposure_attribute</span> <span class="o">=</span> <span class="s2">&quot;exposure&quot;</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">root</span><span class="p">,</span>
+        <span class="n">printer_size_mm</span><span class="p">,</span>
+        <span class="n">dpi</span><span class="p">,</span>
+        <span class="n">layer_height_mm</span><span class="p">,</span>
+        <span class="n">output_directory</span><span class="p">,</span>
+    <span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">printer_size_mm</span> <span class="o">=</span> <span class="n">printer_size_mm</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dpi</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">dpi</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">layer_height_mm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">layer_height_mm</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_directory</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">pixel_pitch_mm</span> <span class="o">=</span> <span class="mf">25.4</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpi</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_width</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">printer_size_mm</span><span class="o">.</span><span class="n">x</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixel_pitch_mm</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">image_height</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">printer_size_mm</span><span class="o">.</span><span class="n">y</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixel_pitch_mm</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+<section id="validate-fit-before-sampling">
+<h3>Validate fit before sampling<a class="headerlink" href="#validate-fit-before-sampling" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">bounding_box()</span></code> is safe before <code class="docutils literal notranslate"><span class="pre">prepare()</span></code>, so the compiler can reject an
+oversized job early:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">object_min</span><span class="p">,</span> <span class="n">object_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">()</span>
+<span class="n">object_size</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">object_max</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">object_min</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+    <span class="n">object_max</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">object_min</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+    <span class="n">object_max</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">object_min</span><span class="o">.</span><span class="n">z</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">printer_size</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">printer_size_mm</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">printer_size_mm</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+    <span class="bp">self</span><span class="o">.</span><span class="n">printer_size_mm</span><span class="o">.</span><span class="n">z</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">object_length</span><span class="p">,</span> <span class="n">printer_length</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+    <span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">),</span> <span class="n">object_size</span><span class="p">,</span> <span class="n">printer_size</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">object_length</span> <span class="o">&gt;</span> <span class="n">printer_length</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="s2">&quot;The object is </span><span class="si">{:.3f}</span><span class="s2"> mm in </span><span class="si">{}</span><span class="s2">, but the printer allows &quot;</span>
+            <span class="s2">&quot;only </span><span class="si">{:.3f}</span><span class="s2"> mm.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="n">object_length</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">printer_length</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="build-and-sample-one-layer-at-a-time">
+<h3>Build and sample one layer at a time<a class="headerlink" href="#build-and-sample-one-layer-at-a-time" title="Link to this heading">#</a></h3>
+<p>Each point is placed at a pixel center. The mapping below centers the object’s
+authored XY bounding box over the printer image:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">y_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_height</span><span class="p">):</span>
+    <span class="n">bed_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_index</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixel_pitch_mm</span>
+    <span class="n">world_y</span> <span class="o">=</span> <span class="n">object_center_y</span> <span class="o">+</span> <span class="n">bed_y</span> <span class="o">-</span> <span class="n">printer_depth_mm</span> <span class="o">/</span> <span class="mf">2.0</span>
+
+    <span class="k">for</span> <span class="n">x_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_width</span><span class="p">):</span>
+        <span class="n">bed_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_index</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixel_pitch_mm</span>
+        <span class="n">world_x</span> <span class="o">=</span> <span class="n">object_center_x</span> <span class="o">+</span> <span class="n">bed_x</span> <span class="o">-</span> <span class="n">printer_width_mm</span> <span class="o">/</span> <span class="mf">2.0</span>
+        <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">world_x</span><span class="p">,</span> <span class="n">world_y</span><span class="p">,</span> <span class="n">world_z</span><span class="p">))</span>
+
+<span class="n">samples</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_points</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">progress_callback</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The returned sample at index <code class="docutils literal notranslate"><span class="pre">i</span></code> belongs to <code class="docutils literal notranslate"><span class="pre">points[i]</span></code>. Outside geometry is
+black. Inside geometry reads <code class="docutils literal notranslate"><span class="pre">exposure</span></code>, validates it, and maps it to one
+grayscale byte:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">signed_distance</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">signed_distance</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+    <span class="n">grayscale</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">elif</span> <span class="n">attributes</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">attributes</span><span class="o">.</span><span class="n">has_sample</span><span class="p">(</span><span class="s2">&quot;exposure&quot;</span><span class="p">):</span>
+    <span class="n">grayscale</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">exposure</span> <span class="o">=</span> <span class="n">attributes</span><span class="o">.</span><span class="n">get_sample</span><span class="p">(</span><span class="s2">&quot;exposure&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">exposure</span> <span class="o">&lt;</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">exposure</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">&quot;Exposure must be between 0 and 1.&quot;</span><span class="p">)</span>
+    <span class="n">grayscale</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">exposure</span> <span class="o">*</span> <span class="mf">255.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The implementation writes each completed layer immediately. PNG files store
+rows from top to bottom, so it vertically flips the NumPy array before saving;
+this makes the displayed lower-left pixel correspond to bed <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0)</span></code>.</p>
+</section>
+<section id="missing-attributes-and-invalid-values">
+<h3>Missing attributes and invalid values<a class="headerlink" href="#missing-attributes-and-invalid-values" title="Link to this heading">#</a></h3>
+<p>A root-level check answers “does <code class="docutils literal notranslate"><span class="pre">exposure</span></code> occur anywhere in this tree?” It
+does not answer “is <code class="docutils literal notranslate"><span class="pre">exposure</span></code> defined at this exact interior point?” A union,
+for example, may combine one branch that defines exposure with another that
+does not.</p>
+<p>The <a class="reference internal" href="compilers/vat-photo.html"><span class="std std-doc">VAT Photo Compiler guide</span></a>
+and the examples under <code class="docutils literal notranslate"><span class="pre">examples/attributes_by_type/undefined/</span></code> show the same
+issue with built-in compiler attributes.</p>
+<p>There are two reasonable policies for a custom compiler:</p>
+<ul class="simple">
+<li><p><strong>strict:</strong> stop at the first undefined interior sample and ask the designer
+to repair the field; or</p></li>
+<li><p><strong>fallback:</strong> substitute a documented machine-safe value.</p></li>
+</ul>
+<p>This example uses exposure <code class="docutils literal notranslate"><span class="pre">0.0</span></code> as the fallback, so an undefined location is
+not cured. It counts these samples and prints one warning after compilation.
+It fails immediately if the root never contains <code class="docutils literal notranslate"><span class="pre">exposure</span></code>, if the sampled
+value is not scalar, or if a value is not finite or falls outside <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">1]</span></code>.</p>
+</section>
+</section>
+<section id="complete-compiler-module">
+<h2>Complete compiler module<a class="headerlink" href="#complete-compiler-module" title="Link to this heading">#</a></h2>
+<p>The full implementation is kept here as a code block and as the reusable
+<code class="docutils literal notranslate"><span class="pre">grayscale_vat_compiler.py</span></code> file. You can also browse the
+<a class="reference external" href="https://github.com/MacCurdyLab/OpenVCAD-Public/tree/main/examples">OpenVCAD-Public examples</a>
+for more complete workflows:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="linenos">  1</span><span class="sd">&quot;&quot;&quot;A small, reusable grayscale VAT compiler written entirely in Python.&quot;&quot;&quot;</span>
+<span class="linenos">  2</span>
+<span class="linenos">  3</span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="linenos">  4</span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+<span class="linenos">  5</span>
+<span class="linenos">  6</span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="linenos">  7</span><span class="kn">from</span><span class="w"> </span><span class="nn">PIL</span><span class="w"> </span><span class="kn">import</span> <span class="n">Image</span>
+<span class="linenos">  8</span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="linenos">  9</span>
+<span class="linenos"> 10</span>
+<span class="linenos"> 11</span><span class="k">class</span><span class="w"> </span><span class="nc">GrayscaleVatCompiler</span><span class="p">:</span>
+<span class="linenos"> 12</span><span class="w">    </span><span class="sd">&quot;&quot;&quot;Compile an OpenVCAD design into full-bed 8-bit grayscale PNG layers.&quot;&quot;&quot;</span>
+<span class="linenos"> 13</span>
+<span class="linenos"> 14</span>    <span class="n">exposure_attribute</span> <span class="o">=</span> <span class="s2">&quot;exposure&quot;</span>
+<span class="linenos"> 15</span>
+<span class="linenos"> 16</span>    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span>
+<span class="linenos"> 17</span>        <span class="bp">self</span><span class="p">,</span>
+<span class="linenos"> 18</span>        <span class="n">root</span><span class="p">,</span>
+<span class="linenos"> 19</span>        <span class="n">printer_size_mm</span><span class="p">,</span>
+<span class="linenos"> 20</span>        <span class="n">dpi</span><span class="p">,</span>
+<span class="linenos"> 21</span>        <span class="n">layer_height_mm</span><span class="p">,</span>
+<span class="linenos"> 22</span>        <span class="n">output_directory</span><span class="p">,</span>
+<span class="linenos"> 23</span>    <span class="p">):</span>
+<span class="linenos"> 24</span>        <span class="bp">self</span><span class="o">.</span><span class="n">root</span> <span class="o">=</span> <span class="n">root</span>
+<span class="linenos"> 25</span>        <span class="bp">self</span><span class="o">.</span><span class="n">printer_size_mm</span> <span class="o">=</span> <span class="n">printer_size_mm</span>
+<span class="linenos"> 26</span>        <span class="bp">self</span><span class="o">.</span><span class="n">dpi</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">dpi</span><span class="p">)</span>
+<span class="linenos"> 27</span>        <span class="bp">self</span><span class="o">.</span><span class="n">layer_height_mm</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">layer_height_mm</span><span class="p">)</span>
+<span class="linenos"> 28</span>        <span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">output_directory</span><span class="p">)</span>
+<span class="linenos"> 29</span>        <span class="bp">self</span><span class="o">.</span><span class="n">undefined_sample_count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos"> 30</span>
+<span class="linenos"> 31</span>        <span class="bp">self</span><span class="o">.</span><span class="n">_validate_settings</span><span class="p">()</span>
+<span class="linenos"> 32</span>        <span class="bp">self</span><span class="o">.</span><span class="n">pixel_pitch_mm</span> <span class="o">=</span> <span class="mf">25.4</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpi</span>
+<span class="linenos"> 33</span>        <span class="bp">self</span><span class="o">.</span><span class="n">image_width</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+<span class="linenos"> 34</span>            <span class="mi">1</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">printer_size_mm</span><span class="o">.</span><span class="n">x</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixel_pitch_mm</span><span class="p">)</span>
+<span class="linenos"> 35</span>        <span class="p">)</span>
+<span class="linenos"> 36</span>        <span class="bp">self</span><span class="o">.</span><span class="n">image_height</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span>
+<span class="linenos"> 37</span>            <span class="mi">1</span><span class="p">,</span> <span class="nb">round</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">printer_size_mm</span><span class="o">.</span><span class="n">y</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixel_pitch_mm</span><span class="p">)</span>
+<span class="linenos"> 38</span>        <span class="p">)</span>
+<span class="linenos"> 39</span>
+<span class="linenos"> 40</span>    <span class="k">def</span><span class="w"> </span><span class="nf">_validate_settings</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos"> 41</span>        <span class="n">printer_dimensions</span> <span class="o">=</span> <span class="p">(</span>
+<span class="linenos"> 42</span>            <span class="bp">self</span><span class="o">.</span><span class="n">printer_size_mm</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+<span class="linenos"> 43</span>            <span class="bp">self</span><span class="o">.</span><span class="n">printer_size_mm</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+<span class="linenos"> 44</span>            <span class="bp">self</span><span class="o">.</span><span class="n">printer_size_mm</span><span class="o">.</span><span class="n">z</span><span class="p">,</span>
+<span class="linenos"> 45</span>        <span class="p">)</span>
+<span class="linenos"> 46</span>        <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">value</span> <span class="o">&lt;=</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">printer_dimensions</span><span class="p">):</span>
+<span class="linenos"> 47</span>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Printer dimensions must be positive.&quot;</span><span class="p">)</span>
+<span class="linenos"> 48</span>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">dpi</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos"> 49</span>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Printer DPI must be positive.&quot;</span><span class="p">)</span>
+<span class="linenos"> 50</span>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_height_mm</span> <span class="o">&lt;=</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos"> 51</span>            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Layer height must be positive.&quot;</span><span class="p">)</span>
+<span class="linenos"> 52</span>
+<span class="linenos"> 53</span>    <span class="k">def</span><span class="w"> </span><span class="nf">_prepare_placement</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="linenos"> 54</span>        <span class="n">object_min</span><span class="p">,</span> <span class="n">object_max</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">()</span>
+<span class="linenos"> 55</span>        <span class="n">object_size</span> <span class="o">=</span> <span class="p">(</span>
+<span class="linenos"> 56</span>            <span class="n">object_max</span><span class="o">.</span><span class="n">x</span> <span class="o">-</span> <span class="n">object_min</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+<span class="linenos"> 57</span>            <span class="n">object_max</span><span class="o">.</span><span class="n">y</span> <span class="o">-</span> <span class="n">object_min</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+<span class="linenos"> 58</span>            <span class="n">object_max</span><span class="o">.</span><span class="n">z</span> <span class="o">-</span> <span class="n">object_min</span><span class="o">.</span><span class="n">z</span><span class="p">,</span>
+<span class="linenos"> 59</span>        <span class="p">)</span>
+<span class="linenos"> 60</span>        <span class="n">printer_size</span> <span class="o">=</span> <span class="p">(</span>
+<span class="linenos"> 61</span>            <span class="bp">self</span><span class="o">.</span><span class="n">printer_size_mm</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+<span class="linenos"> 62</span>            <span class="bp">self</span><span class="o">.</span><span class="n">printer_size_mm</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+<span class="linenos"> 63</span>            <span class="bp">self</span><span class="o">.</span><span class="n">printer_size_mm</span><span class="o">.</span><span class="n">z</span><span class="p">,</span>
+<span class="linenos"> 64</span>        <span class="p">)</span>
+<span class="linenos"> 65</span>
+<span class="linenos"> 66</span>        <span class="n">dimension_names</span> <span class="o">=</span> <span class="p">(</span><span class="s2">&quot;X&quot;</span><span class="p">,</span> <span class="s2">&quot;Y&quot;</span><span class="p">,</span> <span class="s2">&quot;Z&quot;</span><span class="p">)</span>
+<span class="linenos"> 67</span>        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">object_length</span><span class="p">,</span> <span class="n">printer_length</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span>
+<span class="linenos"> 68</span>            <span class="n">dimension_names</span><span class="p">,</span> <span class="n">object_size</span><span class="p">,</span> <span class="n">printer_size</span>
+<span class="linenos"> 69</span>        <span class="p">):</span>
+<span class="linenos"> 70</span>            <span class="k">if</span> <span class="n">object_length</span> <span class="o">&gt;</span> <span class="n">printer_length</span><span class="p">:</span>
+<span class="linenos"> 71</span>                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+<span class="linenos"> 72</span>                    <span class="s2">&quot;The object is </span><span class="si">{:.3f}</span><span class="s2"> mm in </span><span class="si">{}</span><span class="s2">, but the printer allows &quot;</span>
+<span class="linenos"> 73</span>                    <span class="s2">&quot;only </span><span class="si">{:.3f}</span><span class="s2"> mm.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">object_length</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">printer_length</span><span class="p">)</span>
+<span class="linenos"> 74</span>                <span class="p">)</span>
+<span class="linenos"> 75</span>
+<span class="linenos"> 76</span>        <span class="bp">self</span><span class="o">.</span><span class="n">object_min</span> <span class="o">=</span> <span class="n">object_min</span>
+<span class="linenos"> 77</span>        <span class="bp">self</span><span class="o">.</span><span class="n">object_max</span> <span class="o">=</span> <span class="n">object_max</span>
+<span class="linenos"> 78</span>        <span class="bp">self</span><span class="o">.</span><span class="n">object_size</span> <span class="o">=</span> <span class="n">object_size</span>
+<span class="linenos"> 79</span>        <span class="bp">self</span><span class="o">.</span><span class="n">object_center_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">object_min</span><span class="o">.</span><span class="n">x</span> <span class="o">+</span> <span class="n">object_max</span><span class="o">.</span><span class="n">x</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+<span class="linenos"> 80</span>        <span class="bp">self</span><span class="o">.</span><span class="n">object_center_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">object_min</span><span class="o">.</span><span class="n">y</span> <span class="o">+</span> <span class="n">object_max</span><span class="o">.</span><span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="mf">2.0</span>
+<span class="linenos"> 81</span>        <span class="bp">self</span><span class="o">.</span><span class="n">layer_count</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">math</span><span class="o">.</span><span class="n">ceil</span><span class="p">(</span><span class="n">object_size</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_height_mm</span><span class="p">))</span>
+<span class="linenos"> 82</span>
+<span class="linenos"> 83</span>    <span class="k">def</span><span class="w"> </span><span class="nf">_points_for_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">layer_index</span><span class="p">):</span>
+<span class="linenos"> 84</span>        <span class="n">world_z</span> <span class="o">=</span> <span class="p">(</span>
+<span class="linenos"> 85</span>            <span class="bp">self</span><span class="o">.</span><span class="n">object_min</span><span class="o">.</span><span class="n">z</span>
+<span class="linenos"> 86</span>            <span class="o">+</span> <span class="p">(</span><span class="n">layer_index</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_height_mm</span>
+<span class="linenos"> 87</span>        <span class="p">)</span>
+<span class="linenos"> 88</span>        <span class="n">points</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos"> 89</span>
+<span class="linenos"> 90</span>        <span class="k">for</span> <span class="n">y_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_height</span><span class="p">):</span>
+<span class="linenos"> 91</span>            <span class="n">bed_y</span> <span class="o">=</span> <span class="p">(</span><span class="n">y_index</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixel_pitch_mm</span>
+<span class="linenos"> 92</span>            <span class="n">world_y</span> <span class="o">=</span> <span class="p">(</span>
+<span class="linenos"> 93</span>                <span class="bp">self</span><span class="o">.</span><span class="n">object_center_y</span>
+<span class="linenos"> 94</span>                <span class="o">+</span> <span class="n">bed_y</span>
+<span class="linenos"> 95</span>                <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">printer_size_mm</span><span class="o">.</span><span class="n">y</span> <span class="o">/</span> <span class="mf">2.0</span>
+<span class="linenos"> 96</span>            <span class="p">)</span>
+<span class="linenos"> 97</span>
+<span class="linenos"> 98</span>            <span class="k">for</span> <span class="n">x_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_width</span><span class="p">):</span>
+<span class="linenos"> 99</span>                <span class="n">bed_x</span> <span class="o">=</span> <span class="p">(</span><span class="n">x_index</span> <span class="o">+</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">pixel_pitch_mm</span>
+<span class="linenos">100</span>                <span class="n">world_x</span> <span class="o">=</span> <span class="p">(</span>
+<span class="linenos">101</span>                    <span class="bp">self</span><span class="o">.</span><span class="n">object_center_x</span>
+<span class="linenos">102</span>                    <span class="o">+</span> <span class="n">bed_x</span>
+<span class="linenos">103</span>                    <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">printer_size_mm</span><span class="o">.</span><span class="n">x</span> <span class="o">/</span> <span class="mf">2.0</span>
+<span class="linenos">104</span>                <span class="p">)</span>
+<span class="linenos">105</span>                <span class="n">points</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">world_x</span><span class="p">,</span> <span class="n">world_y</span><span class="p">,</span> <span class="n">world_z</span><span class="p">))</span>
+<span class="linenos">106</span>
+<span class="linenos">107</span>        <span class="k">return</span> <span class="n">points</span>
+<span class="linenos">108</span>
+<span class="linenos">109</span>    <span class="k">def</span><span class="w"> </span><span class="nf">_grayscale_layer</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">points</span><span class="p">,</span> <span class="n">samples</span><span class="p">):</span>
+<span class="linenos">110</span>        <span class="n">layer</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span>
+<span class="linenos">111</span>            <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image_height</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_width</span><span class="p">),</span>
+<span class="linenos">112</span>            <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span>
+<span class="linenos">113</span>        <span class="p">)</span>
+<span class="linenos">114</span>
+<span class="linenos">115</span>        <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="p">(</span><span class="n">signed_distance</span><span class="p">,</span> <span class="n">attributes</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">samples</span><span class="p">):</span>
+<span class="linenos">116</span>            <span class="k">if</span> <span class="n">signed_distance</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">signed_distance</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+<span class="linenos">117</span>                <span class="k">continue</span>
+<span class="linenos">118</span>
+<span class="linenos">119</span>            <span class="k">if</span> <span class="p">(</span>
+<span class="linenos">120</span>                <span class="n">attributes</span> <span class="ow">is</span> <span class="kc">None</span>
+<span class="linenos">121</span>                <span class="ow">or</span> <span class="ow">not</span> <span class="n">attributes</span><span class="o">.</span><span class="n">has_sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exposure_attribute</span><span class="p">)</span>
+<span class="linenos">122</span>            <span class="p">):</span>
+<span class="linenos">123</span>                <span class="bp">self</span><span class="o">.</span><span class="n">undefined_sample_count</span> <span class="o">+=</span> <span class="mi">1</span>
+<span class="linenos">124</span>                <span class="k">continue</span>
+<span class="linenos">125</span>
+<span class="linenos">126</span>            <span class="n">exposure</span> <span class="o">=</span> <span class="n">attributes</span><span class="o">.</span><span class="n">get_sample</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">exposure_attribute</span><span class="p">)</span>
+<span class="linenos">127</span>            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">exposure</span><span class="p">,</span> <span class="p">(</span><span class="nb">int</span><span class="p">,</span> <span class="nb">float</span><span class="p">)):</span>
+<span class="linenos">128</span>                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+<span class="linenos">129</span>                    <span class="s2">&quot;&#39;</span><span class="si">{}</span><span class="s2">&#39; must be a floating-point attribute.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+<span class="linenos">130</span>                        <span class="bp">self</span><span class="o">.</span><span class="n">exposure_attribute</span>
+<span class="linenos">131</span>                    <span class="p">)</span>
+<span class="linenos">132</span>                <span class="p">)</span>
+<span class="linenos">133</span>            <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">exposure</span><span class="p">)</span> <span class="ow">or</span> <span class="n">exposure</span> <span class="o">&lt;</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">exposure</span> <span class="o">&gt;</span> <span class="mf">1.0</span><span class="p">:</span>
+<span class="linenos">134</span>                <span class="n">point</span> <span class="o">=</span> <span class="n">points</span><span class="p">[</span><span class="n">index</span><span class="p">]</span>
+<span class="linenos">135</span>                <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+<span class="linenos">136</span>                    <span class="s2">&quot;Exposure must be between 0 and 1; sampled </span><span class="si">{}</span><span class="s2"> at &quot;</span>
+<span class="linenos">137</span>                    <span class="s2">&quot;(</span><span class="si">{:.3f}</span><span class="s2">, </span><span class="si">{:.3f}</span><span class="s2">, </span><span class="si">{:.3f}</span><span class="s2">) mm.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+<span class="linenos">138</span>                        <span class="n">exposure</span><span class="p">,</span>
+<span class="linenos">139</span>                        <span class="n">point</span><span class="o">.</span><span class="n">x</span><span class="p">,</span>
+<span class="linenos">140</span>                        <span class="n">point</span><span class="o">.</span><span class="n">y</span><span class="p">,</span>
+<span class="linenos">141</span>                        <span class="n">point</span><span class="o">.</span><span class="n">z</span><span class="p">,</span>
+<span class="linenos">142</span>                    <span class="p">)</span>
+<span class="linenos">143</span>                <span class="p">)</span>
+<span class="linenos">144</span>
+<span class="linenos">145</span>            <span class="n">y_index</span> <span class="o">=</span> <span class="n">index</span> <span class="o">//</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_width</span>
+<span class="linenos">146</span>            <span class="n">x_index</span> <span class="o">=</span> <span class="n">index</span> <span class="o">%</span> <span class="bp">self</span><span class="o">.</span><span class="n">image_width</span>
+<span class="linenos">147</span>            <span class="n">layer</span><span class="p">[</span><span class="n">y_index</span><span class="p">,</span> <span class="n">x_index</span><span class="p">]</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span><span class="n">exposure</span> <span class="o">*</span> <span class="mf">255.0</span><span class="p">)</span>
+<span class="linenos">148</span>
+<span class="linenos">149</span>        <span class="k">return</span> <span class="n">layer</span>
+<span class="linenos">150</span>
+<span class="linenos">151</span>    <span class="k">def</span><span class="w"> </span><span class="nf">compile</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="linenos">152</span><span class="w">        </span><span class="sd">&quot;&quot;&quot;Compile the design and return the paths of the generated PNG files.&quot;&quot;&quot;</span>
+<span class="linenos">153</span>
+<span class="linenos">154</span>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">exposure_attribute</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">attribute_list</span><span class="p">():</span>
+<span class="linenos">155</span>            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+<span class="linenos">156</span>                <span class="s2">&quot;The design does not contain an &#39;</span><span class="si">{}</span><span class="s2">&#39; attribute.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+<span class="linenos">157</span>                    <span class="bp">self</span><span class="o">.</span><span class="n">exposure_attribute</span>
+<span class="linenos">158</span>                <span class="p">)</span>
+<span class="linenos">159</span>            <span class="p">)</span>
+<span class="linenos">160</span>
+<span class="linenos">161</span>        <span class="bp">self</span><span class="o">.</span><span class="n">_prepare_placement</span><span class="p">()</span>
+<span class="linenos">162</span>        <span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="linenos">163</span>        <span class="k">for</span> <span class="n">old_layer</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span><span class="o">.</span><span class="n">glob</span><span class="p">(</span><span class="s2">&quot;layer_*.png&quot;</span><span class="p">):</span>
+<span class="linenos">164</span>            <span class="n">old_layer</span><span class="o">.</span><span class="n">unlink</span><span class="p">()</span>
+<span class="linenos">165</span>
+<span class="linenos">166</span>        <span class="n">voxel_size</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span>
+<span class="linenos">167</span>            <span class="bp">self</span><span class="o">.</span><span class="n">pixel_pitch_mm</span><span class="p">,</span>
+<span class="linenos">168</span>            <span class="bp">self</span><span class="o">.</span><span class="n">pixel_pitch_mm</span><span class="p">,</span>
+<span class="linenos">169</span>            <span class="bp">self</span><span class="o">.</span><span class="n">layer_height_mm</span><span class="p">,</span>
+<span class="linenos">170</span>        <span class="p">)</span>
+<span class="linenos">171</span>
+<span class="linenos">172</span>        <span class="c1"># TreeSampler prepares the root with this voxel size and a narrow-band</span>
+<span class="linenos">173</span>        <span class="c1"># width of six times the largest voxel dimension.</span>
+<span class="linenos">174</span>        <span class="n">sampler</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">TreeSampler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">root</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">)</span>
+<span class="linenos">175</span>        <span class="n">output_paths</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="linenos">176</span>        <span class="bp">self</span><span class="o">.</span><span class="n">undefined_sample_count</span> <span class="o">=</span> <span class="mi">0</span>
+<span class="linenos">177</span>        <span class="n">last_progress</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+<span class="linenos">178</span>
+<span class="linenos">179</span>        <span class="k">def</span><span class="w"> </span><span class="nf">report_progress</span><span class="p">(</span><span class="n">layer_index</span><span class="p">,</span> <span class="n">sample_progress</span><span class="p">):</span>
+<span class="linenos">180</span>            <span class="k">nonlocal</span> <span class="n">last_progress</span>
+<span class="linenos">181</span>            <span class="n">overall</span> <span class="o">=</span> <span class="nb">round</span><span class="p">(</span>
+<span class="linenos">182</span>                <span class="mf">100.0</span>
+<span class="linenos">183</span>                <span class="o">*</span> <span class="p">(</span><span class="n">layer_index</span> <span class="o">+</span> <span class="n">sample_progress</span> <span class="o">/</span> <span class="mf">100.0</span><span class="p">)</span>
+<span class="linenos">184</span>                <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">layer_count</span>
+<span class="linenos">185</span>            <span class="p">)</span>
+<span class="linenos">186</span>            <span class="k">if</span> <span class="n">progress_callback</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">overall</span> <span class="o">&gt;</span> <span class="n">last_progress</span><span class="p">:</span>
+<span class="linenos">187</span>                <span class="n">last_progress</span> <span class="o">=</span> <span class="n">overall</span>
+<span class="linenos">188</span>                <span class="n">progress_callback</span><span class="p">(</span><span class="n">overall</span><span class="p">)</span>
+<span class="linenos">189</span>
+<span class="linenos">190</span>        <span class="k">for</span> <span class="n">layer_index</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">layer_count</span><span class="p">):</span>
+<span class="linenos">191</span>            <span class="n">points</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_points_for_layer</span><span class="p">(</span><span class="n">layer_index</span><span class="p">)</span>
+<span class="linenos">192</span>            <span class="n">samples</span> <span class="o">=</span> <span class="n">sampler</span><span class="o">.</span><span class="n">sample_points</span><span class="p">(</span>
+<span class="linenos">193</span>                <span class="n">points</span><span class="p">,</span>
+<span class="linenos">194</span>                <span class="k">lambda</span> <span class="n">percent</span><span class="p">:</span> <span class="n">report_progress</span><span class="p">(</span><span class="n">layer_index</span><span class="p">,</span> <span class="n">percent</span><span class="p">),</span>
+<span class="linenos">195</span>            <span class="p">)</span>
+<span class="linenos">196</span>            <span class="n">layer</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_grayscale_layer</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">samples</span><span class="p">)</span>
+<span class="linenos">197</span>
+<span class="linenos">198</span>            <span class="c1"># PNG rows are stored top-to-bottom. Flipping here makes the</span>
+<span class="linenos">199</span>            <span class="c1"># displayed lower-left pixel correspond to the print-bed origin.</span>
+<span class="linenos">200</span>            <span class="n">output_path</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">output_directory</span> <span class="o">/</span> <span class="s2">&quot;layer_</span><span class="si">{:04d}</span><span class="s2">.png&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+<span class="linenos">201</span>                <span class="n">layer_index</span>
+<span class="linenos">202</span>            <span class="p">)</span>
+<span class="linenos">203</span>            <span class="n">Image</span><span class="o">.</span><span class="n">fromarray</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">flipud</span><span class="p">(</span><span class="n">layer</span><span class="p">))</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+<span class="linenos">204</span>            <span class="n">output_paths</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">output_path</span><span class="p">)</span>
+<span class="linenos">205</span>
+<span class="linenos">206</span>        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">undefined_sample_count</span><span class="p">:</span>
+<span class="linenos">207</span>            <span class="nb">print</span><span class="p">(</span>
+<span class="linenos">208</span>                <span class="s2">&quot;Warning: </span><span class="si">{}</span><span class="s2"> inside samples had no &#39;</span><span class="si">{}</span><span class="s2">&#39; value and were &quot;</span>
+<span class="linenos">209</span>                <span class="s2">&quot;written as exposure 0.&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+<span class="linenos">210</span>                    <span class="bp">self</span><span class="o">.</span><span class="n">undefined_sample_count</span><span class="p">,</span>
+<span class="linenos">211</span>                    <span class="bp">self</span><span class="o">.</span><span class="n">exposure_attribute</span><span class="p">,</span>
+<span class="linenos">212</span>                <span class="p">)</span>
+<span class="linenos">213</span>            <span class="p">)</span>
+<span class="linenos">214</span>
+<span class="linenos">215</span>        <span class="k">return</span> <span class="n">output_paths</span>
+</pre></div>
+</div>
+</section>
+<section id="run-the-compiler">
+<h2>Run the compiler<a class="headerlink" href="#run-the-compiler" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">compile_design.py</span></code> constructs the design, supplies the printer settings, and
+prints progress in ten-percent increments:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">root</span> <span class="o">=</span> <span class="n">build_design</span><span class="p">()</span>
+
+<span class="n">compiler</span> <span class="o">=</span> <span class="n">GrayscaleVatCompiler</span><span class="p">(</span>
+    <span class="n">root</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">60.0</span><span class="p">,</span> <span class="mf">40.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">),</span>
+    <span class="mf">100.0</span><span class="p">,</span>
+    <span class="mf">1.0</span><span class="p">,</span>
+    <span class="n">Path</span><span class="p">(</span><span class="vm">__file__</span><span class="p">)</span><span class="o">.</span><span class="n">parent</span> <span class="o">/</span> <span class="s2">&quot;output&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">show_progress</span><span class="p">(</span><span class="n">percent</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">percent</span> <span class="o">%</span> <span class="mi">10</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Compiling: </span><span class="si">{:3d}</span><span class="s2">%&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">percent</span><span class="p">))</span>
+
+<span class="n">layers</span> <span class="o">=</span> <span class="n">compiler</span><span class="o">.</span><span class="n">compile</span><span class="p">(</span><span class="n">show_progress</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Wrote </span><span class="si">{}</span><span class="s2"> layers&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">layers</span><span class="p">)))</span>
+</pre></div>
+</div>
+<p>From the repository root:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./.venv/bin/python<span class="w"> </span>examples/compilers/custom_python_vat/compile_design.py
+</pre></div>
+</div>
+<p>The example writes six full-bed PNGs. The middle layer below is copied directly
+from that output stack:</p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Compiled grayscale PNG layer</p>
+<img src="images/custom_python_compiler_slice.png" alt="Full printer-bed grayscale PNG with a centered rectangular exposure gradient">
+</div>
+</div>
+<p>The black area is the unused printer bed. Inside the object, grayscale rises
+from exposure <code class="docutils literal notranslate"><span class="pre">0.1</span></code> on the left to <code class="docutils literal notranslate"><span class="pre">1.0</span></code> on the right.</p>
+<p>To preview the authored design interactively before compiling:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span>./.venv/bin/python<span class="w"> </span>examples/compilers/custom_python_vat/preview_design.py
+</pre></div>
+</div>
+</section>
+<section id="beyond-image-stacks">
+<h2>Beyond image stacks<a class="headerlink" href="#beyond-image-stacks" title="Link to this heading">#</a></h2>
+<p>Voxel and image-stack compilers are often the easiest place to start, but
+<code class="docutils literal notranslate"><span class="pre">TreeSampler</span></code> is not restricted to regular grids.</p>
+<p>Suppose an external slicer has already produced G-code motion points. A Python
+compiler could collect those XYZ locations, call <code class="docutils literal notranslate"><span class="pre">sample_points()</span></code> once per
+chunk, and insert OpenVCAD attributes such as <code class="docutils literal notranslate"><span class="pre">speed_override</span></code> or
+<code class="docutils literal notranslate"><span class="pre">laser_power</span></code> into the outgoing G-code.</p>
+<p>Other approaches can segment a design into meshes or build complete slicer
+projects. See the <a class="reference internal" href="compilers/slicer-project.html"><span class="std std-doc">Slicer Project Compiler</span></a> and
+the other <a class="reference internal" href="compilers/index.html"><span class="std std-doc">compiler guides</span></a> for examples of what the
+provided compilers can produce.</p>
+<p>Bulk results still occupy memory. At very high resolution, do not construct
+every point and every sample for the full three-dimensional build at once.
+Chunk by layer, path segment, tile, or another natural machine unit; write each
+completed result, release its arrays, and then sample the next chunk. This
+guide’s compiler already follows that pattern by keeping only one printer
+layer in memory.</p>
+</section>
+<section id="source-access-and-help">
+<h2>Source access and help<a class="headerlink" href="#source-access-and-help" title="Link to this heading">#</a></h2>
+<p>The supplied compilers are valuable references even when their implementations
+are more extensive than this tutorial. You can
+<a class="reference external" href="https://forms.gle/MAjCmG66xZ6p1JcE9">request access to the OpenVCAD source repository</a>
+to study them and adapt their validation and output strategies to new
+machines.</p>
+<p>We are interested in helping users reach additional manufacturing systems. If
+you are developing a compiler, start a conversation through
+<a class="reference external" href="https://github.com/MacCurdyLab/OpenVCAD-Public/discussions">GitHub Discussions</a>
+or email <a class="reference external" href="mailto:charles&#46;wade&#37;&#52;&#48;colorado&#46;edu">charles<span>&#46;</span>wade<span>&#64;</span>colorado<span>&#46;</span>edu</a> to
+discuss the machine and its file format.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="math-expressions.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Math expressions in OpenVCAD</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../gallery.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Gallery</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites-and-project-files">Prerequisites and project files</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-practical-compiler-contract">A practical compiler contract</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prepare-before-querying-a-tree">Prepare before querying a tree</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#evaluate-geometry-only"><code class="docutils literal notranslate"><span class="pre">evaluate()</span></code>: geometry only</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sample-geometry-and-attributes"><code class="docutils literal notranslate"><span class="pre">sample()</span></code>: geometry and attributes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-a-design-with-a-custom-attribute">Build a design with a custom attribute</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scale-up-with-treesampler">Scale up with <code class="docutils literal notranslate"><span class="pre">TreeSampler</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#define-the-printer-and-the-two-bounding-boxes">Define the printer and the two bounding boxes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#implement-the-reusable-compiler">Implement the reusable compiler</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#validate-fit-before-sampling">Validate fit before sampling</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#build-and-sample-one-layer-at-a-time">Build and sample one layer at a time</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#missing-attributes-and-invalid-values">Missing attributes and invalid values</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#complete-compiler-module">Complete compiler module</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#run-the-compiler">Run the compiler</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#beyond-image-stacks">Beyond image stacks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#source-access-and-help">Source access and help</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/guides/custom-python-compiler.md.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Charles Wade and Robert MacCurdy.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

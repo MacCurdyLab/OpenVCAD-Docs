@@ -1,0 +1,844 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Cylindrical and spherical cell maps &#8212; OpenVCAD 3.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_theme.css?v=84becb00" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_branding.css?v=c43e02c9" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+
+    <script src="../../_static/documentation_options.js?v=110ea713"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'guides/metamaterials/cylindrical-spherical-cell-maps';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../../_static/openvcad_lightbox.js?v=e11fca97"></script>
+    <script src="../../_static/openvcad_comparison.js?v=0e3a0b21"></script>
+    <link rel="icon" href="../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Conformal mapping CAD surfaces" href="conformal-cad.html" />
+    <link rel="prev" title="Attribute modeling for metamaterials" href="attribute-modeling.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="OpenVCAD - Home"/>
+    <img src="../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="OpenVCAD - Home"/>
+  
+  
+    <p class="title logo__title">
+      <span class="logo__title-full">OpenVCAD Documentation</span>
+      <span class="logo__title-compact" aria-hidden="true">Documentation</span>
+      <span class="logo__title-short" aria-hidden="true">Docs</span>
+    </p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item dropdown active">
+      <button class="btn dropdown-toggle nav-link active" type="button" id="pst-nav-dd-guides" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Guides
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-guides">
+        <li><a class="dropdown-item" href="../../install.html">Installation</a></li>
+        <li><a class="dropdown-item" href="../theory-and-motivation.html">Theory and Motivation</a></li>
+        <li><a class="dropdown-item" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
+        <li><a class="dropdown-item" href="../gradients.html">Functional grading</a></li>
+        <li><a class="dropdown-item active" href="index.html">Metamaterials</a></li>
+        <li><a class="dropdown-item" href="../compilers/index.html">Compilers</a></li>
+        <li><a class="dropdown-item" href="../attribute-resolver.html">Attribute modifier and resolver</a></li>
+        <li><a class="dropdown-item" href="../attribute-conflicts.html">Attribute conflict resolution</a></li>
+        <li><a class="dropdown-item" href="../numba-attributes.html">Python functions for attributes</a></li>
+        <li><a class="dropdown-item" href="../advanced.html">Advanced</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../gallery.html">Gallery</a>
+    </li>
+    <li class="nav-item dropdown">
+      <button class="btn dropdown-toggle nav-link" type="button" id="pst-nav-dd-py" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Python API
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-py">
+        <li><a class="dropdown-item" href="../../python-api/pyvcad/index.html">pyvcad module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_compilers/index.html">pyvcad_compilers module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_rendering/index.html">pyvcad_rendering module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_attribute_resolver/index.html">pyvcad_attribute_resolver module</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../cpp-api/index.html">C++ API</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../papers.html">Papers</a>
+    </li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+
+<nav class="openvcad-mobile-nav" aria-label="Site navigation">
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item"><a class="nav-link" href="../../index.html">Home</a></li>
+    <li class="nav-item">
+      <details class="openvcad-mobile-nav__group">
+        <summary>Guides</summary>
+        <ul>
+          <li><a class="nav-link" href="../../install.html">Installation</a></li>
+          <li><a class="nav-link" href="../moving-from-v2-to-v3.html">Moving from Version 2 to 3</a></li>
+          <li><a class="nav-link" href="../theory-and-motivation.html">Theory and Motivation</a></li>
+          <li><a class="nav-link" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
+          <li><a class="nav-link" href="../gradients.html">Functional grading</a></li>
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Metamaterials</summary>
+              <ul>
+                <li><a class="nav-link" href="index.html">Overview</a></li>
+                <li><a class="nav-link" href="concepts.html">Concepts and representation</a></li>
+                <li><a class="nav-link" href="catalog.html">TPMS and lattice catalog</a></li>
+                <li><a class="nav-link" href="custom-unit-cells.html">Custom unit cells</a></li>
+                <li><a class="nav-link" href="geometry-grading.html">Functionally graded geometry</a></li>
+                <li><a class="nav-link" href="attribute-modeling.html">Attribute modeling</a></li>
+                <li><a class="nav-link active" href="#">Cylindrical and spherical cell maps</a></li>
+                <li><a class="nav-link" href="conformal-cad.html">Conformal mapping CAD surfaces</a></li>
+                <li><a class="nav-link" href="conformal-meshes.html">Conformal mapping triangle meshes</a></li>
+                <li><a class="nav-link" href="heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
+                <li><a class="nav-link" href="properties.html">Geometric characterization</a></li>
+              </ul>
+            </details>
+          </li>
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Compilers</summary>
+              <ul>
+                <li><a class="nav-link" href="../compilers/index.html">Overview</a></li>
+                <li><a class="nav-link" href="../compilers/material-inkjet.html">Material Inkjet</a></li>
+                <li><a class="nav-link" href="../compilers/color-inkjet.html">Color Inkjet</a></li>
+                <li><a class="nav-link" href="../compilers/vat-photo.html">VAT Photo</a></li>
+                <li><a class="nav-link" href="../compilers/slicer-project.html">Slicer Project</a></li>
+                <li><a class="nav-link" href="../compilers/simulation-compiler.html">Simulation Compiler</a></li>
+              </ul>
+            </details>
+          </li>
+          <li><a class="nav-link" href="../attribute-resolver.html">Attribute modifier and resolver</a></li>
+          <li><a class="nav-link" href="../attribute-conflicts.html">Attribute conflict resolution</a></li>
+          <li><a class="nav-link" href="../numba-attributes.html">Python functions for attributes</a></li>
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Advanced</summary>
+              <ul>
+                <li><a class="nav-link" href="../advanced.html">Overview</a></li>
+                <li><a class="nav-link" href="../cadquery.html">CAD with CadQuery</a></li>
+                <li><a class="nav-link" href="../surface-relief.html">Physical surface relief</a></li>
+                <li><a class="nav-link" href="../volumes.html">Working with volumes</a></li>
+                <li><a class="nav-link" href="../math-expressions.html">Math expressions</a></li>
+                <li><a class="nav-link" href="../custom-python-compiler.html">Creating a compiler in Python</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </details>
+    </li>
+    <li class="nav-item"><a class="nav-link" href="../../gallery.html">Gallery</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../python-api/index.html">Python API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../cpp-api/index.html">C++ API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../papers.html">Papers</a></li>
+  </ul>
+</nav>
+</div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../theory-and-motivation.html">Theory and Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../gradients.html">Functional Grading Guide</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Metamaterials</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="concepts.html">Concepts and representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="catalog.html">TPMS and lattice catalog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-unit-cells.html">Custom unit cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="geometry-grading.html">Functionally graded metamaterial geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="attribute-modeling.html">Attribute modeling for metamaterials</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Cylindrical and spherical cell maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conformal-cad.html">Conformal mapping CAD surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="conformal-meshes.html">Map lattices onto triangle meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="properties.html">Geometric characterization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../compilers/index.html">Compilers</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/material-inkjet.html">Material Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/color-inkjet.html">Color Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/vat-photo.html">VAT Photo Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/slicer-project.html">Slicer Project Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/simulation-compiler.html">Simulation Compiler</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="../attribute-resolver.html">Attribute Modifier and Resolver Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../attribute-conflicts.html">Attribute Conflict Resolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../numba-attributes.html">Python Functions for Attributes</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../advanced.html">Advanced</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../cadquery.html">Authoring CAD with CadQuery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../surface-relief.html">Physical surface relief</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../volumes.html">Working with Volumes in OpenVCAD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../math-expressions.html">Math expressions in OpenVCAD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../custom-python-compiler.html">Creating a Compiler in Python</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Guides</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Metamaterials</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Cylindrical and spherical cell maps</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="cylindrical-and-spherical-cell-maps">
+<span id="guide-metamaterials-geometric-cell-maps"></span><h1>Cylindrical and spherical cell maps<a class="headerlink" href="#cylindrical-and-spherical-cell-maps" title="Link to this heading">#</a></h1>
+<!--
+Build dependency sentinel for guide sidebar compiler membership.
+Guide pages that render the shared Guides sidebar include this file so
+changes to the compiler-guide set force those pages to rebuild on
+incremental Sphinx runs.
+
+Current compiler guides:
+- material-inkjet
+- color-inkjet
+- vat-photo
+- slicer-project
+- simulation-compiler
+-->
+<p>A cell map decides where repeated cells go. A unit cell decides what repeats.
+Keeping those jobs separate means the same gyroid, BCC beam cell, or custom
+cell can fill a rectangular block, wrap around a pipe, or follow a spherical
+shell without being rewritten.</p>
+<p>This guide assumes you have completed <a class="reference internal" href="../getting-started.html"><span class="std std-doc">Getting Started</span></a>
+and <a class="reference internal" href="../gradients.html"><span class="std std-doc">Functional Grading</span></a>. It uses ideal cylinders and
+spherical bands that OpenVCAD can construct directly, so CadQuery is not
+needed.</p>
+<section id="why-map-shape-matters">
+<h2>Why map shape matters<a class="headerlink" href="#why-map-shape-matters" title="Link to this heading">#</a></h2>
+<p>A rectangular map lays out rows along Cartesian X, Y, and Z. A cylindrical map
+turns those rows into azimuth, axial position, and radial layers. A spherical
+map turns them into longitude, latitude, and radial layers.</p>
+<p>The unit-cell recipe stays the same:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">rectangular</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">bcc</span><span class="p">(</span><span class="n">rectangular_map</span><span class="p">,</span> <span class="n">beam_radius</span><span class="o">=</span><span class="mf">0.55</span><span class="p">)</span>
+<span class="n">cylindrical</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">bcc</span><span class="p">(</span><span class="n">cylindrical_map</span><span class="p">,</span> <span class="n">beam_radius</span><span class="o">=</span><span class="mf">0.55</span><span class="p">)</span>
+<span class="n">spherical</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">bcc</span><span class="p">(</span><span class="n">spherical_map</span><span class="p">,</span> <span class="n">beam_radius</span><span class="o">=</span><span class="mf">0.55</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Only the map changes. This map-first workflow also works with TPMS, graph, and
+face or plate cells.</p>
+</section>
+<section id="wrap-a-gyroid-around-a-pipe">
+<h2>Wrap a gyroid around a pipe<a class="headerlink" href="#wrap-a-gyroid-around-a-pipe" title="Link to this heading">#</a></h2>
+<p>The first example makes a 6 mm thick pipe wall that is 42 mm tall. Its
+coordinate directions are:</p>
+<ul class="simple">
+<li><p><strong>U:</strong> around the circumference,</p></li>
+<li><p><strong>V:</strong> from the lower end to the upper end, and</p></li>
+<li><p><strong>W:</strong> from the inner radius to the outer radius.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_metamaterials</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">pipe_center</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+<span class="n">inner_radius</span> <span class="o">=</span> <span class="mf">18.0</span>
+<span class="n">outer_radius</span> <span class="o">=</span> <span class="mf">24.0</span>
+<span class="n">height</span> <span class="o">=</span> <span class="mf">42.0</span>
+
+<span class="n">cell_map</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">cylindrical_cell_map</span><span class="p">(</span>
+    <span class="n">center</span><span class="o">=</span><span class="n">pipe_center</span><span class="p">,</span>
+    <span class="n">inner_radius</span><span class="o">=</span><span class="n">inner_radius</span><span class="p">,</span>
+    <span class="n">outer_radius</span><span class="o">=</span><span class="n">outer_radius</span><span class="p">,</span>
+    <span class="n">height</span><span class="o">=</span><span class="n">height</span><span class="p">,</span>
+    <span class="n">arc_count</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">axial_cell_size</span><span class="o">=</span><span class="mf">7.0</span><span class="p">,</span>
+    <span class="n">radial_cell_size</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span>
+    <span class="n">axis</span><span class="o">=</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">reference_direction</span><span class="o">=</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">gyroid</span><span class="p">(</span><span class="n">cell_map</span><span class="p">,</span> <span class="n">wall_thickness</span><span class="o">=</span><span class="mf">0.75</span><span class="p">)</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">arc_count=20</span></code> places 20 repetitions around the pipe. The target sizes ask for
+approximately 7 mm tall cells and 3 mm radial layers. OpenVCAD rounds those
+targets up to whole cell counts while keeping the requested 18 mm and 24 mm
+radii and 42 mm height exact.</p>
+<p><code class="docutils literal notranslate"><span class="pre">axis</span></code> points along V. <code class="docutils literal notranslate"><span class="pre">reference_direction</span></code> points from the pipe center toward
+the U seam, where the circumferential count begins. Both directions can be
+changed to place the same map in another frame.</p>
+<div class="guide-figure-stack">
+  <div class="guide-figure-cell"><a href="../images/mm_geometric_cell_maps_cylindrical_pipe.png" data-lightbox="geometric-cell-maps-cylinder"><img src="../images/mm_geometric_cell_maps_cylindrical_pipe.png" alt="Gyroid sheet wrapped through an annular cylindrical pipe wall"></a><div class="guide-figure-label">A native cylindrical map wraps the gyroid rows around the pipe and carries them through its radial layers.</div></div>
+</div>
+<p>Run the complete example:
+<a class="reference download internal" download="" href="../../_downloads/1924f244a6d4a32300e52ae91a5519f6/01_cylindrical_pipe.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">01_cylindrical_pipe.py</span></code></span></a>.</p>
+<p>For exact count control, replace the three sizing arguments with:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cells</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># circumferential, axial, radial</span>
+</pre></div>
+</div>
+<p>Use either <code class="docutils literal notranslate"><span class="pre">cells</span></code> or the complete sizing group, not both.</p>
+</section>
+<section id="rectangular-or-cylindrical">
+<h2>Rectangular or cylindrical?<a class="headerlink" href="#rectangular-or-cylindrical" title="Link to this heading">#</a></h2>
+<p>The next example uses one BCC beam cell and one annular pipe envelope twice.
+The left result starts with a rectangular map and clips away everything outside
+the pipe. The right result starts with a cylindrical map and clips against the
+same envelope.</p>
+<div class="guide-figure-stack">
+  <div class="guide-figure-cell"><a href="../images/mm_geometric_cell_maps_rectangular_vs_cylindrical.png" data-lightbox="geometric-cell-maps-cylinder-comparison"><img src="../images/mm_geometric_cell_maps_rectangular_vs_cylindrical.png" alt="Rectangular BCC pipe lattice on the left and cylindrical BCC pipe lattice on the right"></a><div class="guide-figure-label">Left: Cartesian rows are cut by the pipe. Right: rows wrap around the bore and align with radial layers.</div></div>
+</div>
+<p>The cylindrical map is useful when circumferential continuity or bore-aligned
+rows matter. A rectangular map can still be the better choice when the part’s
+loading, manufacturing direction, or surrounding features follow Cartesian
+axes. The map is a design choice, not a universal quality ranking.</p>
+<p>The full comparison is in
+<a class="reference download internal" download="" href="../../_downloads/53bf407930eabce508e8fe592d6d5635/03_map_comparison.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">03_map_comparison.py</span></code></span></a>.</p>
+</section>
+<section id="build-a-spherical-protective-shell">
+<h2>Build a spherical protective shell<a class="headerlink" href="#build-a-spherical-protective-shell" title="Link to this heading">#</a></h2>
+<p>A spherical map uses:</p>
+<ul class="simple">
+<li><p><strong>U:</strong> longitude around the shell,</p></li>
+<li><p><strong>V:</strong> latitude from south toward north, and</p></li>
+<li><p><strong>W:</strong> radial layers from the inner sphere to the outer sphere.</p></li>
+</ul>
+<p>This example places a Schwarz-P cell through a 6 mm thick protective shell
+band:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_metamaterials</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">shell_center</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
+<span class="n">inner_radius</span> <span class="o">=</span> <span class="mf">20.0</span>
+<span class="n">outer_radius</span> <span class="o">=</span> <span class="mf">26.0</span>
+
+<span class="n">cell_map</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">spherical_cell_map</span><span class="p">(</span>
+    <span class="n">center</span><span class="o">=</span><span class="n">shell_center</span><span class="p">,</span>
+    <span class="n">inner_radius</span><span class="o">=</span><span class="n">inner_radius</span><span class="p">,</span>
+    <span class="n">outer_radius</span><span class="o">=</span><span class="n">outer_radius</span><span class="p">,</span>
+    <span class="n">latitude_bounds_degrees</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mf">62.0</span><span class="p">,</span> <span class="mf">62.0</span><span class="p">),</span>
+    <span class="n">longitude_count</span><span class="o">=</span><span class="mi">20</span><span class="p">,</span>
+    <span class="n">latitude_count</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+    <span class="n">radial_cell_size</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span>
+    <span class="n">north_axis</span><span class="o">=</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span>
+    <span class="n">reference_direction</span><span class="o">=</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
+<span class="p">)</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">schwarz_p</span><span class="p">(</span><span class="n">cell_map</span><span class="p">,</span> <span class="n">wall_thickness</span><span class="o">=</span><span class="mf">0.65</span><span class="p">)</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The 20 longitude cells close around the shell. Ten latitude cells run through
+the open band, and the 3 mm target makes two radial layers. <code class="docutils literal notranslate"><span class="pre">north_axis</span></code>
+orients the latitude direction. <code class="docutils literal notranslate"><span class="pre">reference_direction</span></code> points toward the
+zero-longitude seam after it is projected onto the equator.</p>
+<div class="guide-figure-stack">
+  <div class="guide-figure-cell"><a href="../images/mm_geometric_cell_maps_spherical_shell.png" data-lightbox="geometric-cell-maps-sphere"><img src="../images/mm_geometric_cell_maps_spherical_shell.png" alt="Schwarz-P sheet placed through a spherical protective shell band"></a><div class="guide-figure-label">Longitude rows close around the shell while latitude rows and radial layers follow its curved frame.</div></div>
+</div>
+<p>Run
+<a class="reference download internal" download="" href="../../_downloads/987e1d571ee8e923923eb011d70f0e71/02_spherical_shell.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">02_spherical_shell.py</span></code></span></a>.</p>
+<p>For exact count control, use:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cells</span><span class="o">=</span><span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>  <span class="c1"># longitude, latitude, radial</span>
+</pre></div>
+</div>
+</section>
+<section id="rectangular-or-spherical">
+<h2>Rectangular or spherical?<a class="headerlink" href="#rectangular-or-spherical" title="Link to this heading">#</a></h2>
+<p>The spherical comparison again uses the same BCC cell and the same clipped
+shell envelope on both sides.</p>
+<div class="guide-figure-stack">
+  <div class="guide-figure-cell"><a href="../images/mm_geometric_cell_maps_rectangular_vs_spherical.png" data-lightbox="geometric-cell-maps-sphere-comparison"><img src="../images/mm_geometric_cell_maps_rectangular_vs_spherical.png" alt="Rectangular BCC spherical shell lattice on the left and spherical BCC shell lattice on the right"></a><div class="guide-figure-label">Left: Cartesian cells are cut by the shell. Right: the same cell family is organized concentrically and radially.</div></div>
+</div>
+<p>The spherical arrangement makes concentric and radial organization explicit.
+The rectangular arrangement keeps global X/Y/Z alignment. Both remain ordinary
+OpenVCAD geometry and can be intersected with holes, openings, ribs, and other
+part features.</p>
+</section>
+<section id="native-map-or-surface-map">
+<h2>Native map or surface map?<a class="headerlink" href="#native-map-or-surface-map" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Design surface</p></th>
+<th class="head"><p>Start with</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Ideal annular cylinder, cylindrical shell, or partial angular sector</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mm.cylindrical_cell_map(...)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Ideal spherical shell or spherical band</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mm.spherical_cell_map(...)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Selected imported or freeform CAD face</p></td>
+<td><p><a class="reference internal" href="conformal-cad.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">mm.cell_map_from_cad_face(...)</span></code></span></a></p></td>
+</tr>
+<tr class="row-odd"><td><p>Open triangle-mesh patch, or mixed mesh/CAD boundaries</p></td>
+<td><p><a class="reference internal" href="conformal-meshes.html"><span class="std std-doc"><code class="docutils literal notranslate"><span class="pre">mm.cell_map_from_surface(...)</span></code></span></a></p></td>
+</tr>
+<tr class="row-even"><td><p>Two independently authored boundary surfaces</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">mm.cell_map_between_surfaces(...)</span></code> or <code class="docutils literal notranslate"><span class="pre">mm.cell_map_between_cad_faces(...)</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Native maps give direct control over radii, height, counts, orientation, and
+seam direction. Surface maps are the right tool when the exact authored or
+scanned surface is the design intent.</p>
+</section>
+<section id="a-few-practical-checks">
+<h2>A few practical checks<a class="headerlink" href="#a-few-practical-checks" title="Link to this heading">#</a></h2>
+<p>Native maps default to curved cells. This preserves midpoint samples and gives
+a closer approximation to the requested analytic shape than one linear element
+per cell. Curved placement can stretch cells, especially when radial layers
+are thick; that is expected map behavior.</p>
+<p>Keep inner radii greater than zero. Spherical latitude bounds must stay inside
+the poles, so use values strictly between -90° and 90°. A full 360° direction
+joins periodically; a partial sweep has two open angular boundaries.</p>
+<p>Reusable custom cells keep the same responsibilities they have on rectangular
+maps: implicit functions should match across periodic boundaries, and graph
+cells should have matching boundary vertices and edges. Some plate cells repeat
+over more than one logical cell, so their circumferential or longitude count
+must be divisible by that repeat period.</p>
+</section>
+<section id="next-steps">
+<h2>Next steps<a class="headerlink" href="#next-steps" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Create your own topology in <a class="reference internal" href="custom-unit-cells.html"><span class="std std-doc">Custom unit cells</span></a>.</p></li>
+<li><p>Grade wall thickness, beam radius, or other controls in
+<a class="reference internal" href="geometry-grading.html"><span class="std std-doc">Functionally graded geometry</span></a>.</p></li>
+<li><p>Attach mapped scalar, vector, color, or material fields in
+<a class="reference internal" href="attribute-modeling.html"><span class="std std-doc">Attribute modeling</span></a>.</p></li>
+<li><p>Follow selected CAD faces in <a class="reference internal" href="conformal-cad.html"><span class="std std-doc">Conformal mapping CAD surfaces</span></a>.</p></li>
+<li><p>Follow scanned or generated patches in
+<a class="reference internal" href="conformal-meshes.html"><span class="std std-doc">Conformal mapping triangle meshes</span></a>.</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="attribute-modeling.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Attribute modeling for metamaterials</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="conformal-cad.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Conformal mapping CAD surfaces</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-map-shape-matters">Why map shape matters</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#wrap-a-gyroid-around-a-pipe">Wrap a gyroid around a pipe</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rectangular-or-cylindrical">Rectangular or cylindrical?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#build-a-spherical-protective-shell">Build a spherical protective shell</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#rectangular-or-spherical">Rectangular or spherical?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#native-map-or-surface-map">Native map or surface map?</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#a-few-practical-checks">A few practical checks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#next-steps">Next steps</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/guides/metamaterials/cylindrical-spherical-cell-maps.md.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Charles Wade and Robert MacCurdy.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

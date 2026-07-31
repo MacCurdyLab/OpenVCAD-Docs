@@ -1,0 +1,495 @@
+(guide-custom-python-compiler)=
+# Creating a Compiler in Python
+
+An OpenVCAD **compiler** translates a reusable design tree into the lower-level
+representation understood by a machine. The design describes geometry and
+spatial attributes; the compiler decides where to sample them, validates the
+result, and writes the machine-facing files.
+
+This guide builds a small compiler entirely in Python for a hypothetical vat
+photopolymerization printer. The printer accepts a stack of full-bed,
+8-bit grayscale PNG images:
+
+- black (`0`) means no exposure;
+- white (`255`) means maximum exposure; and
+- intermediate values request an intermediate exposure time or light
+  intensity.
+
+Some grayscale-capable vat systems use exposure dose to change cure state and,
+in turn, mechanical response. That is the motivation for this example. The
+built-in [VAT Photo Compiler](compilers/vat-photo.md) solves a similar problem
+with OpenVCAD's standard `INTENSITY` attribute and BMP output. Here, we will
+write a simpler PNG compiler ourselves and deliberately use a custom scalar
+attribute named **`exposure`**.
+
+## Prerequisites and project files
+
+This is an advanced guide, but it assumes only the Python concepts introduced
+in {ref}`guide-getting-started` and the
+[Functional Grading Guide](gradients.md). All dimensions in this guide are in
+**millimetres**.
+
+The complete project is in
+`examples/compilers/custom_python_vat/`
+
+```text
+custom_python_vat/
+├── .gitignore
+├── README.md
+├── design.py
+├── grayscale_vat_compiler.py
+├── compile_design.py
+└── preview_design.py
+```
+
+The separation is intentional. `grayscale_vat_compiler.py` is reusable and
+accepts any compatible OpenVCAD root object. `design.py` is only one test
+design, while `compile_design.py` supplies the settings for one printer.
+
+## A practical compiler contract
+
+You do not need a custom compiler for every design, and a small Python
+compiler does not need a complicated framework. A useful compiler should:
+
+1. accept any OpenVCAD root object that carries the field it consumes;
+2. name and validate its required attribute;
+3. define the machine's sampling domain and resolution;
+4. check that the object fits within the machine;
+5. sample geometry and attributes in bulk;
+6. define behavior for missing or invalid values;
+7. convert valid samples into the machine's representation; and
+8. report actionable errors and progress.
+
+The lowest-level attribute should be as close as practical to something the
+machine understands. Our printer understands grayscale exposure, so
+`exposure` is a better compiler input than a high-level property such as
+modulus. A different workflow could convert modulus into exposure before this
+compiler runs via
+[Attribute Translation in the Attribute Modifier and Resolver Guide](attribute-resolver.md).
+
+## Prepare before querying a tree
+
+OpenVCAD design roots provide three central query methods:
+
+- `bounding_box()` returns the minimum and maximum authored coordinates;
+- `evaluate(x, y, z)` queries geometry; and
+- `sample(x, y, z)` queries geometry and attributes together.
+
+Call `prepare(voxel_size, bandwidth)` on a root before calling `evaluate()` or
+`sample()`.
+
+```python
+voxel_size = pv.Vec3(0.254, 0.254, 1.0)
+bandwidth = 6.0
+
+root.prepare(voxel_size, bandwidth)
+```
+
+`voxel_size` tells the tree the intended sampling pitch in X, Y, and Z.
+`bandwidth` is a physical distance around the zero level set—the surface where
+the signed distance equals zero. Some nodes use these values to load data,
+construct an internal distance field, or initialize state needed for later
+queries.
+
+Within the **narrow band**, the signed-distance magnitude describes distance
+to the surface. Away from it, many workflows need only the sign: negative or
+zero is inside and positive is outside. Depending on the node, a query far
+outside its prepared domain may instead return `None`. Analytic primitives may
+provide an exact distance over a wider region, but a compiler should not
+depend on far-field distance magnitude when an inside/outside test is enough.
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Signed distance and the narrow band</p>
+<img src="images/custom_python_compiler_narrow_band.png" alt="Diagram showing a surface, its narrow band, and the signed-distance sign inside and outside">
+</div>
+</div>
+
+### `evaluate()`: geometry only
+
+`evaluate()` returns a signed-distance value or `None`:
+
+```python
+signed_distance = root.evaluate(0.0, 0.0, 0.0)
+
+if signed_distance is None:
+    print("Outside the prepared query domain")
+elif signed_distance <= 0.0:
+    print("Inside or on the object")
+else:
+    print("Outside the object")
+```
+
+This is enough for a compiler that cares only about occupancy or surface
+geometry.
+
+### `sample()`: geometry and attributes
+
+`sample()` accepts the same X, Y, and Z coordinates but returns two values:
+
+```python
+signed_distance, attributes = root.sample(0.0, 0.0, 0.0)
+
+if signed_distance is not None and signed_distance <= 0.0:
+    if attributes is not None and attributes.has_sample("exposure"):
+        exposure = attributes.get_sample("exposure")
+        print("Exposure:", exposure)
+```
+
+The first value follows `evaluate()`. The second is an `AttributeSamples`
+container holding whatever named fields are defined at that location. Use
+`has_sample(name)` before `get_sample(name)`.
+
+To check which names occur anywhere in a design tree:
+
+```python
+print(root.attribute_list())
+
+if "exposure" not in root.attribute_list():
+    raise RuntimeError("The design does not contain an 'exposure' attribute.")
+```
+
+This is a useful preflight check, but it is not proof that the attribute exists
+at every interior point. We will handle that distinction explicitly.
+
+## Build a design with a custom attribute
+
+Attribute names do not need to come from `pv.DefaultAttributes`. This example
+uses the ordinary Python string `"exposure"` and a floating-point field from
+`0.1` to `1.0` along the 30 mm X length:
+
+```python
+import pyvcad as pv
+
+EXPOSURE = "exposure"
+
+length_mm = 30.0
+width_mm = 16.0
+height_mm = 6.0
+
+prism = pv.RectPrism(
+    pv.Vec3(0, 0, 0),
+    pv.Vec3(length_mm, width_mm, height_mm),
+)
+
+# x spans -15 to +15 mm:
+# 0.03(-15) + 0.55 = 0.1
+# 0.03(+15) + 0.55 = 1.0
+exposure_gradient = pv.FloatAttribute("0.03 * x + 0.55")
+prism.set_attribute(EXPOSURE, exposure_gradient)
+
+root = prism
+```
+
+This definition is also available in `design.py`. The compiler does not know
+that it is receiving a rectangular prism; it only knows that `root` is an
+OpenVCAD object with geometry and, somewhere in its tree, an `exposure`
+attribute.
+
+The render below visualizes that custom attribute with a black-to-white
+palette. Dark values are near exposure `0.1`, and white reaches exposure
+`1.0`.
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Demo object with its exposure gradient</p>
+<img src="images/custom_python_compiler_design.png" alt="Rendered rectangular prism with a black-to-white exposure gradient along its length">
+</div>
+</div>
+
+## Scale up with `TreeSampler`
+
+Calling `evaluate()` or `sample()` in a Python loop works for a few inspection
+points, but printer grids can contain billions of samples. Repeated
+single-point calls add unnecessary Python overhead.
+
+{py:class}`pyvcad.TreeSampler` provides ordered, parallel bulk queries:
+
+```python
+points = [
+    pv.Vec3(-10, 0, 0),
+    pv.Vec3(0, 0, 0),
+    pv.Vec3(10, 0, 0),
+]
+
+sampler = pv.TreeSampler(root, voxel_size)
+
+distances = sampler.evaluate_points(points)
+samples = sampler.sample_points(points)
+```
+
+- `evaluate_points(points)` performs the equivalent of `evaluate()` for every
+  point.
+- `sample_points(points)` performs the equivalent of `sample()` for every
+  point.
+- Both methods preserve the input order, run the work in parallel, and accept
+  an optional progress callback receiving integers from `0` through `100`.
+
+Constructing `TreeSampler` prepares the root automatically using the supplied
+voxel size and a bandwidth six times the largest voxel dimension. The earlier
+explicit `prepare()` example remains important whenever you query a root
+directly.
+
+The grid-oriented `TreeSampler` methods sample the object's bounding-box
+domain with sampler padding. Our machine instead needs a full-printer image,
+so the compiler builds one layer of printer-space XYZ points and passes those
+points to `sample_points()`.
+
+## Define the printer and the two bounding boxes
+
+The example machine is described by:
+
+```python
+printer_size_mm = pv.Vec3(60.0, 40.0, 20.0)
+dpi = 100.0
+layer_height_mm = 1.0
+```
+
+There are two bounding boxes:
+
+1. The **printer bounding box** runs from `(0, 0, 0)` to
+   `(60, 40, 20)` mm.
+2. The **object bounding box** comes from `root.bounding_box()`.
+
+The object must not exceed the printer in X, Y, or Z. The compiler centers its
+bounding box in the printer's XY image and places its lowest Z coordinate on
+the build plane. It preserves the design's orientation and does not modify the
+caller's tree.
+
+The lower-left corner of every displayed PNG is the lower-left corner of the
+print bed. The physical pixel pitch is:
+
+$$
+p_{xy} = \frac{25.4\ \mathrm{mm/in}}{\mathrm{DPI}}
+$$
+
+At 100 DPI, $p_{xy}=0.254$ mm. The 60 × 40 mm bed becomes a 236 × 157
+pixel image after rounding to whole pixels.
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Printer and object bounding boxes</p>
+<img src="images/custom_python_compiler_bounding_boxes.png" alt="Printer bounding box with a smaller exposure-gradient object bounding box centered in XY">
+</div>
+</div>
+
+## Implement the reusable compiler
+
+The class constructor stores the design and machine settings. It computes the
+pixel pitch and full-bed image dimensions, but it does not assume a particular
+geometry:
+
+```python
+class GrayscaleVatCompiler:
+    exposure_attribute = "exposure"
+
+    def __init__(
+        self,
+        root,
+        printer_size_mm,
+        dpi,
+        layer_height_mm,
+        output_directory,
+    ):
+        self.root = root
+        self.printer_size_mm = printer_size_mm
+        self.dpi = float(dpi)
+        self.layer_height_mm = float(layer_height_mm)
+        self.output_directory = Path(output_directory)
+
+        self.pixel_pitch_mm = 25.4 / self.dpi
+        self.image_width = round(
+            self.printer_size_mm.x / self.pixel_pitch_mm
+        )
+        self.image_height = round(
+            self.printer_size_mm.y / self.pixel_pitch_mm
+        )
+```
+
+### Validate fit before sampling
+
+`bounding_box()` is safe before `prepare()`, so the compiler can reject an
+oversized job early:
+
+```python
+object_min, object_max = self.root.bounding_box()
+object_size = (
+    object_max.x - object_min.x,
+    object_max.y - object_min.y,
+    object_max.z - object_min.z,
+)
+
+printer_size = (
+    self.printer_size_mm.x,
+    self.printer_size_mm.y,
+    self.printer_size_mm.z,
+)
+
+for name, object_length, printer_length in zip(
+    ("X", "Y", "Z"), object_size, printer_size
+):
+    if object_length > printer_length:
+        raise RuntimeError(
+            "The object is {:.3f} mm in {}, but the printer allows "
+            "only {:.3f} mm.".format(
+                object_length, name, printer_length
+            )
+        )
+```
+
+### Build and sample one layer at a time
+
+Each point is placed at a pixel center. The mapping below centers the object's
+authored XY bounding box over the printer image:
+
+```python
+for y_index in range(self.image_height):
+    bed_y = (y_index + 0.5) * self.pixel_pitch_mm
+    world_y = object_center_y + bed_y - printer_depth_mm / 2.0
+
+    for x_index in range(self.image_width):
+        bed_x = (x_index + 0.5) * self.pixel_pitch_mm
+        world_x = object_center_x + bed_x - printer_width_mm / 2.0
+        points.append(pv.Vec3(world_x, world_y, world_z))
+
+samples = sampler.sample_points(points, progress_callback)
+```
+
+The returned sample at index `i` belongs to `points[i]`. Outside geometry is
+black. Inside geometry reads `exposure`, validates it, and maps it to one
+grayscale byte:
+
+```python
+if signed_distance is None or signed_distance > 0:
+    grayscale = 0
+elif attributes is None or not attributes.has_sample("exposure"):
+    grayscale = 0
+else:
+    exposure = attributes.get_sample("exposure")
+    if exposure < 0.0 or exposure > 1.0:
+        raise RuntimeError("Exposure must be between 0 and 1.")
+    grayscale = round(exposure * 255.0)
+```
+
+The implementation writes each completed layer immediately. PNG files store
+rows from top to bottom, so it vertically flips the NumPy array before saving;
+this makes the displayed lower-left pixel correspond to bed `(0, 0)`.
+
+### Missing attributes and invalid values
+
+A root-level check answers “does `exposure` occur anywhere in this tree?” It
+does not answer “is `exposure` defined at this exact interior point?” A union,
+for example, may combine one branch that defines exposure with another that
+does not.
+
+The [VAT Photo Compiler guide](compilers/vat-photo.md)
+and the examples under `examples/attributes_by_type/undefined/` show the same
+issue with built-in compiler attributes.
+
+There are two reasonable policies for a custom compiler:
+
+- **strict:** stop at the first undefined interior sample and ask the designer
+  to repair the field; or
+- **fallback:** substitute a documented machine-safe value.
+
+This example uses exposure `0.0` as the fallback, so an undefined location is
+not cured. It counts these samples and prints one warning after compilation.
+It fails immediately if the root never contains `exposure`, if the sampled
+value is not scalar, or if a value is not finite or falls outside `[0, 1]`.
+
+## Complete compiler module
+
+The full implementation is kept here as a code block and as the reusable
+`grayscale_vat_compiler.py` file. You can also browse the
+[OpenVCAD-Public examples](https://github.com/MacCurdyLab/OpenVCAD-Public/tree/main/examples)
+for more complete workflows:
+
+```{literalinclude} ../../../examples/compilers/custom_python_vat/grayscale_vat_compiler.py
+:language: python
+:linenos:
+```
+
+## Run the compiler
+
+`compile_design.py` constructs the design, supplies the printer settings, and
+prints progress in ten-percent increments:
+
+```python
+root = build_design()
+
+compiler = GrayscaleVatCompiler(
+    root,
+    pv.Vec3(60.0, 40.0, 20.0),
+    100.0,
+    1.0,
+    Path(__file__).parent / "output",
+)
+
+def show_progress(percent):
+    if percent % 10 == 0:
+        print("Compiling: {:3d}%".format(percent))
+
+layers = compiler.compile(show_progress)
+print("Wrote {} layers".format(len(layers)))
+```
+
+From the repository root:
+
+```bash
+./.venv/bin/python examples/compilers/custom_python_vat/compile_design.py
+```
+
+The example writes six full-bed PNGs. The middle layer below is copied directly
+from that output stack:
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Compiled grayscale PNG layer</p>
+<img src="images/custom_python_compiler_slice.png" alt="Full printer-bed grayscale PNG with a centered rectangular exposure gradient">
+</div>
+</div>
+
+The black area is the unused printer bed. Inside the object, grayscale rises
+from exposure `0.1` on the left to `1.0` on the right.
+
+To preview the authored design interactively before compiling:
+
+```bash
+./.venv/bin/python examples/compilers/custom_python_vat/preview_design.py
+```
+
+## Beyond image stacks
+
+Voxel and image-stack compilers are often the easiest place to start, but
+`TreeSampler` is not restricted to regular grids.
+
+Suppose an external slicer has already produced G-code motion points. A Python
+compiler could collect those XYZ locations, call `sample_points()` once per
+chunk, and insert OpenVCAD attributes such as `speed_override` or
+`laser_power` into the outgoing G-code. 
+
+Other approaches can segment a design into meshes or build complete slicer
+projects. See the [Slicer Project Compiler](compilers/slicer-project.md) and
+the other [compiler guides](compilers/index.md) for examples of what the
+provided compilers can produce.
+
+Bulk results still occupy memory. At very high resolution, do not construct
+every point and every sample for the full three-dimensional build at once.
+Chunk by layer, path segment, tile, or another natural machine unit; write each
+completed result, release its arrays, and then sample the next chunk. This
+guide's compiler already follows that pattern by keeping only one printer
+layer in memory.
+
+## Source access and help
+
+The supplied compilers are valuable references even when their implementations
+are more extensive than this tutorial. You can
+[request access to the OpenVCAD source repository](https://forms.gle/MAjCmG66xZ6p1JcE9)
+to study them and adapt their validation and output strategies to new
+machines.
+
+We are interested in helping users reach additional manufacturing systems. If
+you are developing a compiler, start a conversation through
+[GitHub Discussions](https://github.com/MacCurdyLab/OpenVCAD-Public/discussions)
+or email [charles.wade@colorado.edu](mailto:charles.wade@colorado.edu) to
+discuss the machine and its file format.

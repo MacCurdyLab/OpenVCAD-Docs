@@ -311,3 +311,103 @@
     background: rgba(255, 255, 255, 0.22);
     outline: 2px solid #2980b9;
 }
+
+/* Responsive site navigation ------------------------------------------------
+ * The primary drawer receives both this complete site menu and Sphinx's
+ * page-dependent section navigation. The latter is useful as a desktop
+ * sidebar, but duplicates navigation in the narrow drawer and is absent on
+ * the landing page. Keep only the complete site menu on narrow layouts.
+ */
+.openvcad-mobile-nav {
+    width: 100%;
+}
+
+.openvcad-mobile-nav ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.openvcad-mobile-nav .nav-link,
+.openvcad-mobile-nav summary {
+    display: block;
+    padding: 0.35rem 0;
+}
+
+.openvcad-mobile-nav summary {
+    position: relative;
+    padding-right: 2rem;
+    cursor: pointer;
+    font-weight: 600;
+    list-style: none;
+}
+
+.openvcad-mobile-nav summary::-webkit-details-marker {
+    display: none;
+}
+
+.openvcad-mobile-nav summary::after {
+    position: absolute;
+    right: 0.4rem;
+    content: "\f078";
+    font-family: "Font Awesome 6 Free";
+    font-size: 0.75rem;
+    font-weight: 900;
+    transition: transform 0.15s ease-in-out;
+}
+
+.openvcad-mobile-nav details[open] > summary::after {
+    transform: rotate(180deg);
+}
+
+.openvcad-mobile-nav details > ul {
+    margin-left: 0.75rem;
+    padding-left: 0.75rem;
+    border-left: 1px solid var(--pst-color-border);
+}
+
+.openvcad-mobile-nav .nav-link.active {
+    font-weight: 600;
+}
+
+@media (max-width: 959.98px) {
+    /* The drawer should contain the site-wide menu, not the local sidebar. */
+    .bd-sidebar-primary .sidebar-primary-items__start {
+        display: none;
+    }
+
+    /* Preserve the logo and title while making room for the primary menu toggle. */
+    .bd-header .logo__title {
+        display: block;
+        white-space: nowrap;
+    }
+
+    .bd-header .secondary-toggle {
+        display: none;
+    }
+}
+
+.logo__title-compact,
+.logo__title-short {
+    display: none;
+}
+
+@media (max-width: 600px) {
+    .logo__title-full {
+        display: none;
+    }
+
+    .logo__title-compact {
+        display: inline;
+    }
+}
+
+@media (max-width: 420px) {
+    .logo__title-compact {
+        display: none;
+    }
+
+    .logo__title-short {
+        display: inline;
+    }
+}

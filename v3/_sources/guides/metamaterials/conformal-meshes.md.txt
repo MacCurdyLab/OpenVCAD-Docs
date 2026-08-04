@@ -31,6 +31,21 @@ To place cells on an irregular surface, OpenVCAD first makes a 2D **chart**: a f
 
 This process preserves angles better than areas. Wall thickness and beam radius stay in millimeters everywhere, but strongly curved patches such as deep pockets or nearly closed caps can still make cells vary in size. The map validates the resulting volume when you create it.
 
+(choosing-the-flattening-method)=
+### Choosing the flattening method
+
+The `method` argument of `pv.TriangleMeshSurface(...)` selects how the patch is flattened. All three methods produce the same kind of chart and feed the same mapping pipeline; they trade angle fidelity against area fidelity differently:
+
+- **`"lscm"` (the default)** — free-boundary least-squares conformal maps. Local angles are preserved best and the chart keeps the patch's natural outline, but strongly curved patches can make cells vary in size.
+- **`"arap"`** — free-boundary as-rigid-as-possible flattening. It balances angle and area distortion, which often keeps cell sizes more even on deep or strongly domed patches while still keeping the natural outline.
+- **`"authalic"`** — iterative area-preserving flattening on a circular border. Cells keep near-uniform area at the cost of angle distortion, and the chart outline becomes a disk rather than the patch's natural shape.
+
+```python
+surface = pv.TriangleMeshSurface(vertices, triangles, method="arap")
+```
+
+Whichever method you request, `surface.parameterization_method` reports what actually produced the chart. If the requested flattening folds, the guaranteed-injective mean-value fallback is used and reported as `"convex_border_mean_value"`.
+
 (trimming-to-the-true-boundary)=
 (guide-metamaterials-conformal-meshes-trimming)=
 ## Trimming to the true boundary
@@ -56,6 +71,31 @@ All three options start from the same chart. In the two trimming modes, cells en
 For `cell_map_between_surfaces(...)`, the same `trim` choice applies. A point is kept only where it falls on **both** patches, so the lattice fills their shared footprint. To inspect the result, use `cell_map.trim_mode`, `cell_map.has_boundary_trim`, and `cell_map.validate().trimmed_element_count` (the number of fully removed cells).
 
 One restriction: `warp_cell_map(...)` cannot warp a map made with `trim="boundary"`, because the warp could move cells past the stored edge. Warp an untrimmed map instead, or use `trim="cells"` when changing cell spacing matters more than a smooth edge.
+
+(standing-the-lattice-off-the-surface)=
+## Standing the lattice off the surface
+
+By default the mapped volume starts on the surface and extends `height` along its normal. The `standoff` argument of `cell_map_from_surface(...)` (and `cell_map_from_cad_face(...)`) lifts the whole map off the surface first, so it spans `[standoff, standoff + height]` along the oriented normal. Use it when the lattice must keep a clearance from the surface it follows -- a helmet liner floating a stand-off distance above the head form, for example:
+
+```python
+cell_map = mm.cell_map_from_surface(surface, cells=(15, 15, 4), height=25.0, standoff=4.0)
+```
+
+`standoff` shares the sign convention of `height`: both follow the surface's oriented normal, so a negative stand-off on a positive-height map starts the volume behind the surface.
+
+(sealing-the-cropped-edge-with-a-rim)=
+## Sealing the cropped edge with a rim
+
+Trimming a lattice at the patch's true edge leaves the boundary cells open. `mm.rim(cell_map, width=...)` builds a solid band that seals them: a signed distance field from the map's **edge wall** -- the cropped chart boundary swept through the full map height. The band follows the cropped edge exactly and extends `width` inward, so unioning it with any lattice built on the same map closes the open edge cells:
+
+```python
+root = pv.Union(
+    mm.gyroid(cell_map, wall_thickness=0.7),
+    mm.rim(cell_map, width=2.0),
+)
+```
+
+The rim is an ordinary node (`pv.MappedRim`), so materials and attributes attach to it like any other leaf, and `width` may be a `pv.FloatAttribute` to grade the band. For maps without a boundary trim the band follows the lateral sides of the cell grid instead; only the map's base and offset surfaces are never treated as edges. [`23_standoff_rim_and_parameterizations.py`](../../../../examples/metamaterials/conformal_meshes/23_standoff_rim_and_parameterizations.py) combines the stand-off, the rim, and the flattening methods on one domed patch.
 
 ## Choosing the chart orientation
 

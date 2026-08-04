@@ -302,6 +302,7 @@
                 <li><a class="nav-link" href="concepts.html">Concepts and representation</a></li>
                 <li><a class="nav-link" href="catalog.html">TPMS and lattice catalog</a></li>
                 <li><a class="nav-link" href="custom-unit-cells.html">Custom unit cells</a></li>
+                <li><a class="nav-link" href="stochastic-lattices.html">Stochastic lattices</a></li>
                 <li><a class="nav-link" href="geometry-grading.html">Functionally graded geometry</a></li>
                 <li><a class="nav-link" href="attribute-modeling.html">Attribute modeling</a></li>
                 <li><a class="nav-link" href="cylindrical-spherical-cell-maps.html">Cylindrical and spherical cell maps</a></li>
@@ -400,6 +401,7 @@
 <li class="toctree-l2"><a class="reference internal" href="concepts.html">Concepts and representation</a></li>
 <li class="toctree-l2"><a class="reference internal" href="catalog.html">TPMS and lattice catalog</a></li>
 <li class="toctree-l2"><a class="reference internal" href="custom-unit-cells.html">Custom unit cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="stochastic-lattices.html">Stochastic Voronoi and Delaunay lattices</a></li>
 <li class="toctree-l2"><a class="reference internal" href="geometry-grading.html">Functionally graded metamaterial geometry</a></li>
 <li class="toctree-l2"><a class="reference internal" href="attribute-modeling.html">Attribute modeling for metamaterials</a></li>
 <li class="toctree-l2"><a class="reference internal" href="cylindrical-spherical-cell-maps.html">Cylindrical and spherical cell maps</a></li>
@@ -527,9 +529,22 @@ Current compiler guides:
 <h2>How the patch becomes a chart<a class="headerlink" href="#how-the-patch-becomes-a-chart" title="Link to this heading">#</a></h2>
 <p>To place cells on an irregular surface, OpenVCAD first makes a 2D <strong>chart</strong>: a flat coordinate system for the patch. This flattening approximately preserves local angles and <strong>keeps the patch’s natural outline</strong>. A circular patch becomes a round chart and a long strip becomes a long chart. The chart sits inside the rectangle reported by <code class="docutils literal notranslate"><span class="pre">surface.uv_bounds</span></code>; its longer side is normalized to 1 and its aspect ratio is preserved. That helps cells remain close to square instead of stretching the patch into a forced square.</p>
 <p>This process preserves angles better than areas. Wall thickness and beam radius stay in millimeters everywhere, but strongly curved patches such as deep pockets or nearly closed caps can still make cells vary in size. The map validates the resulting volume when you create it.</p>
+<section id="choosing-the-flattening-method">
+<span id="id1"></span><h3>Choosing the flattening method<a class="headerlink" href="#choosing-the-flattening-method" title="Link to this heading">#</a></h3>
+<p>The <code class="docutils literal notranslate"><span class="pre">method</span></code> argument of <code class="docutils literal notranslate"><span class="pre">pv.TriangleMeshSurface(...)</span></code> selects how the patch is flattened. All three methods produce the same kind of chart and feed the same mapping pipeline; they trade angle fidelity against area fidelity differently:</p>
+<ul class="simple">
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">&quot;lscm&quot;</span></code> (the default)</strong> — free-boundary least-squares conformal maps. Local angles are preserved best and the chart keeps the patch’s natural outline, but strongly curved patches can make cells vary in size.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">&quot;arap&quot;</span></code></strong> — free-boundary as-rigid-as-possible flattening. It balances angle and area distortion, which often keeps cell sizes more even on deep or strongly domed patches while still keeping the natural outline.</p></li>
+<li><p><strong><code class="docutils literal notranslate"><span class="pre">&quot;authalic&quot;</span></code></strong> — iterative area-preserving flattening on a circular border. Cells keep near-uniform area at the cost of angle distortion, and the chart outline becomes a disk rather than the patch’s natural shape.</p></li>
+</ul>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">surface</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">TriangleMeshSurface</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">triangles</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;arap&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Whichever method you request, <code class="docutils literal notranslate"><span class="pre">surface.parameterization_method</span></code> reports what actually produced the chart. If the requested flattening folds, the guaranteed-injective mean-value fallback is used and reported as <code class="docutils literal notranslate"><span class="pre">&quot;convex_border_mean_value&quot;</span></code>.</p>
+</section>
 </section>
 <section id="guide-metamaterials-conformal-meshes-trimming">
-<span id="trimming-to-the-true-boundary"></span><span id="id1"></span><h2>Trimming to the true boundary<a class="headerlink" href="#guide-metamaterials-conformal-meshes-trimming" title="Link to this heading">#</a></h2>
+<span id="trimming-to-the-true-boundary"></span><span id="id2"></span><h2>Trimming to the true boundary<a class="headerlink" href="#guide-metamaterials-conformal-meshes-trimming" title="Link to this heading">#</a></h2>
 <p>A non-rectangular chart leaves unused space inside its bounding rectangle. The <code class="docutils literal notranslate"><span class="pre">trim</span></code> argument of <code class="docutils literal notranslate"><span class="pre">cell_map_from_surface(...)</span></code> chooses what happens at that margin. It accepts a <code class="docutils literal notranslate"><span class="pre">pv.TrimMode</span></code> value or the matching string:</p>
 <ul class="simple">
 <li><p><strong><code class="docutils literal notranslate"><span class="pre">&quot;boundary&quot;</span></code> (the default)</strong> — clips the lattice at the patch’s <strong>actual edge</strong>. Partial edge cells are cut where the surface ends, so a circular patch has a clean round rim.</p></li>
@@ -547,6 +562,25 @@ Current compiler guides:
 </div>
 <p>For <code class="docutils literal notranslate"><span class="pre">cell_map_between_surfaces(...)</span></code>, the same <code class="docutils literal notranslate"><span class="pre">trim</span></code> choice applies. A point is kept only where it falls on <strong>both</strong> patches, so the lattice fills their shared footprint. To inspect the result, use <code class="docutils literal notranslate"><span class="pre">cell_map.trim_mode</span></code>, <code class="docutils literal notranslate"><span class="pre">cell_map.has_boundary_trim</span></code>, and <code class="docutils literal notranslate"><span class="pre">cell_map.validate().trimmed_element_count</span></code> (the number of fully removed cells).</p>
 <p>One restriction: <code class="docutils literal notranslate"><span class="pre">warp_cell_map(...)</span></code> cannot warp a map made with <code class="docutils literal notranslate"><span class="pre">trim=&quot;boundary&quot;</span></code>, because the warp could move cells past the stored edge. Warp an untrimmed map instead, or use <code class="docutils literal notranslate"><span class="pre">trim=&quot;cells&quot;</span></code> when changing cell spacing matters more than a smooth edge.</p>
+</section>
+<section id="standing-the-lattice-off-the-surface">
+<span id="id3"></span><h2>Standing the lattice off the surface<a class="headerlink" href="#standing-the-lattice-off-the-surface" title="Link to this heading">#</a></h2>
+<p>By default the mapped volume starts on the surface and extends <code class="docutils literal notranslate"><span class="pre">height</span></code> along its normal. The <code class="docutils literal notranslate"><span class="pre">standoff</span></code> argument of <code class="docutils literal notranslate"><span class="pre">cell_map_from_surface(...)</span></code> (and <code class="docutils literal notranslate"><span class="pre">cell_map_from_cad_face(...)</span></code>) lifts the whole map off the surface first, so it spans <code class="docutils literal notranslate"><span class="pre">[standoff,</span> <span class="pre">standoff</span> <span class="pre">+</span> <span class="pre">height]</span></code> along the oriented normal. Use it when the lattice must keep a clearance from the surface it follows – a helmet liner floating a stand-off distance above the head form, for example:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cell_map</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">cell_map_from_surface</span><span class="p">(</span><span class="n">surface</span><span class="p">,</span> <span class="n">cells</span><span class="o">=</span><span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">4</span><span class="p">),</span> <span class="n">height</span><span class="o">=</span><span class="mf">25.0</span><span class="p">,</span> <span class="n">standoff</span><span class="o">=</span><span class="mf">4.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">standoff</span></code> shares the sign convention of <code class="docutils literal notranslate"><span class="pre">height</span></code>: both follow the surface’s oriented normal, so a negative stand-off on a positive-height map starts the volume behind the surface.</p>
+</section>
+<section id="sealing-the-cropped-edge-with-a-rim">
+<span id="id4"></span><h2>Sealing the cropped edge with a rim<a class="headerlink" href="#sealing-the-cropped-edge-with-a-rim" title="Link to this heading">#</a></h2>
+<p>Trimming a lattice at the patch’s true edge leaves the boundary cells open. <code class="docutils literal notranslate"><span class="pre">mm.rim(cell_map,</span> <span class="pre">width=...)</span></code> builds a solid band that seals them: a signed distance field from the map’s <strong>edge wall</strong> – the cropped chart boundary swept through the full map height. The band follows the cropped edge exactly and extends <code class="docutils literal notranslate"><span class="pre">width</span></code> inward, so unioning it with any lattice built on the same map closes the open edge cells:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">(</span>
+    <span class="n">mm</span><span class="o">.</span><span class="n">gyroid</span><span class="p">(</span><span class="n">cell_map</span><span class="p">,</span> <span class="n">wall_thickness</span><span class="o">=</span><span class="mf">0.7</span><span class="p">),</span>
+    <span class="n">mm</span><span class="o">.</span><span class="n">rim</span><span class="p">(</span><span class="n">cell_map</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">2.0</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The rim is an ordinary node (<code class="docutils literal notranslate"><span class="pre">pv.MappedRim</span></code>), so materials and attributes attach to it like any other leaf, and <code class="docutils literal notranslate"><span class="pre">width</span></code> may be a <code class="docutils literal notranslate"><span class="pre">pv.FloatAttribute</span></code> to grade the band. For maps without a boundary trim the band follows the lateral sides of the cell grid instead; only the map’s base and offset surfaces are never treated as edges. <a class="reference internal" href="#../../../../examples/metamaterials/conformal_meshes/23_standoff_rim_and_parameterizations.py"><span class="xref myst"><code class="docutils literal notranslate"><span class="pre">23_standoff_rim_and_parameterizations.py</span></code></span></a> combines the stand-off, the rim, and the flattening methods on one domed patch.</p>
 </section>
 <section id="choosing-the-chart-orientation">
 <h2>Choosing the chart orientation<a class="headerlink" href="#choosing-the-chart-orientation" title="Link to this heading">#</a></h2>
@@ -622,7 +656,7 @@ Current compiler guides:
 </figure>
 </section>
 <section id="select-a-region-of-an-imported-mesh">
-<span id="id2"></span><h2>Select a region of an imported mesh<a class="headerlink" href="#select-a-region-of-an-imported-mesh" title="Link to this heading">#</a></h2>
+<span id="id5"></span><h2>Select a region of an imported mesh<a class="headerlink" href="#select-a-region-of-an-imported-mesh" title="Link to this heading">#</a></h2>
 <p>An imported mesh is often a closed solid with several surface regions, not the one open patch this workflow needs. <a class="reference download internal" download="" href="../../_downloads/787e5130c1b36fc2b500adffbf7ee2e1/21_imported_triangle_mesh_patch.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">21_imported_triangle_mesh_patch.py</span></code></span></a> starts with a domed tile: a domed top, four sides, and a flat bottom. It uses the <code class="docutils literal notranslate"><span class="pre">SurfaceMesh</span></code> <code class="docutils literal notranslate"><span class="pre">vertices</span></code> and <code class="docutils literal notranslate"><span class="pre">triangles</span></code> arrays with helpers from <a class="reference download internal" download="" href="../../_downloads/9faa4d2fdf8ec4bf82f535d317e115f0/_triangle_surface_examples.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">_triangle_surface_examples.py</span></code></span></a> to keep only the top:</p>
 <ol class="arabic simple">
 <li><p><code class="docutils literal notranslate"><span class="pre">select_triangles(...)</span></code> keeps the upward-facing top face group (<code class="docutils literal notranslate"><span class="pre">normal.z</span> <span class="pre">&gt;</span> <span class="pre">0.5</span></code>).</p></li>
@@ -638,7 +672,7 @@ Current compiler guides:
 <p>Choose the selection rule that matches the region boundary. A normal threshold works when the target region meets its neighbors at a visible edge, and <code class="docutils literal notranslate"><span class="pre">largest_connected_component(...)</span></code> drops stray triangles with the same orientation elsewhere on the mesh. The result must still be one connected patch with one boundary loop.</p>
 </section>
 <section id="pair-a-mesh-with-a-cad-surface">
-<span id="id3"></span><h2>Pair a mesh with a CAD surface<a class="headerlink" href="#pair-a-mesh-with-a-cad-surface" title="Link to this heading">#</a></h2>
+<span id="id6"></span><h2>Pair a mesh with a CAD surface<a class="headerlink" href="#pair-a-mesh-with-a-cad-surface" title="Link to this heading">#</a></h2>
 <p><code class="docutils literal notranslate"><span class="pre">CADFace</span></code> and <code class="docutils literal notranslate"><span class="pre">TriangleMeshSurface</span></code> can both act as a surface boundary, so <code class="docutils literal notranslate"><span class="pre">cell_map_between_surfaces(...)</span></code> can fill the space between either combination. <a class="reference download internal" download="" href="../../_downloads/a80560147c64b80cb9d8a455fdfbe5ec/22_between_mesh_and_cad_surfaces.py"><span class="xref download myst"><code class="docutils literal notranslate"><span class="pre">22_between_mesh_and_cad_surfaces.py</span></code></span></a> builds an octet lattice between a wavy triangle-mesh floor and a smooth CAD dome above it. The map’s W direction runs from the mesh at <code class="docutils literal notranslate"><span class="pre">w</span> <span class="pre">=</span> <span class="pre">0</span></code> to the CAD surface at <code class="docutils literal notranslate"><span class="pre">w</span> <span class="pre">=</span> <span class="pre">1</span></code>.</p>
 <p>When one boundary is a mesh and the other is CAD, align their U axes in <strong>world space</strong>. Automatic alignment can flip directions or swap U and V, but it cannot correct every rotation. In this example the mesh would otherwise be 45° out of step with the dome, which would twist the lattice. <code class="docutils literal notranslate"><span class="pre">u_axis_hint</span></code> pins the mesh U direction to the CAD face’s U direction:</p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">floor_surface</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">TriangleMeshSurface</span><span class="p">(</span>                                   <span class="c1"># lower: triangle mesh</span>
@@ -658,7 +692,7 @@ Current compiler guides:
 <p>Once built, these lattices are ordinary OpenVCAD nodes. You can grade them as in the previous guide, combine them in <a class="reference internal" href="heterogeneous-lattices.html"><span class="std std-doc">heterogeneous lattices</span></a>, or send them to a compatible <a class="reference internal" href="../compilers/index.html"><span class="std std-doc">compiler</span></a>.</p>
 </section>
 <section id="limitations-and-troubleshooting">
-<span id="id4"></span><h2>Limitations and troubleshooting<a class="headerlink" href="#limitations-and-troubleshooting" title="Link to this heading">#</a></h2>
+<span id="id7"></span><h2>Limitations and troubleshooting<a class="headerlink" href="#limitations-and-troubleshooting" title="Link to this heading">#</a></h2>
 <section id="rejected-input-topology">
 <h3>Rejected input topology<a class="headerlink" href="#rejected-input-topology" title="Link to this heading">#</a></h3>
 <p>OpenVCAD reports each invalid input with a specific <code class="docutils literal notranslate"><span class="pre">RuntimeError</span></code> rather than guessing how to repair it:</p>
@@ -767,8 +801,13 @@ Current compiler guides:
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-patch-must-be">What the patch must be</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-the-patch-becomes-a-chart">How the patch becomes a chart</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#how-the-patch-becomes-a-chart">How the patch becomes a chart</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#choosing-the-flattening-method">Choosing the flattening method</a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#guide-metamaterials-conformal-meshes-trimming">Trimming to the true boundary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#standing-the-lattice-off-the-surface">Standing the lattice off the surface</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sealing-the-cropped-edge-with-a-rim">Sealing the cropped edge with a rim</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#choosing-the-chart-orientation">Choosing the chart orientation</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#map-a-procedural-patch">Map a procedural patch</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#select-a-region-of-an-imported-mesh">Select a region of an imported mesh</a></li>

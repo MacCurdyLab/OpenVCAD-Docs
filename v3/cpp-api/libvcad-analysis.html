@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
@@ -36,10 +36,10 @@
     <link rel="stylesheet" type="text/css" href="../_static/openvcad_branding.css?v=c43e02c9" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
     <script src="../_static/documentation_options.js?v=110ea713"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
@@ -319,6 +319,7 @@
               <ul>
                 <li><a class="nav-link" href="../guides/compilers/index.html">Overview</a></li>
                 <li><a class="nav-link" href="../guides/compilers/material-inkjet.html">Material Inkjet</a></li>
+                <li><a class="nav-link" href="../guides/compilers/multi-material-vat.html">Multi-material VAT</a></li>
                 <li><a class="nav-link" href="../guides/compilers/color-inkjet.html">Color Inkjet</a></li>
                 <li><a class="nav-link" href="../guides/compilers/vat-photo.html">VAT Photo</a></li>
                 <li><a class="nav-link" href="../guides/compilers/slicer-project.html">Slicer Project</a></li>
@@ -336,9 +337,14 @@
                 <li><a class="nav-link" href="../guides/advanced.html">Overview</a></li>
                 <li><a class="nav-link" href="../guides/cadquery.html">CAD with CadQuery</a></li>
                 <li><a class="nav-link" href="../guides/surface-relief.html">Physical surface relief</a></li>
+                <li><a class="nav-link" href="../guides/mesh-selection.html">Selecting triangle-mesh patches</a></li>
+                <li><a class="nav-link" href="../guides/textured-mesh.html">Importing textured solids</a></li>
+                <li><a class="nav-link" href="../guides/3mf-beam-lattice.html">Importing 3MF beam lattices</a></li>
                 <li><a class="nav-link" href="../guides/volumes.html">Working with volumes</a></li>
+                <li><a class="nav-link" href="../guides/support-analyzer.html">Inkjet support volumes</a></li>
                 <li><a class="nav-link" href="../guides/math-expressions.html">Math expressions</a></li>
                 <li><a class="nav-link" href="../guides/custom-python-compiler.html">Creating a compiler in Python</a></li>
+                <li><a class="nav-link" href="../guides/simulation-driven-design.html">Simulation-driven design</a></li>
               </ul>
             </details>
           </li>
@@ -482,20 +488,35 @@
 <span id="_CPPv315SupportAnalyzer"></span><span id="_CPPv215SupportAnalyzer"></span><span id="SupportAnalyzer"></span><span class="target" id="class_support_analyzer"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SupportAnalyzer</span></span></span><a class="headerlink" href="#_CPPv415SupportAnalyzer" title="Link to this definition">#</a><br /></dt>
 <dd><div class="docutils container">
 <em>#include &lt;support_analyzer.h&gt;</em></div>
-<p>Analyzes a given OpenVCAD design to determine where supports are needed. </p>
-<p>For now, this assumes generic Inkjet printing.</p>
-<p>This class is designed to analyze a 3D model represented by an OpenVCAD <a class="reference internal" href="libvcad-tree-core.html#class_node"><span class="std std-ref">Node</span></a> and determine the areas that require support structures for printing. The analysis is based on the geometry of the model and the specified voxel size. The class provides an analysis method that returns an OpenVCAD volume that represents where supports are needed. It is up to down stream process to actually generate the supports. </p>
+<p>Computes the inkjet support volume beneath an OpenVCAD design. </p>
+<p>Inkjet printers cannot print a voxel unless there is already material in the column directly below it. This analyzer samples the input model on a uniform voxel grid and marks every empty voxel that has occupied model or support material above it, filling downward to the bottom of the model’s bounding box. XY columns are processed concurrently.</p>
+<p><code class="docutils literal notranslate"><a class="reference internal" href="#class_support_analyzer_1ac8a201a4626470f171a652509cdb4d7f"><span class="std std-ref"><span class="pre">analyze()</span></span></a></code> returns that occupancy as an implicit OpenVCAD solid (a signed-distance field). Downstream code can fill the solid with support material, a lattice, or any other OpenVCAD geometry. The input model is not modified. </p>
 <div class="breathe-sectiondef docutils container">
 <p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N15SupportAnalyzer7analyzeEv">
 <span id="_CPPv3N15SupportAnalyzer7analyzeEv"></span><span id="_CPPv2N15SupportAnalyzer7analyzeEv"></span><span id="SupportAnalyzer::analyze"></span><span class="target" id="class_support_analyzer_1ac8a201a4626470f171a652509cdb4d7f"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">analyze</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15SupportAnalyzer7analyzeEv" title="Link to this definition">#</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Sample the model and return the inkjet support volume as an implicit solid. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A node representing the support occupancy. The original input model is unchanged. </p>
+</dd>
+</dl>
+</dd></dl>
 
 <dl class="cpp function">
 <dt class="sig sig-object cpp" id="_CPPv4N15SupportAnalyzer15SupportAnalyzerERKNSt10shared_ptrI4NodeEERKN3glm4vec3E">
 <span id="_CPPv3N15SupportAnalyzer15SupportAnalyzerERKNSt10shared_ptrI4NodeEERKN3glm4vec3E"></span><span id="_CPPv2N15SupportAnalyzer15SupportAnalyzerERKNSt10shared_ptrI4NodeEERKN3glm4vec3E"></span><span id="SupportAnalyzer::SupportAnalyzer__std::shared_ptr:Node:CR.glm::vec3CR"></span><span class="target" id="class_support_analyzer_1a97e4e3deae47d4c98a47670650ba69aa"></span><span class="sig-name descname"><span class="n"><span class="pre">SupportAnalyzer</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">input_model</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">voxel_size</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N15SupportAnalyzer15SupportAnalyzerERKNSt10shared_ptrI4NodeEERKN3glm4vec3E" title="Link to this definition">#</a><br /></dt>
-<dd></dd></dl>
+<dd><p>Construct an analyzer for a model. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>input_model</strong> – The design to analyze. Must be non-null. </p></li>
+<li><p><strong>voxel_size</strong> – Sampling pitch in millimetres. Every component must be positive and finite. The analyzer uses the smallest component as a uniform voxel size. </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
 
 </div>
 <div class="breathe-sectiondef docutils container">
@@ -508,42 +529,6 @@
 <dl class="cpp var">
 <dt class="sig sig-object cpp" id="_CPPv4N15SupportAnalyzer12m_voxel_sizeE">
 <span id="_CPPv3N15SupportAnalyzer12m_voxel_sizeE"></span><span id="_CPPv2N15SupportAnalyzer12m_voxel_sizeE"></span><span id="SupportAnalyzer::m_voxel_size__glm::vec3"></span><span class="target" id="class_support_analyzer_1a693276c1c2418fd063b1a231e592326a"></span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_voxel_size</span></span></span><a class="headerlink" href="#_CPPv4N15SupportAnalyzer12m_voxel_sizeE" title="Link to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-</div>
-</dd></dl>
-
-<dl class="cpp class">
-<dt class="sig sig-object cpp" id="_CPPv423SupportAnalyzerParallel">
-<span id="_CPPv323SupportAnalyzerParallel"></span><span id="_CPPv223SupportAnalyzerParallel"></span><span id="SupportAnalyzerParallel"></span><span class="target" id="class_support_analyzer_parallel"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SupportAnalyzerParallel</span></span></span><a class="headerlink" href="#_CPPv423SupportAnalyzerParallel" title="Link to this definition">#</a><br /></dt>
-<dd><div class="docutils container">
-<em>#include &lt;support_analyzer_parallel.h&gt;</em></div>
-<p>Analyzes a given OpenVCAD design to determine where supports are needed. </p>
-<p>For now, this assumes generic Inkjet printing.</p>
-<p>This class is designed to analyze a 3D model represented by an OpenVCAD <a class="reference internal" href="libvcad-tree-core.html#class_node"><span class="std std-ref">Node</span></a> and determine the areas that require support structures for printing. The analysis is based on the geometry of the model and the specified voxel size. The class provides an analysis method that returns an OpenVCAD volume that represents where supports are needed. It is up to down stream process to actually generate the supports. </p>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-functions">Public Functions</p>
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N23SupportAnalyzerParallel7analyzeEv">
-<span id="_CPPv3N23SupportAnalyzerParallel7analyzeEv"></span><span id="_CPPv2N23SupportAnalyzerParallel7analyzeEv"></span><span id="SupportAnalyzerParallel::analyze"></span><span class="target" id="class_support_analyzer_parallel_1a1bb5459074f8ae75a77f1572797fb343"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">analyze</span></span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N23SupportAnalyzerParallel7analyzeEv" title="Link to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp function">
-<dt class="sig sig-object cpp" id="_CPPv4N23SupportAnalyzerParallel23SupportAnalyzerParallelERKNSt10shared_ptrI4NodeEERKN3glm4vec3E">
-<span id="_CPPv3N23SupportAnalyzerParallel23SupportAnalyzerParallelERKNSt10shared_ptrI4NodeEERKN3glm4vec3E"></span><span id="_CPPv2N23SupportAnalyzerParallel23SupportAnalyzerParallelERKNSt10shared_ptrI4NodeEERKN3glm4vec3E"></span><span id="SupportAnalyzerParallel::SupportAnalyzerParallel__std::shared_ptr:Node:CR.glm::vec3CR"></span><span class="target" id="class_support_analyzer_parallel_1a0cead71c6554b4d7131ac1ac86873900"></span><span class="sig-name descname"><span class="n"><span class="pre">SupportAnalyzerParallel</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">input_model</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">voxel_size</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N23SupportAnalyzerParallel23SupportAnalyzerParallelERKNSt10shared_ptrI4NodeEERKN3glm4vec3E" title="Link to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-</div>
-<div class="breathe-sectiondef docutils container">
-<p class="breathe-sectiondef-title rubric" id="breathe-section-title-private-members">Private Members</p>
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N23SupportAnalyzerParallel13m_input_modelE">
-<span id="_CPPv3N23SupportAnalyzerParallel13m_input_modelE"></span><span id="_CPPv2N23SupportAnalyzerParallel13m_input_modelE"></span><span id="SupportAnalyzerParallel::m_input_model__std::shared_ptr:Node:"></span><span class="target" id="class_support_analyzer_parallel_1ac02936cfce869e00e35c73c5a515e399"></span><span class="n"><span class="pre">std</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">shared_ptr</span></span><span class="p"><span class="pre">&lt;</span></span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="p"><span class="pre">&gt;</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_input_model</span></span></span><a class="headerlink" href="#_CPPv4N23SupportAnalyzerParallel13m_input_modelE" title="Link to this definition">#</a><br /></dt>
-<dd></dd></dl>
-
-<dl class="cpp var">
-<dt class="sig sig-object cpp" id="_CPPv4N23SupportAnalyzerParallel12m_voxel_sizeE">
-<span id="_CPPv3N23SupportAnalyzerParallel12m_voxel_sizeE"></span><span id="_CPPv2N23SupportAnalyzerParallel12m_voxel_sizeE"></span><span id="SupportAnalyzerParallel::m_voxel_size__glm::vec3"></span><span class="target" id="class_support_analyzer_parallel_1aef0161db09c68825ff6e82c84bd804d3"></span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">m_voxel_size</span></span></span><a class="headerlink" href="#_CPPv4N23SupportAnalyzerParallel12m_voxel_sizeE" title="Link to this definition">#</a><br /></dt>
 <dd></dd></dl>
 
 </div>
@@ -605,13 +590,6 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N15SupportAnalyzer12m_voxel_sizeE"><code class="docutils literal notranslate"><span class="pre">m_voxel_size</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv423SupportAnalyzerParallel"><code class="docutils literal notranslate"><span class="pre">SupportAnalyzerParallel</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N23SupportAnalyzerParallel7analyzeEv"><code class="docutils literal notranslate"><span class="pre">analyze()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N23SupportAnalyzerParallel23SupportAnalyzerParallelERKNSt10shared_ptrI4NodeEERKN3glm4vec3E"><code class="docutils literal notranslate"><span class="pre">SupportAnalyzerParallel()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N23SupportAnalyzerParallel13m_input_modelE"><code class="docutils literal notranslate"><span class="pre">m_input_model</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N23SupportAnalyzerParallel12m_voxel_sizeE"><code class="docutils literal notranslate"><span class="pre">m_voxel_size</span></code></a></li>
-</ul>
-</li>
 </ul>
   </nav></div>
 
@@ -637,8 +615,8 @@
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -672,7 +650,7 @@
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
 </p></div>
       
     </div>

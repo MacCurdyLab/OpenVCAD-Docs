@@ -1,0 +1,229 @@
+(guide-mesh-selection)=
+# Select triangle-mesh patches
+
+Mesh selection turns a complete or complicated `SurfaceMesh` into a reusable set of triangles. It
+is useful whenever the next operation applies to only part of a mesh: mapping a conformal lattice,
+adding physical surface relief, assigning a region, measuring an area, or exporting a local patch.
+
+This guide focuses on the practical selection process. The [Python API](../python-api/pyvcad/index)
+contains the complete method reference, while the [triangle-mesh conformal mapping
+guide](metamaterials/conformal-meshes.md) explains chart construction and mapped lattices in depth.
+
+## The selection process
+
+Most workflows follow five steps:
+
+1. **Resolve the source mesh.** Load a mesh file, construct a `SurfaceMesh`, or resolve an OpenVCAD
+   tree at an explicit voxel size.
+2. **Choose a stable geometric seed.** Use a point, ray, or nearest vertex instead of hard-coding a
+   triangle ID when the source may change.
+3. **Grow the region.** Follow connected triangles, stop at sharp edges or data boundaries, select
+   by surface distance, or enclose a region with mesh-edge paths.
+4. **Inspect and refine it.** Check its area and boundary, then add or remove triangle rings or make
+   manual corrections in the interactive picker.
+5. **Convert or save it.** Pass the general selection to another operation. Conformal mapping
+   validates its stricter open-disk requirements only when you request a `TriangleMeshSurface`.
+
+`MeshSelection` is immutable: refinement returns a new selection and leaves the previous result
+unchanged. Every result is tied to a fingerprint of the ordered source vertices and triangles. If
+the mesh is translated, merged, or regenerated at another resolution, operations reject the stale
+triangle IDs instead of silently selecting a different region.
+
+## Choose the method that matches the boundary
+
+| Situation | Useful approach |
+| --- | --- |
+| One disconnected shell or scan fragment | `select_linked(...)` |
+| A smooth panel meeting walls at a crease | `select_linked_by_face_angle(...)` |
+| A segmented or material-labelled region | `select_linked_constrained(...)` |
+| A local patch on a curved scan | `select_by_geodesic_radius(...)` |
+| A region inside a deliberate outline | `shortest_surface_path(...)` and `select_enclosed_region(...)` |
+| An almost-correct automatic result | `grown(...)`, `shrunk(...)`, or the interactive picker |
+
+The angle method uses the angle between each pair of neighboring triangles. It can follow gradual
+curvature around a dome while stopping at a sharp feature edge. Constrained growth adds marked
+mesh edges and per-triangle integer labels as delimiters. Labels can represent segmentation,
+material IDs, or any other triangle data you have reduced to region categories.
+
+Geodesic-radius selection measures shortest distances along mesh edges rather than straight through
+space. This matters on folded or curved surfaces: two triangles may be close in 3D while remaining
+far apart when travelling over the surface. Because this distance follows the triangulation, its
+boundary changes when the mesh resolution changes.
+
+## Walkthrough: select a domed top for conformal mapping
+
+The complete example is
+[`01_conformal_patch_workflow.py`](https://github.com/MacCurdyLab/OpenVCAD/blob/main/examples/geometry/mesh_selection/01_conformal_patch_workflow.py).
+It starts from a closed domed tile. The target top is smooth, but it meets the side walls at a sharp
+edge, so angle-limited linked selection is a natural fit.
+
+```python
+from pathlib import Path
+
+import pyvcad as pv
+import pyvcad_metamaterials as mm
+import pyvcad_rendering as viz
+
+tile_path = Path("examples/data/3d_models/domed_tile.stl")
+mesh = pv.SurfaceMesh(str(tile_path), disable_validation=True)
+
+# Seed the top from a point above the part, then follow smooth neighboring faces.
+seed = mesh.nearest_triangle(pv.Vec3(0, 0, 100))
+selection = mesh.select_linked_by_face_angle(
+    seed_triangle=seed.triangle_id,
+    max_angle_degrees=30.0,
+)
+```
+
+The seed point does not need to lie exactly on the mesh. `nearest_triangle(...)` returns both the
+chosen triangle and the nearest surface point. A ray from a known camera or construction direction
+is another useful choice:
+
+```python
+seed = mesh.ray_intersection(
+    pv.Vec3(0, 0, 100),
+    pv.Vec3(0, 0, -1),
+)
+```
+
+The selection reports its size and exposes the source edges around its boundary:
+
+```python
+print(selection.triangle_count)
+print(selection.area)               # square millimetres
+boundary = selection.boundary_edges()
+```
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="images/mesh_selection_domed_patch.png" data-lightbox="mesh-selection-workflow"><img src="images/mesh_selection_domed_patch.png" alt="Closed domed tile shown in gray with its smooth top triangle patch selected in orange and outlined in dark blue"></a><div class="guide-figure-label">Angle-linked selection follows the dome and stops at the side-wall crease</div></div>
+  <div class="guide-figure-cell"><a href="images/mesh_selection_domed_lattice.png" data-lightbox="mesh-selection-workflow"><img src="images/mesh_selection_domed_lattice.png" alt="Gyroid lattice conformally mapped over the selected domed triangle patch"></a><div class="guide-figure-label">The validated patch becomes the surface for a conformal gyroid</div></div>
+</div>
+
+At this point the selection is still a general triangle set. The conformal conversion is the step
+that requires one connected, consistently wound open disk with one boundary and no holes:
+
+```python
+surface = selection.to_triangle_mesh_surface(
+    u_axis_hint=pv.Vec3(1, 0, 0),
+)
+cell_map = mm.cell_map_from_surface(
+    surface,
+    cells=(12, 12, 1),
+    height=3.0,
+)
+root = mm.gyroid(cell_map, wall_thickness=0.55)
+
+viz.Render(root)
+```
+
+Keeping validation at conversion makes the selection tools useful for other tasks that do not need
+a disk. If this conversion reports a closed patch, a hole, or multiple components, inspect the
+boundary and refine the selection before mapping it.
+
+## Refine and inspect an automatic selection
+
+Grow and shrink add or remove complete edge-adjacent triangle rings:
+
+```python
+expanded = selection.grown(rings=2)
+inset = selection.shrunk(rings=1)
+```
+
+Shrinking is useful when the mapped feature needs clearance from a seam. Growing can recover a thin
+strip missed by a seed rule. These are topological operations, so their physical width follows the
+local triangle size rather than a fixed millimetre distance. Use geodesic radius when physical
+surface distance is the important control.
+
+The
+[`02_geodesic_patch_and_refinement.py`](https://github.com/MacCurdyLab/OpenVCAD/blob/main/examples/geometry/mesh_selection/02_geodesic_patch_and_refinement.py)
+example creates a local disk on a wavy mesh and demonstrates ring refinement:
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="images/mesh_selection_geodesic_patch.png" data-lightbox="mesh-selection-geodesic"><img src="images/mesh_selection_geodesic_patch.png" alt="Wavy triangle mesh with a compact geodesic-radius patch highlighted in orange and its boundary outlined"></a><div class="guide-figure-label">A surface-distance patch stays local while following the curved sheet</div></div>
+</div>
+
+## Draw an enclosed region with mesh paths
+
+For a deliberate outline, snap construction points to vertices with `nearest_vertex(...)`, join
+them with `shortest_surface_path(...)`, and combine the returned `path.edges` into one closed loop.
+`select_enclosed_region(...)` then chooses the side containing a seed triangle:
+
+```python
+first = mesh.nearest_vertex(pv.Vec3(-10, -10, 0))
+second = mesh.nearest_vertex(pv.Vec3(10, -10, 0))
+path = mesh.shortest_surface_path(first, second)
+
+# Combine this path with the remaining sides of a closed outline.
+boundary_edges = list(path.edges) + other_path_edges
+selection = mesh.select_enclosed_region(
+    boundary_edges,
+    seed_triangle=inside_triangle,
+)
+```
+
+The full
+[`04_path_enclosed_region.py`](https://github.com/MacCurdyLab/OpenVCAD/blob/main/examples/geometry/mesh_selection/04_path_enclosed_region.py)
+example joins four paths into an outline and maps a cubic lattice inside it. The boundary must be
+one connected, non-branching loop made from actual mesh edges. Use `blocked_edges` when a shortest
+path itself must avoid a seam or forbidden edge.
+
+## Use the interactive picker while authoring a script
+
+When the correct triangle IDs or threshold are not obvious, open the auxiliary picker:
+
+```python
+selection = viz.select_mesh_patch(mesh)
+```
+
+This is intentionally separate from the normal renderer. It supports clicking or painting manual
+faces, linked and angle-linked growth, geodesic-radius preview, replace/add/remove edits,
+grow/shrink, clear/invert, boundary display, area/count reporting, and conformal-patch validation.
+You can copy triangle IDs, save a versioned JSON selection, or return the result to the current
+Python session.
+
+Treat the picker as an authoring tool, not a dialog that must open every time your finished design
+runs. Save a chosen result and load it in the normal script:
+
+```python
+viz.save_mesh_selection(selection, "tile-top.selection.json")
+
+# Later, against the exact same ordered mesh:
+selection = viz.load_mesh_selection("tile-top.selection.json", mesh)
+```
+
+Point- and ray-seeded recipes may be deliberately replayed after remeshing with
+`viz.replay_mesh_selection(...)`. Exact triangle IDs, marked edges, region labels, and enclosed
+loops are topology-specific and therefore refuse replay on a different fingerprint.
+
+## Select from an OpenVCAD tree
+
+An implicit OpenVCAD tree has no triangles until it is resolved. Supply the voxel size explicitly:
+
+```python
+design = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(40, 40, 12))
+mesh = viz.resolve_selection_mesh(design, voxel_size=0.75)
+selection = viz.select_mesh_patch(design, voxel_size=0.75)
+```
+
+The voxel size controls both surface fidelity and triangle identity. Keep it with the saved
+selection and expect to reselect or explicitly replay a geometric recipe if you change it. See
+[`26_select_patch_from_tree.py`](https://github.com/MacCurdyLab/OpenVCAD/blob/main/examples/metamaterials/conformal_meshes/26_select_patch_from_tree.py)
+for a non-interactive ray-seeded version.
+
+## Practical limits
+
+- Open and non-manifold edges delimit linked growth by default. This prevents an automatic region
+  from leaking through ambiguous topology.
+- Face-angle growth is local. A gently curving surface can travel far from the seed even though no
+  individual edge exceeds the threshold.
+- Shortest paths and geodesic radii follow mesh edges, so finer and more uniform triangulations
+  produce smoother, more resolution-independent boundaries.
+- `boundary_edges()` can report several loops or non-manifold boundaries. Conformal conversion is
+  stricter and accepts exactly one disk boundary.
+- A changed fingerprint means triangle and vertex IDs are stale. Recreate the selection or replay a
+  deliberately geometric recipe; do not copy old IDs onto the new mesh.
+
+Additional runnable examples cover
+[`triangle-region delimiters`](https://github.com/MacCurdyLab/OpenVCAD/blob/main/examples/geometry/mesh_selection/03_attribute_delimited_patch.py),
+[`manual IDs`](https://github.com/MacCurdyLab/OpenVCAD/blob/main/examples/metamaterials/conformal_meshes/23_manual_triangle_selection.py),
+and [`connected components`](https://github.com/MacCurdyLab/OpenVCAD/blob/main/examples/metamaterials/conformal_meshes/24_select_linked_mesh_patch.py).

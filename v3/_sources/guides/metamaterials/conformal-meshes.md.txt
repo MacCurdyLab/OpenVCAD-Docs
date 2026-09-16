@@ -6,6 +6,11 @@
 
 Use this guide when the surface you want to lattice is a scan, an STL region, or a mesh made by your own script rather than CAD. A **triangle mesh** is simply a list of points connected by triangles. `TriangleMeshSurface` turns one open mesh patch into a surface that OpenVCAD can follow: it creates a flat internal coordinate system for the patch, then `mm.cell_map_from_surface(...)` and `mm.cell_map_between_surfaces(...)` can use it just as they use a `CADFace` in the [CAD guide](conformal-cad.md). You do not need CadQuery for this workflow.
 
+If your input is a complete mesh rather than an already extracted patch, see [Selecting
+triangle-mesh patches](../mesh-selection.md). OpenVCAD provides an auxiliary interactive picker as
+well as advanced Python APIs for connected, angle-limited, geodesic, constrained, and
+boundary-defined selection. The result converts directly to the `TriangleMeshSurface` used here.
+
 ```python
 surface = pv.TriangleMeshSurface(vertices, triangles)
 cell_map = mm.cell_map_from_surface(surface, cells=(12, 12, 1), height=4.0)
@@ -95,7 +100,7 @@ root = pv.Union(
 )
 ```
 
-The rim is an ordinary node (`pv.MappedRim`), so materials and attributes attach to it like any other leaf, and `width` may be a `pv.FloatAttribute` to grade the band. For maps without a boundary trim the band follows the lateral sides of the cell grid instead; only the map's base and offset surfaces are never treated as edges. [`23_standoff_rim_and_parameterizations.py`](../../../../examples/metamaterials/conformal_meshes/23_standoff_rim_and_parameterizations.py) combines the stand-off, the rim, and the flattening methods on one domed patch.
+The rim is an ordinary node (`pv.MappedRim`), so materials and attributes attach to it like any other leaf, and `width` may be a `pv.FloatAttribute` to grade the band. For maps without a boundary trim the band follows the lateral sides of the cell grid instead; only the map's base and offset surfaces are never treated as edges. Stand-off, rim, and flattening-method choices can be combined on the same mapped patch.
 
 ## Choosing the chart orientation
 
@@ -181,11 +186,11 @@ Each comparison keeps the camera fixed: drag the divider to see the input patch 
 (select-a-region-of-an-imported-mesh)=
 ## Select a region of an imported mesh
 
-An imported mesh is often a closed solid with several surface regions, not the one open patch this workflow needs. [`21_imported_triangle_mesh_patch.py`](../../../../examples/metamaterials/conformal_meshes/21_imported_triangle_mesh_patch.py) starts with a domed tile: a domed top, four sides, and a flat bottom. It uses the `SurfaceMesh` `vertices` and `triangles` arrays with helpers from [`_triangle_surface_examples.py`](../../../../examples/metamaterials/conformal_meshes/_triangle_surface_examples.py) to keep only the top:
+An imported mesh is often a closed solid with several surface regions, not the one open patch this workflow needs. [`21_imported_triangle_mesh_patch.py`](../../../../examples/metamaterials/conformal_meshes/21_imported_triangle_mesh_patch.py) starts with a domed tile: a domed top, four sides, and a flat bottom. It uses a geometric seed and local face-angle growth to keep only the top:
 
-1. `select_triangles(...)` keeps the upward-facing top face group (`normal.z > 0.5`).
-2. `largest_connected_component(...)` isolates the largest edge-connected patch.
-3. `reindex(...)` compacts it to its own vertices.
+1. `nearest_triangle(...)` finds a seed from a point above the model.
+2. `select_linked_by_face_angle(...)` follows the smooth dome and stops at the side-wall crease.
+3. `to_triangle_mesh_surface(...)` extracts, reindexes, and validates the open disk.
 
 The extracted top is an open disk, so it can go straight into `TriangleMeshSurface`. The example then makes the gyroid walls thicker from one side of the top to the other with `cell_map.logical_position.x`. Because the chart keeps the selected outline, the lattice follows the true boundary; the selection does not need to be square or convex.
 
@@ -195,7 +200,10 @@ The extracted top is an open disk, so it can go straight into `TriangleMeshSurfa
   <div class="guide-figure-cell"><a href="../images/mm_triangle_surface_imported_patch.png" data-lightbox="triangle-surface-import"><img src="../images/mm_triangle_surface_imported_patch.png" alt="Gyroid mapped onto the extracted top patch"></a><div class="guide-figure-label">Mapped gyroid</div></div>
 </div>
 
-Choose the selection rule that matches the region boundary. A normal threshold works when the target region meets its neighbors at a visible edge, and `largest_connected_component(...)` drops stray triangles with the same orientation elsewhere on the mesh. The result must still be one connected patch with one boundary loop.
+Choose the selection rule that matches the region boundary. The [advanced mesh-selection
+guide](../mesh-selection.md) covers interactive selection, ring refinement, data delimiters,
+surface-distance patches, and path-defined outlines. The result must still be one connected patch
+with one boundary loop before it can drive conformal mapping.
 
 (pair-a-mesh-with-a-cad-surface)=
 ## Pair a mesh with a CAD surface

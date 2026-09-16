@@ -1,0 +1,383 @@
+(guide-3mf-beam-lattice)=
+# Importing 3MF beam lattices
+
+OpenVCAD imports lattice geometry written in the
+[3MF Beam Lattice Extension](https://github.com/3MFConsortium/spec_beamlattice).
+`ThreeMFBeamLattice` reads such a file and rebuilds it as an implicit tree, so the
+result is an ordinary OpenVCAD node: transform it, combine it with other geometry,
+hang attributes on it, and compile it like anything else.
+
+```{note}
+OpenVCAD currently **imports** beam lattice files. Writing them is not supported
+yet, so this is a one-way path into OpenVCAD rather than a round trip.
+```
+
+This guide assumes you have worked through
+[Getting Started](getting-started.md). It covers geometry import only — see
+[Scope and limitations](#scope-and-limitations) at the end.
+
+## Why the extension exists
+
+Additive manufacturing can build lattices that no subtractive process could, and
+they are now routine in medical implants, lightweighting, energy absorption, and
+heat exchange. The bottleneck was never the printer — it was the file.
+
+A triangle mesh describes only a surface, so a lattice has to be tessellated
+strut by strut. Every beam becomes a tube of triangles, every joint becomes a
+patch where tubes intersect, and the triangle count scales with the number of
+struts rather than with the complexity of the design. A lattice fine enough to
+matter mechanically produces a mesh too large to open, let alone edit. nTop cites
+a variable-thickness diamond lattice that exports as a
+[3.4 MB 3MF and would be over 3 GB as an STL](https://www.ntop.com/resources/blog/ntop-platform-supports-the-3mf-file-format-with-beam-extension/).
+
+The insight behind the extension is that a beam lattice is not really a surface —
+it is a **graph**. The design intent is a set of nodes, the beams connecting them,
+and a radius at each beam end. That is a few numbers per strut, and the surface can
+be regenerated from it whenever it is actually needed. So the extension stores
+exactly that: beams indexed into the mesh's own vertex list, with optional per-end
+radii and cap modes, alongside whatever solid triangle geometry the object also
+carries. The spinal implant sample used later in this guide holds an 11,821-beam
+lattice *and* a solid cage body in 262 KB.
+
+Because it rides on the 3MF core format, a beam lattice travels with units, build
+transforms, materials, and component structure intact — the things STL throws away.
+
+### Where these files come from
+
+[nTop](https://www.ntop.com/) is the tool most likely to have produced a beam
+lattice 3MF you are handed; it has
+[exported them since Platform 2.14](https://support.ntop.com/hc/en-us/articles/360054069993-How-to-export-a-mesh-and-lattice-to-3MF-format),
+writing the solid mesh and the lattice into one file. Materialise Magics, Netfabb,
+and other AM preparation tools read them. Note that the extension describes beams
+and balls only: face lattices and TPMS surfaces such as gyroids cannot travel
+through it, from nTop or from anywhere else. OpenVCAD models those natively — see
+[Metamaterials](metamaterials/index.md) — they just have no representation in this
+file format.
+
+Bringing such a file into OpenVCAD converts that graph into signed-distance
+geometry, which is where it becomes editable again: intersect it with a body,
+grade a material through it, or feed it to any OpenVCAD compiler.
+
+## Import a file
+
+```python
+import pyvcad as pv
+import pyvcad_rendering as viz
+
+root = pv.ThreeMFBeamLattice("examples/data/beam_lattice/pyramid.3mf")
+
+viz.Render(root)
+```
+
+That is the whole import. Every build item in the file is resolved through its
+component graph, transforms are baked in, coordinates are converted to
+millimetres, and each object becomes part of one tree.
+
+<div class="guide-figure-stack">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">The pyramid sample: a lattice-only object of 391 beams, 156 of them tapered</p>
+<img src="images/beam_lattice_3_import_3mf_pyramid.webp" alt="A pyramidal truss lattice of 391 tapered beams imported from a 3MF file" width="100%">
+</div>
+</div>
+
+The three official 3MF Consortium samples ship with OpenVCAD under
+`examples/data/beam_lattice/`, and between them they exercise most of the
+extension:
+
+| File | Beams | What it exercises |
+| --- | --- | --- |
+| `pyramid.3mf` | 391 | A lattice-only object with no triangles, and beams that taper from one radius to another |
+| `variable_voronoi.3mf` | 1291 | Clipping against a separate cube object, and beams that inherit the lattice radius |
+| `spinal_implant.3mf` | 11821 | A solid mesh object and a lattice object built together as one part |
+
+## Inspect what the file declared
+
+Import does not hide the source data. Every object carries the settings it was
+read with, which is the quickest way to understand an unfamiliar file:
+
+```python
+lattice = pv.ThreeMFBeamLattice("examples/data/beam_lattice/variable_voronoi.3mf")
+
+imported = lattice.imported_objects[0]
+print(imported.name)              # Thick_lattice
+print(len(imported.beams))        # 1291
+print(imported.radius)            # 0.5
+print(imported.min_length)        # 0.005
+print(imported.cap)               # CapMode.Sphere
+print(imported.clip_mode)         # ClipMode.Inside
+```
+
+Use `pv.read_3mf_beam_lattice(path)` when you only want to look at a file
+without building geometry for it. It returns the same object records, and skips
+the cost of constructing the tree:
+
+```python
+scene = pv.read_3mf_beam_lattice("examples/data/beam_lattice/spinal_implant.3mf")
+
+for obj in scene.objects:
+    kind = f"{len(obj.beams)} beams" if obj.has_lattice else f"{len(obj.triangles)} triangles"
+    print(obj.object_id, obj.name, kind)
+```
+
+```
+1 ALIF 5672 triangles
+2 Thick_lattice 11821 beams
+```
+
+## What a beam actually is
+
+A beam is the conical frustum between two vertices, with an independent radius
+at each end, closed off by a cap mode. `Strut` is that shape:
+
+```python
+beam = pv.Strut(
+    pv.Vec3(0.0, 0.0, 0.0),   # start
+    pv.Vec3(0.0, 0.0, 20.0),  # end
+    2.0,                       # radius at the start
+    5.0,                       # radius at the end
+    pv.CapMode.HemiSphere,     # cap at the start
+    pv.CapMode.HemiSphere,     # cap at the end
+)
+```
+
+The single-radius constructor you already know, `pv.Strut(start, end, radius)`,
+is the same shape with matching radii and sphere caps — an ordinary capsule.
+Nothing about existing lattice code changes.
+
+### Cap modes
+
+The three cap modes decide what closes each end:
+
+| Mode | Geometry |
+| --- | --- |
+| `CapMode.Butt` | Flat, leaving a bare cone or cylinder |
+| `CapMode.Sphere` | A full sphere of the end radius, which can bulge past a narrowing lateral surface |
+| `CapMode.HemiSphere` | Only the outward half of that sphere, flush with the end |
+
+<div class="guide-figure-stack">
+  <div class="guide-figure-cell">
+    <a href="images/beam_lattice_1_beam_cap_modes.png" class="lightbox">
+      <img src="images/beam_lattice_1_beam_cap_modes.png" alt="Three tapered beams closed with butt, sphere, and hemisphere caps">
+    </a>
+    <div class="guide-figure-label">Left to right: <code>Butt</code>, <code>Sphere</code>, <code>HemiSphere</code>. Note the neck where the sphere cap bulges past the cone rim</div>
+  </div>
+</div>
+
+On a cylinder, where both radii match, sphere and hemisphere describe the same
+solid — the specification says so, and OpenVCAD collapses the two so the
+distance field stays exact. The difference only appears at the wider end of a
+cone. A beam may combine two different modes, one per end.
+
+Runnable version: `examples/lattices/beam_lattice/1_beam_cap_modes.py`.
+
+## Authoring a lattice directly
+
+`BeamLattice` is the node the importer builds, and it is just as usable on its
+own. It takes a shared vertex list plus `Beam` entries that index into it, which
+is far more compact than one `Strut` per edge once a lattice has hundreds of
+members. Internally every beam and ball becomes a child of an accelerated union,
+so large lattices stay cheap to sample.
+
+```python
+vertices = [pv.Vec3(0.0, 0.0, 0.0), pv.Vec3(10.0, 0.0, 0.0), pv.Vec3(0.0, 10.0, 0.0)]
+
+beams = [
+    pv.Beam(0, 1),                   # inherits the lattice radius
+    pv.Beam(0, 2, r1=1.0, r2=2.0),   # tapers from 1 mm to 2 mm
+]
+
+lattice = pv.BeamLattice(
+    vertices,
+    beams,
+    2.0,                             # default beam radius
+    min_length=0.01,
+    cap=pv.CapMode.Sphere,
+    ball_mode=pv.BallMode.All,
+    ball_radius=2.6,
+)
+lattice.prepare(pv.Vec3(0.25, 0.25, 0.25), 1.0)
+```
+
+### Radius resolution
+
+Anything a `Beam` leaves unset falls back to the lattice defaults, in the order
+the specification defines:
+
+| Given | Result |
+| --- | --- |
+| `r1` and `r2` | A conical frustum between the two radii |
+| `r1` only | A cylinder of radius `r1` |
+| Neither | A cylinder of the lattice `radius` |
+
+Cap modes resolve the same way: `cap1` and `cap2` override the lattice `cap`
+for that one end.
+
+This matters when reading real files. 813 of the variable voronoi sample's 1291
+beams declare no radius at all and inherit the lattice default of 0.5 mm; the
+rest range up to 2.2 mm, which is what makes that lattice variable.
+
+### Balls and minimum length
+
+Balls are spheres centred on vertices, and `ball_mode` decides where they go:
+
+| Mode | Behaviour |
+| --- | --- |
+| `BallMode.None_` | No balls |
+| `BallMode.Mixed` | Balls only where an explicit `pv.Ball(vertex, radius)` entry exists |
+| `BallMode.All` | A ball on every vertex that terminates a beam, using its explicit radius where one was given and `ball_radius` otherwise |
+
+A ball on a vertex that no beam terminates is ignored, as the specification
+requires. `min_length` drops beams shorter than the given length; check
+`active_beam_count` and `active_ball_count` to see what survived.
+
+<div class="guide-figure-stack">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">A hand-authored rod-and-ball lattice: uniform cube edges, body diagonals tapering from a thick hub, and <code>BallMode.All</code></p>
+<img src="images/beam_lattice_2_beam_lattice_by_hand.webp" alt="A cube of beams with tapered body diagonals and a ball at every node" width="100%">
+</div>
+</div>
+
+Runnable version: `examples/lattices/beam_lattice/2_beam_lattice_by_hand.py`.
+
+## Clipping
+
+A lattice may declare a clipping mode and a separate mesh object to clip
+against. OpenVCAD realises those modes as ordinary implicit CSG — the clipping
+mesh is loaded as a `Mesh` node and intersected with, or subtracted from, the
+lattice:
+
+| Mode | OpenVCAD equivalent |
+| --- | --- |
+| `ClipMode.None_` | The lattice, untouched |
+| `ClipMode.Inside` | `pv.Intersection(lattice, clipping_mesh)` |
+| `ClipMode.Outside` | `pv.Difference(lattice, clipping_mesh)` |
+
+<div class="guide-figure-stack">
+  <div class="guide-figure-cell">
+    <a href="images/beam_lattice_6_clipping_modes.png" class="lightbox">
+      <img src="images/beam_lattice_6_clipping_modes.png" alt="One lattice block shown unclipped, clipped to the inside of a sphere, and clipped to the outside of a sphere">
+    </a>
+    <div class="guide-figure-label">Left to right: <code>None_</code>, <code>Inside</code>, and <code>Outside</code>, all against the same sphere</div>
+  </div>
+</div>
+
+Because the clip is CSG rather than a pre-trimmed mesh, the result stays
+editable: swap the clipping volume for any other OpenVCAD node, or animate it.
+
+The importer applies whatever clip the file declares. The variable voronoi
+sample clips to the inside of its 100 mm cube. Beams that terminate on a cube
+face would otherwise bulge a full radius past it, and the clip trims that away.
+Pass `apply_clipping=False` to import the raw beams instead, which makes the
+difference easy to measure:
+
+```python
+point = (-50.2, -34.50148, 56.55310)   # 0.2 mm outside the cube's -X face
+
+clipped = pv.ThreeMFBeamLattice("examples/data/beam_lattice/variable_voronoi.3mf",
+                                mesh_voxel_size=0.25)
+raw = pv.ThreeMFBeamLattice("examples/data/beam_lattice/variable_voronoi.3mf",
+                            apply_clipping=False, mesh_voxel_size=0.25)
+
+clipped.prepare(pv.Vec3(0.25, 0.25, 0.25), 1.0)
+raw.prepare(pv.Vec3(0.25, 0.25, 0.25), 1.0)
+
+print(raw.evaluate(*point))       # -0.3: inside a beam's overhanging cap
+print(clipped.evaluate(*point))   #  0.2: the clip removed it
+```
+
+`mesh_voxel_size` sets how finely the clipping mesh is voxelized into a signed
+distance field. Match it to the smallest feature the clip has to resolve;
+leaving it unset uses OpenVCAD's usual heuristic for the mesh's size.
+
+<div class="guide-figure-stack">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">The variable voronoi sample, clipped to its cube on import</p>
+<img src="images/beam_lattice_4_import_3mf_clipped_voronoi.webp" alt="A variable-radius voronoi lattice clipped to a cube, with thick beams grading into thin ones" width="100%">
+</div>
+</div>
+
+Runnable versions: `examples/lattices/beam_lattice/4_import_3mf_clipped_voronoi.py`
+and `examples/lattices/beam_lattice/6_clipping_modes.py`.
+
+## Builds that mix solids and lattices
+
+The extension unifies a lattice with the triangle mesh of the same object, and a
+build may contain several objects. The spinal implant sample does both: object 1
+is the solid ALIF cage body, object 2 is an 11,821-beam lattice filling its
+windows. Importing the file brings in the whole build:
+
+```python
+part = pv.ThreeMFBeamLattice("examples/data/beam_lattice/spinal_implant.3mf",
+                             mesh_voxel_size=0.2)
+```
+
+<div class="guide-figure-stack">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">The spinal implant sample: a solid cage body unioned with an 11,821-beam lattice</p>
+<img src="images/beam_lattice_5_import_3mf_spinal_implant.webp" alt="A spinal cage implant whose solid body is filled with a fine beam lattice" width="100%">
+</div>
+</div>
+
+Pass `object_id` to bring in one object on its own. That is how you give the
+lattice and the solid body different materials:
+
+```python
+cage = pv.ThreeMFBeamLattice(path, object_id=1, mesh_voxel_size=0.2)
+infill = pv.ThreeMFBeamLattice(path, object_id=2)
+
+cage.set_attribute(pv.DefaultAttributes.COLOR_RGBA,
+                   pv.Vec4Attribute("0.75", "0.75", "0.78", "1.0"))
+infill.set_attribute(pv.DefaultAttributes.COLOR_RGBA,
+                     pv.Vec4Attribute("0.20", "0.55", "0.85", "1.0"))
+
+root = pv.Union(cage, infill)
+```
+
+Set `include_triangle_mesh=False` to import a lattice object without the
+triangle shell of the same object. Applying it to an object that is only a
+triangle mesh leaves nothing to build, and the import says so.
+
+Runnable version: `examples/lattices/beam_lattice/5_import_3mf_spinal_implant.py`.
+
+## Python API
+
+| Name | Purpose |
+| --- | --- |
+| `pv.Strut(start, end, radius)` | A capsule, unchanged from earlier releases |
+| `pv.Strut(start, end, r1, r2, cap1, cap2)` | A conical frustum with per-end radii and cap modes |
+| `pv.CapMode` | `Sphere`, `HemiSphere`, `Butt` |
+| `pv.Beam(v1, v2, r1, r2, cap1, cap2)` | One beam of a `BeamLattice`; unset fields inherit the lattice defaults |
+| `pv.Ball(vertex, radius)` | One ball of a `BeamLattice` |
+| `pv.BallMode` | `None_`, `Mixed`, `All` |
+| `pv.BeamLattice(vertices, beams, radius, ...)` | A beam-and-ball lattice over a shared vertex list |
+| `pv.ClipMode` | `None_`, `Inside`, `Outside` |
+| `pv.read_3mf_beam_lattice(path)` | Reads a file's contents without building geometry |
+| `pv.ThreeMFBeamLattice(path, ...)` | Imports a beam lattice 3MF as an implicit tree |
+
+`ThreeMFBeamLattice` takes `object_id`, `include_triangle_mesh`,
+`apply_clipping`, `use_representation_mesh`, and `mesh_voxel_size`. Its bounding
+box is valid before `prepare()`, because it is derived from the imported data
+rather than from its child meshes.
+
+(scope-and-limitations)=
+## Scope and limitations
+
+- **Geometry only.** Per-beam and per-ball property references (`pid`, `p1`,
+  `p2`) are not read, so imported lattices carry no material or colour from the
+  file. Assign OpenVCAD attributes to the imported node instead.
+- **Beam sets are not imported.** `<beamset>` elements group beams for an
+  editing application's own purposes and do not affect geometry, which the
+  specification lets a consumer ignore.
+- **Representation meshes are not used by default.** A representation mesh is a
+  display stand-in that the specification forbids using to manufacture a part.
+  `use_representation_mesh=True` substitutes it for the lattice when you want a
+  cheap preview of a very large file; do not compile that result.
+- **Export is not supported.** OpenVCAD reads beam lattice files but does not
+  yet write them.
+- **Non-uniform build transforms scale radii approximately.** A beam radius is a
+  single number, so a transform that scales the axes differently is applied to
+  radii as the equivalent uniform scale. Rigid and uniformly scaled transforms,
+  which is what real files use, are exact.
+
+Both the current `clippingmode` attribute and the older `clipping` spelling used
+by the published samples are read.

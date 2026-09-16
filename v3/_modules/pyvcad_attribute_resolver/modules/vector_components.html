@@ -26,8 +26,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
@@ -35,10 +35,10 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/openvcad_branding.css?v=c43e02c9" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
     <script src="../../../_static/documentation_options.js?v=110ea713"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
@@ -314,6 +314,7 @@
               <ul>
                 <li><a class="nav-link" href="../../../guides/compilers/index.html">Overview</a></li>
                 <li><a class="nav-link" href="../../../guides/compilers/material-inkjet.html">Material Inkjet</a></li>
+                <li><a class="nav-link" href="../../../guides/compilers/multi-material-vat.html">Multi-material VAT</a></li>
                 <li><a class="nav-link" href="../../../guides/compilers/color-inkjet.html">Color Inkjet</a></li>
                 <li><a class="nav-link" href="../../../guides/compilers/vat-photo.html">VAT Photo</a></li>
                 <li><a class="nav-link" href="../../../guides/compilers/slicer-project.html">Slicer Project</a></li>
@@ -331,9 +332,14 @@
                 <li><a class="nav-link" href="../../../guides/advanced.html">Overview</a></li>
                 <li><a class="nav-link" href="../../../guides/cadquery.html">CAD with CadQuery</a></li>
                 <li><a class="nav-link" href="../../../guides/surface-relief.html">Physical surface relief</a></li>
+                <li><a class="nav-link" href="../../../guides/mesh-selection.html">Selecting triangle-mesh patches</a></li>
+                <li><a class="nav-link" href="../../../guides/textured-mesh.html">Importing textured solids</a></li>
+                <li><a class="nav-link" href="../../../guides/3mf-beam-lattice.html">Importing 3MF beam lattices</a></li>
                 <li><a class="nav-link" href="../../../guides/volumes.html">Working with volumes</a></li>
+                <li><a class="nav-link" href="../../../guides/support-analyzer.html">Inkjet support volumes</a></li>
                 <li><a class="nav-link" href="../../../guides/math-expressions.html">Math expressions</a></li>
                 <li><a class="nav-link" href="../../../guides/custom-python-compiler.html">Creating a compiler in Python</a></li>
+                <li><a class="nav-link" href="../../../guides/simulation-driven-design.html">Simulation-driven design</a></li>
               </ul>
             </details>
           </li>
@@ -433,12 +439,12 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyvcad_attribute_resolver.modules.vector_components</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;Vector component promote/demote conversion registrations.</span>
+<span></span><span class="sd">"""Vector component promote/demote conversion registrations.</span>
 
 <span class="sd">These conversions are machine-agnostic adapters that split Vec3/Vec4</span>
 <span class="sd">attributes into named float components, or rebuild vectors from floats.</span>
 <span class="sd">Attribute names are chosen by the caller at registration time.</span>
-<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">"""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 
@@ -478,19 +484,19 @@
 <div class="viewcode-block" id="register_vec3_to_scalars_conversions">
 <a class="viewcode-back" href="../../../python-api/pyvcad_attribute_resolver/modules.html#pyvcad_attribute_resolver.register_vec3_to_scalars_conversions">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">register_vec3_to_scalars_conversions</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">x_name</span><span class="p">,</span> <span class="n">y_name</span><span class="p">,</span> <span class="n">z_name</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register Vec3 demotion edges that produce three named float attributes.</span>
+<span class="w">    </span><span class="sd">"""Register Vec3 demotion edges that produce three named float attributes.</span>
 
 <span class="sd">    One converter instance produces all three outputs. Separate graph edges are</span>
 <span class="sd">    registered for each component so ``adapt(..., [x_name])`` (and likewise for</span>
 <span class="sd">    Y/Z) can discover the conversion.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">factory</span> <span class="o">=</span> <span class="n">_vec3_to_scalars_factory</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">x_name</span><span class="p">,</span> <span class="n">y_name</span><span class="p">,</span> <span class="n">z_name</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="p">(</span><span class="n">x_name</span><span class="p">,</span> <span class="n">y_name</span><span class="p">,</span> <span class="n">z_name</span><span class="p">):</span>
         <span class="n">register_conversion</span><span class="p">(</span>
             <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span>
             <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
             <span class="n">converter_factory</span><span class="o">=</span><span class="n">factory</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;vector_components_</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">_to_</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">"vector_components_</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">_to_</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
             <span class="n">priority</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="n">VECTOR_COMPONENTS_TAG</span><span class="p">],</span>
         <span class="p">)</span></div>
@@ -500,14 +506,14 @@
 <div class="viewcode-block" id="register_vec4_to_scalars_conversions">
 <a class="viewcode-back" href="../../../python-api/pyvcad_attribute_resolver/modules.html#pyvcad_attribute_resolver.register_vec4_to_scalars_conversions">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">register_vec4_to_scalars_conversions</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">x_name</span><span class="p">,</span> <span class="n">y_name</span><span class="p">,</span> <span class="n">z_name</span><span class="p">,</span> <span class="n">w_name</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register Vec4 demotion edges that produce four named float attributes.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Register Vec4 demotion edges that produce four named float attributes."""</span>
     <span class="n">factory</span> <span class="o">=</span> <span class="n">_vec4_to_scalars_factory</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">x_name</span><span class="p">,</span> <span class="n">y_name</span><span class="p">,</span> <span class="n">z_name</span><span class="p">,</span> <span class="n">w_name</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="p">(</span><span class="n">x_name</span><span class="p">,</span> <span class="n">y_name</span><span class="p">,</span> <span class="n">z_name</span><span class="p">,</span> <span class="n">w_name</span><span class="p">):</span>
         <span class="n">register_conversion</span><span class="p">(</span>
             <span class="n">source</span><span class="o">=</span><span class="n">source</span><span class="p">,</span>
             <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
             <span class="n">converter_factory</span><span class="o">=</span><span class="n">factory</span><span class="p">,</span>
-            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;vector_components_</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">_to_</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">"vector_components_</span><span class="si">{</span><span class="n">source</span><span class="si">}</span><span class="s2">_to_</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
             <span class="n">priority</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
             <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="n">VECTOR_COMPONENTS_TAG</span><span class="p">],</span>
         <span class="p">)</span></div>
@@ -517,12 +523,12 @@
 <div class="viewcode-block" id="register_scalars_to_vec3_conversions">
 <a class="viewcode-back" href="../../../python-api/pyvcad_attribute_resolver/modules.html#pyvcad_attribute_resolver.register_scalars_to_vec3_conversions">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">register_scalars_to_vec3_conversions</span><span class="p">(</span><span class="n">x_name</span><span class="p">,</span> <span class="n">y_name</span><span class="p">,</span> <span class="n">z_name</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register a multi-input conversion that builds a Vec3 from three floats.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Register a multi-input conversion that builds a Vec3 from three floats."""</span>
     <span class="n">register_conversion</span><span class="p">(</span>
         <span class="n">source</span><span class="o">=</span><span class="n">x_name</span><span class="p">,</span>
         <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
         <span class="n">converter_factory</span><span class="o">=</span><span class="n">_scalars_to_vec3_factory</span><span class="p">(</span><span class="n">x_name</span><span class="p">,</span> <span class="n">y_name</span><span class="p">,</span> <span class="n">z_name</span><span class="p">,</span> <span class="n">target</span><span class="p">),</span>
-        <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;vector_components_</span><span class="si">{</span><span class="n">x_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">y_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">z_name</span><span class="si">}</span><span class="s2">_to_</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">"vector_components_</span><span class="si">{</span><span class="n">x_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">y_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">z_name</span><span class="si">}</span><span class="s2">_to_</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
         <span class="n">priority</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="n">VECTOR_COMPONENTS_TAG</span><span class="p">],</span>
         <span class="n">required_inputs</span><span class="o">=</span><span class="p">[</span><span class="n">x_name</span><span class="p">,</span> <span class="n">y_name</span><span class="p">,</span> <span class="n">z_name</span><span class="p">],</span>
@@ -533,14 +539,14 @@
 <div class="viewcode-block" id="register_scalars_to_vec4_conversions">
 <a class="viewcode-back" href="../../../python-api/pyvcad_attribute_resolver/modules.html#pyvcad_attribute_resolver.register_scalars_to_vec4_conversions">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">register_scalars_to_vec4_conversions</span><span class="p">(</span><span class="n">x_name</span><span class="p">,</span> <span class="n">y_name</span><span class="p">,</span> <span class="n">z_name</span><span class="p">,</span> <span class="n">w_name</span><span class="p">,</span> <span class="n">target</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register a multi-input conversion that builds a Vec4 from four floats.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Register a multi-input conversion that builds a Vec4 from four floats."""</span>
     <span class="n">register_conversion</span><span class="p">(</span>
         <span class="n">source</span><span class="o">=</span><span class="n">x_name</span><span class="p">,</span>
         <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="p">,</span>
         <span class="n">converter_factory</span><span class="o">=</span><span class="n">_scalars_to_vec4_factory</span><span class="p">(</span>
             <span class="n">x_name</span><span class="p">,</span> <span class="n">y_name</span><span class="p">,</span> <span class="n">z_name</span><span class="p">,</span> <span class="n">w_name</span><span class="p">,</span> <span class="n">target</span>
         <span class="p">),</span>
-        <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;vector_components_</span><span class="si">{</span><span class="n">x_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">y_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">z_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">w_name</span><span class="si">}</span><span class="s2">_to_</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="sa">f</span><span class="s2">"vector_components_</span><span class="si">{</span><span class="n">x_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">y_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">z_name</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">w_name</span><span class="si">}</span><span class="s2">_to_</span><span class="si">{</span><span class="n">target</span><span class="si">}</span><span class="s2">"</span><span class="p">,</span>
         <span class="n">priority</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
         <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="n">VECTOR_COMPONENTS_TAG</span><span class="p">],</span>
         <span class="n">required_inputs</span><span class="o">=</span><span class="p">[</span><span class="n">x_name</span><span class="p">,</span> <span class="n">y_name</span><span class="p">,</span> <span class="n">z_name</span><span class="p">,</span> <span class="n">w_name</span><span class="p">],</span>
@@ -563,16 +569,16 @@
     <span class="n">register_demote</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">register_promote</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register demote and/or promote conversions for the supplied attribute names.</span>
+<span class="w">    </span><span class="sd">"""Register demote and/or promote conversions for the supplied attribute names.</span>
 
 <span class="sd">    Pass a complete Vec3 name set and/or a complete Vec4 name set. Incomplete</span>
 <span class="sd">    name sets are ignored. At least one complete set must be provided.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="n">has_vec3</span> <span class="o">=</span> <span class="kc">None</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">vec3_source</span><span class="p">,</span> <span class="n">vec3_x</span><span class="p">,</span> <span class="n">vec3_y</span><span class="p">,</span> <span class="n">vec3_z</span><span class="p">)</span>
     <span class="n">has_vec4</span> <span class="o">=</span> <span class="kc">None</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">(</span><span class="n">vec4_source</span><span class="p">,</span> <span class="n">vec4_x</span><span class="p">,</span> <span class="n">vec4_y</span><span class="p">,</span> <span class="n">vec4_z</span><span class="p">,</span> <span class="n">vec4_w</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">has_vec3</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">has_vec4</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="s2">&quot;Provide a complete Vec3 name set and/or a complete Vec4 name set.&quot;</span>
+            <span class="s2">"Provide a complete Vec3 name set and/or a complete Vec4 name set."</span>
         <span class="p">)</span>
 
     <span class="k">if</span> <span class="n">has_vec3</span><span class="p">:</span>
@@ -594,11 +600,11 @@
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;register_vector_component_conversions&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;register_vec3_to_scalars_conversions&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;register_vec4_to_scalars_conversions&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;register_scalars_to_vec3_conversions&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;register_scalars_to_vec4_conversions&quot;</span><span class="p">,</span>
+    <span class="s2">"register_vector_component_conversions"</span><span class="p">,</span>
+    <span class="s2">"register_vec3_to_scalars_conversions"</span><span class="p">,</span>
+    <span class="s2">"register_vec4_to_scalars_conversions"</span><span class="p">,</span>
+    <span class="s2">"register_scalars_to_vec3_conversions"</span><span class="p">,</span>
+    <span class="s2">"register_scalars_to_vec4_conversions"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -629,8 +635,8 @@
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
-<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -664,7 +670,7 @@
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
 </p></div>
       
     </div>

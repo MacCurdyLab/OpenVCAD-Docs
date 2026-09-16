@@ -1,0 +1,858 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Select triangle-mesh patches &#8212; OpenVCAD 3.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../_static/openvcad_theme.css?v=84becb00" />
+    <link rel="stylesheet" type="text/css" href="../_static/openvcad_branding.css?v=c43e02c9" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
+
+    <script src="../_static/documentation_options.js?v=110ea713"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'guides/mesh-selection';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../_static/openvcad_lightbox.js?v=e11fca97"></script>
+    <script src="../_static/openvcad_comparison.js?v=0e3a0b21"></script>
+    <link rel="icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Importing textured solids" href="textured-mesh.html" />
+    <link rel="prev" title="Physical surface relief" href="surface-relief.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="OpenVCAD - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="OpenVCAD - Home"/>
+  
+  
+    <p class="title logo__title">
+      <span class="logo__title-full">OpenVCAD Documentation</span>
+      <span class="logo__title-compact" aria-hidden="true">Documentation</span>
+      <span class="logo__title-short" aria-hidden="true">Docs</span>
+    </p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item dropdown active">
+      <button class="btn dropdown-toggle nav-link active" type="button" id="pst-nav-dd-guides" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Guides
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-guides">
+        <li><a class="dropdown-item" href="../install.html">Installation</a></li>
+        <li><a class="dropdown-item" href="theory-and-motivation.html">Theory and Motivation</a></li>
+        <li><a class="dropdown-item" href="getting-started.html">Getting Started with OpenVCAD</a></li>
+        <li><a class="dropdown-item" href="gradients.html">Functional grading</a></li>
+        <li><a class="dropdown-item" href="metamaterials/index.html">Metamaterials</a></li>
+        <li><a class="dropdown-item" href="compilers/index.html">Compilers</a></li>
+        <li><a class="dropdown-item" href="attribute-resolver.html">Attribute modifier and resolver</a></li>
+        <li><a class="dropdown-item" href="attribute-conflicts.html">Attribute conflict resolution</a></li>
+        <li><a class="dropdown-item" href="numba-attributes.html">Python functions for attributes</a></li>
+        <li><a class="dropdown-item active" href="advanced.html">Advanced</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../gallery.html">Gallery</a>
+    </li>
+    <li class="nav-item dropdown">
+      <button class="btn dropdown-toggle nav-link" type="button" id="pst-nav-dd-py" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Python API
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-py">
+        <li><a class="dropdown-item" href="../python-api/pyvcad/index.html">pyvcad module</a></li>
+        <li><a class="dropdown-item" href="../python-api/pyvcad_compilers/index.html">pyvcad_compilers module</a></li>
+        <li><a class="dropdown-item" href="../python-api/pyvcad_rendering/index.html">pyvcad_rendering module</a></li>
+        <li><a class="dropdown-item" href="../python-api/pyvcad_attribute_resolver/index.html">pyvcad_attribute_resolver module</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../cpp-api/index.html">C++ API</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../papers.html">Papers</a>
+    </li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+
+<nav class="openvcad-mobile-nav" aria-label="Site navigation">
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+    <li class="nav-item">
+      <details class="openvcad-mobile-nav__group">
+        <summary>Guides</summary>
+        <ul>
+          <li><a class="nav-link" href="../install.html">Installation</a></li>
+          <li><a class="nav-link" href="moving-from-v2-to-v3.html">Moving from Version 2 to 3</a></li>
+          <li><a class="nav-link" href="theory-and-motivation.html">Theory and Motivation</a></li>
+          <li><a class="nav-link" href="getting-started.html">Getting Started with OpenVCAD</a></li>
+          <li><a class="nav-link" href="gradients.html">Functional grading</a></li>
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Metamaterials</summary>
+              <ul>
+                <li><a class="nav-link" href="metamaterials/index.html">Overview</a></li>
+                <li><a class="nav-link" href="metamaterials/concepts.html">Concepts and representation</a></li>
+                <li><a class="nav-link" href="metamaterials/catalog.html">TPMS and lattice catalog</a></li>
+                <li><a class="nav-link" href="metamaterials/custom-unit-cells.html">Custom unit cells</a></li>
+                <li><a class="nav-link" href="metamaterials/stochastic-lattices.html">Stochastic lattices</a></li>
+                <li><a class="nav-link" href="metamaterials/geometry-grading.html">Functionally graded geometry</a></li>
+                <li><a class="nav-link" href="metamaterials/attribute-modeling.html">Attribute modeling</a></li>
+                <li><a class="nav-link" href="metamaterials/cylindrical-spherical-cell-maps.html">Cylindrical and spherical cell maps</a></li>
+                <li><a class="nav-link" href="metamaterials/conformal-cad.html">Conformal mapping CAD surfaces</a></li>
+                <li><a class="nav-link" href="metamaterials/conformal-meshes.html">Conformal mapping triangle meshes</a></li>
+                <li><a class="nav-link" href="metamaterials/heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
+                <li><a class="nav-link" href="metamaterials/properties.html">Geometric characterization</a></li>
+              </ul>
+            </details>
+          </li>
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Compilers</summary>
+              <ul>
+                <li><a class="nav-link" href="compilers/index.html">Overview</a></li>
+                <li><a class="nav-link" href="compilers/material-inkjet.html">Material Inkjet</a></li>
+                <li><a class="nav-link" href="compilers/multi-material-vat.html">Multi-material VAT</a></li>
+                <li><a class="nav-link" href="compilers/color-inkjet.html">Color Inkjet</a></li>
+                <li><a class="nav-link" href="compilers/vat-photo.html">VAT Photo</a></li>
+                <li><a class="nav-link" href="compilers/slicer-project.html">Slicer Project</a></li>
+                <li><a class="nav-link" href="compilers/simulation-compiler.html">Simulation Compiler</a></li>
+              </ul>
+            </details>
+          </li>
+          <li><a class="nav-link" href="attribute-resolver.html">Attribute modifier and resolver</a></li>
+          <li><a class="nav-link" href="attribute-conflicts.html">Attribute conflict resolution</a></li>
+          <li><a class="nav-link" href="numba-attributes.html">Python functions for attributes</a></li>
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Advanced</summary>
+              <ul>
+                <li><a class="nav-link" href="advanced.html">Overview</a></li>
+                <li><a class="nav-link" href="cadquery.html">CAD with CadQuery</a></li>
+                <li><a class="nav-link" href="surface-relief.html">Physical surface relief</a></li>
+                <li><a class="nav-link active" href="#">Selecting triangle-mesh patches</a></li>
+                <li><a class="nav-link" href="textured-mesh.html">Importing textured solids</a></li>
+                <li><a class="nav-link" href="3mf-beam-lattice.html">Importing 3MF beam lattices</a></li>
+                <li><a class="nav-link" href="volumes.html">Working with volumes</a></li>
+                <li><a class="nav-link" href="support-analyzer.html">Inkjet support volumes</a></li>
+                <li><a class="nav-link" href="math-expressions.html">Math expressions</a></li>
+                <li><a class="nav-link" href="custom-python-compiler.html">Creating a compiler in Python</a></li>
+                <li><a class="nav-link" href="simulation-driven-design.html">Simulation-driven design</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </details>
+    </li>
+    <li class="nav-item"><a class="nav-link" href="../gallery.html">Gallery</a></li>
+    <li class="nav-item"><a class="nav-link" href="../python-api/index.html">Python API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../cpp-api/index.html">C++ API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../papers.html">Papers</a></li>
+  </ul>
+</nav>
+</div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory-and-motivation.html">Theory and Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gradients.html">Functional Grading Guide</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="metamaterials/index.html">Metamaterials</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/concepts.html">Concepts and representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/catalog.html">TPMS and lattice catalog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/custom-unit-cells.html">Custom unit cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/stochastic-lattices.html">Stochastic Voronoi and Delaunay lattices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/geometry-grading.html">Functionally graded metamaterial geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/attribute-modeling.html">Attribute modeling for metamaterials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/cylindrical-spherical-cell-maps.html">Cylindrical and spherical cell maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/conformal-cad.html">Conformal mapping CAD surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/conformal-meshes.html">Map lattices onto triangle meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/properties.html">Geometric characterization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="compilers/index.html">Compilers</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="compilers/material-inkjet.html">Material Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/multi-material-vat.html">Multi-material VAT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/color-inkjet.html">Color Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/vat-photo.html">VAT Photo Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/slicer-project.html">Slicer Project Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/simulation-compiler.html">Simulation Compiler</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="attribute-resolver.html">Attribute Modifier and Resolver Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attribute-conflicts.html">Attribute Conflict Resolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numba-attributes.html">Python Functions for Attributes</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="advanced.html">Advanced</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cadquery.html">Authoring CAD with CadQuery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="surface-relief.html">Physical surface relief</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Select triangle-mesh patches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="textured-mesh.html">Importing textured solids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="3mf-beam-lattice.html">Importing 3MF beam lattices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="volumes.html">Working with Volumes in OpenVCAD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support-analyzer.html">Inkjet support volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math-expressions.html">Math expressions in OpenVCAD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-python-compiler.html">Creating a Compiler in Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-driven-design.html">Simulation-driven design</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Guides</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="advanced.html" class="nav-link">Advanced</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Select triangle-mesh patches</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="select-triangle-mesh-patches">
+<span id="guide-mesh-selection"></span><h1>Select triangle-mesh patches<a class="headerlink" href="#select-triangle-mesh-patches" title="Link to this heading">#</a></h1>
+<p>Mesh selection turns a complete or complicated <code class="docutils literal notranslate"><span class="pre">SurfaceMesh</span></code> into a reusable set of triangles. It
+is useful whenever the next operation applies to only part of a mesh: mapping a conformal lattice,
+adding physical surface relief, assigning a region, measuring an area, or exporting a local patch.</p>
+<p>This guide focuses on the practical selection process. The <a class="reference internal" href="../python-api/pyvcad/index.html"><span class="doc std std-doc">Python API</span></a>
+contains the complete method reference, while the <a class="reference internal" href="metamaterials/conformal-meshes.html"><span class="std std-doc">triangle-mesh conformal mapping
+guide</span></a> explains chart construction and mapped lattices in depth.</p>
+<section id="the-selection-process">
+<h2>The selection process<a class="headerlink" href="#the-selection-process" title="Link to this heading">#</a></h2>
+<p>Most workflows follow five steps:</p>
+<ol class="arabic simple">
+<li><p><strong>Resolve the source mesh.</strong> Load a mesh file, construct a <code class="docutils literal notranslate"><span class="pre">SurfaceMesh</span></code>, or resolve an OpenVCAD
+tree at an explicit voxel size.</p></li>
+<li><p><strong>Choose a stable geometric seed.</strong> Use a point, ray, or nearest vertex instead of hard-coding a
+triangle ID when the source may change.</p></li>
+<li><p><strong>Grow the region.</strong> Follow connected triangles, stop at sharp edges or data boundaries, select
+by surface distance, or enclose a region with mesh-edge paths.</p></li>
+<li><p><strong>Inspect and refine it.</strong> Check its area and boundary, then add or remove triangle rings or make
+manual corrections in the interactive picker.</p></li>
+<li><p><strong>Convert or save it.</strong> Pass the general selection to another operation. Conformal mapping
+validates its stricter open-disk requirements only when you request a <code class="docutils literal notranslate"><span class="pre">TriangleMeshSurface</span></code>.</p></li>
+</ol>
+<p><code class="docutils literal notranslate"><span class="pre">MeshSelection</span></code> is immutable: refinement returns a new selection and leaves the previous result
+unchanged. Every result is tied to a fingerprint of the ordered source vertices and triangles. If
+the mesh is translated, merged, or regenerated at another resolution, operations reject the stale
+triangle IDs instead of silently selecting a different region.</p>
+</section>
+<section id="choose-the-method-that-matches-the-boundary">
+<h2>Choose the method that matches the boundary<a class="headerlink" href="#choose-the-method-that-matches-the-boundary" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Situation</p></th>
+<th class="head"><p>Useful approach</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>One disconnected shell or scan fragment</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">select_linked(...)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>A smooth panel meeting walls at a crease</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">select_linked_by_face_angle(...)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>A segmented or material-labelled region</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">select_linked_constrained(...)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>A local patch on a curved scan</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">select_by_geodesic_radius(...)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>A region inside a deliberate outline</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">shortest_surface_path(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">select_enclosed_region(...)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>An almost-correct automatic result</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">grown(...)</span></code>, <code class="docutils literal notranslate"><span class="pre">shrunk(...)</span></code>, or the interactive picker</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>The angle method uses the angle between each pair of neighboring triangles. It can follow gradual
+curvature around a dome while stopping at a sharp feature edge. Constrained growth adds marked
+mesh edges and per-triangle integer labels as delimiters. Labels can represent segmentation,
+material IDs, or any other triangle data you have reduced to region categories.</p>
+<p>Geodesic-radius selection measures shortest distances along mesh edges rather than straight through
+space. This matters on folded or curved surfaces: two triangles may be close in 3D while remaining
+far apart when travelling over the surface. Because this distance follows the triangulation, its
+boundary changes when the mesh resolution changes.</p>
+</section>
+<section id="walkthrough-select-a-domed-top-for-conformal-mapping">
+<h2>Walkthrough: select a domed top for conformal mapping<a class="headerlink" href="#walkthrough-select-a-domed-top-for-conformal-mapping" title="Link to this heading">#</a></h2>
+<p>The complete example is
+<a class="reference external" href="https://github.com/MacCurdyLab/OpenVCAD/blob/main/examples/geometry/mesh_selection/01_conformal_patch_workflow.py"><code class="docutils literal notranslate"><span class="pre">01_conformal_patch_workflow.py</span></code></a>.
+It starts from a closed domed tile. The target top is smooth, but it meets the side walls at a sharp
+edge, so angle-limited linked selection is a natural fit.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_metamaterials</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">mm</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">tile_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="s2">"examples/data/3d_models/domed_tile.stl"</span><span class="p">)</span>
+<span class="n">mesh</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">SurfaceMesh</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">tile_path</span><span class="p">),</span> <span class="n">disable_validation</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Seed the top from a point above the part, then follow smooth neighboring faces.</span>
+<span class="n">seed</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">nearest_triangle</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">))</span>
+<span class="n">selection</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">select_linked_by_face_angle</span><span class="p">(</span>
+    <span class="n">seed_triangle</span><span class="o">=</span><span class="n">seed</span><span class="o">.</span><span class="n">triangle_id</span><span class="p">,</span>
+    <span class="n">max_angle_degrees</span><span class="o">=</span><span class="mf">30.0</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The seed point does not need to lie exactly on the mesh. <code class="docutils literal notranslate"><span class="pre">nearest_triangle(...)</span></code> returns both the
+chosen triangle and the nearest surface point. A ray from a known camera or construction direction
+is another useful choice:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">seed</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">ray_intersection</span><span class="p">(</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">100</span><span class="p">),</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The selection reports its size and exposes the source edges around its boundary:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="nb">print</span><span class="p">(</span><span class="n">selection</span><span class="o">.</span><span class="n">triangle_count</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">selection</span><span class="o">.</span><span class="n">area</span><span class="p">)</span>               <span class="c1"># square millimetres</span>
+<span class="n">boundary</span> <span class="o">=</span> <span class="n">selection</span><span class="o">.</span><span class="n">boundary_edges</span><span class="p">()</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="images/mesh_selection_domed_patch.png" data-lightbox="mesh-selection-workflow"><img src="images/mesh_selection_domed_patch.png" alt="Closed domed tile shown in gray with its smooth top triangle patch selected in orange and outlined in dark blue"></a><div class="guide-figure-label">Angle-linked selection follows the dome and stops at the side-wall crease</div></div>
+  <div class="guide-figure-cell"><a href="images/mesh_selection_domed_lattice.png" data-lightbox="mesh-selection-workflow"><img src="images/mesh_selection_domed_lattice.png" alt="Gyroid lattice conformally mapped over the selected domed triangle patch"></a><div class="guide-figure-label">The validated patch becomes the surface for a conformal gyroid</div></div>
+</div>
+<p>At this point the selection is still a general triangle set. The conformal conversion is the step
+that requires one connected, consistently wound open disk with one boundary and no holes:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">surface</span> <span class="o">=</span> <span class="n">selection</span><span class="o">.</span><span class="n">to_triangle_mesh_surface</span><span class="p">(</span>
+    <span class="n">u_axis_hint</span><span class="o">=</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span>
+<span class="p">)</span>
+<span class="n">cell_map</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">cell_map_from_surface</span><span class="p">(</span>
+    <span class="n">surface</span><span class="p">,</span>
+    <span class="n">cells</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+    <span class="n">height</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">root</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">gyroid</span><span class="p">(</span><span class="n">cell_map</span><span class="p">,</span> <span class="n">wall_thickness</span><span class="o">=</span><span class="mf">0.55</span><span class="p">)</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Keeping validation at conversion makes the selection tools useful for other tasks that do not need
+a disk. If this conversion reports a closed patch, a hole, or multiple components, inspect the
+boundary and refine the selection before mapping it.</p>
+</section>
+<section id="refine-and-inspect-an-automatic-selection">
+<h2>Refine and inspect an automatic selection<a class="headerlink" href="#refine-and-inspect-an-automatic-selection" title="Link to this heading">#</a></h2>
+<p>Grow and shrink add or remove complete edge-adjacent triangle rings:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">expanded</span> <span class="o">=</span> <span class="n">selection</span><span class="o">.</span><span class="n">grown</span><span class="p">(</span><span class="n">rings</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">inset</span> <span class="o">=</span> <span class="n">selection</span><span class="o">.</span><span class="n">shrunk</span><span class="p">(</span><span class="n">rings</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Shrinking is useful when the mapped feature needs clearance from a seam. Growing can recover a thin
+strip missed by a seed rule. These are topological operations, so their physical width follows the
+local triangle size rather than a fixed millimetre distance. Use geodesic radius when physical
+surface distance is the important control.</p>
+<p>The
+<a class="reference external" href="https://github.com/MacCurdyLab/OpenVCAD/blob/main/examples/geometry/mesh_selection/02_geodesic_patch_and_refinement.py"><code class="docutils literal notranslate"><span class="pre">02_geodesic_patch_and_refinement.py</span></code></a>
+example creates a local disk on a wavy mesh and demonstrates ring refinement:</p>
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="images/mesh_selection_geodesic_patch.png" data-lightbox="mesh-selection-geodesic"><img src="images/mesh_selection_geodesic_patch.png" alt="Wavy triangle mesh with a compact geodesic-radius patch highlighted in orange and its boundary outlined"></a><div class="guide-figure-label">A surface-distance patch stays local while following the curved sheet</div></div>
+</div>
+</section>
+<section id="draw-an-enclosed-region-with-mesh-paths">
+<h2>Draw an enclosed region with mesh paths<a class="headerlink" href="#draw-an-enclosed-region-with-mesh-paths" title="Link to this heading">#</a></h2>
+<p>For a deliberate outline, snap construction points to vertices with <code class="docutils literal notranslate"><span class="pre">nearest_vertex(...)</span></code>, join
+them with <code class="docutils literal notranslate"><span class="pre">shortest_surface_path(...)</span></code>, and combine the returned <code class="docutils literal notranslate"><span class="pre">path.edges</span></code> into one closed loop.
+<code class="docutils literal notranslate"><span class="pre">select_enclosed_region(...)</span></code> then chooses the side containing a seed triangle:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">first</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">nearest_vertex</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="n">second</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">nearest_vertex</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">10</span><span class="p">,</span> <span class="o">-</span><span class="mi">10</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span>
+<span class="n">path</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">shortest_surface_path</span><span class="p">(</span><span class="n">first</span><span class="p">,</span> <span class="n">second</span><span class="p">)</span>
+
+<span class="c1"># Combine this path with the remaining sides of a closed outline.</span>
+<span class="n">boundary_edges</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">edges</span><span class="p">)</span> <span class="o">+</span> <span class="n">other_path_edges</span>
+<span class="n">selection</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">select_enclosed_region</span><span class="p">(</span>
+    <span class="n">boundary_edges</span><span class="p">,</span>
+    <span class="n">seed_triangle</span><span class="o">=</span><span class="n">inside_triangle</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The full
+<a class="reference external" href="https://github.com/MacCurdyLab/OpenVCAD/blob/main/examples/geometry/mesh_selection/04_path_enclosed_region.py"><code class="docutils literal notranslate"><span class="pre">04_path_enclosed_region.py</span></code></a>
+example joins four paths into an outline and maps a cubic lattice inside it. The boundary must be
+one connected, non-branching loop made from actual mesh edges. Use <code class="docutils literal notranslate"><span class="pre">blocked_edges</span></code> when a shortest
+path itself must avoid a seam or forbidden edge.</p>
+</section>
+<section id="use-the-interactive-picker-while-authoring-a-script">
+<h2>Use the interactive picker while authoring a script<a class="headerlink" href="#use-the-interactive-picker-while-authoring-a-script" title="Link to this heading">#</a></h2>
+<p>When the correct triangle IDs or threshold are not obvious, open the auxiliary picker:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">selection</span> <span class="o">=</span> <span class="n">viz</span><span class="o">.</span><span class="n">select_mesh_patch</span><span class="p">(</span><span class="n">mesh</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This is intentionally separate from the normal renderer. It supports clicking or painting manual
+faces, linked and angle-linked growth, geodesic-radius preview, replace/add/remove edits,
+grow/shrink, clear/invert, boundary display, area/count reporting, and conformal-patch validation.
+You can copy triangle IDs, save a versioned JSON selection, or return the result to the current
+Python session.</p>
+<p>Treat the picker as an authoring tool, not a dialog that must open every time your finished design
+runs. Save a chosen result and load it in the normal script:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">viz</span><span class="o">.</span><span class="n">save_mesh_selection</span><span class="p">(</span><span class="n">selection</span><span class="p">,</span> <span class="s2">"tile-top.selection.json"</span><span class="p">)</span>
+
+<span class="c1"># Later, against the exact same ordered mesh:</span>
+<span class="n">selection</span> <span class="o">=</span> <span class="n">viz</span><span class="o">.</span><span class="n">load_mesh_selection</span><span class="p">(</span><span class="s2">"tile-top.selection.json"</span><span class="p">,</span> <span class="n">mesh</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Point- and ray-seeded recipes may be deliberately replayed after remeshing with
+<code class="docutils literal notranslate"><span class="pre">viz.replay_mesh_selection(...)</span></code>. Exact triangle IDs, marked edges, region labels, and enclosed
+loops are topology-specific and therefore refuse replay on a different fingerprint.</p>
+</section>
+<section id="select-from-an-openvcad-tree">
+<h2>Select from an OpenVCAD tree<a class="headerlink" href="#select-from-an-openvcad-tree" title="Link to this heading">#</a></h2>
+<p>An implicit OpenVCAD tree has no triangles until it is resolved. Supply the voxel size explicitly:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">design</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">12</span><span class="p">))</span>
+<span class="n">mesh</span> <span class="o">=</span> <span class="n">viz</span><span class="o">.</span><span class="n">resolve_selection_mesh</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">=</span><span class="mf">0.75</span><span class="p">)</span>
+<span class="n">selection</span> <span class="o">=</span> <span class="n">viz</span><span class="o">.</span><span class="n">select_mesh_patch</span><span class="p">(</span><span class="n">design</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">=</span><span class="mf">0.75</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The voxel size controls both surface fidelity and triangle identity. Keep it with the saved
+selection and expect to reselect or explicitly replay a geometric recipe if you change it. See
+<a class="reference external" href="https://github.com/MacCurdyLab/OpenVCAD/blob/main/examples/metamaterials/conformal_meshes/26_select_patch_from_tree.py"><code class="docutils literal notranslate"><span class="pre">26_select_patch_from_tree.py</span></code></a>
+for a non-interactive ray-seeded version.</p>
+</section>
+<section id="practical-limits">
+<h2>Practical limits<a class="headerlink" href="#practical-limits" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Open and non-manifold edges delimit linked growth by default. This prevents an automatic region
+from leaking through ambiguous topology.</p></li>
+<li><p>Face-angle growth is local. A gently curving surface can travel far from the seed even though no
+individual edge exceeds the threshold.</p></li>
+<li><p>Shortest paths and geodesic radii follow mesh edges, so finer and more uniform triangulations
+produce smoother, more resolution-independent boundaries.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">boundary_edges()</span></code> can report several loops or non-manifold boundaries. Conformal conversion is
+stricter and accepts exactly one disk boundary.</p></li>
+<li><p>A changed fingerprint means triangle and vertex IDs are stale. Recreate the selection or replay a
+deliberately geometric recipe; do not copy old IDs onto the new mesh.</p></li>
+</ul>
+<p>Additional runnable examples cover
+<a class="reference external" href="https://github.com/MacCurdyLab/OpenVCAD/blob/main/examples/geometry/mesh_selection/03_attribute_delimited_patch.py"><code class="docutils literal notranslate"><span class="pre">triangle-region</span> <span class="pre">delimiters</span></code></a>,
+<a class="reference external" href="https://github.com/MacCurdyLab/OpenVCAD/blob/main/examples/metamaterials/conformal_meshes/23_manual_triangle_selection.py"><code class="docutils literal notranslate"><span class="pre">manual</span> <span class="pre">IDs</span></code></a>,
+and <a class="reference external" href="https://github.com/MacCurdyLab/OpenVCAD/blob/main/examples/metamaterials/conformal_meshes/24_select_linked_mesh_patch.py"><code class="docutils literal notranslate"><span class="pre">connected</span> <span class="pre">components</span></code></a>.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="surface-relief.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Physical surface relief</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="textured-mesh.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Importing textured solids</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-selection-process">The selection process</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#choose-the-method-that-matches-the-boundary">Choose the method that matches the boundary</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#walkthrough-select-a-domed-top-for-conformal-mapping">Walkthrough: select a domed top for conformal mapping</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#refine-and-inspect-an-automatic-selection">Refine and inspect an automatic selection</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#draw-an-enclosed-region-with-mesh-paths">Draw an enclosed region with mesh paths</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#use-the-interactive-picker-while-authoring-a-script">Use the interactive picker while authoring a script</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#select-from-an-openvcad-tree">Select from an OpenVCAD tree</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#practical-limits">Practical limits</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/guides/mesh-selection.md.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Charles Wade and Robert MacCurdy.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

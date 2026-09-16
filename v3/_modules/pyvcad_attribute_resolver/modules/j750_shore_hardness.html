@@ -26,8 +26,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
@@ -35,10 +35,10 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/openvcad_branding.css?v=c43e02c9" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
     <script src="../../../_static/documentation_options.js?v=110ea713"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
@@ -314,6 +314,7 @@
               <ul>
                 <li><a class="nav-link" href="../../../guides/compilers/index.html">Overview</a></li>
                 <li><a class="nav-link" href="../../../guides/compilers/material-inkjet.html">Material Inkjet</a></li>
+                <li><a class="nav-link" href="../../../guides/compilers/multi-material-vat.html">Multi-material VAT</a></li>
                 <li><a class="nav-link" href="../../../guides/compilers/color-inkjet.html">Color Inkjet</a></li>
                 <li><a class="nav-link" href="../../../guides/compilers/vat-photo.html">VAT Photo</a></li>
                 <li><a class="nav-link" href="../../../guides/compilers/slicer-project.html">Slicer Project</a></li>
@@ -331,9 +332,14 @@
                 <li><a class="nav-link" href="../../../guides/advanced.html">Overview</a></li>
                 <li><a class="nav-link" href="../../../guides/cadquery.html">CAD with CadQuery</a></li>
                 <li><a class="nav-link" href="../../../guides/surface-relief.html">Physical surface relief</a></li>
+                <li><a class="nav-link" href="../../../guides/mesh-selection.html">Selecting triangle-mesh patches</a></li>
+                <li><a class="nav-link" href="../../../guides/textured-mesh.html">Importing textured solids</a></li>
+                <li><a class="nav-link" href="../../../guides/3mf-beam-lattice.html">Importing 3MF beam lattices</a></li>
                 <li><a class="nav-link" href="../../../guides/volumes.html">Working with volumes</a></li>
+                <li><a class="nav-link" href="../../../guides/support-analyzer.html">Inkjet support volumes</a></li>
                 <li><a class="nav-link" href="../../../guides/math-expressions.html">Math expressions</a></li>
                 <li><a class="nav-link" href="../../../guides/custom-python-compiler.html">Creating a compiler in Python</a></li>
+                <li><a class="nav-link" href="../../../guides/simulation-driven-design.html">Simulation-driven design</a></li>
               </ul>
             </details>
           </li>
@@ -433,7 +439,7 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyvcad_attribute_resolver.modules.j750_shore_hardness</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;J750 shore-hardness to volume-fractions conversion registrations.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""J750 shore-hardness to volume-fractions conversion registrations."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 
@@ -456,17 +462,17 @@
         <span class="k">if</span> <span class="n">name</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">prefix</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">material_id</span>
 
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;No material found with prefix &#39;</span><span class="si">{}</span><span class="s2">&#39;&quot;</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">))</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"No material found with prefix '</span><span class="si">{}</span><span class="s2">'"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">prefix</span><span class="p">))</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_resolve_material_ids</span><span class="p">(</span><span class="n">material_defs</span><span class="p">,</span> <span class="n">agilus_material</span><span class="p">,</span> <span class="n">vero_material</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">agilus_material</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">agilus_id</span> <span class="o">=</span> <span class="n">_first_material_id_with_prefix</span><span class="p">(</span><span class="n">material_defs</span><span class="p">,</span> <span class="s2">&quot;Agilus30&quot;</span><span class="p">)</span>
+        <span class="n">agilus_id</span> <span class="o">=</span> <span class="n">_first_material_id_with_prefix</span><span class="p">(</span><span class="n">material_defs</span><span class="p">,</span> <span class="s2">"Agilus30"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">agilus_id</span> <span class="o">=</span> <span class="n">material_defs</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="n">agilus_material</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">vero_material</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">vero_id</span> <span class="o">=</span> <span class="n">_first_material_id_with_prefix</span><span class="p">(</span><span class="n">material_defs</span><span class="p">,</span> <span class="s2">&quot;Vero&quot;</span><span class="p">)</span>
+        <span class="n">vero_id</span> <span class="o">=</span> <span class="n">_first_material_id_with_prefix</span><span class="p">(</span><span class="n">material_defs</span><span class="p">,</span> <span class="s2">"Vero"</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">vero_id</span> <span class="o">=</span> <span class="n">material_defs</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="n">vero_material</span><span class="p">)</span>
 
@@ -488,21 +494,21 @@
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">fit_j750_shore_hardness_curve</span><span class="p">(</span><span class="n">polynomial_degree</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Fit the source CSV and return the expression data.</span>
+<span class="w">    </span><span class="sd">"""Fit the source CSV and return the expression data.</span>
 
 <span class="sd">    This helper is intentionally lazy so the runtime converter does not import</span>
 <span class="sd">    NumPy or read the CSV while adapting a design.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">.fit_curve</span><span class="w"> </span><span class="kn">import</span> <span class="n">build_expression</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">.fit_curve</span><span class="w"> </span><span class="kn">import</span> <span class="n">fit_j750_shore_hardness_curve</span> <span class="k">as</span> <span class="n">_fit_curve</span>
 
     <span class="n">fit</span> <span class="o">=</span> <span class="n">_fit_curve</span><span class="p">(</span><span class="n">polynomial_degree</span><span class="p">)</span>
-    <span class="n">fit</span><span class="p">[</span><span class="s2">&quot;expression&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">build_expression</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span>
+    <span class="n">fit</span><span class="p">[</span><span class="s2">"expression"</span><span class="p">]</span> <span class="o">=</span> <span class="n">build_expression</span><span class="p">(</span><span class="n">fit</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">fit</span>
 
 
 <span class="k">def</span><span class="w"> </span><span class="nf">generate_j750_shore_hardness_fit_plot</span><span class="p">(</span><span class="n">output_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">polynomial_degree</span><span class="o">=</span><span class="mi">6</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate the out-of-loop J750 hardness fit SVG figure.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Generate the out-of-loop J750 hardness fit SVG figure."""</span>
     <span class="kn">from</span><span class="w"> </span><span class="nn">.fit_curve</span><span class="w"> </span><span class="kn">import</span> <span class="n">generate_j750_shore_hardness_fit_plot</span> <span class="k">as</span> <span class="n">_generate_plot</span>
 
     <span class="k">return</span> <span class="n">_generate_plot</span><span class="p">(</span><span class="n">output_path</span><span class="p">,</span> <span class="n">polynomial_degree</span><span class="p">)</span>
@@ -515,12 +521,12 @@
     <span class="n">agilus_material</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
     <span class="n">vero_material</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register the J750 shore-hardness to volume-fractions conversion.</span>
+<span class="w">    </span><span class="sd">"""Register the J750 shore-hardness to volume-fractions conversion.</span>
 
 <span class="sd">    By default this resolves the first J750 materials whose names begin with</span>
 <span class="sd">    ``Agilus30`` and ``Vero``. Callers can override the representative material</span>
 <span class="sd">    names when they want a specific color variant.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">material_defs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">material_defs</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">j750_materials</span>
 
@@ -531,21 +537,21 @@
     <span class="p">)</span>
 
     <span class="n">register_conversion</span><span class="p">(</span>
-        <span class="n">source</span><span class="o">=</span><span class="s2">&quot;shore_hardness&quot;</span><span class="p">,</span>
-        <span class="n">target</span><span class="o">=</span><span class="s2">&quot;volume_fractions&quot;</span><span class="p">,</span>
+        <span class="n">source</span><span class="o">=</span><span class="s2">"shore_hardness"</span><span class="p">,</span>
+        <span class="n">target</span><span class="o">=</span><span class="s2">"volume_fractions"</span><span class="p">,</span>
         <span class="n">converter_factory</span><span class="o">=</span><span class="n">_curve_fit_factory</span><span class="p">(</span><span class="n">agilus_id</span><span class="p">,</span> <span class="n">vero_id</span><span class="p">),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;j750_shore_hardness_to_volume_fractions&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"j750_shore_hardness_to_volume_fractions"</span><span class="p">,</span>
         <span class="n">priority</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;j750_shore_hardness&quot;</span><span class="p">],</span>
+        <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">"j750_shore_hardness"</span><span class="p">],</span>
     <span class="p">)</span></div>
 
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;J750_AGILUS_FRACTION_EXPRESSION&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;fit_j750_shore_hardness_curve&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;generate_j750_shore_hardness_fit_plot&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;register_j750_shore_hardness_conversions&quot;</span><span class="p">,</span>
+    <span class="s2">"J750_AGILUS_FRACTION_EXPRESSION"</span><span class="p">,</span>
+    <span class="s2">"fit_j750_shore_hardness_curve"</span><span class="p">,</span>
+    <span class="s2">"generate_j750_shore_hardness_fit_plot"</span><span class="p">,</span>
+    <span class="s2">"register_j750_shore_hardness_conversions"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -576,8 +582,8 @@
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
-<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -611,7 +617,7 @@
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
 </p></div>
       
     </div>

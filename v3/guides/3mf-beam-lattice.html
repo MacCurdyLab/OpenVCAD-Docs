@@ -1,0 +1,1087 @@
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Importing 3MF beam lattices &#8212; OpenVCAD 3.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../_static/openvcad_theme.css?v=84becb00" />
+    <link rel="stylesheet" type="text/css" href="../_static/openvcad_branding.css?v=c43e02c9" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
+
+    <script src="../_static/documentation_options.js?v=110ea713"></script>
+    <script src="../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'guides/3mf-beam-lattice';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../_static/openvcad_lightbox.js?v=e11fca97"></script>
+    <script src="../_static/openvcad_comparison.js?v=0e3a0b21"></script>
+    <link rel="icon" href="../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Working with Volumes in OpenVCAD" href="volumes.html" />
+    <link rel="prev" title="Importing textured solids" href="textured-mesh.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../_static/searchtools.js"></script>
+    <script src="../_static/language_data.js"></script>
+    <script src="../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="OpenVCAD - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="OpenVCAD - Home"/>
+  
+  
+    <p class="title logo__title">
+      <span class="logo__title-full">OpenVCAD Documentation</span>
+      <span class="logo__title-compact" aria-hidden="true">Documentation</span>
+      <span class="logo__title-short" aria-hidden="true">Docs</span>
+    </p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item dropdown active">
+      <button class="btn dropdown-toggle nav-link active" type="button" id="pst-nav-dd-guides" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Guides
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-guides">
+        <li><a class="dropdown-item" href="../install.html">Installation</a></li>
+        <li><a class="dropdown-item" href="theory-and-motivation.html">Theory and Motivation</a></li>
+        <li><a class="dropdown-item" href="getting-started.html">Getting Started with OpenVCAD</a></li>
+        <li><a class="dropdown-item" href="gradients.html">Functional grading</a></li>
+        <li><a class="dropdown-item" href="metamaterials/index.html">Metamaterials</a></li>
+        <li><a class="dropdown-item" href="compilers/index.html">Compilers</a></li>
+        <li><a class="dropdown-item" href="attribute-resolver.html">Attribute modifier and resolver</a></li>
+        <li><a class="dropdown-item" href="attribute-conflicts.html">Attribute conflict resolution</a></li>
+        <li><a class="dropdown-item" href="numba-attributes.html">Python functions for attributes</a></li>
+        <li><a class="dropdown-item active" href="advanced.html">Advanced</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../gallery.html">Gallery</a>
+    </li>
+    <li class="nav-item dropdown">
+      <button class="btn dropdown-toggle nav-link" type="button" id="pst-nav-dd-py" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Python API
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-py">
+        <li><a class="dropdown-item" href="../python-api/pyvcad/index.html">pyvcad module</a></li>
+        <li><a class="dropdown-item" href="../python-api/pyvcad_compilers/index.html">pyvcad_compilers module</a></li>
+        <li><a class="dropdown-item" href="../python-api/pyvcad_rendering/index.html">pyvcad_rendering module</a></li>
+        <li><a class="dropdown-item" href="../python-api/pyvcad_attribute_resolver/index.html">pyvcad_attribute_resolver module</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../cpp-api/index.html">C++ API</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../papers.html">Papers</a>
+    </li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+
+<nav class="openvcad-mobile-nav" aria-label="Site navigation">
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item"><a class="nav-link" href="../index.html">Home</a></li>
+    <li class="nav-item">
+      <details class="openvcad-mobile-nav__group">
+        <summary>Guides</summary>
+        <ul>
+          <li><a class="nav-link" href="../install.html">Installation</a></li>
+          <li><a class="nav-link" href="moving-from-v2-to-v3.html">Moving from Version 2 to 3</a></li>
+          <li><a class="nav-link" href="theory-and-motivation.html">Theory and Motivation</a></li>
+          <li><a class="nav-link" href="getting-started.html">Getting Started with OpenVCAD</a></li>
+          <li><a class="nav-link" href="gradients.html">Functional grading</a></li>
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Metamaterials</summary>
+              <ul>
+                <li><a class="nav-link" href="metamaterials/index.html">Overview</a></li>
+                <li><a class="nav-link" href="metamaterials/concepts.html">Concepts and representation</a></li>
+                <li><a class="nav-link" href="metamaterials/catalog.html">TPMS and lattice catalog</a></li>
+                <li><a class="nav-link" href="metamaterials/custom-unit-cells.html">Custom unit cells</a></li>
+                <li><a class="nav-link" href="metamaterials/stochastic-lattices.html">Stochastic lattices</a></li>
+                <li><a class="nav-link" href="metamaterials/geometry-grading.html">Functionally graded geometry</a></li>
+                <li><a class="nav-link" href="metamaterials/attribute-modeling.html">Attribute modeling</a></li>
+                <li><a class="nav-link" href="metamaterials/cylindrical-spherical-cell-maps.html">Cylindrical and spherical cell maps</a></li>
+                <li><a class="nav-link" href="metamaterials/conformal-cad.html">Conformal mapping CAD surfaces</a></li>
+                <li><a class="nav-link" href="metamaterials/conformal-meshes.html">Conformal mapping triangle meshes</a></li>
+                <li><a class="nav-link" href="metamaterials/heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
+                <li><a class="nav-link" href="metamaterials/properties.html">Geometric characterization</a></li>
+              </ul>
+            </details>
+          </li>
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Compilers</summary>
+              <ul>
+                <li><a class="nav-link" href="compilers/index.html">Overview</a></li>
+                <li><a class="nav-link" href="compilers/material-inkjet.html">Material Inkjet</a></li>
+                <li><a class="nav-link" href="compilers/multi-material-vat.html">Multi-material VAT</a></li>
+                <li><a class="nav-link" href="compilers/color-inkjet.html">Color Inkjet</a></li>
+                <li><a class="nav-link" href="compilers/vat-photo.html">VAT Photo</a></li>
+                <li><a class="nav-link" href="compilers/slicer-project.html">Slicer Project</a></li>
+                <li><a class="nav-link" href="compilers/simulation-compiler.html">Simulation Compiler</a></li>
+              </ul>
+            </details>
+          </li>
+          <li><a class="nav-link" href="attribute-resolver.html">Attribute modifier and resolver</a></li>
+          <li><a class="nav-link" href="attribute-conflicts.html">Attribute conflict resolution</a></li>
+          <li><a class="nav-link" href="numba-attributes.html">Python functions for attributes</a></li>
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Advanced</summary>
+              <ul>
+                <li><a class="nav-link" href="advanced.html">Overview</a></li>
+                <li><a class="nav-link" href="cadquery.html">CAD with CadQuery</a></li>
+                <li><a class="nav-link" href="surface-relief.html">Physical surface relief</a></li>
+                <li><a class="nav-link" href="mesh-selection.html">Selecting triangle-mesh patches</a></li>
+                <li><a class="nav-link" href="textured-mesh.html">Importing textured solids</a></li>
+                <li><a class="nav-link active" href="#">Importing 3MF beam lattices</a></li>
+                <li><a class="nav-link" href="volumes.html">Working with volumes</a></li>
+                <li><a class="nav-link" href="support-analyzer.html">Inkjet support volumes</a></li>
+                <li><a class="nav-link" href="math-expressions.html">Math expressions</a></li>
+                <li><a class="nav-link" href="custom-python-compiler.html">Creating a compiler in Python</a></li>
+                <li><a class="nav-link" href="simulation-driven-design.html">Simulation-driven design</a></li>
+              </ul>
+            </details>
+          </li>
+        </ul>
+      </details>
+    </li>
+    <li class="nav-item"><a class="nav-link" href="../gallery.html">Gallery</a></li>
+    <li class="nav-item"><a class="nav-link" href="../python-api/index.html">Python API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../cpp-api/index.html">C++ API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../papers.html">Papers</a></li>
+  </ul>
+</nav>
+</div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg fa-fw" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg fa-fw" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg fa-fw" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg fa-fw me-1"></i>System Settings</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg fa-fw me-1"></i>Light</button></li>
+    <li><button class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg fa-fw me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../install.html">Installation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="theory-and-motivation.html">Theory and Motivation</a></li>
+<li class="toctree-l1"><a class="reference internal" href="getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l1"><a class="reference internal" href="gradients.html">Functional Grading Guide</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="metamaterials/index.html">Metamaterials</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/concepts.html">Concepts and representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/catalog.html">TPMS and lattice catalog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/custom-unit-cells.html">Custom unit cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/stochastic-lattices.html">Stochastic Voronoi and Delaunay lattices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/geometry-grading.html">Functionally graded metamaterial geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/attribute-modeling.html">Attribute modeling for metamaterials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/cylindrical-spherical-cell-maps.html">Cylindrical and spherical cell maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/conformal-cad.html">Conformal mapping CAD surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/conformal-meshes.html">Map lattices onto triangle meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="metamaterials/properties.html">Geometric characterization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="compilers/index.html">Compilers</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="compilers/material-inkjet.html">Material Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/multi-material-vat.html">Multi-material VAT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/color-inkjet.html">Color Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/vat-photo.html">VAT Photo Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/slicer-project.html">Slicer Project Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="compilers/simulation-compiler.html">Simulation Compiler</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1"><a class="reference internal" href="attribute-resolver.html">Attribute Modifier and Resolver Guide</a></li>
+<li class="toctree-l1"><a class="reference internal" href="attribute-conflicts.html">Attribute Conflict Resolution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="numba-attributes.html">Python Functions for Attributes</a></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="advanced.html">Advanced</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cadquery.html">Authoring CAD with CadQuery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="surface-relief.html">Physical surface relief</a></li>
+<li class="toctree-l2"><a class="reference internal" href="mesh-selection.html">Select triangle-mesh patches</a></li>
+<li class="toctree-l2"><a class="reference internal" href="textured-mesh.html">Importing textured solids</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">Importing 3MF beam lattices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="volumes.html">Working with Volumes in OpenVCAD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="support-analyzer.html">Inkjet support volumes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math-expressions.html">Math expressions in OpenVCAD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="custom-python-compiler.html">Creating a Compiler in Python</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-driven-design.html">Simulation-driven design</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-home"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Guides</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="advanced.html" class="nav-link">Advanced</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Importing 3MF beam lattices</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="importing-3mf-beam-lattices">
+<span id="guide-3mf-beam-lattice"></span><h1>Importing 3MF beam lattices<a class="headerlink" href="#importing-3mf-beam-lattices" title="Link to this heading">#</a></h1>
+<p>OpenVCAD imports lattice geometry written in the
+<a class="reference external" href="https://github.com/3MFConsortium/spec_beamlattice">3MF Beam Lattice Extension</a>.
+<code class="docutils literal notranslate"><span class="pre">ThreeMFBeamLattice</span></code> reads such a file and rebuilds it as an implicit tree, so the
+result is an ordinary OpenVCAD node: transform it, combine it with other geometry,
+hang attributes on it, and compile it like anything else.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>OpenVCAD currently <strong>imports</strong> beam lattice files. Writing them is not supported
+yet, so this is a one-way path into OpenVCAD rather than a round trip.</p>
+</div>
+<p>This guide assumes you have worked through
+<a class="reference internal" href="getting-started.html"><span class="std std-doc">Getting Started</span></a>. It covers geometry import only — see
+<a class="reference internal" href="#scope-and-limitations">Scope and limitations</a> at the end.</p>
+<section id="why-the-extension-exists">
+<h2>Why the extension exists<a class="headerlink" href="#why-the-extension-exists" title="Link to this heading">#</a></h2>
+<p>Additive manufacturing can build lattices that no subtractive process could, and
+they are now routine in medical implants, lightweighting, energy absorption, and
+heat exchange. The bottleneck was never the printer — it was the file.</p>
+<p>A triangle mesh describes only a surface, so a lattice has to be tessellated
+strut by strut. Every beam becomes a tube of triangles, every joint becomes a
+patch where tubes intersect, and the triangle count scales with the number of
+struts rather than with the complexity of the design. A lattice fine enough to
+matter mechanically produces a mesh too large to open, let alone edit. nTop cites
+a variable-thickness diamond lattice that exports as a
+<a class="reference external" href="https://www.ntop.com/resources/blog/ntop-platform-supports-the-3mf-file-format-with-beam-extension/">3.4 MB 3MF and would be over 3 GB as an STL</a>.</p>
+<p>The insight behind the extension is that a beam lattice is not really a surface —
+it is a <strong>graph</strong>. The design intent is a set of nodes, the beams connecting them,
+and a radius at each beam end. That is a few numbers per strut, and the surface can
+be regenerated from it whenever it is actually needed. So the extension stores
+exactly that: beams indexed into the mesh’s own vertex list, with optional per-end
+radii and cap modes, alongside whatever solid triangle geometry the object also
+carries. The spinal implant sample used later in this guide holds an 11,821-beam
+lattice <em>and</em> a solid cage body in 262 KB.</p>
+<p>Because it rides on the 3MF core format, a beam lattice travels with units, build
+transforms, materials, and component structure intact — the things STL throws away.</p>
+<section id="where-these-files-come-from">
+<h3>Where these files come from<a class="headerlink" href="#where-these-files-come-from" title="Link to this heading">#</a></h3>
+<p><a class="reference external" href="https://www.ntop.com/">nTop</a> is the tool most likely to have produced a beam
+lattice 3MF you are handed; it has
+<a class="reference external" href="https://support.ntop.com/hc/en-us/articles/360054069993-How-to-export-a-mesh-and-lattice-to-3MF-format">exported them since Platform 2.14</a>,
+writing the solid mesh and the lattice into one file. Materialise Magics, Netfabb,
+and other AM preparation tools read them. Note that the extension describes beams
+and balls only: face lattices and TPMS surfaces such as gyroids cannot travel
+through it, from nTop or from anywhere else. OpenVCAD models those natively — see
+<a class="reference internal" href="metamaterials/index.html"><span class="std std-doc">Metamaterials</span></a> — they just have no representation in this
+file format.</p>
+<p>Bringing such a file into OpenVCAD converts that graph into signed-distance
+geometry, which is where it becomes editable again: intersect it with a body,
+grade a material through it, or feed it to any OpenVCAD compiler.</p>
+</section>
+</section>
+<section id="import-a-file">
+<h2>Import a file<a class="headerlink" href="#import-a-file" title="Link to this heading">#</a></h2>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">ThreeMFBeamLattice</span><span class="p">(</span><span class="s2">"examples/data/beam_lattice/pyramid.3mf"</span><span class="p">)</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>That is the whole import. Every build item in the file is resolved through its
+component graph, transforms are baked in, coordinates are converted to
+millimetres, and each object becomes part of one tree.</p>
+<div class="guide-figure-stack">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">The pyramid sample: a lattice-only object of 391 beams, 156 of them tapered</p>
+<img src="images/beam_lattice_3_import_3mf_pyramid.webp" alt="A pyramidal truss lattice of 391 tapered beams imported from a 3MF file" width="100%">
+</div>
+</div>
+<p>The three official 3MF Consortium samples ship with OpenVCAD under
+<code class="docutils literal notranslate"><span class="pre">examples/data/beam_lattice/</span></code>, and between them they exercise most of the
+extension:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>File</p></th>
+<th class="head"><p>Beams</p></th>
+<th class="head"><p>What it exercises</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pyramid.3mf</span></code></p></td>
+<td><p>391</p></td>
+<td><p>A lattice-only object with no triangles, and beams that taper from one radius to another</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">variable_voronoi.3mf</span></code></p></td>
+<td><p>1291</p></td>
+<td><p>Clipping against a separate cube object, and beams that inherit the lattice radius</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">spinal_implant.3mf</span></code></p></td>
+<td><p>11821</p></td>
+<td><p>A solid mesh object and a lattice object built together as one part</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<section id="inspect-what-the-file-declared">
+<h2>Inspect what the file declared<a class="headerlink" href="#inspect-what-the-file-declared" title="Link to this heading">#</a></h2>
+<p>Import does not hide the source data. Every object carries the settings it was
+read with, which is the quickest way to understand an unfamiliar file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">lattice</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">ThreeMFBeamLattice</span><span class="p">(</span><span class="s2">"examples/data/beam_lattice/variable_voronoi.3mf"</span><span class="p">)</span>
+
+<span class="n">imported</span> <span class="o">=</span> <span class="n">lattice</span><span class="o">.</span><span class="n">imported_objects</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">imported</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>              <span class="c1"># Thick_lattice</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">imported</span><span class="o">.</span><span class="n">beams</span><span class="p">))</span>        <span class="c1"># 1291</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">imported</span><span class="o">.</span><span class="n">radius</span><span class="p">)</span>            <span class="c1"># 0.5</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">imported</span><span class="o">.</span><span class="n">min_length</span><span class="p">)</span>        <span class="c1"># 0.005</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">imported</span><span class="o">.</span><span class="n">cap</span><span class="p">)</span>               <span class="c1"># CapMode.Sphere</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">imported</span><span class="o">.</span><span class="n">clip_mode</span><span class="p">)</span>         <span class="c1"># ClipMode.Inside</span>
+</pre></div>
+</div>
+<p>Use <code class="docutils literal notranslate"><span class="pre">pv.read_3mf_beam_lattice(path)</span></code> when you only want to look at a file
+without building geometry for it. It returns the same object records, and skips
+the cost of constructing the tree:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">scene</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">read_3mf_beam_lattice</span><span class="p">(</span><span class="s2">"examples/data/beam_lattice/spinal_implant.3mf"</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">scene</span><span class="o">.</span><span class="n">objects</span><span class="p">:</span>
+    <span class="n">kind</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">beams</span><span class="p">)</span><span class="si">}</span><span class="s2"> beams"</span> <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">has_lattice</span> <span class="k">else</span> <span class="sa">f</span><span class="s2">"</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">triangles</span><span class="p">)</span><span class="si">}</span><span class="s2"> triangles"</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">object_id</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">kind</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="mi">1</span> <span class="n">ALIF</span> <span class="mi">5672</span> <span class="n">triangles</span>
+<span class="mi">2</span> <span class="n">Thick_lattice</span> <span class="mi">11821</span> <span class="n">beams</span>
+</pre></div>
+</div>
+</section>
+<section id="what-a-beam-actually-is">
+<h2>What a beam actually is<a class="headerlink" href="#what-a-beam-actually-is" title="Link to this heading">#</a></h2>
+<p>A beam is the conical frustum between two vertices, with an independent radius
+at each end, closed off by a cap mode. <code class="docutils literal notranslate"><span class="pre">Strut</span></code> is that shape:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">beam</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Strut</span><span class="p">(</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>   <span class="c1"># start</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">),</span>  <span class="c1"># end</span>
+    <span class="mf">2.0</span><span class="p">,</span>                       <span class="c1"># radius at the start</span>
+    <span class="mf">5.0</span><span class="p">,</span>                       <span class="c1"># radius at the end</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">CapMode</span><span class="o">.</span><span class="n">HemiSphere</span><span class="p">,</span>     <span class="c1"># cap at the start</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">CapMode</span><span class="o">.</span><span class="n">HemiSphere</span><span class="p">,</span>     <span class="c1"># cap at the end</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The single-radius constructor you already know, <code class="docutils literal notranslate"><span class="pre">pv.Strut(start,</span> <span class="pre">end,</span> <span class="pre">radius)</span></code>,
+is the same shape with matching radii and sphere caps — an ordinary capsule.
+Nothing about existing lattice code changes.</p>
+<section id="cap-modes">
+<h3>Cap modes<a class="headerlink" href="#cap-modes" title="Link to this heading">#</a></h3>
+<p>The three cap modes decide what closes each end:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Mode</p></th>
+<th class="head"><p>Geometry</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CapMode.Butt</span></code></p></td>
+<td><p>Flat, leaving a bare cone or cylinder</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">CapMode.Sphere</span></code></p></td>
+<td><p>A full sphere of the end radius, which can bulge past a narrowing lateral surface</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">CapMode.HemiSphere</span></code></p></td>
+<td><p>Only the outward half of that sphere, flush with the end</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="guide-figure-stack">
+  <div class="guide-figure-cell">
+    <a href="images/beam_lattice_1_beam_cap_modes.png" class="lightbox">
+      <img src="images/beam_lattice_1_beam_cap_modes.png" alt="Three tapered beams closed with butt, sphere, and hemisphere caps">
+    </a>
+    <div class="guide-figure-label">Left to right: <code>Butt</code>, <code>Sphere</code>, <code>HemiSphere</code>. Note the neck where the sphere cap bulges past the cone rim</div>
+  </div>
+</div>
+<p>On a cylinder, where both radii match, sphere and hemisphere describe the same
+solid — the specification says so, and OpenVCAD collapses the two so the
+distance field stays exact. The difference only appears at the wider end of a
+cone. A beam may combine two different modes, one per end.</p>
+<p>Runnable version: <code class="docutils literal notranslate"><span class="pre">examples/lattices/beam_lattice/1_beam_cap_modes.py</span></code>.</p>
+</section>
+</section>
+<section id="authoring-a-lattice-directly">
+<h2>Authoring a lattice directly<a class="headerlink" href="#authoring-a-lattice-directly" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">BeamLattice</span></code> is the node the importer builds, and it is just as usable on its
+own. It takes a shared vertex list plus <code class="docutils literal notranslate"><span class="pre">Beam</span></code> entries that index into it, which
+is far more compact than one <code class="docutils literal notranslate"><span class="pre">Strut</span></code> per edge once a lattice has hundreds of
+members. Internally every beam and ball becomes a child of an accelerated union,
+so large lattices stay cheap to sample.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">vertices</span> <span class="o">=</span> <span class="p">[</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)]</span>
+
+<span class="n">beams</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Beam</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>                   <span class="c1"># inherits the lattice radius</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Beam</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">r1</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">r2</span><span class="o">=</span><span class="mf">2.0</span><span class="p">),</span>   <span class="c1"># tapers from 1 mm to 2 mm</span>
+<span class="p">]</span>
+
+<span class="n">lattice</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">BeamLattice</span><span class="p">(</span>
+    <span class="n">vertices</span><span class="p">,</span>
+    <span class="n">beams</span><span class="p">,</span>
+    <span class="mf">2.0</span><span class="p">,</span>                             <span class="c1"># default beam radius</span>
+    <span class="n">min_length</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
+    <span class="n">cap</span><span class="o">=</span><span class="n">pv</span><span class="o">.</span><span class="n">CapMode</span><span class="o">.</span><span class="n">Sphere</span><span class="p">,</span>
+    <span class="n">ball_mode</span><span class="o">=</span><span class="n">pv</span><span class="o">.</span><span class="n">BallMode</span><span class="o">.</span><span class="n">All</span><span class="p">,</span>
+    <span class="n">ball_radius</span><span class="o">=</span><span class="mf">2.6</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">lattice</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">)</span>
+</pre></div>
+</div>
+<section id="radius-resolution">
+<h3>Radius resolution<a class="headerlink" href="#radius-resolution" title="Link to this heading">#</a></h3>
+<p>Anything a <code class="docutils literal notranslate"><span class="pre">Beam</span></code> leaves unset falls back to the lattice defaults, in the order
+the specification defines:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Given</p></th>
+<th class="head"><p>Result</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">r1</span></code> and <code class="docutils literal notranslate"><span class="pre">r2</span></code></p></td>
+<td><p>A conical frustum between the two radii</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">r1</span></code> only</p></td>
+<td><p>A cylinder of radius <code class="docutils literal notranslate"><span class="pre">r1</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Neither</p></td>
+<td><p>A cylinder of the lattice <code class="docutils literal notranslate"><span class="pre">radius</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Cap modes resolve the same way: <code class="docutils literal notranslate"><span class="pre">cap1</span></code> and <code class="docutils literal notranslate"><span class="pre">cap2</span></code> override the lattice <code class="docutils literal notranslate"><span class="pre">cap</span></code>
+for that one end.</p>
+<p>This matters when reading real files. 813 of the variable voronoi sample’s 1291
+beams declare no radius at all and inherit the lattice default of 0.5 mm; the
+rest range up to 2.2 mm, which is what makes that lattice variable.</p>
+</section>
+<section id="balls-and-minimum-length">
+<h3>Balls and minimum length<a class="headerlink" href="#balls-and-minimum-length" title="Link to this heading">#</a></h3>
+<p>Balls are spheres centred on vertices, and <code class="docutils literal notranslate"><span class="pre">ball_mode</span></code> decides where they go:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Mode</p></th>
+<th class="head"><p>Behaviour</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BallMode.None_</span></code></p></td>
+<td><p>No balls</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">BallMode.Mixed</span></code></p></td>
+<td><p>Balls only where an explicit <code class="docutils literal notranslate"><span class="pre">pv.Ball(vertex,</span> <span class="pre">radius)</span></code> entry exists</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">BallMode.All</span></code></p></td>
+<td><p>A ball on every vertex that terminates a beam, using its explicit radius where one was given and <code class="docutils literal notranslate"><span class="pre">ball_radius</span></code> otherwise</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>A ball on a vertex that no beam terminates is ignored, as the specification
+requires. <code class="docutils literal notranslate"><span class="pre">min_length</span></code> drops beams shorter than the given length; check
+<code class="docutils literal notranslate"><span class="pre">active_beam_count</span></code> and <code class="docutils literal notranslate"><span class="pre">active_ball_count</span></code> to see what survived.</p>
+<div class="guide-figure-stack">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">A hand-authored rod-and-ball lattice: uniform cube edges, body diagonals tapering from a thick hub, and <code>BallMode.All</code></p>
+<img src="images/beam_lattice_2_beam_lattice_by_hand.webp" alt="A cube of beams with tapered body diagonals and a ball at every node" width="100%">
+</div>
+</div>
+<p>Runnable version: <code class="docutils literal notranslate"><span class="pre">examples/lattices/beam_lattice/2_beam_lattice_by_hand.py</span></code>.</p>
+</section>
+</section>
+<section id="clipping">
+<h2>Clipping<a class="headerlink" href="#clipping" title="Link to this heading">#</a></h2>
+<p>A lattice may declare a clipping mode and a separate mesh object to clip
+against. OpenVCAD realises those modes as ordinary implicit CSG — the clipping
+mesh is loaded as a <code class="docutils literal notranslate"><span class="pre">Mesh</span></code> node and intersected with, or subtracted from, the
+lattice:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Mode</p></th>
+<th class="head"><p>OpenVCAD equivalent</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ClipMode.None_</span></code></p></td>
+<td><p>The lattice, untouched</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">ClipMode.Inside</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pv.Intersection(lattice,</span> <span class="pre">clipping_mesh)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">ClipMode.Outside</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pv.Difference(lattice,</span> <span class="pre">clipping_mesh)</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="guide-figure-stack">
+  <div class="guide-figure-cell">
+    <a href="images/beam_lattice_6_clipping_modes.png" class="lightbox">
+      <img src="images/beam_lattice_6_clipping_modes.png" alt="One lattice block shown unclipped, clipped to the inside of a sphere, and clipped to the outside of a sphere">
+    </a>
+    <div class="guide-figure-label">Left to right: <code>None_</code>, <code>Inside</code>, and <code>Outside</code>, all against the same sphere</div>
+  </div>
+</div>
+<p>Because the clip is CSG rather than a pre-trimmed mesh, the result stays
+editable: swap the clipping volume for any other OpenVCAD node, or animate it.</p>
+<p>The importer applies whatever clip the file declares. The variable voronoi
+sample clips to the inside of its 100 mm cube. Beams that terminate on a cube
+face would otherwise bulge a full radius past it, and the clip trims that away.
+Pass <code class="docutils literal notranslate"><span class="pre">apply_clipping=False</span></code> to import the raw beams instead, which makes the
+difference easy to measure:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">point</span> <span class="o">=</span> <span class="p">(</span><span class="o">-</span><span class="mf">50.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">34.50148</span><span class="p">,</span> <span class="mf">56.55310</span><span class="p">)</span>   <span class="c1"># 0.2 mm outside the cube's -X face</span>
+
+<span class="n">clipped</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">ThreeMFBeamLattice</span><span class="p">(</span><span class="s2">"examples/data/beam_lattice/variable_voronoi.3mf"</span><span class="p">,</span>
+                                <span class="n">mesh_voxel_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+<span class="n">raw</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">ThreeMFBeamLattice</span><span class="p">(</span><span class="s2">"examples/data/beam_lattice/variable_voronoi.3mf"</span><span class="p">,</span>
+                            <span class="n">apply_clipping</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">mesh_voxel_size</span><span class="o">=</span><span class="mf">0.25</span><span class="p">)</span>
+
+<span class="n">clipped</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">raw</span><span class="o">.</span><span class="n">prepare</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span> <span class="mf">1.0</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">raw</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="o">*</span><span class="n">point</span><span class="p">))</span>       <span class="c1"># -0.3: inside a beam's overhanging cap</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">clipped</span><span class="o">.</span><span class="n">evaluate</span><span class="p">(</span><span class="o">*</span><span class="n">point</span><span class="p">))</span>   <span class="c1">#  0.2: the clip removed it</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">mesh_voxel_size</span></code> sets how finely the clipping mesh is voxelized into a signed
+distance field. Match it to the smallest feature the clip has to resolve;
+leaving it unset uses OpenVCAD’s usual heuristic for the mesh’s size.</p>
+<div class="guide-figure-stack">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">The variable voronoi sample, clipped to its cube on import</p>
+<img src="images/beam_lattice_4_import_3mf_clipped_voronoi.webp" alt="A variable-radius voronoi lattice clipped to a cube, with thick beams grading into thin ones" width="100%">
+</div>
+</div>
+<p>Runnable versions: <code class="docutils literal notranslate"><span class="pre">examples/lattices/beam_lattice/4_import_3mf_clipped_voronoi.py</span></code>
+and <code class="docutils literal notranslate"><span class="pre">examples/lattices/beam_lattice/6_clipping_modes.py</span></code>.</p>
+</section>
+<section id="builds-that-mix-solids-and-lattices">
+<h2>Builds that mix solids and lattices<a class="headerlink" href="#builds-that-mix-solids-and-lattices" title="Link to this heading">#</a></h2>
+<p>The extension unifies a lattice with the triangle mesh of the same object, and a
+build may contain several objects. The spinal implant sample does both: object 1
+is the solid ALIF cage body, object 2 is an 11,821-beam lattice filling its
+windows. Importing the file brings in the whole build:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">part</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">ThreeMFBeamLattice</span><span class="p">(</span><span class="s2">"examples/data/beam_lattice/spinal_implant.3mf"</span><span class="p">,</span>
+                             <span class="n">mesh_voxel_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-stack">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">The spinal implant sample: a solid cage body unioned with an 11,821-beam lattice</p>
+<img src="images/beam_lattice_5_import_3mf_spinal_implant.webp" alt="A spinal cage implant whose solid body is filled with a fine beam lattice" width="100%">
+</div>
+</div>
+<p>Pass <code class="docutils literal notranslate"><span class="pre">object_id</span></code> to bring in one object on its own. That is how you give the
+lattice and the solid body different materials:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">cage</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">ThreeMFBeamLattice</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">object_id</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mesh_voxel_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">)</span>
+<span class="n">infill</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">ThreeMFBeamLattice</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">object_id</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">cage</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span>
+                   <span class="n">pv</span><span class="o">.</span><span class="n">Vec4Attribute</span><span class="p">(</span><span class="s2">"0.75"</span><span class="p">,</span> <span class="s2">"0.75"</span><span class="p">,</span> <span class="s2">"0.78"</span><span class="p">,</span> <span class="s2">"1.0"</span><span class="p">))</span>
+<span class="n">infill</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span>
+                     <span class="n">pv</span><span class="o">.</span><span class="n">Vec4Attribute</span><span class="p">(</span><span class="s2">"0.20"</span><span class="p">,</span> <span class="s2">"0.55"</span><span class="p">,</span> <span class="s2">"0.85"</span><span class="p">,</span> <span class="s2">"1.0"</span><span class="p">))</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">(</span><span class="n">cage</span><span class="p">,</span> <span class="n">infill</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Set <code class="docutils literal notranslate"><span class="pre">include_triangle_mesh=False</span></code> to import a lattice object without the
+triangle shell of the same object. Applying it to an object that is only a
+triangle mesh leaves nothing to build, and the import says so.</p>
+<p>Runnable version: <code class="docutils literal notranslate"><span class="pre">examples/lattices/beam_lattice/5_import_3mf_spinal_implant.py</span></code>.</p>
+</section>
+<section id="python-api">
+<h2>Python API<a class="headerlink" href="#python-api" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Name</p></th>
+<th class="head"><p>Purpose</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pv.Strut(start,</span> <span class="pre">end,</span> <span class="pre">radius)</span></code></p></td>
+<td><p>A capsule, unchanged from earlier releases</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pv.Strut(start,</span> <span class="pre">end,</span> <span class="pre">r1,</span> <span class="pre">r2,</span> <span class="pre">cap1,</span> <span class="pre">cap2)</span></code></p></td>
+<td><p>A conical frustum with per-end radii and cap modes</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pv.CapMode</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">Sphere</span></code>, <code class="docutils literal notranslate"><span class="pre">HemiSphere</span></code>, <code class="docutils literal notranslate"><span class="pre">Butt</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pv.Beam(v1,</span> <span class="pre">v2,</span> <span class="pre">r1,</span> <span class="pre">r2,</span> <span class="pre">cap1,</span> <span class="pre">cap2)</span></code></p></td>
+<td><p>One beam of a <code class="docutils literal notranslate"><span class="pre">BeamLattice</span></code>; unset fields inherit the lattice defaults</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pv.Ball(vertex,</span> <span class="pre">radius)</span></code></p></td>
+<td><p>One ball of a <code class="docutils literal notranslate"><span class="pre">BeamLattice</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pv.BallMode</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">None_</span></code>, <code class="docutils literal notranslate"><span class="pre">Mixed</span></code>, <code class="docutils literal notranslate"><span class="pre">All</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pv.BeamLattice(vertices,</span> <span class="pre">beams,</span> <span class="pre">radius,</span> <span class="pre">...)</span></code></p></td>
+<td><p>A beam-and-ball lattice over a shared vertex list</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pv.ClipMode</span></code></p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">None_</span></code>, <code class="docutils literal notranslate"><span class="pre">Inside</span></code>, <code class="docutils literal notranslate"><span class="pre">Outside</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">pv.read_3mf_beam_lattice(path)</span></code></p></td>
+<td><p>Reads a file’s contents without building geometry</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">pv.ThreeMFBeamLattice(path,</span> <span class="pre">...)</span></code></p></td>
+<td><p>Imports a beam lattice 3MF as an implicit tree</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">ThreeMFBeamLattice</span></code> takes <code class="docutils literal notranslate"><span class="pre">object_id</span></code>, <code class="docutils literal notranslate"><span class="pre">include_triangle_mesh</span></code>,
+<code class="docutils literal notranslate"><span class="pre">apply_clipping</span></code>, <code class="docutils literal notranslate"><span class="pre">use_representation_mesh</span></code>, and <code class="docutils literal notranslate"><span class="pre">mesh_voxel_size</span></code>. Its bounding
+box is valid before <code class="docutils literal notranslate"><span class="pre">prepare()</span></code>, because it is derived from the imported data
+rather than from its child meshes.</p>
+</section>
+<section id="scope-and-limitations">
+<span id="id1"></span><h2>Scope and limitations<a class="headerlink" href="#scope-and-limitations" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Geometry only.</strong> Per-beam and per-ball property references (<code class="docutils literal notranslate"><span class="pre">pid</span></code>, <code class="docutils literal notranslate"><span class="pre">p1</span></code>,
+<code class="docutils literal notranslate"><span class="pre">p2</span></code>) are not read, so imported lattices carry no material or colour from the
+file. Assign OpenVCAD attributes to the imported node instead.</p></li>
+<li><p><strong>Beam sets are not imported.</strong> <code class="docutils literal notranslate"><span class="pre">&lt;beamset&gt;</span></code> elements group beams for an
+editing application’s own purposes and do not affect geometry, which the
+specification lets a consumer ignore.</p></li>
+<li><p><strong>Representation meshes are not used by default.</strong> A representation mesh is a
+display stand-in that the specification forbids using to manufacture a part.
+<code class="docutils literal notranslate"><span class="pre">use_representation_mesh=True</span></code> substitutes it for the lattice when you want a
+cheap preview of a very large file; do not compile that result.</p></li>
+<li><p><strong>Export is not supported.</strong> OpenVCAD reads beam lattice files but does not
+yet write them.</p></li>
+<li><p><strong>Non-uniform build transforms scale radii approximately.</strong> A beam radius is a
+single number, so a transform that scales the axes differently is applied to
+radii as the equivalent uniform scale. Rigid and uniformly scaled transforms,
+which is what real files use, are exact.</p></li>
+</ul>
+<p>Both the current <code class="docutils literal notranslate"><span class="pre">clippingmode</span></code> attribute and the older <code class="docutils literal notranslate"><span class="pre">clipping</span></code> spelling used
+by the published samples are read.</p>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="textured-mesh.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Importing textured solids</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="volumes.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Working with Volumes in OpenVCAD</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#why-the-extension-exists">Why the extension exists</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#where-these-files-come-from">Where these files come from</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#import-a-file">Import a file</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#inspect-what-the-file-declared">Inspect what the file declared</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-a-beam-actually-is">What a beam actually is</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cap-modes">Cap modes</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#authoring-a-lattice-directly">Authoring a lattice directly</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#radius-resolution">Radius resolution</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#balls-and-minimum-length">Balls and minimum length</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#clipping">Clipping</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#builds-that-mix-solids-and-lattices">Builds that mix solids and lattices</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#python-api">Python API</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scope-and-limitations">Scope and limitations</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../_sources/guides/3mf-beam-lattice.md.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Charles Wade and Robert MacCurdy.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.1.0.
+    <br/>
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

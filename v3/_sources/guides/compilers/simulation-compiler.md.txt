@@ -6,14 +6,16 @@
 
 The **SimulationCompiler** turns an OpenVCAD design into a finite-element mesh plus cell-wise simulation data. The supported backends in this guide are:
 
+- **`GENERIC`** for a solver-neutral **`SimulationModel`** returned to Python or C++
 - **`FENICSX_XDMF`** for **`.xdmf` + `.h5`** mesh/data bundles
 - **`ABAQUS_INP`** for **`.inp`** mesh export
 
-This page is a hands-on guide to the exporter workflow. It is organized as three
-lessons: a volume-fractions export, an export-only direct-mechanical beam, and a
-self-contained OpenVCAD-to-FEniCSx beam solve. It focuses on the tetrahedral
-**XDMF/H5** path, shows the matching hexahedral **Abaqus** calls, and explains
-the two export modes that matter most:
+This page is a hands-on guide to the exporter workflow. It is organized as four
+lessons: a volume-fractions export, an export-only direct-mechanical beam, a
+self-contained OpenVCAD-to-FEniCSx beam solve, and generic in-memory model
+access. It covers tetrahedral **XDMF/H5**, hexahedral **Abaqus**, and both mesh
+families through Python objects. It also explains the two cell-data modes that
+matter most:
 
 - **`volume_fractions`** exported as both a stochastic **`material_id`** field and raw **`volume_fraction_*`** fields
 - direct scalar fields such as **`modulus`**, **`poissons_ratio`**, and **`density`** exported directly per element
@@ -28,6 +30,7 @@ The guide example files live under **`examples/compilers/simulation/`**:
 - **`01_volume_fractions_export.py`**
 - **`02_direct_mechanical_properties_export.py`**
 - **`03_fenicsx_load_exported_design.py`**
+- **`04_generic_in_memory_model.py`**
 
 ## What this compiler exports
 
@@ -35,13 +38,40 @@ The simulation compiler always starts from the same ingredients:
 
 1. a prepared OpenVCAD design
 2. a target mesh type
-3. one export backend
+3. one transport backend
 4. the attributes you want carried into the simulation mesh
+
+The backend selects transport, not meshing behavior. All three consume the
+same compact prepared model, so callers can switch destinations without
+changing geometry or cell-data semantics. `GENERIC` creates no files; after
+`compile()`, call `model()` to access topology, nodes, flattened zero-based
+connectivity, cell centroids, material fields, volume fractions, and scalar
+fields:
+
+```python
+settings = pvc.SimulationCompilerSettings()
+settings.backend = pvc.SimulationBackend.GENERIC
+settings.mesh_kind = pvc.SimulationMeshKind.HEX
+
+hex_settings = pvc.SimulationHexMeshSettings()
+hex_settings.voxel_size = pv.Vec3(1.0, 1.0, 1.0)
+settings.hex_settings = hex_settings
+
+compiler = pvc.SimulationCompiler(root, settings)
+compiler.compile()
+model = compiler.model()
+print(model.cell_type, len(model.nodes), len(model.connectivity))
+assert compiler.written_files() == []
+```
 
 The mesh itself can be:
 
 - **hexahedral** using a regular voxel-style grid
 - **tetrahedral** using a tet mesh with variable sized elements
+
+For fixed geometry, mesh settings, dependency versions, and `random_seed`, the
+compiler emits deterministic compact node and element identity. Compact means
+that every returned or written node is referenced by at least one element.
 
 The attribute path depends on what you attach to the model:
 
@@ -544,19 +574,56 @@ under the same applied traction.
 </div>
 </div>
 
+## Lesson 4: Generic in-memory models
+
+The script **`examples/compilers/simulation/04_generic_in_memory_model.py`**
+compiles the same graded bar to both `HEX8` and `TET4` without writing an
+intermediate file. Select `GENERIC`, call `compile()`, and then retrieve the
+prepared `SimulationModel` with `model()`.
+
+```python
+settings = pvc.SimulationCompilerSettings()
+settings.backend = pvc.SimulationBackend.GENERIC
+settings.mesh_kind = pvc.SimulationMeshKind.HEX
+
+hex_settings = pvc.SimulationHexMeshSettings()
+hex_settings.voxel_size = pv.Vec3(1.0, 1.0, 1.0)
+settings.hex_settings = hex_settings
+
+compiler = pvc.SimulationCompiler(root, settings)
+compiler.compile()
+model = compiler.model()
+```
+
+`SimulationModel` exposes:
+
+- `cell_type`: `SimulationCellType.HEX8` or `SimulationCellType.TET4`
+- `nodes_per_cell`: 8 or 4
+- `nodes`: compact `Vec3` coordinates
+- `connectivity`: flattened, zero-based node indices
+- `cell_centroids`: one `Vec3` per element
+- `material_ids` and `material_names`
+- `volume_fraction_fields` and `scalar_fields`
+
+Reshape connectivity conceptually into consecutive groups of
+`nodes_per_cell`. All cell fields align with that element order. The model is
+owned by its compiler, so keep the compiler alive while using the returned
+Python object. `model()` is available only after compiling with `GENERIC`, and
+`written_files()` is empty for that backend.
+
 ## Practical settings reference
 
 | Setting | Meaning |
 | ------- | ------- |
-| **`output_directory`** | Folder where the compiler writes the exported files. |
-| **`file_prefix`** | Prefix used for the written files. |
-| **`backend`** | Output family such as **`FENICSX_XDMF`** or **`ABAQUS_INP`**. |
+| **`output_directory`** | Folder used by file backends; ignored by **`GENERIC`**. |
+| **`file_prefix`** | Prefix used by file backends; ignored by **`GENERIC`**. |
+| **`backend`** | Transport: **`GENERIC`**, **`FENICSX_XDMF`**, or **`ABAQUS_INP`**. |
 | **`mesh_kind`** | Element family: **`HEX`** or **`TET`**. |
 | **`hex_settings.voxel_size`** | Regular hexahedral cell size in millimeters. |
 | **`tet_fixed_settings.facet_size`** | Surface triangle size target for fixed tet meshing. |
 | **`tet_fixed_settings.facet_distance`** | Surface approximation tolerance for fixed tet meshing. |
 | **`tet_fixed_settings.cell_size`** | Interior tetrahedral size target. |
-| **`random_seed`** | Seed used for deterministic stochastic material assignment. |
+| **`random_seed`** | Seed used for deterministic tet generation and stochastic material assignment. |
 | **`material_defs`** | Base material definitions used when exporting **`volume_fractions`**. |
 | **`direct_attributes`** | List of scalar attributes to export directly as cell data. |
 
@@ -565,3 +632,4 @@ under the same applied traction.
 - **`examples/compilers/simulation/01_volume_fractions_export.py`** — stochastic material assignment plus raw volume-fraction datasets
 - **`examples/compilers/simulation/02_direct_mechanical_properties_export.py`** — export-only direct scalar mechanical fields with **`poissons_ratio`** varying through **z**
 - **`examples/compilers/simulation/03_fenicsx_load_exported_design.py`** — self-contained DOLFINx/FEniCSx cantilever solve with a stiff-to-soft modulus gradient along **x**
+- **`examples/compilers/simulation/04_generic_in_memory_model.py`** — direct Python access to compact solver-neutral `HEX8` and `TET4` models

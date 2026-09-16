@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
@@ -36,10 +36,10 @@
     <link rel="stylesheet" type="text/css" href="../../_static/openvcad_branding.css?v=c43e02c9" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
     <script src="../../_static/documentation_options.js?v=110ea713"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
@@ -319,6 +319,7 @@
               <ul>
                 <li><a class="nav-link" href="../../guides/compilers/index.html">Overview</a></li>
                 <li><a class="nav-link" href="../../guides/compilers/material-inkjet.html">Material Inkjet</a></li>
+                <li><a class="nav-link" href="../../guides/compilers/multi-material-vat.html">Multi-material VAT</a></li>
                 <li><a class="nav-link" href="../../guides/compilers/color-inkjet.html">Color Inkjet</a></li>
                 <li><a class="nav-link" href="../../guides/compilers/vat-photo.html">VAT Photo</a></li>
                 <li><a class="nav-link" href="../../guides/compilers/slicer-project.html">Slicer Project</a></li>
@@ -336,9 +337,14 @@
                 <li><a class="nav-link" href="../../guides/advanced.html">Overview</a></li>
                 <li><a class="nav-link" href="../../guides/cadquery.html">CAD with CadQuery</a></li>
                 <li><a class="nav-link" href="../../guides/surface-relief.html">Physical surface relief</a></li>
+                <li><a class="nav-link" href="../../guides/mesh-selection.html">Selecting triangle-mesh patches</a></li>
+                <li><a class="nav-link" href="../../guides/textured-mesh.html">Importing textured solids</a></li>
+                <li><a class="nav-link" href="../../guides/3mf-beam-lattice.html">Importing 3MF beam lattices</a></li>
                 <li><a class="nav-link" href="../../guides/volumes.html">Working with volumes</a></li>
+                <li><a class="nav-link" href="../../guides/support-analyzer.html">Inkjet support volumes</a></li>
                 <li><a class="nav-link" href="../../guides/math-expressions.html">Math expressions</a></li>
                 <li><a class="nav-link" href="../../guides/custom-python-compiler.html">Creating a compiler in Python</a></li>
+                <li><a class="nav-link" href="../../guides/simulation-driven-design.html">Simulation-driven design</a></li>
               </ul>
             </details>
           </li>
@@ -496,6 +502,7 @@
 <li><p><strong>Typed volumes</strong> — <code class="docutils literal notranslate"><span class="pre">FloatVolume</span></code>, <code class="docutils literal notranslate"><span class="pre">Vec2sVolume</span></code>, <code class="docutils literal notranslate"><span class="pre">Vec3sVolume</span></code>, and <code class="docutils literal notranslate"><span class="pre">Vec4sVolume</span></code> wrap scalar or vector VDB grids. Call <code class="docutils literal notranslate"><span class="pre">sample(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code> for a value, <code class="docutils literal notranslate"><span class="pre">bounding_box()</span></code> for world-space bounds, and <code class="docutils literal notranslate"><span class="pre">clone()</span></code> when you need a thread-safe copy for concurrent evaluation.</p></li>
 <li><p><strong>VDB files</strong> — Use <code class="docutils literal notranslate"><span class="pre">pyvcad.vdb_loader</span></code> (<code class="docutils literal notranslate"><span class="pre">load_float_volume</span></code>, <code class="docutils literal notranslate"><span class="pre">load_vec3s_volume</span></code>, <code class="docutils literal notranslate"><span class="pre">load_vec4s_volume</span></code>) to open a named grid from a <code class="docutils literal notranslate"><span class="pre">.vdb</span></code> file, optionally centered on the origin.</p></li>
 <li><p><strong>DICOM stacks</strong> — <code class="docutils literal notranslate"><span class="pre">DICOMLoader</span></code> reads a directory of slices, applies real-world spacing and rescale metadata where available, and builds a scalar <code class="docutils literal notranslate"><span class="pre">FloatVolume</span></code> (commonly HU). Call <code class="docutils literal notranslate"><span class="pre">as_volume()</span></code> when you are ready to sample.</p></li>
+<li><p><strong>Unstructured result fields</strong> — <code class="docutils literal notranslate"><span class="pre">UnstructuredFieldDataset</span></code> copies TET4 point/connectivity arrays, stores named point- or cell-associated scalar and three-component vector results, and exposes them as ordinary <code class="docutils literal notranslate"><span class="pre">FloatAttribute</span></code> and <code class="docutils literal notranslate"><span class="pre">Vec3Attribute</span></code> objects. <code class="docutils literal notranslate"><span class="pre">XDMFFieldLoader</span></code> provides the same dataset from the supported XDMF 3/HDF5 subset.</p></li>
 <li><p><strong>Attributes</strong> — A <code class="docutils literal notranslate"><span class="pre">FloatVolume</span></code> is a continuous field; pass it to <code class="docutils literal notranslate"><span class="pre">FloatAttribute(volume)</span></code> (or <code class="docutils literal notranslate"><span class="pre">set_volume</span></code> on an existing <code class="docutils literal notranslate"><span class="pre">FloatAttribute</span></code>) and attach that attribute to geometry with <code class="docutils literal notranslate"><span class="pre">set_attribute</span></code>, same as expression-driven fields. Evaluation runs where your solid exists, using the volume’s values inside the part.</p></li>
 </ul>
 <section id="examples">
@@ -504,7 +511,7 @@
 <p><strong>VDB scalar grid</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 
-<span class="n">vol</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">vdb_loader</span><span class="o">.</span><span class="n">load_float_volume</span><span class="p">(</span><span class="s2">&quot;model.vdb&quot;</span><span class="p">,</span> <span class="s2">&quot;density&quot;</span><span class="p">)</span>
+<span class="n">vol</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">vdb_loader</span><span class="o">.</span><span class="n">load_float_volume</span><span class="p">(</span><span class="s2">"model.vdb"</span><span class="p">,</span> <span class="s2">"density"</span><span class="p">)</span>
 <span class="n">bbox_min</span><span class="p">,</span> <span class="n">bbox_max</span> <span class="o">=</span> <span class="n">vol</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">()</span>
 <span class="n">solid</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="o">.</span><span class="n">FromMinAndMax</span><span class="p">(</span><span class="n">bbox_min</span><span class="p">,</span> <span class="n">bbox_max</span><span class="p">)</span>
 <span class="n">solid</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">DENSITY</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">vol</span><span class="p">))</span>
@@ -513,10 +520,94 @@
 <p><strong>DICOM series → float volume</strong></p>
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 
-<span class="n">loader</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">DICOMLoader</span><span class="p">(</span><span class="s2">&quot;path/to/dicom_series&quot;</span><span class="p">)</span>
+<span class="n">loader</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">DICOMLoader</span><span class="p">(</span><span class="s2">"path/to/dicom_series"</span><span class="p">)</span>
 <span class="n">vol</span> <span class="o">=</span> <span class="n">loader</span><span class="o">.</span><span class="n">as_volume</span><span class="p">()</span>
 <span class="n">solid</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="o">.</span><span class="n">FromMinAndMax</span><span class="p">(</span><span class="o">*</span><span class="n">vol</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">())</span>
 <span class="n">solid</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">HU</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">vol</span><span class="p">))</span>
+</pre></div>
+</div>
+</section>
+<section id="unstructured-tet4-result-fields">
+<h2>Unstructured TET4 result fields<a class="headerlink" href="#unstructured-tet4-result-fields" title="Link to this heading">#</a></h2>
+<p>An unstructured field dataset is data, not geometry. Keep or separately import
+the OpenVCAD node that should consume the result, then attach a returned
+attribute to that node:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+
+<span class="n">results</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">UnstructuredFieldDataset</span><span class="o">.</span><span class="n">from_tetrahedra</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">cells</span><span class="p">)</span>
+<span class="n">results</span><span class="o">.</span><span class="n">add_point_vector</span><span class="p">(</span><span class="s2">"displacement"</span><span class="p">,</span> <span class="n">displacement</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s2">"mm"</span><span class="p">)</span>
+<span class="n">results</span><span class="o">.</span><span class="n">add_point_scalar</span><span class="p">(</span>
+    <span class="s2">"strain_energy_density"</span><span class="p">,</span>
+    <span class="n">energy</span><span class="p">,</span>
+    <span class="n">units</span><span class="o">=</span><span class="s2">"mJ/mm^3"</span><span class="p">,</span>
+    <span class="n">step_identifier</span><span class="o">=</span><span class="s2">"load-1"</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">energy_attribute</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">float_attribute</span><span class="p">(</span>
+    <span class="s2">"strain_energy_density"</span><span class="p">,</span>
+    <span class="n">outside</span><span class="o">=</span><span class="s2">"boundary_clamp"</span><span class="p">,</span>
+    <span class="n">max_distance</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">source_geometry</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">"strain_energy_density"</span><span class="p">,</span> <span class="n">energy_attribute</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Point-associated values are interpolated with TET4 barycentric coordinates.
+Cell-associated values remain piecewise constant. Coordinates and input values
+may be contiguous or strided NumPy-compatible <code class="docutils literal notranslate"><span class="pre">float32</span></code>/<code class="docutils literal notranslate"><span class="pre">float64</span></code> arrays;
+connectivity must use an integer dtype. Construction copies every input array,
+so later mutation or deletion of the NumPy arrays does not affect the dataset.</p>
+<p>Outside behavior is always explicit:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;error&quot;</span></code> is the default and raises when an ordinary attribute is sampled
+outside the domain. A constant or <code class="docutils literal notranslate"><span class="pre">max_distance</span></code> supplied with this policy
+is rejected rather than silently changing its meaning.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;constant&quot;</span></code> requires <code class="docutils literal notranslate"><span class="pre">constant_value</span></code>; no implicit zero fill is used.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;boundary_clamp&quot;</span></code> projects to the closest point on the outer TET4-domain
+boundary and requires a finite <code class="docutils literal notranslate"><span class="pre">max_distance</span></code>. Beyond that band it raises,
+unless an explicit <code class="docutils literal notranslate"><span class="pre">constant_value</span></code> is also provided.</p></li>
+</ul>
+<p>Numerical containment tolerance is separate from geometric boundary clamping.
+Use <code class="docutils literal notranslate"><span class="pre">sample_scalar</span></code> / <code class="docutils literal notranslate"><span class="pre">sample_vector</span></code> to inspect one query’s
+<code class="docutils literal notranslate"><span class="pre">SampleStatus</span></code>, or <code class="docutils literal notranslate"><span class="pre">coverage</span></code> to preflight a batch without adding counters
+to ordinary attribute samples:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">report</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">coverage</span><span class="p">(</span>
+    <span class="n">query_points</span><span class="p">,</span>
+    <span class="n">outside</span><span class="o">=</span><span class="s2">"boundary_clamp"</span><span class="p">,</span>
+    <span class="n">max_distance</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span>
+    <span class="n">maximum_failures</span><span class="o">=</span><span class="mi">8</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">report</span><span class="o">.</span><span class="n">inside_count</span><span class="p">,</span> <span class="n">report</span><span class="o">.</span><span class="n">boundary_clamped_count</span><span class="p">,</span> <span class="n">report</span><span class="o">.</span><span class="n">outside_count</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Coordinates default to the reference dataset coordinates. <code class="docutils literal notranslate"><span class="pre">transformed</span></code>
+uses two deliberately separate matrices: a 4x4 affine matrix maps consuming
+node positions into dataset positions, and a 3x3 matrix maps stored vector
+components into consuming coordinates. A displacement field never deforms the
+domain implicitly. Unit conversion is an explicit matrix scale rather than an
+effect of the <code class="docutils literal notranslate"><span class="pre">units</span></code> metadata:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">aligned</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">transformed</span><span class="p">(</span>
+    <span class="n">consumer_to_dataset_position</span><span class="p">,</span>
+    <span class="n">stored_to_consumer_vector</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">max_distance</span></code> is measured after the position transform, in reference
+dataset-coordinate units. This keeps its meaning explicit when the transform
+also performs a model-to-solver unit conversion.</p>
+<p><code class="docutils literal notranslate"><span class="pre">XDMFFieldLoader</span></code> supports XDMF 3 Uniform grids with
+<code class="docutils literal notranslate"><span class="pre">TopologyType=&quot;Tetrahedron&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">GeometryType=&quot;XYZ&quot;</span></code>, direct HDF-backed
+topology/geometry/attributes, <code class="docutils literal notranslate"><span class="pre">Center=&quot;Node&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">Center=&quot;Cell&quot;</span></code>, and
+scalar or three-component vector attributes. Select <code class="docutils literal notranslate"><span class="pre">grid_name</span></code> when a file
+contains more than one Uniform grid and optionally select <code class="docutils literal notranslate"><span class="pre">field_names</span></code>.
+Temporal or spatial collections, mixed topology, HEX8, inline XML arrays,
+functions, hyperslabs, tensors, malformed dimensions, and unsupported numeric
+types fail explicitly; this loader is not a general XDMF implementation.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">results</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">XDMFFieldLoader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span>
+    <span class="s2">"result.xdmf"</span><span class="p">,</span>
+    <span class="n">grid_name</span><span class="o">=</span><span class="s2">"OpenVCADMesh"</span><span class="p">,</span>
+    <span class="n">field_names</span><span class="o">=</span><span class="p">[</span><span class="s2">"displacement"</span><span class="p">,</span> <span class="s2">"strain_energy_density"</span><span class="p">],</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </section>
@@ -980,6 +1071,484 @@
 
 </dd></dl>
 
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.TetrahedralDomain">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">TetrahedralDomain</span></span><a class="headerlink" href="#pyvcad.TetrahedralDomain" title="Link to this definition">#</a></dt>
+<dd><p>Immutable validated TET4 domain with shared CGAL point-location and outer-boundary queries.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.TetrahedralDomain.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.TetrahedralDomain" title="pyvcad.pyvcad.TetrahedralDomain"><span class="pre">pyvcad.pyvcad.TetrahedralDomain</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cells</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.TetrahedralDomain.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Construct a TET4 domain by copying NumPy-compatible arrays.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (<em>array-like</em>) – Finite float32/float64 array with shape (N, 3).</p></li>
+<li><p><strong>cells</strong> (<em>array-like</em>) – Integer array with shape (M, 4).</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">domain</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">TetrahedralDomain</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">cells</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.TetrahedralDomain.boundary_face_count">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">boundary_face_count</span></span><a class="headerlink" href="#pyvcad.TetrahedralDomain.boundary_face_count" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.TetrahedralDomain.bounding_box">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">bounding_box</span></span><a class="headerlink" href="#pyvcad.TetrahedralDomain.bounding_box" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.TetrahedralDomain.cell_count">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cell_count</span></span><a class="headerlink" href="#pyvcad.TetrahedralDomain.cell_count" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.TetrahedralDomain.cells">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">cells</span></span><a class="headerlink" href="#pyvcad.TetrahedralDomain.cells" title="Link to this definition">#</a></dt>
+<dd><p>Return a copy of normalized TET4 connectivity.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.TetrahedralDomain.point_count">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">point_count</span></span><a class="headerlink" href="#pyvcad.TetrahedralDomain.point_count" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.TetrahedralDomain.points">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">points</span></span><a class="headerlink" href="#pyvcad.TetrahedralDomain.points" title="Link to this definition">#</a></dt>
+<dd><p>Return a copy of validated dataset-space point coordinates.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.TetrahedralDomain.reoriented_cell_count">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">reoriented_cell_count</span></span><a class="headerlink" href="#pyvcad.TetrahedralDomain.reoriented_cell_count" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.UnstructuredFieldDataset">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">UnstructuredFieldDataset</span></span><a class="headerlink" href="#pyvcad.UnstructuredFieldDataset" title="Link to this definition">#</a></dt>
+<dd><p>Solver-neutral named point/cell scalar and Vec3 fields sharing one immutable TET4 domain.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.UnstructuredFieldDataset.__init__">
+<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.UnstructuredFieldDataset" title="pyvcad.pyvcad.UnstructuredFieldDataset"><span class="pre">pyvcad.pyvcad.UnstructuredFieldDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">domain</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.TetrahedralDomain" title="pyvcad.pyvcad.TetrahedralDomain"><span class="pre">pyvcad.pyvcad.TetrahedralDomain</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.UnstructuredFieldDataset.__init__" title="Link to this definition">#</a></dt>
+<dd><p>Construct an empty field dataset sharing an immutable domain.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>domain</strong> (<a class="reference internal" href="#pyvcad.TetrahedralDomain" title="pyvcad.TetrahedralDomain"><em>TetrahedralDomain</em></a>) – Prepared immutable TET4 domain.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">UnstructuredFieldDataset</span><span class="p">(</span><span class="n">domain</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.UnstructuredFieldDataset.add_cell_scalar">
+<span class="sig-name descname"><span class="pre">add_cell_scalar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.UnstructuredFieldDataset" title="pyvcad.pyvcad.UnstructuredFieldDataset"><span class="pre">pyvcad.pyvcad.UnstructuredFieldDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.UnstructuredFieldDataset.add_cell_scalar" title="Link to this definition">#</a></dt>
+<dd><p>Add a copied cell-associated scalar field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Unique field name.</p></li>
+<li><p><strong>values</strong> (<em>array-like</em>) – Float32/float64 array with one value per cell.</p></li>
+<li><p><strong>units</strong> (<em>str</em>) – Optional units metadata.</p></li>
+<li><p><strong>step_identifier</strong> (<em>str</em>) – Optional load/time-step identifier.</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Optional descriptive metadata.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">results</span><span class="o">.</span><span class="n">add_cell_scalar</span><span class="p">(</span><span class="s1">'material_id'</span><span class="p">,</span> <span class="n">material_ids</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.UnstructuredFieldDataset.add_cell_vector">
+<span class="sig-name descname"><span class="pre">add_cell_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.UnstructuredFieldDataset" title="pyvcad.pyvcad.UnstructuredFieldDataset"><span class="pre">pyvcad.pyvcad.UnstructuredFieldDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.UnstructuredFieldDataset.add_cell_vector" title="Link to this definition">#</a></dt>
+<dd><p>Add a copied cell-associated three-component vector field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Unique field name.</p></li>
+<li><p><strong>values</strong> (<em>array-like</em>) – Float32/float64 array with shape (cell_count, 3).</p></li>
+<li><p><strong>units</strong> (<em>str</em>) – Optional units metadata.</p></li>
+<li><p><strong>step_identifier</strong> (<em>str</em>) – Optional load/time-step identifier.</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Optional descriptive metadata.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">results</span><span class="o">.</span><span class="n">add_cell_vector</span><span class="p">(</span><span class="s1">'flux'</span><span class="p">,</span> <span class="n">flux</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.UnstructuredFieldDataset.add_point_scalar">
+<span class="sig-name descname"><span class="pre">add_point_scalar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.UnstructuredFieldDataset" title="pyvcad.pyvcad.UnstructuredFieldDataset"><span class="pre">pyvcad.pyvcad.UnstructuredFieldDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.UnstructuredFieldDataset.add_point_scalar" title="Link to this definition">#</a></dt>
+<dd><p>Add a copied point-associated scalar field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Unique field name.</p></li>
+<li><p><strong>values</strong> (<em>array-like</em>) – Float32/float64 array with one value per point.</p></li>
+<li><p><strong>units</strong> (<em>str</em>) – Optional units metadata.</p></li>
+<li><p><strong>step_identifier</strong> (<em>str</em>) – Optional load/time-step identifier.</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Optional descriptive metadata.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">results</span><span class="o">.</span><span class="n">add_point_scalar</span><span class="p">(</span><span class="s1">'energy'</span><span class="p">,</span> <span class="n">energy</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">'mJ/mm^3'</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.UnstructuredFieldDataset.add_point_vector">
+<span class="sig-name descname"><span class="pre">add_point_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.UnstructuredFieldDataset" title="pyvcad.pyvcad.UnstructuredFieldDataset"><span class="pre">pyvcad.pyvcad.UnstructuredFieldDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">values</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">units</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step_identifier</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">description</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.UnstructuredFieldDataset.add_point_vector" title="Link to this definition">#</a></dt>
+<dd><p>Add a copied point-associated three-component vector field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Unique field name.</p></li>
+<li><p><strong>values</strong> (<em>array-like</em>) – Float32/float64 array with shape (point_count, 3).</p></li>
+<li><p><strong>units</strong> (<em>str</em>) – Optional units metadata.</p></li>
+<li><p><strong>step_identifier</strong> (<em>str</em>) – Optional load/time-step identifier.</p></li>
+<li><p><strong>description</strong> (<em>str</em>) – Optional descriptive metadata.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">results</span><span class="o">.</span><span class="n">add_point_vector</span><span class="p">(</span><span class="s1">'displacement'</span><span class="p">,</span> <span class="n">displacement</span><span class="p">,</span> <span class="n">units</span><span class="o">=</span><span class="s1">'mm'</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.UnstructuredFieldDataset.coverage">
+<span class="sig-name descname"><span class="pre">coverage</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.UnstructuredFieldDataset" title="pyvcad.pyvcad.UnstructuredFieldDataset"><span class="pre">pyvcad.pyvcad.UnstructuredFieldDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">positions</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outside</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'error'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_distance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">maximum_failures</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsInt</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">8</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.CoverageReport" title="pyvcad.pyvcad.CoverageReport"><span class="pre">pyvcad.pyvcad.CoverageReport</span></a></span></span><a class="headerlink" href="#pyvcad.UnstructuredFieldDataset.coverage" title="Link to this definition">#</a></dt>
+<dd><p>Classify a batch of consuming-coordinate query positions without persistent counters.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>positions</strong> (<em>array-like</em>) – Float array with shape (N, 3).</p></li>
+<li><p><strong>outside</strong> (<em>str</em><em> | </em><a class="reference internal" href="#pyvcad.OutsidePolicy" title="pyvcad.OutsidePolicy"><em>OutsidePolicy</em></a>) – Outside policy to preflight.</p></li>
+<li><p><strong>max_distance</strong> (<em>float</em><em> | </em><em>None</em>) – Required finite boundary-clamp band.</p></li>
+<li><p><strong>maximum_failures</strong> (<em>int</em>) – Bounded number of representative outside points.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">report</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">coverage</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">outside</span><span class="o">=</span><span class="s1">'boundary_clamp'</span><span class="p">,</span> <span class="n">max_distance</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.UnstructuredFieldDataset.domain">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">domain</span></span><a class="headerlink" href="#pyvcad.UnstructuredFieldDataset.domain" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.UnstructuredFieldDataset.field_metadata">
+<span class="sig-name descname"><span class="pre">field_metadata</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.UnstructuredFieldDataset" title="pyvcad.pyvcad.UnstructuredFieldDataset"><span class="pre">pyvcad.pyvcad.UnstructuredFieldDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.FieldMetadata" title="pyvcad.pyvcad.FieldMetadata"><span class="pre">pyvcad.pyvcad.FieldMetadata</span></a></span></span><a class="headerlink" href="#pyvcad.UnstructuredFieldDataset.field_metadata" title="Link to this definition">#</a></dt>
+<dd><p>Return read-only metadata for a named field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Field name.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">metadata</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">field_metadata</span><span class="p">(</span><span class="s1">'displacement'</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.UnstructuredFieldDataset.field_names">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">field_names</span></span><a class="headerlink" href="#pyvcad.UnstructuredFieldDataset.field_names" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.UnstructuredFieldDataset.float_attribute">
+<span class="sig-name descname"><span class="pre">float_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.UnstructuredFieldDataset" title="pyvcad.pyvcad.UnstructuredFieldDataset"><span class="pre">pyvcad.pyvcad.UnstructuredFieldDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outside</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'error'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_distance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constant_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="attributes.html#pyvcad.FloatAttribute" title="pyvcad.pyvcad.FloatAttribute"><span class="pre">pyvcad.pyvcad.FloatAttribute</span></a></span></span><a class="headerlink" href="#pyvcad.UnstructuredFieldDataset.float_attribute" title="Link to this definition">#</a></dt>
+<dd><p>Create an ordinary FloatAttribute backed by a named scalar field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Scalar field name.</p></li>
+<li><p><strong>outside</strong> (<em>str</em><em> | </em><a class="reference internal" href="#pyvcad.OutsidePolicy" title="pyvcad.OutsidePolicy"><em>OutsidePolicy</em></a>) – error, constant, or boundary_clamp.</p></li>
+<li><p><strong>max_distance</strong> (<em>float</em><em> | </em><em>None</em>) – Required finite clamp band for boundary_clamp.</p></li>
+<li><p><strong>constant_value</strong> (<em>float</em><em> | </em><em>None</em>) – Explicit fallback; with boundary_clamp it applies beyond the band.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">energy</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">float_attribute</span><span class="p">(</span><span class="s1">'energy'</span><span class="p">,</span> <span class="n">outside</span><span class="o">=</span><span class="s1">'boundary_clamp'</span><span class="p">,</span> <span class="n">max_distance</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.UnstructuredFieldDataset.from_tetrahedra">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">from_tetrahedra</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cells</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.UnstructuredFieldDataset" title="pyvcad.pyvcad.UnstructuredFieldDataset"><span class="pre">pyvcad.pyvcad.UnstructuredFieldDataset</span></a></span></span><a class="headerlink" href="#pyvcad.UnstructuredFieldDataset.from_tetrahedra" title="Link to this definition">#</a></dt>
+<dd><p>Construct a dataset by copying point and TET4 connectivity arrays.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>points</strong> (<em>array-like</em>) – Float32/float64 array with shape (N, 3).</p></li>
+<li><p><strong>cells</strong> (<em>array-like</em>) – Integer array with shape (M, 4).</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">UnstructuredFieldDataset</span><span class="o">.</span><span class="n">from_tetrahedra</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">cells</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.UnstructuredFieldDataset.has_field">
+<span class="sig-name descname"><span class="pre">has_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.UnstructuredFieldDataset" title="pyvcad.pyvcad.UnstructuredFieldDataset"><span class="pre">pyvcad.pyvcad.UnstructuredFieldDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="headerlink" href="#pyvcad.UnstructuredFieldDataset.has_field" title="Link to this definition">#</a></dt>
+<dd><p>Return whether a named field exists.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>name</strong> (<em>str</em>) – Field name.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="k">assert</span> <span class="n">results</span><span class="o">.</span><span class="n">has_field</span><span class="p">(</span><span class="s1">'displacement'</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.UnstructuredFieldDataset.position_transform">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">position_transform</span></span><a class="headerlink" href="#pyvcad.UnstructuredFieldDataset.position_transform" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.UnstructuredFieldDataset.sample_scalar">
+<span class="sig-name descname"><span class="pre">sample_scalar</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.UnstructuredFieldDataset" title="pyvcad.pyvcad.UnstructuredFieldDataset"><span class="pre">pyvcad.pyvcad.UnstructuredFieldDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outside</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'error'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_distance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constant_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.ScalarFieldSample" title="pyvcad.pyvcad.ScalarFieldSample"><span class="pre">pyvcad.pyvcad.ScalarFieldSample</span></a></span></span><a class="headerlink" href="#pyvcad.UnstructuredFieldDataset.sample_scalar" title="Link to this definition">#</a></dt>
+<dd><p>Diagnostically sample a scalar field and return its classification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Scalar field name.</p></li>
+<li><p><strong>position</strong> (<em>array-like</em>) – Three consuming-coordinate values.</p></li>
+<li><p><strong>outside</strong> (<em>str</em><em> | </em><a class="reference internal" href="#pyvcad.OutsidePolicy" title="pyvcad.OutsidePolicy"><em>OutsidePolicy</em></a>) – Outside policy.</p></li>
+<li><p><strong>max_distance</strong> (<em>float</em><em> | </em><em>None</em>) – Finite clamp band.</p></li>
+<li><p><strong>constant_value</strong> (<em>float</em><em> | </em><em>None</em>) – Explicit fallback.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sample</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">sample_scalar</span><span class="p">(</span><span class="s1">'energy'</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.UnstructuredFieldDataset.sample_vector">
+<span class="sig-name descname"><span class="pre">sample_vector</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.UnstructuredFieldDataset" title="pyvcad.pyvcad.UnstructuredFieldDataset"><span class="pre">pyvcad.pyvcad.UnstructuredFieldDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">position</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outside</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'error'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_distance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constant_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.Vec3FieldSample" title="pyvcad.pyvcad.Vec3FieldSample"><span class="pre">pyvcad.pyvcad.Vec3FieldSample</span></a></span></span><a class="headerlink" href="#pyvcad.UnstructuredFieldDataset.sample_vector" title="Link to this definition">#</a></dt>
+<dd><p>Diagnostically sample a vector field and return its classification.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Vector field name.</p></li>
+<li><p><strong>position</strong> (<em>array-like</em>) – Three consuming-coordinate values.</p></li>
+<li><p><strong>outside</strong> (<em>str</em><em> | </em><a class="reference internal" href="#pyvcad.OutsidePolicy" title="pyvcad.OutsidePolicy"><em>OutsidePolicy</em></a>) – Outside policy.</p></li>
+<li><p><strong>max_distance</strong> (<em>float</em><em> | </em><em>None</em>) – Finite clamp band.</p></li>
+<li><p><strong>constant_value</strong> (<em>array-like</em><em> | </em><em>None</em>) – Explicit three-component fallback.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">sample</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">sample_vector</span><span class="p">(</span><span class="s1">'displacement'</span><span class="p">,</span> <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.UnstructuredFieldDataset.transformed">
+<span class="sig-name descname"><span class="pre">transformed</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.UnstructuredFieldDataset" title="pyvcad.pyvcad.UnstructuredFieldDataset"><span class="pre">pyvcad.pyvcad.UnstructuredFieldDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">position_transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">numpy.ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vector_transform</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.UnstructuredFieldDataset" title="pyvcad.pyvcad.UnstructuredFieldDataset"><span class="pre">pyvcad.pyvcad.UnstructuredFieldDataset</span></a></span></span><a class="headerlink" href="#pyvcad.UnstructuredFieldDataset.transformed" title="Link to this definition">#</a></dt>
+<dd><p>Return a field view with explicit position and vector component transforms.</p>
+<p>position_transform maps consuming-node positions into reference dataset coordinates.
+vector_transform separately maps stored vector components into consuming coordinates.
+Neither transform implicitly deforms the TET4 domain from a displacement field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>position_transform</strong> (<em>array-like</em>) – Non-singular affine 4x4 consumer-to-dataset matrix.</p></li>
+<li><p><strong>vector_transform</strong> (<em>array-like</em><em> | </em><em>None</em>) – Non-singular 3x3 stored-to-consumer vector matrix.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">aligned</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">transformed</span><span class="p">(</span><span class="n">consumer_to_dataset</span><span class="p">,</span> <span class="n">dataset_to_consumer_vectors</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.UnstructuredFieldDataset.vec3_attribute">
+<span class="sig-name descname"><span class="pre">vec3_attribute</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.UnstructuredFieldDataset" title="pyvcad.pyvcad.UnstructuredFieldDataset"><span class="pre">pyvcad.pyvcad.UnstructuredFieldDataset</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outside</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'error'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_distance</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">constant_value</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">object</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="attributes.html#pyvcad.Vec3Attribute" title="pyvcad.pyvcad.Vec3Attribute"><span class="pre">pyvcad.pyvcad.Vec3Attribute</span></a></span></span><a class="headerlink" href="#pyvcad.UnstructuredFieldDataset.vec3_attribute" title="Link to this definition">#</a></dt>
+<dd><p>Create an ordinary Vec3Attribute backed by a named vector field.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<em>str</em>) – Three-component field name.</p></li>
+<li><p><strong>outside</strong> (<em>str</em><em> | </em><a class="reference internal" href="#pyvcad.OutsidePolicy" title="pyvcad.OutsidePolicy"><em>OutsidePolicy</em></a>) – error, constant, or boundary_clamp.</p></li>
+<li><p><strong>max_distance</strong> (<em>float</em><em> | </em><em>None</em>) – Required finite clamp band for boundary_clamp.</p></li>
+<li><p><strong>constant_value</strong> (<em>array-like</em><em> | </em><em>None</em>) – Explicit three-component fallback.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">displacement</span> <span class="o">=</span> <span class="n">results</span><span class="o">.</span><span class="n">vec3_attribute</span><span class="p">(</span><span class="s1">'displacement'</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad.UnstructuredFieldDataset.vector_transform">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">vector_transform</span></span><a class="headerlink" href="#pyvcad.UnstructuredFieldDataset.vector_transform" title="Link to this definition">#</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.XDMFFieldLoader">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">XDMFFieldLoader</span></span><a class="headerlink" href="#pyvcad.XDMFFieldLoader" title="Link to this definition">#</a></dt>
+<dd><p>Public loader for the documented XDMF 3/HDF5 Uniform TET4 result-field subset.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.XDMFFieldLoader.load">
+<span class="property"><span class="k"><span class="pre">static</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">load</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xdmf_path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">grid_name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">collections.abc.Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">[]</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#pyvcad.UnstructuredFieldDataset" title="pyvcad.pyvcad.UnstructuredFieldDataset"><span class="pre">pyvcad.pyvcad.UnstructuredFieldDataset</span></a></span></span><a class="headerlink" href="#pyvcad.XDMFFieldLoader.load" title="Link to this definition">#</a></dt>
+<dd><p>Load one supported XDMF Uniform TET4 grid and selected HDF-backed fields.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>xdmf_path</strong> (<em>str</em>) – XDMF 3 document path.</p></li>
+<li><p><strong>grid_name</strong> (<em>str</em>) – Required selection when multiple Uniform grids are present.</p></li>
+<li><p><strong>field_names</strong> (<em>list</em><em>[</em><em>str</em><em>]</em>) – Selected fields, or an empty list for all fields.</p></li>
+</ul>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">results</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">XDMFFieldLoader</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s1">'results.xdmf'</span><span class="p">,</span> <span class="n">field_names</span><span class="o">=</span><span class="p">[</span><span class="s1">'displacement'</span><span class="p">])</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.FieldMetadata">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">FieldMetadata</span></span><a class="headerlink" href="#pyvcad.FieldMetadata" title="Link to this definition">#</a></dt>
+<dd><p>Read-only metadata for one named unstructured result field.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.CoverageReport">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">CoverageReport</span></span><a class="headerlink" href="#pyvcad.CoverageReport" title="Link to this definition">#</a></dt>
+<dd><p>Opt-in classification report for a batch of sample positions.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="pyvcad.CoverageReport.fraction">
+<span class="sig-name descname"><span class="pre">fraction</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.CoverageReport" title="pyvcad.pyvcad.CoverageReport"><span class="pre">pyvcad.pyvcad.CoverageReport</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.SampleStatus" title="pyvcad.pyvcad.SampleStatus"><span class="pre">pyvcad.pyvcad.SampleStatus</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#pyvcad.CoverageReport.fraction" title="Link to this definition">#</a></dt>
+<dd><p>Return the fraction assigned to one SampleStatus.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>status</strong> (<a class="reference internal" href="#pyvcad.SampleStatus" title="pyvcad.SampleStatus"><em>SampleStatus</em></a>) – Classification to inspect.</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">outside_fraction</span> <span class="o">=</span> <span class="n">report</span><span class="o">.</span><span class="n">fraction</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">SampleStatus</span><span class="o">.</span><span class="n">OUTSIDE</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.ScalarFieldSample">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">ScalarFieldSample</span></span><a class="headerlink" href="#pyvcad.ScalarFieldSample" title="Link to this definition">#</a></dt>
+<dd><p>Diagnostic scalar value and geometric classification.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.Vec3FieldSample">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">Vec3FieldSample</span></span><a class="headerlink" href="#pyvcad.Vec3FieldSample" title="Link to this definition">#</a></dt>
+<dd><p>Diagnostic vector value and geometric classification.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.CoverageFailure">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">CoverageFailure</span></span><a class="headerlink" href="#pyvcad.CoverageFailure" title="Link to this definition">#</a></dt>
+<dd><p>Representative outside-domain query retained by a coverage report.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.FieldAssociation">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">FieldAssociation</span></span><a class="headerlink" href="#pyvcad.FieldAssociation" title="Link to this definition">#</a></dt>
+<dd><p>Association of result values with mesh points or cells.</p>
+<p>Members:</p>
+<blockquote>
+<div><p>POINT</p>
+<p>CELL</p>
+</div></blockquote>
+<dl class="py property">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">FieldAssociation.name</span> <span class="pre">-&gt;</span> <span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.OutsidePolicy">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">OutsidePolicy</span></span><a class="headerlink" href="#pyvcad.OutsidePolicy" title="Link to this definition">#</a></dt>
+<dd><p>Explicit behavior outside an unstructured field domain.</p>
+<p>Members:</p>
+<blockquote>
+<div><p>ERROR</p>
+<p>CONSTANT</p>
+<p>BOUNDARY_CLAMP</p>
+</div></blockquote>
+<dl class="py property">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">OutsidePolicy.name</span> <span class="pre">-&gt;</span> <span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad.SampleStatus">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">SampleStatus</span></span><a class="headerlink" href="#pyvcad.SampleStatus" title="Link to this definition">#</a></dt>
+<dd><p>Diagnostic classification for one result-field query.</p>
+<p>Members:</p>
+<blockquote>
+<div><p>INSIDE</p>
+<p>TOLERANCE_ADJUSTED</p>
+<p>BOUNDARY_CLAMPED</p>
+<p>OUTSIDE</p>
+</div></blockquote>
+<dl class="py property">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">SampleStatus.name</span> <span class="pre">-&gt;</span> <span class="pre">str</span></span></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
 </section>
 <section id="module-pyvcad.vdb_loader">
 <span id="pyvcad-vdb-loader"></span><h2><code class="docutils literal notranslate"><span class="pre">pyvcad.vdb_loader</span></code><a class="headerlink" href="#module-pyvcad.vdb_loader" title="Link to this heading">#</a></h2>
@@ -1035,6 +1604,7 @@
   <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
     <ul class="pst-show_toc_level nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#examples">Examples</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unstructured-tet4-result-fields">Unstructured TET4 result fields</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#volume-types">Volume types</a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FloatVolume"><code class="docutils literal notranslate"><span class="pre">FloatVolume</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FloatVolume.__init__"><code class="docutils literal notranslate"><span class="pre">FloatVolume.__init__()</span></code></a></li>
@@ -1082,6 +1652,53 @@
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.DICOMLoader.get_voxel_size"><code class="docutils literal notranslate"><span class="pre">DICOMLoader.get_voxel_size()</span></code></a></li>
 </ul>
 </li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.TetrahedralDomain"><code class="docutils literal notranslate"><span class="pre">TetrahedralDomain</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.TetrahedralDomain.__init__"><code class="docutils literal notranslate"><span class="pre">TetrahedralDomain.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.TetrahedralDomain.boundary_face_count"><code class="docutils literal notranslate"><span class="pre">TetrahedralDomain.boundary_face_count</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.TetrahedralDomain.bounding_box"><code class="docutils literal notranslate"><span class="pre">TetrahedralDomain.bounding_box</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.TetrahedralDomain.cell_count"><code class="docutils literal notranslate"><span class="pre">TetrahedralDomain.cell_count</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.TetrahedralDomain.cells"><code class="docutils literal notranslate"><span class="pre">TetrahedralDomain.cells</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.TetrahedralDomain.point_count"><code class="docutils literal notranslate"><span class="pre">TetrahedralDomain.point_count</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.TetrahedralDomain.points"><code class="docutils literal notranslate"><span class="pre">TetrahedralDomain.points</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.TetrahedralDomain.reoriented_cell_count"><code class="docutils literal notranslate"><span class="pre">TetrahedralDomain.reoriented_cell_count</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.UnstructuredFieldDataset"><code class="docutils literal notranslate"><span class="pre">UnstructuredFieldDataset</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.UnstructuredFieldDataset.__init__"><code class="docutils literal notranslate"><span class="pre">UnstructuredFieldDataset.__init__()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.UnstructuredFieldDataset.add_cell_scalar"><code class="docutils literal notranslate"><span class="pre">UnstructuredFieldDataset.add_cell_scalar()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.UnstructuredFieldDataset.add_cell_vector"><code class="docutils literal notranslate"><span class="pre">UnstructuredFieldDataset.add_cell_vector()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.UnstructuredFieldDataset.add_point_scalar"><code class="docutils literal notranslate"><span class="pre">UnstructuredFieldDataset.add_point_scalar()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.UnstructuredFieldDataset.add_point_vector"><code class="docutils literal notranslate"><span class="pre">UnstructuredFieldDataset.add_point_vector()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.UnstructuredFieldDataset.coverage"><code class="docutils literal notranslate"><span class="pre">UnstructuredFieldDataset.coverage()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.UnstructuredFieldDataset.domain"><code class="docutils literal notranslate"><span class="pre">UnstructuredFieldDataset.domain</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.UnstructuredFieldDataset.field_metadata"><code class="docutils literal notranslate"><span class="pre">UnstructuredFieldDataset.field_metadata()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.UnstructuredFieldDataset.field_names"><code class="docutils literal notranslate"><span class="pre">UnstructuredFieldDataset.field_names</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.UnstructuredFieldDataset.float_attribute"><code class="docutils literal notranslate"><span class="pre">UnstructuredFieldDataset.float_attribute()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.UnstructuredFieldDataset.from_tetrahedra"><code class="docutils literal notranslate"><span class="pre">UnstructuredFieldDataset.from_tetrahedra()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.UnstructuredFieldDataset.has_field"><code class="docutils literal notranslate"><span class="pre">UnstructuredFieldDataset.has_field()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.UnstructuredFieldDataset.position_transform"><code class="docutils literal notranslate"><span class="pre">UnstructuredFieldDataset.position_transform</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.UnstructuredFieldDataset.sample_scalar"><code class="docutils literal notranslate"><span class="pre">UnstructuredFieldDataset.sample_scalar()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.UnstructuredFieldDataset.sample_vector"><code class="docutils literal notranslate"><span class="pre">UnstructuredFieldDataset.sample_vector()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.UnstructuredFieldDataset.transformed"><code class="docutils literal notranslate"><span class="pre">UnstructuredFieldDataset.transformed()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.UnstructuredFieldDataset.vec3_attribute"><code class="docutils literal notranslate"><span class="pre">UnstructuredFieldDataset.vec3_attribute()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.UnstructuredFieldDataset.vector_transform"><code class="docutils literal notranslate"><span class="pre">UnstructuredFieldDataset.vector_transform</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.XDMFFieldLoader"><code class="docutils literal notranslate"><span class="pre">XDMFFieldLoader</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.XDMFFieldLoader.load"><code class="docutils literal notranslate"><span class="pre">XDMFFieldLoader.load()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FieldMetadata"><code class="docutils literal notranslate"><span class="pre">FieldMetadata</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CoverageReport"><code class="docutils literal notranslate"><span class="pre">CoverageReport</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CoverageReport.fraction"><code class="docutils literal notranslate"><span class="pre">CoverageReport.fraction()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.ScalarFieldSample"><code class="docutils literal notranslate"><span class="pre">ScalarFieldSample</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.Vec3FieldSample"><code class="docutils literal notranslate"><span class="pre">Vec3FieldSample</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.CoverageFailure"><code class="docutils literal notranslate"><span class="pre">CoverageFailure</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.FieldAssociation"><code class="docutils literal notranslate"><span class="pre">FieldAssociation</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.OutsidePolicy"><code class="docutils literal notranslate"><span class="pre">OutsidePolicy</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.SampleStatus"><code class="docutils literal notranslate"><span class="pre">SampleStatus</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-pyvcad.vdb_loader"><code class="docutils literal notranslate"><span class="pre">pyvcad.vdb_loader</span></code></a></li>
@@ -1110,8 +1727,8 @@
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -1145,7 +1762,7 @@
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
 </p></div>
       
     </div>

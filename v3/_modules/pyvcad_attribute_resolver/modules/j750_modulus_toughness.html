@@ -26,8 +26,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../../_static/graphviz.css?v=4ae1632d" />
@@ -35,10 +35,10 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/openvcad_branding.css?v=c43e02c9" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../../../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
     <script src="../../../_static/documentation_options.js?v=110ea713"></script>
     <script src="../../../_static/doctools.js?v=fd6eb6e6"></script>
@@ -314,6 +314,7 @@
               <ul>
                 <li><a class="nav-link" href="../../../guides/compilers/index.html">Overview</a></li>
                 <li><a class="nav-link" href="../../../guides/compilers/material-inkjet.html">Material Inkjet</a></li>
+                <li><a class="nav-link" href="../../../guides/compilers/multi-material-vat.html">Multi-material VAT</a></li>
                 <li><a class="nav-link" href="../../../guides/compilers/color-inkjet.html">Color Inkjet</a></li>
                 <li><a class="nav-link" href="../../../guides/compilers/vat-photo.html">VAT Photo</a></li>
                 <li><a class="nav-link" href="../../../guides/compilers/slicer-project.html">Slicer Project</a></li>
@@ -331,9 +332,14 @@
                 <li><a class="nav-link" href="../../../guides/advanced.html">Overview</a></li>
                 <li><a class="nav-link" href="../../../guides/cadquery.html">CAD with CadQuery</a></li>
                 <li><a class="nav-link" href="../../../guides/surface-relief.html">Physical surface relief</a></li>
+                <li><a class="nav-link" href="../../../guides/mesh-selection.html">Selecting triangle-mesh patches</a></li>
+                <li><a class="nav-link" href="../../../guides/textured-mesh.html">Importing textured solids</a></li>
+                <li><a class="nav-link" href="../../../guides/3mf-beam-lattice.html">Importing 3MF beam lattices</a></li>
                 <li><a class="nav-link" href="../../../guides/volumes.html">Working with volumes</a></li>
+                <li><a class="nav-link" href="../../../guides/support-analyzer.html">Inkjet support volumes</a></li>
                 <li><a class="nav-link" href="../../../guides/math-expressions.html">Math expressions</a></li>
                 <li><a class="nav-link" href="../../../guides/custom-python-compiler.html">Creating a compiler in Python</a></li>
+                <li><a class="nav-link" href="../../../guides/simulation-driven-design.html">Simulation-driven design</a></li>
               </ul>
             </details>
           </li>
@@ -433,7 +439,7 @@
                 <article class="bd-article">
                   
   <h1>Source code for pyvcad_attribute_resolver.modules.j750_modulus_toughness</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot;J750 modulus+toughness to volume-fractions conversion registrations.&quot;&quot;&quot;</span>
+<span></span><span class="sd">"""J750 modulus+toughness to volume-fractions conversion registrations."""</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
 
@@ -461,10 +467,10 @@
 
 <span class="k">def</span><span class="w"> </span><span class="nf">_build_lookup_entries</span><span class="p">(</span><span class="n">soft_id</span><span class="p">,</span> <span class="n">rigid_id</span><span class="p">,</span> <span class="n">liquid_id</span><span class="p">,</span> <span class="n">lookup_table_path</span><span class="p">):</span>
     <span class="n">lookup_table</span> <span class="o">=</span> <span class="n">load_lookup_table</span><span class="p">(</span><span class="n">lookup_table_path</span><span class="p">)</span>
-    <span class="n">modulus_axis_mpa</span> <span class="o">=</span> <span class="n">lookup_table</span><span class="p">[</span><span class="s2">&quot;modulus_axis_mpa&quot;</span><span class="p">]</span>
-    <span class="n">toughness_axis_mj_per_m3</span> <span class="o">=</span> <span class="n">lookup_table</span><span class="p">[</span><span class="s2">&quot;toughness_axis_mj_per_m3&quot;</span><span class="p">]</span>
-    <span class="n">fraction_grid</span> <span class="o">=</span> <span class="n">lookup_table</span><span class="p">[</span><span class="s2">&quot;fractions&quot;</span><span class="p">]</span>
-    <span class="n">valid_grid</span> <span class="o">=</span> <span class="n">lookup_table</span><span class="p">[</span><span class="s2">&quot;valid&quot;</span><span class="p">]</span>
+    <span class="n">modulus_axis_mpa</span> <span class="o">=</span> <span class="n">lookup_table</span><span class="p">[</span><span class="s2">"modulus_axis_mpa"</span><span class="p">]</span>
+    <span class="n">toughness_axis_mj_per_m3</span> <span class="o">=</span> <span class="n">lookup_table</span><span class="p">[</span><span class="s2">"toughness_axis_mj_per_m3"</span><span class="p">]</span>
+    <span class="n">fraction_grid</span> <span class="o">=</span> <span class="n">lookup_table</span><span class="p">[</span><span class="s2">"fractions"</span><span class="p">]</span>
+    <span class="n">valid_grid</span> <span class="o">=</span> <span class="n">lookup_table</span><span class="p">[</span><span class="s2">"valid"</span><span class="p">]</span>
 
     <span class="n">entries</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">toughness_index</span><span class="p">,</span> <span class="n">toughness_mj_per_m3</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">toughness_axis_mj_per_m3</span><span class="p">):</span>
@@ -501,12 +507,12 @@
 <a class="viewcode-back" href="../../../python-api/pyvcad_attribute_resolver/modules.html#pyvcad_attribute_resolver.register_j750_modulus_toughness_conversions">[docs]</a>
 <span class="k">def</span><span class="w"> </span><span class="nf">register_j750_modulus_toughness_conversions</span><span class="p">(</span>
     <span class="n">material_defs</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-    <span class="n">rigid_material</span><span class="o">=</span><span class="s2">&quot;VeroBlack&quot;</span><span class="p">,</span>
-    <span class="n">soft_material</span><span class="o">=</span><span class="s2">&quot;Agilus30Clr&quot;</span><span class="p">,</span>
-    <span class="n">liquid_material</span><span class="o">=</span><span class="s2">&quot;M.Cleanser&quot;</span><span class="p">,</span>
+    <span class="n">rigid_material</span><span class="o">=</span><span class="s2">"VeroBlack"</span><span class="p">,</span>
+    <span class="n">soft_material</span><span class="o">=</span><span class="s2">"Agilus30Clr"</span><span class="p">,</span>
+    <span class="n">liquid_material</span><span class="o">=</span><span class="s2">"M.Cleanser"</span><span class="p">,</span>
     <span class="n">lookup_table_path</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Register the J750 modulus+toughness to volume-fractions conversion.</span>
+<span class="w">    </span><span class="sd">"""Register the J750 modulus+toughness to volume-fractions conversion.</span>
 
 <span class="sd">    The bundled lookup table assumes modulus values are provided in MPa and</span>
 <span class="sd">    toughness values are provided in MJ/m^3. The shipped table is generated</span>
@@ -515,7 +521,7 @@
 <span class="sd">    To use a different liquid cap or table resolution, generate a new table</span>
 <span class="sd">    file with :func:`generate_j750_modulus_toughness_lookup_table` and pass its</span>
 <span class="sd">    path via ``lookup_table_path``.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="sd">    """</span>
     <span class="k">if</span> <span class="n">material_defs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">material_defs</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">j750_materials</span>
     <span class="k">if</span> <span class="n">lookup_table_path</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -529,18 +535,18 @@
     <span class="p">)</span>
 
     <span class="n">register_conversion</span><span class="p">(</span>
-        <span class="n">source</span><span class="o">=</span><span class="s2">&quot;modulus&quot;</span><span class="p">,</span>
-        <span class="n">target</span><span class="o">=</span><span class="s2">&quot;volume_fractions&quot;</span><span class="p">,</span>
+        <span class="n">source</span><span class="o">=</span><span class="s2">"modulus"</span><span class="p">,</span>
+        <span class="n">target</span><span class="o">=</span><span class="s2">"volume_fractions"</span><span class="p">,</span>
         <span class="n">converter_factory</span><span class="o">=</span><span class="n">_lut_factory</span><span class="p">(</span>
             <span class="n">soft_id</span><span class="p">,</span>
             <span class="n">rigid_id</span><span class="p">,</span>
             <span class="n">liquid_id</span><span class="p">,</span>
             <span class="n">lookup_table_path</span><span class="p">,</span>
         <span class="p">),</span>
-        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;j750_modulus_toughness_to_volume_fractions&quot;</span><span class="p">,</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">"j750_modulus_toughness_to_volume_fractions"</span><span class="p">,</span>
         <span class="n">priority</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>
-        <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;j750_modulus_toughness&quot;</span><span class="p">],</span>
-        <span class="n">required_inputs</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;modulus&quot;</span><span class="p">,</span> <span class="s2">&quot;toughness&quot;</span><span class="p">],</span>
+        <span class="n">tags</span><span class="o">=</span><span class="p">[</span><span class="s2">"j750_modulus_toughness"</span><span class="p">],</span>
+        <span class="n">required_inputs</span><span class="o">=</span><span class="p">[</span><span class="s2">"modulus"</span><span class="p">,</span> <span class="s2">"toughness"</span><span class="p">],</span>
     <span class="p">)</span></div>
 
 
@@ -553,7 +559,7 @@
     <span class="n">max_liquid_volume</span><span class="o">=</span><span class="mf">0.30</span><span class="p">,</span>
     <span class="n">fail_threshold</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate a J750 modulus+toughness lookup-table JSON file.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Generate a J750 modulus+toughness lookup-table JSON file."""</span>
     <span class="k">return</span> <span class="n">generate_lookup_table_file</span><span class="p">(</span>
         <span class="n">output_path</span><span class="o">=</span><span class="n">output_path</span><span class="p">,</span>
         <span class="n">table_size</span><span class="o">=</span><span class="n">table_size</span><span class="p">,</span>
@@ -573,7 +579,7 @@
     <span class="n">fail_threshold</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span>
     <span class="n">fraction_steps</span><span class="o">=</span><span class="mi">181</span><span class="p">,</span>
 <span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Generate the reachable-region validation plot used in the docs.&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">"""Generate the reachable-region validation plot used in the docs."""</span>
     <span class="k">return</span> <span class="n">generate_reachable_region_plot</span><span class="p">(</span>
         <span class="n">output_path</span><span class="o">=</span><span class="n">output_path</span><span class="p">,</span>
         <span class="n">lookup_table_path</span><span class="o">=</span><span class="n">lookup_table_path</span><span class="p">,</span>
@@ -586,14 +592,14 @@
 
 
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
-    <span class="s2">&quot;register_j750_modulus_toughness_conversions&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;generate_j750_modulus_toughness_lookup_table&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;generate_j750_modulus_toughness_reachable_region_plot&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;solve_volume_fractions&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;compute_achieved_properties&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;interpolate_lookup_table&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;load_lookup_table&quot;</span><span class="p">,</span>
-    <span class="s2">&quot;validate_solution&quot;</span><span class="p">,</span>
+    <span class="s2">"register_j750_modulus_toughness_conversions"</span><span class="p">,</span>
+    <span class="s2">"generate_j750_modulus_toughness_lookup_table"</span><span class="p">,</span>
+    <span class="s2">"generate_j750_modulus_toughness_reachable_region_plot"</span><span class="p">,</span>
+    <span class="s2">"solve_volume_fractions"</span><span class="p">,</span>
+    <span class="s2">"compute_achieved_properties"</span><span class="p">,</span>
+    <span class="s2">"interpolate_lookup_table"</span><span class="p">,</span>
+    <span class="s2">"load_lookup_table"</span><span class="p">,</span>
+    <span class="s2">"validate_solution"</span><span class="p">,</span>
 <span class="p">]</span>
 </pre></div>
 
@@ -624,8 +630,8 @@
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
-<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -659,7 +665,7 @@
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
 </p></div>
       
     </div>

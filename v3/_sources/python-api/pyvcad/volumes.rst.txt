@@ -10,6 +10,7 @@ Typical uses include mapping Hounsfield units or bone density to material proper
 * **Typed volumes** — ``FloatVolume``, ``Vec2sVolume``, ``Vec3sVolume``, and ``Vec4sVolume`` wrap scalar or vector VDB grids. Call ``sample(x, y, z)`` for a value, ``bounding_box()`` for world-space bounds, and ``clone()`` when you need a thread-safe copy for concurrent evaluation.
 * **VDB files** — Use ``pyvcad.vdb_loader`` (``load_float_volume``, ``load_vec3s_volume``, ``load_vec4s_volume``) to open a named grid from a ``.vdb`` file, optionally centered on the origin.
 * **DICOM stacks** — ``DICOMLoader`` reads a directory of slices, applies real-world spacing and rescale metadata where available, and builds a scalar ``FloatVolume`` (commonly HU). Call ``as_volume()`` when you are ready to sample.
+* **Unstructured result fields** — ``UnstructuredFieldDataset`` copies TET4 point/connectivity arrays, stores named point- or cell-associated scalar and three-component vector results, and exposes them as ordinary ``FloatAttribute`` and ``Vec3Attribute`` objects. ``XDMFFieldLoader`` provides the same dataset from the supported XDMF 3/HDF5 subset.
 * **Attributes** — A ``FloatVolume`` is a continuous field; pass it to ``FloatAttribute(volume)`` (or ``set_volume`` on an existing ``FloatAttribute``) and attach that attribute to geometry with ``set_attribute``, same as expression-driven fields. Evaluation runs where your solid exists, using the volume’s values inside the part.
 
 Examples
@@ -38,6 +39,100 @@ The patterns below mirror the getting-started discussion of **sampled** scalar f
    vol = loader.as_volume()
    solid = pv.RectPrism.FromMinAndMax(*vol.bounding_box())
    solid.set_attribute(pv.DefaultAttributes.HU, pv.FloatAttribute(vol))
+
+Unstructured TET4 result fields
+--------------------------------
+
+An unstructured field dataset is data, not geometry. Keep or separately import
+the OpenVCAD node that should consume the result, then attach a returned
+attribute to that node:
+
+.. code-block:: python
+
+   import numpy as np
+   import pyvcad as pv
+
+   results = pv.UnstructuredFieldDataset.from_tetrahedra(points, cells)
+   results.add_point_vector("displacement", displacement, units="mm")
+   results.add_point_scalar(
+       "strain_energy_density",
+       energy,
+       units="mJ/mm^3",
+       step_identifier="load-1",
+   )
+
+   energy_attribute = results.float_attribute(
+       "strain_energy_density",
+       outside="boundary_clamp",
+       max_distance=0.8,
+   )
+   source_geometry.set_attribute("strain_energy_density", energy_attribute)
+
+Point-associated values are interpolated with TET4 barycentric coordinates.
+Cell-associated values remain piecewise constant. Coordinates and input values
+may be contiguous or strided NumPy-compatible ``float32``/``float64`` arrays;
+connectivity must use an integer dtype. Construction copies every input array,
+so later mutation or deletion of the NumPy arrays does not affect the dataset.
+
+Outside behavior is always explicit:
+
+* ``"error"`` is the default and raises when an ordinary attribute is sampled
+  outside the domain. A constant or ``max_distance`` supplied with this policy
+  is rejected rather than silently changing its meaning.
+* ``"constant"`` requires ``constant_value``; no implicit zero fill is used.
+* ``"boundary_clamp"`` projects to the closest point on the outer TET4-domain
+  boundary and requires a finite ``max_distance``. Beyond that band it raises,
+  unless an explicit ``constant_value`` is also provided.
+
+Numerical containment tolerance is separate from geometric boundary clamping.
+Use ``sample_scalar`` / ``sample_vector`` to inspect one query's
+``SampleStatus``, or ``coverage`` to preflight a batch without adding counters
+to ordinary attribute samples:
+
+.. code-block:: python
+
+   report = results.coverage(
+       query_points,
+       outside="boundary_clamp",
+       max_distance=0.8,
+       maximum_failures=8,
+   )
+   print(report.inside_count, report.boundary_clamped_count, report.outside_count)
+
+Coordinates default to the reference dataset coordinates. ``transformed``
+uses two deliberately separate matrices: a 4x4 affine matrix maps consuming
+node positions into dataset positions, and a 3x3 matrix maps stored vector
+components into consuming coordinates. A displacement field never deforms the
+domain implicitly. Unit conversion is an explicit matrix scale rather than an
+effect of the ``units`` metadata:
+
+.. code-block:: python
+
+   aligned = results.transformed(
+       consumer_to_dataset_position,
+       stored_to_consumer_vector,
+   )
+
+``max_distance`` is measured after the position transform, in reference
+dataset-coordinate units. This keeps its meaning explicit when the transform
+also performs a model-to-solver unit conversion.
+
+``XDMFFieldLoader`` supports XDMF 3 Uniform grids with
+``TopologyType="Tetrahedron"``, ``GeometryType="XYZ"``, direct HDF-backed
+topology/geometry/attributes, ``Center="Node"`` or ``Center="Cell"``, and
+scalar or three-component vector attributes. Select ``grid_name`` when a file
+contains more than one Uniform grid and optionally select ``field_names``.
+Temporal or spatial collections, mixed topology, HEX8, inline XML arrays,
+functions, hyperslabs, tensors, malformed dimensions, and unsupported numeric
+types fail explicitly; this loader is not a general XDMF implementation.
+
+.. code-block:: python
+
+   results = pv.XDMFFieldLoader.load(
+       "result.xdmf",
+       grid_name="OpenVCADMesh",
+       field_names=["displacement", "strain_energy_density"],
+   )
 
 .. currentmodule:: pyvcad
 
@@ -71,6 +166,43 @@ Loaders
    :members:
    :undoc-members:
    :special-members: __init__
+
+.. autoclass:: TetrahedralDomain
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: UnstructuredFieldDataset
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: XDMFFieldLoader
+   :members:
+
+.. autoclass:: FieldMetadata
+   :members:
+
+.. autoclass:: CoverageReport
+   :members:
+
+.. autoclass:: ScalarFieldSample
+   :members:
+
+.. autoclass:: Vec3FieldSample
+   :members:
+
+.. autoclass:: CoverageFailure
+   :members:
+
+.. autoclass:: FieldAssociation
+   :members:
+
+.. autoclass:: OutsidePolicy
+   :members:
+
+.. autoclass:: SampleStatus
+   :members:
 
 ``pyvcad.vdb_loader``
 ---------------------

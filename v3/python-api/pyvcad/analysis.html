@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
@@ -36,10 +36,10 @@
     <link rel="stylesheet" type="text/css" href="../../_static/openvcad_branding.css?v=c43e02c9" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
     <script src="../../_static/documentation_options.js?v=110ea713"></script>
     <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
@@ -319,6 +319,7 @@
               <ul>
                 <li><a class="nav-link" href="../../guides/compilers/index.html">Overview</a></li>
                 <li><a class="nav-link" href="../../guides/compilers/material-inkjet.html">Material Inkjet</a></li>
+                <li><a class="nav-link" href="../../guides/compilers/multi-material-vat.html">Multi-material VAT</a></li>
                 <li><a class="nav-link" href="../../guides/compilers/color-inkjet.html">Color Inkjet</a></li>
                 <li><a class="nav-link" href="../../guides/compilers/vat-photo.html">VAT Photo</a></li>
                 <li><a class="nav-link" href="../../guides/compilers/slicer-project.html">Slicer Project</a></li>
@@ -336,9 +337,14 @@
                 <li><a class="nav-link" href="../../guides/advanced.html">Overview</a></li>
                 <li><a class="nav-link" href="../../guides/cadquery.html">CAD with CadQuery</a></li>
                 <li><a class="nav-link" href="../../guides/surface-relief.html">Physical surface relief</a></li>
+                <li><a class="nav-link" href="../../guides/mesh-selection.html">Selecting triangle-mesh patches</a></li>
+                <li><a class="nav-link" href="../../guides/textured-mesh.html">Importing textured solids</a></li>
+                <li><a class="nav-link" href="../../guides/3mf-beam-lattice.html">Importing 3MF beam lattices</a></li>
                 <li><a class="nav-link" href="../../guides/volumes.html">Working with volumes</a></li>
+                <li><a class="nav-link" href="../../guides/support-analyzer.html">Inkjet support volumes</a></li>
                 <li><a class="nav-link" href="../../guides/math-expressions.html">Math expressions</a></li>
                 <li><a class="nav-link" href="../../guides/custom-python-compiler.html">Creating a compiler in Python</a></li>
+                <li><a class="nav-link" href="../../guides/simulation-driven-design.html">Simulation-driven design</a></li>
               </ul>
             </details>
           </li>
@@ -489,19 +495,23 @@
                   
   <section id="analysis">
 <h1>Analysis<a class="headerlink" href="#analysis" title="Link to this heading">#</a></h1>
+<p>Inkjet support-volume helper <a class="reference internal" href="#pyvcad.SupportAnalyzer" title="pyvcad.SupportAnalyzer"><code class="xref py py-class docutils literal notranslate"><span class="pre">pyvcad.SupportAnalyzer</span></code></a>. See the
+<a class="reference internal" href="../../guides/support-analyzer.html"><span class="doc">Inkjet support volumes</span></a> guide for a tutorial.</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="pyvcad.SupportAnalyzer">
 <span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">SupportAnalyzer</span></span><a class="headerlink" href="#pyvcad.SupportAnalyzer" title="Link to this definition">#</a></dt>
-<dd><p>Analyzes a model to determine support structures needed</p>
+<dd><p>Compute the inkjet support volume beneath a model.</p>
+<p>Inkjet printers require material in the column below every printed voxel. SupportAnalyzer samples the input model on a uniform grid, processing XY columns concurrently, and returns the unsupported downward-facing volume as an ordinary OpenVCAD implicit solid. Fill that solid with support material, a lattice, or any other node.</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="pyvcad.SupportAnalyzer.__init__">
 <span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.SupportAnalyzer" title="pyvcad.pyvcad.SupportAnalyzer"><span class="pre">pyvcad.pyvcad.SupportAnalyzer</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.pyvcad.Node"><span class="pre">pyvcad.pyvcad.Node</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.SupportAnalyzer.__init__" title="Link to this definition">#</a></dt>
-<dd><p>Constructor for SupportAnalyzer.</p>
+<dd><p>Create a SupportAnalyzer.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>input_model</strong> (<a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The input 3D model to analyze.</p></li>
-<li><p><strong>voxel_size</strong> (<em>glm.vec3</em>) – The size of each voxel in mm.</p></li>
+<li><p><strong>input_model</strong> (<a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The design to analyze.</p></li>
+<li><p><strong>voxel_size</strong> (<a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a>) – Sampling pitch in millimetres. Every component must
+be positive. The smallest component is used as a uniform voxel size.</p></li>
 </ul>
 </dd>
 </dl>
@@ -510,33 +520,8 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="pyvcad.SupportAnalyzer.analyze">
 <span class="sig-name descname"><span class="pre">analyze</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.SupportAnalyzer" title="pyvcad.pyvcad.SupportAnalyzer"><span class="pre">pyvcad.pyvcad.SupportAnalyzer</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.pyvcad.Node"><span class="pre">pyvcad.pyvcad.Node</span></a></span></span><a class="headerlink" href="#pyvcad.SupportAnalyzer.analyze" title="Link to this definition">#</a></dt>
-<dd><p>Analyze the input model and return the support analysis as a Node</p>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="pyvcad.SupportAnalyzerParallel">
-<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad.</span></span><span class="sig-name descname"><span class="pre">SupportAnalyzerParallel</span></span><a class="headerlink" href="#pyvcad.SupportAnalyzerParallel" title="Link to this definition">#</a></dt>
-<dd><p>Analyzes a model to determine support structures needed</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="pyvcad.SupportAnalyzerParallel.__init__">
-<span class="sig-name descname"><span class="pre">__init__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.SupportAnalyzerParallel" title="pyvcad.pyvcad.SupportAnalyzerParallel"><span class="pre">pyvcad.pyvcad.SupportAnalyzerParallel</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_model</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.pyvcad.Node"><span class="pre">pyvcad.pyvcad.Node</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="geometry.html#pyvcad.Vec3" title="pyvcad.pyvcad.Vec3"><span class="pre">pyvcad.pyvcad.Vec3</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="headerlink" href="#pyvcad.SupportAnalyzerParallel.__init__" title="Link to this definition">#</a></dt>
-<dd><p>Constructor for SupportAnalyzer.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>input_model</strong> (<a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The input 3D model to analyze.</p></li>
-<li><p><strong>voxel_size</strong> (<em>glm.vec3</em>) – The size of each voxel in mm.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="pyvcad.SupportAnalyzerParallel.analyze">
-<span class="sig-name descname"><span class="pre">analyze</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">self</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#pyvcad.SupportAnalyzerParallel" title="pyvcad.pyvcad.SupportAnalyzerParallel"><span class="pre">pyvcad.pyvcad.SupportAnalyzerParallel</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="tree.html#pyvcad.Node" title="pyvcad.pyvcad.Node"><span class="pre">pyvcad.pyvcad.Node</span></a></span></span><a class="headerlink" href="#pyvcad.SupportAnalyzerParallel.analyze" title="Link to this definition">#</a></dt>
-<dd><p>Analyze the input model and return the support analysis as a Node</p>
+<dd><p>Sample the model and return the support volume as a Node.</p>
+<p>The returned solid occupies empty space that has model or support material above it, filling downward to the bottom of the model’s bounding box. The input model is not modified.</p>
 </dd></dl>
 
 </dd></dl>
@@ -595,11 +580,6 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.SupportAnalyzer.analyze"><code class="docutils literal notranslate"><span class="pre">SupportAnalyzer.analyze()</span></code></a></li>
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.SupportAnalyzerParallel"><code class="docutils literal notranslate"><span class="pre">SupportAnalyzerParallel</span></code></a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.SupportAnalyzerParallel.__init__"><code class="docutils literal notranslate"><span class="pre">SupportAnalyzerParallel.__init__()</span></code></a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad.SupportAnalyzerParallel.analyze"><code class="docutils literal notranslate"><span class="pre">SupportAnalyzerParallel.analyze()</span></code></a></li>
-</ul>
-</li>
 </ul>
   </nav></div>
 
@@ -625,8 +605,8 @@
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -660,7 +640,7 @@
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
 </p></div>
       
     </div>

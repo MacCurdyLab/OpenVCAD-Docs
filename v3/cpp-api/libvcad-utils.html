@@ -27,8 +27,8 @@
   </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=90905a2f556bf617f1a9" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=cb8930eaaf36d9849b67" rel="stylesheet" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css?v=8f2a1f02" />
     <link rel="stylesheet" type="text/css" href="../_static/graphviz.css?v=4ae1632d" />
@@ -36,10 +36,10 @@
     <link rel="stylesheet" type="text/css" href="../_static/openvcad_branding.css?v=c43e02c9" />
   
   <!-- So that users can add custom icons -->
-  <script defer src="../_static/scripts/fontawesome.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../_static/scripts/fontawesome.js?digest=cb8930eaaf36d9849b67"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67" />
 
     <script src="../_static/documentation_options.js?v=110ea713"></script>
     <script src="../_static/doctools.js?v=fd6eb6e6"></script>
@@ -319,6 +319,7 @@
               <ul>
                 <li><a class="nav-link" href="../guides/compilers/index.html">Overview</a></li>
                 <li><a class="nav-link" href="../guides/compilers/material-inkjet.html">Material Inkjet</a></li>
+                <li><a class="nav-link" href="../guides/compilers/multi-material-vat.html">Multi-material VAT</a></li>
                 <li><a class="nav-link" href="../guides/compilers/color-inkjet.html">Color Inkjet</a></li>
                 <li><a class="nav-link" href="../guides/compilers/vat-photo.html">VAT Photo</a></li>
                 <li><a class="nav-link" href="../guides/compilers/slicer-project.html">Slicer Project</a></li>
@@ -336,9 +337,14 @@
                 <li><a class="nav-link" href="../guides/advanced.html">Overview</a></li>
                 <li><a class="nav-link" href="../guides/cadquery.html">CAD with CadQuery</a></li>
                 <li><a class="nav-link" href="../guides/surface-relief.html">Physical surface relief</a></li>
+                <li><a class="nav-link" href="../guides/mesh-selection.html">Selecting triangle-mesh patches</a></li>
+                <li><a class="nav-link" href="../guides/textured-mesh.html">Importing textured solids</a></li>
+                <li><a class="nav-link" href="../guides/3mf-beam-lattice.html">Importing 3MF beam lattices</a></li>
                 <li><a class="nav-link" href="../guides/volumes.html">Working with volumes</a></li>
+                <li><a class="nav-link" href="../guides/support-analyzer.html">Inkjet support volumes</a></li>
                 <li><a class="nav-link" href="../guides/math-expressions.html">Math expressions</a></li>
                 <li><a class="nav-link" href="../guides/custom-python-compiler.html">Creating a compiler in Python</a></li>
+                <li><a class="nav-link" href="../guides/simulation-driven-design.html">Simulation-driven design</a></li>
               </ul>
             </details>
           </li>
@@ -1244,6 +1250,143 @@
 
 </dd></dl>
 
+<dl class="cpp type">
+<dt class="sig sig-object cpp" id="_CPPv412SurfaceProbe">
+<span id="_CPPv312SurfaceProbe"></span><span id="_CPPv212SurfaceProbe"></span><span id="SurfaceProbe"></span><span class="target" id="namespace_surface_probe"></span><span class="k"><span class="pre">namespace</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">SurfaceProbe</span></span></span><a class="headerlink" href="#_CPPv412SurfaceProbe" title="Link to this definition">#</a><br /></dt>
+<dd><p>Surface interrogation helpers for prepared OpenVCAD trees. </p>
+<p>These helpers answer the two questions a designer needs when placing one node against the surface of another: “where exactly is the surface here?” and “which way is it facing?”. The returned position/normal pair can be fed straight into <a class="reference internal" href="#namespace_surface_probe_1a10ccedbf2b0aea86d7452a11057b0bfc"><span class="std std-ref">alignment_angles()</span></a> to build the <a class="reference internal" href="libvcad-tree-composition.html#class_rotate"><span class="std std-ref">Rotate</span></a> node that aligns a child’s local +Z with the surface normal. </p>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>Every function that takes a <a class="reference internal" href="libvcad-tree-core.html#class_node"><span class="std std-ref">Node</span></a> requires that prepare() has already been called on the root of that tree. The queries below use evaluate() and gradient(), which are undefined before prepare(). </p>
+</div>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-functions">Functions</p>
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12SurfaceProbe16alignment_anglesERKN3glm4vec3ERKN3glm4vec3E">
+<span id="_CPPv3N12SurfaceProbe16alignment_anglesERKN3glm4vec3ERKN3glm4vec3E"></span><span id="_CPPv2N12SurfaceProbe16alignment_anglesERKN3glm4vec3ERKN3glm4vec3E"></span><span id="SurfaceProbe::alignment_angles__glm::vec3CR.glm::vec3CR"></span><span class="target" id="namespace_surface_probe_1a10ccedbf2b0aea86d7452a11057b0bfc"></span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">alignment_angles</span></span></span><span class="sig-paren">(</span><span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">forward</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">up</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="p"><span class="pre">(</span></span><span class="m"><span class="pre">0.0f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0.0f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">1.0f</span></span><span class="p"><span class="pre">)</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12SurfaceProbe16alignment_anglesERKN3glm4vec3ERKN3glm4vec3E" title="Link to this definition">#</a><br /></dt>
+<dd><p>Computes the <a class="reference internal" href="libvcad-tree-composition.html#class_rotate"><span class="std std-ref">Rotate</span></a> angles that aim a child node’s local axes along a chosen frame. </p>
+<p>The returned angles are in the <a class="reference internal" href="libvcad-tree-composition.html#class_rotate"><span class="std std-ref">Rotate</span></a> node’s own convention, so they can be handed straight to <a class="reference internal" href="libvcad-tree-composition.html#class_rotate"><span class="std std-ref">Rotate(pitch, yaw, roll, child)</span></a>. The child’s local +Z is aimed along forward and its local +Y along up. up is orthogonalized against forward, so it only has to be roughly right; when the two are parallel a fallback world axis is substituted.</p>
+<p>The <a class="reference internal" href="libvcad-tree-leaves.html#class_text"><span class="std std-ref">Text</span></a> node extrudes along +Z, so aiming +Z along a surface normal stands text up off that surface. Note that <a class="reference internal" href="libvcad-tree-leaves.html#class_text"><span class="std std-ref">Text</span></a> builds its glyphs on a flipped X axis, which puts their visual up along its own -Y: pass the negated world up to get text that reads upright. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>forward</strong> – The world direction that the child’s local +Z should point along. </p></li>
+<li><p><strong>up</strong> – The world direction that the child’s local +Y should point along, before orthogonalization. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Throws<span class="colon">:</span></dt>
+<dd class="field-even"><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">runtime_error</span></span></span> – if forward is zero length or non-finite. </p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>Euler angles in degrees, packed as (pitch, yaw, roll) for the <a class="reference internal" href="libvcad-tree-composition.html#class_rotate"><span class="std std-ref">Rotate</span></a> node. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12SurfaceProbe11probe_pointER4NodeRKN3glm4vec3Edi">
+<span id="_CPPv3N12SurfaceProbe11probe_pointER4NodeRKN3glm4vec3Edi"></span><span id="_CPPv2N12SurfaceProbe11probe_pointER4NodeRKN3glm4vec3Edi"></span><span id="SurfaceProbe::probe_point__NodeR.glm::vec3CR.double.i"></span><span class="target" id="namespace_surface_probe_1a1268a8e44ae1e8097738d2e885412040"></span><a class="reference internal" href="#_CPPv4N12SurfaceProbe5ProbeE" title="SurfaceProbe::Probe"><span class="n"><span class="pre">Probe</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">probe_point</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">node</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">point</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">tolerance</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1e-4</span></span>, <span class="kt"><span class="pre">int</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">max_iterations</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">16</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12SurfaceProbe11probe_pointER4NodeRKN3glm4vec3Edi" title="Link to this definition">#</a><br /></dt>
+<dd><p>Projects a point onto the nearest surface of a tree and reports the normal there. </p>
+<p>Runs a damped Newton iteration along the signed distance gradient, which lands on the surface in a handful of steps for well-behaved fields. The best iterate is kept, so a field that fails to converge still returns its closest approach (with hit set to false). </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node</strong> – The prepared node to interrogate. </p></li>
+<li><p><strong>point</strong> – The starting point. May be inside, outside, or already on the surface. </p></li>
+<li><p><strong>tolerance</strong> – The absolute signed distance, in model units, that counts as “on the surface”. </p></li>
+<li><p><strong>max_iterations</strong> – The maximum number of Newton steps to take. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Throws<span class="colon">:</span></dt>
+<dd class="field-even"><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">runtime_error</span></span></span> – if tolerance is not positive or max_iterations is not positive. </p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A <a class="reference internal" href="#struct_surface_probe_1_1_probe"><span class="std std-ref">Probe</span></a> describing the surface point. hit is false when the field is undefined at the starting point, when the gradient is unusable, or when the iteration did not converge. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12SurfaceProbe9probe_rayER4NodeRKN3glm4vec3ERKN3glm4vec3Edd">
+<span id="_CPPv3N12SurfaceProbe9probe_rayER4NodeRKN3glm4vec3ERKN3glm4vec3Edd"></span><span id="_CPPv2N12SurfaceProbe9probe_rayER4NodeRKN3glm4vec3ERKN3glm4vec3Edd"></span><span id="SurfaceProbe::probe_ray__NodeR.glm::vec3CR.glm::vec3CR.double.double"></span><span class="target" id="namespace_surface_probe_1a0058fa545f06b59036c79f849ecee3af"></span><a class="reference internal" href="#_CPPv4N12SurfaceProbe5ProbeE" title="SurfaceProbe::Probe"><span class="n"><span class="pre">Probe</span></span></a><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">probe_ray</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">node</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">origin</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">direction</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">step_size</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.0</span></span>, <span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="n sig-param"><span class="pre">tolerance</span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">1e-4</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12SurfaceProbe9probe_rayER4NodeRKN3glm4vec3ERKN3glm4vec3Edd" title="Link to this definition">#</a><br /></dt>
+<dd><p>Casts a ray at a tree and reports the first surface it enters. </p>
+<p>The ray is clipped to the node’s bounding box, marched until the signed distance turns negative, bisected onto the crossing, and finally refined with <a class="reference internal" href="#namespace_surface_probe_1a1268a8e44ae1e8097738d2e885412040"><span class="std std-ref">probe_point()</span></a>. This is the query a viewport pick maps onto: the camera position is the origin and the unprojected click direction is the direction. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node</strong> – The prepared node to interrogate. </p></li>
+<li><p><strong>origin</strong> – The ray origin in world coordinates. </p></li>
+<li><p><strong>direction</strong> – The ray direction. Need not be normalized, but must not be zero length. </p></li>
+<li><p><strong>step_size</strong> – The march step in model units. Pass 0 (the default) to derive one from the bounding box diagonal. </p></li>
+<li><p><strong>tolerance</strong> – The absolute signed distance, in model units, that counts as “on the surface”. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Throws<span class="colon">:</span></dt>
+<dd class="field-even"><p><span><span class="cpp-expr sig sig-inline cpp"><span class="n">std</span><span class="p">::</span><span class="n">runtime_error</span></span></span> – if direction is zero length, or if step_size or tolerance is negative. </p>
+</dd>
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>A <a class="reference internal" href="#struct_surface_probe_1_1_probe"><span class="std std-ref">Probe</span></a> describing the entry point. hit is false when the ray misses the node. </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="cpp function">
+<dt class="sig sig-object cpp" id="_CPPv4N12SurfaceProbe14surface_normalER4NodeRKN3glm4vec3E">
+<span id="_CPPv3N12SurfaceProbe14surface_normalER4NodeRKN3glm4vec3E"></span><span id="_CPPv2N12SurfaceProbe14surface_normalER4NodeRKN3glm4vec3E"></span><span id="SurfaceProbe::surface_normal__NodeR.glm::vec3CR"></span><span class="target" id="namespace_surface_probe_1add07fd9bcebccc2bcdd06c3af24fcc8b"></span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">surface_normal</span></span></span><span class="sig-paren">(</span><a class="reference internal" href="libvcad-tree-core.html#_CPPv44Node" title="Node"><span class="n"><span class="pre">Node</span></span></a><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">node</span></span>, <span class="k"><span class="pre">const</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="p"><span class="pre">&amp;</span></span><span class="n sig-param"><span class="pre">point</span></span><span class="sig-paren">)</span><a class="headerlink" href="#_CPPv4N12SurfaceProbe14surface_normalER4NodeRKN3glm4vec3E" title="Link to this definition">#</a><br /></dt>
+<dd><p>Returns the outward unit surface normal of a tree at a point. </p>
+<p>This is the normalized signed distance gradient. The point does not have to lie exactly on the surface; away from it the result is the direction of steepest increase of the field. </p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>node</strong> – The prepared node to interrogate. </p></li>
+<li><p><strong>point</strong> – The point to evaluate, in world coordinates. </p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The unit normal, or a zero vector when the gradient is degenerate or non-finite. </p>
+</dd>
+</dl>
+</dd></dl>
+
+</div>
+<dl class="cpp struct">
+<dt class="sig sig-object cpp" id="_CPPv4N12SurfaceProbe5ProbeE">
+<span id="_CPPv3N12SurfaceProbe5ProbeE"></span><span id="_CPPv2N12SurfaceProbe5ProbeE"></span><span id="SurfaceProbe::Probe"></span><span class="target" id="struct_surface_probe_1_1_probe"></span><span class="k"><span class="pre">struct</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">Probe</span></span></span><a class="headerlink" href="#_CPPv4N12SurfaceProbe5ProbeE" title="Link to this definition">#</a><br /></dt>
+<dd><div class="docutils container">
+<em>#include &lt;surface_probe.h&gt;</em></div>
+<p>The result of a single surface interrogation. </p>
+<p>position and normal are always populated with the best answer the probe could find, even when hit is false, so callers can debug a failed probe. Only trust them when hit is true. </p>
+<div class="breathe-sectiondef docutils container">
+<p class="breathe-sectiondef-title rubric" id="breathe-section-title-public-members">Public Members</p>
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12SurfaceProbe5Probe3hitE">
+<span id="_CPPv3N12SurfaceProbe5Probe3hitE"></span><span id="_CPPv2N12SurfaceProbe5Probe3hitE"></span><span id="SurfaceProbe::Probe::hit__b"></span><span class="target" id="struct_surface_probe_1_1_probe_1a86c39663cbf45bdc6a46939d75a15c16"></span><span class="kt"><span class="pre">bool</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">hit</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="k"><span class="pre">false</span></span><a class="headerlink" href="#_CPPv4N12SurfaceProbe5Probe3hitE" title="Link to this definition">#</a><br /></dt>
+<dd><p>True when the probe converged onto the surface within the requested tolerance. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12SurfaceProbe5Probe6normalE">
+<span id="_CPPv3N12SurfaceProbe5Probe6normalE"></span><span id="_CPPv2N12SurfaceProbe5Probe6normalE"></span><span id="SurfaceProbe::Probe::normal__glm::vec3"></span><span class="target" id="struct_surface_probe_1_1_probe_1a4e3e5e40ef77ae641a04492c051f00ff"></span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">normal</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="p"><span class="pre">(</span></span><span class="m"><span class="pre">0.0f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">0.0f</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="m"><span class="pre">1.0f</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N12SurfaceProbe5Probe6normalE" title="Link to this definition">#</a><br /></dt>
+<dd><p>The outward unit surface normal at position. Points away from the solid. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12SurfaceProbe5Probe8positionE">
+<span id="_CPPv3N12SurfaceProbe5Probe8positionE"></span><span id="_CPPv2N12SurfaceProbe5Probe8positionE"></span><span id="SurfaceProbe::Probe::position__glm::vec3"></span><span class="target" id="struct_surface_probe_1_1_probe_1a6a196b918597e0bb9b6c47dd0edd125f"></span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">position</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="n"><span class="pre">glm</span></span><span class="p"><span class="pre">::</span></span><span class="n"><span class="pre">vec3</span></span><span class="p"><span class="pre">(</span></span><span class="m"><span class="pre">0.0f</span></span><span class="p"><span class="pre">)</span></span><a class="headerlink" href="#_CPPv4N12SurfaceProbe5Probe8positionE" title="Link to this definition">#</a><br /></dt>
+<dd><p>The point on (or nearest to) the surface, in world coordinates. </p>
+</dd></dl>
+
+<dl class="cpp var">
+<dt class="sig sig-object cpp" id="_CPPv4N12SurfaceProbe5Probe15signed_distanceE">
+<span id="_CPPv3N12SurfaceProbe5Probe15signed_distanceE"></span><span id="_CPPv2N12SurfaceProbe5Probe15signed_distanceE"></span><span id="SurfaceProbe::Probe::signed_distance__double"></span><span class="target" id="struct_surface_probe_1_1_probe_1aed241a1a03e7dbee85649c84a5e3ea5b"></span><span class="kt"><span class="pre">double</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">signed_distance</span></span></span><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="m"><span class="pre">0.0</span></span><a class="headerlink" href="#_CPPv4N12SurfaceProbe5Probe15signed_distanceE" title="Link to this definition">#</a><br /></dt>
+<dd><p>The residual signed distance at position. Near zero for a converged probe. </p>
+</dd></dl>
+
+</div>
+</dd></dl>
+
+</dd></dl>
+
 <dl class="cpp class">
 <dt class="sig sig-object cpp" id="_CPPv419ExpressionEvaluator">
 <span id="_CPPv319ExpressionEvaluator"></span><span id="_CPPv219ExpressionEvaluator"></span><span id="ExpressionEvaluator"></span><span class="target" id="class_expression_evaluator"></span><span class="k"><span class="pre">class</span></span><span class="w"> </span><span class="sig-name descname"><span class="n"><span class="pre">ExpressionEvaluator</span></span></span><a class="headerlink" href="#_CPPv419ExpressionEvaluator" title="Link to this definition">#</a><br /></dt>
@@ -1927,6 +2070,20 @@
 </li>
 </ul>
 </li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv412SurfaceProbe"><code class="docutils literal notranslate"><span class="pre">SurfaceProbe</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12SurfaceProbe16alignment_anglesERKN3glm4vec3ERKN3glm4vec3E"><code class="docutils literal notranslate"><span class="pre">alignment_angles()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12SurfaceProbe11probe_pointER4NodeRKN3glm4vec3Edi"><code class="docutils literal notranslate"><span class="pre">probe_point()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12SurfaceProbe9probe_rayER4NodeRKN3glm4vec3ERKN3glm4vec3Edd"><code class="docutils literal notranslate"><span class="pre">probe_ray()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12SurfaceProbe14surface_normalER4NodeRKN3glm4vec3E"><code class="docutils literal notranslate"><span class="pre">surface_normal()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12SurfaceProbe5ProbeE"><code class="docutils literal notranslate"><span class="pre">SurfaceProbe::Probe</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12SurfaceProbe5Probe3hitE"><code class="docutils literal notranslate"><span class="pre">hit</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12SurfaceProbe5Probe6normalE"><code class="docutils literal notranslate"><span class="pre">normal</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12SurfaceProbe5Probe8positionE"><code class="docutils literal notranslate"><span class="pre">position</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N12SurfaceProbe5Probe15signed_distanceE"><code class="docutils literal notranslate"><span class="pre">signed_distance</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv419ExpressionEvaluator"><code class="docutils literal notranslate"><span class="pre">ExpressionEvaluator</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N19ExpressionEvaluator7compileERKNSt6stringERKNSt13unordered_mapINSt6stringEPdEE"><code class="docutils literal notranslate"><span class="pre">compile()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#_CPPv4N19ExpressionEvaluator5errorEv"><code class="docutils literal notranslate"><span class="pre">error()</span></code></a></li>
@@ -2023,8 +2180,8 @@
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=90905a2f556bf617f1a9"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=90905a2f556bf617f1a9"></script>
+  <script defer src="../_static/scripts/bootstrap.js?digest=cb8930eaaf36d9849b67"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=cb8930eaaf36d9849b67"></script>
 
   <footer class="bd-footer">
 <div class="bd-footer__inner bd-page-width">
@@ -2058,7 +2215,7 @@
         <div class="footer-item">
 <p class="theme-version">
   <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
-  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.20.0.
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.21.0.
 </p></div>
       
     </div>

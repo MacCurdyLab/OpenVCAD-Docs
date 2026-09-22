@@ -495,9 +495,14 @@
         <span class="k">except</span><span class="p">:</span>
             <span class="k">pass</span>
 
-    <span class="n">app</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">App</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="c1"># Re-initialising wxWidgets after a MainLoop has already torn it down is</span>
+    <span class="c1"># unsupported, so a second render() in the same script reuses the running</span>
+    <span class="c1"># app rather than constructing another one. The frame is deliberately not</span>
+    <span class="c1"># parked on the app: it keeps itself alive until it is closed, and holding</span>
+    <span class="c1"># it here would strand the whole VTK scene for the rest of the process.</span>
+    <span class="n">app</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">GetApp</span><span class="p">()</span> <span class="ow">or</span> <span class="n">wx</span><span class="o">.</span><span class="n">App</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
     <span class="c1"># Pass state file path so Frame can save on close</span>
-    <span class="n">app</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">RenderFrame</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">state_file</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">STATE_FILE</span><span class="p">),</span> <span class="n">initial_settings</span><span class="o">=</span><span class="n">settings_to_use</span><span class="p">,</span> <span class="n">materials</span><span class="o">=</span><span class="n">materials</span><span class="p">)</span>
+    <span class="n">RenderFrame</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">state_file</span><span class="o">=</span><span class="nb">str</span><span class="p">(</span><span class="n">STATE_FILE</span><span class="p">),</span> <span class="n">initial_settings</span><span class="o">=</span><span class="n">settings_to_use</span><span class="p">,</span> <span class="n">materials</span><span class="o">=</span><span class="n">materials</span><span class="p">)</span>
     <span class="n">app</span><span class="o">.</span><span class="n">MainLoop</span><span class="p">()</span>
 
 <div class="viewcode-block" id="Render">

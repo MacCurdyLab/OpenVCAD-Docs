@@ -474,7 +474,7 @@
 
 <div class="viewcode-block" id="export_iso_surface_vtk">
 <a class="viewcode-back" href="../../python-api/pyvcad_rendering/vtk_data_export.html#pyvcad_rendering.vtk_export.export_iso_surface_vtk">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">export_iso_surface_vtk</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="s2">"high"</span><span class="p">,</span> <span class="n">use_blending</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">export_iso_surface_vtk</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="s2">"high"</span><span class="p">,</span> <span class="n">use_blending</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">custom_voxel_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Exports the colored iso-surface of a given OpenVCAD object to a .vtp file.</span>
 <span class="sd">    It computes the colors for all defined attributes and adds them as arrays in the PointData.</span>
@@ -482,9 +482,10 @@
 <span class="sd">    Args:</span>
 <span class="sd">        vcad_object: The OpenVCAD node to export.</span>
 <span class="sd">        file_path (str): The destination file path (.vtp is recommended).</span>
-<span class="sd">        quality (str, optional): The sampling quality profile ("low", "medium", "high", "ultra"). Defaults to "high".</span>
+<span class="sd">        quality (str, optional): The sampling quality profile ("low", "medium", "high", "ultra", "custom"). Defaults to "high".</span>
 <span class="sd">        use_blending (bool, optional): Whether to use alpha blending. Defaults to True.</span>
 <span class="sd">        progress_callback (callable, optional): Callback for progress updates taking a float (0-100).</span>
+<span class="sd">        custom_voxel_size (float, optional): Voxel size in mm, required when quality is "custom".</span>
 <span class="sd">    """</span>
     <span class="n">materials</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span> <span class="ow">in</span> <span class="n">vcad_object</span><span class="o">.</span><span class="n">attribute_list</span><span class="p">():</span>
@@ -493,7 +494,7 @@
         <span class="k">if</span> <span class="n">materials</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Volume fractions attribute requires material definitions to export."</span><span class="p">)</span>
 
-    <span class="n">voxel_size</span> <span class="o">=</span> <span class="n">compute_voxel_size_for_quality_profile</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">quality</span><span class="p">)</span>
+    <span class="n">voxel_size</span> <span class="o">=</span> <span class="n">compute_voxel_size_for_quality_profile</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">quality</span><span class="p">,</span> <span class="n">custom_voxel_size</span><span class="p">)</span>
     <span class="n">tree_sampler</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">TreeSampler</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
     
     <span class="c1"># Generate the SDF</span>
@@ -607,7 +608,7 @@
 
 <div class="viewcode-block" id="export_volume_vtk">
 <a class="viewcode-back" href="../../python-api/pyvcad_rendering/vtk_data_export.html#pyvcad_rendering.vtk_export.export_volume_vtk">[docs]</a>
-<span class="k">def</span><span class="w"> </span><span class="nf">export_volume_vtk</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="s2">"high"</span><span class="p">,</span> <span class="n">use_blending</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">export_volume_vtk</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">file_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">quality</span><span class="o">=</span><span class="s2">"high"</span><span class="p">,</span> <span class="n">use_blending</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">progress_callback</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">custom_voxel_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">"""</span>
 <span class="sd">    Exports the multi-material colored volume of a given OpenVCAD object to a .vti file.</span>
 <span class="sd">    It computes the colors for all defined attributes and adds them as arrays in the PointData.</span>
@@ -615,9 +616,10 @@
 <span class="sd">    Args:</span>
 <span class="sd">        vcad_object: The OpenVCAD node to export.</span>
 <span class="sd">        file_path (str): The destination file path (.vti is recommended).</span>
-<span class="sd">        quality (str, optional): The sampling quality profile ("low", "medium", "high", "ultra"). Defaults to "high".</span>
+<span class="sd">        quality (str, optional): The sampling quality profile ("low", "medium", "high", "ultra", "custom"). Defaults to "high".</span>
 <span class="sd">        use_blending (bool, optional): Whether to use alpha blending. Defaults to True.</span>
 <span class="sd">        progress_callback (callable, optional): Callback for progress updates taking a float (0-100).</span>
+<span class="sd">        custom_voxel_size (float, optional): Voxel size in mm, required when quality is "custom".</span>
 <span class="sd">    """</span>
     <span class="n">materials</span> <span class="o">=</span> <span class="kc">None</span>
     <span class="k">if</span> <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span> <span class="ow">in</span> <span class="n">vcad_object</span><span class="o">.</span><span class="n">attribute_list</span><span class="p">():</span>
@@ -626,7 +628,7 @@
         <span class="k">if</span> <span class="n">materials</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"Volume fractions attribute requires material definitions to export."</span><span class="p">)</span>
 
-    <span class="n">voxel_size</span> <span class="o">=</span> <span class="n">compute_voxel_size_for_quality_profile</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">quality</span><span class="p">)</span>
+    <span class="n">voxel_size</span> <span class="o">=</span> <span class="n">compute_voxel_size_for_quality_profile</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">quality</span><span class="p">,</span> <span class="n">custom_voxel_size</span><span class="p">)</span>
     <span class="n">tree_sampler</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">TreeSampler</span><span class="p">(</span><span class="n">vcad_object</span><span class="p">,</span> <span class="n">voxel_size</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
     
     <span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkCommonDataModel</span><span class="w"> </span><span class="kn">import</span> <span class="n">vtkImageData</span>

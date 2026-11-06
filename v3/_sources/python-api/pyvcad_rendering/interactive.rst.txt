@@ -3,11 +3,59 @@ Interactive (GUI)
 
 These functions start a wx-based user interface. Use them when you want to
 inspect a design interactively or drive a compiler workflow from form controls.
+Each one has a CamelCase alias (``Render``, ``Export``, ``Select_Mesh_Patch``)
+that older scripts use; both spellings behave the same.
 
-.. autofunction:: pyvcad_rendering.render.Render
+.. currentmodule:: pyvcad_rendering
 
-.. autofunction:: pyvcad_rendering.export.Export
+Viewer
+------
 
-``Export`` is the entry point for choosing a :doc:`compiler <../pyvcad_compilers/compilers>`
-and filling its options in the UI before writing output. The concrete compiler
-classes live in ``pyvcad_compilers``; see that page for available backends.
+.. autofunction:: render
+
+.. autofunction:: Render
+
+Two viewer tools show analysis results (see the :doc:`/guides/analysis/analysing-designs` guide):
+
+- **Inspect > Mass Properties** computes :func:`pyvcad.mass_properties` for the design at the
+  current quality, with the materials passed to ``Render`` and an optional uniform density. It
+  lists the numbers (with a Copy button) and draws the centre of mass and principal axes over
+  the view.
+- **Display > Range > Flag below min / Flag above max** paints values outside a Fixed colour
+  range in a flag colour, for example walls thinner than a limit when viewing a thickness
+  attribute from :func:`pyvcad.local_thickness`.
+
+Compiler export wizard
+----------------------
+
+.. autofunction:: export
+
+.. autofunction:: Export
+
+``Export`` opens a three-step wizard for compiling a design without writing
+compiler code:
+
+1. **Choose a compiler.** The attributes the design provides, then every
+   :doc:`compiler <../pyvcad_compilers/compilers>` with the attributes it
+   expects. Compilers the design cannot feed are greyed out.
+2. **Settings.** What the compiler targets, a link to its guide when one
+   exists, and validated settings with sensible defaults and a size estimate.
+3. **Export.** Live progress with cancel, then the written files.
+
+This lets a script stay compiler-agnostic: build the design, call
+``viz.export(root, materials)``, and choose the output at run time. Outputs
+default to an ``output/`` folder next to the calling script.
+
+Mesh patch picker
+-----------------
+
+A separate picker for choosing a patch of triangles on a surface mesh, for
+example the faces a lattice or texture should follow. It returns a
+``pyvcad.MeshSelection``; see :doc:`mesh_selection` for saving and replaying
+selections without the GUI, and the :doc:`/guides/imports/mesh-selection` guide.
+
+.. autofunction:: select_mesh_patch
+
+.. autofunction:: Select_Mesh_Patch
+
+.. autoclass:: MeshSelectionFrame

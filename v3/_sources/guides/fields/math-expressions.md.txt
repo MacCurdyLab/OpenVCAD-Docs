@@ -1,0 +1,109 @@
+# Math expressions in OpenVCAD
+
+```{include} ../_guide-sidebar-compiler-membership.md
+```
+
+OpenVCAD compiles **math expression strings** at runtime with the [ExprTk](https://github.com/ArashPartow/exprtk) library. The same syntax is used wherever you pass an expression string—for example `FloatAttribute`, `Vec4Attribute`, and `VolumeFractionsAttribute` in the attribute-modeling workflow, and other nodes that accept spatial formulas.
+
+```{note}
+Syntax matches most graphing-calculator conventions, with many advanced features available. See the
+[ExprTk documentation](https://github.com/ArashPartow/exprtk) for the full language specification.
+```
+
+## Coordinate systems
+
+The following variables may be used in any math expression. You can combine multiple coordinate systems in a single expression.
+
+| Name | Form | Variable names |
+|------|------|----------------|
+| Cartesian | f(x, y, z) | `x`, `y`, `z` |
+| Cylindrical | f(rho, phic, z) | `rho`, `phic`, `z` |
+| Spherical | f(r, theta, phis) | `r`, `theta`, `phis` |
+| Signed distance | f(d) | `d` |
+
+```{note}
+`phic` is the azimuthal angle in cylindrical coordinates; `phis` is the polar angle in spherical coordinates. Both use radians.
+```
+
+```{note}
+`d` is the signed distance to the object surface: zero on the surface, negative inside, positive outside. This supports conformal (surface-following) gradients.
+```
+
+### Cylindrical definitions
+
+- `rho` = sqrt(x^2 + y^2) — distance from the Z axis  
+- `phic` = atan2(y, x) — azimuth in the XY plane (radians, about -π to +π)  
+- `z` — same as Cartesian `z`
+
+### Spherical definitions
+
+- `r` = sqrt(x^2 + y^2 + z^2) — distance from the origin  
+- `theta` = atan2(y, x) — azimuth in the XY plane (radians)  
+- `phis` = acos(z / r) — polar angle from +Z (radians, 0 to π)
+
+## Arithmetic and assignment operators
+
+| Operator | Definition |
+|----------|------------|
+| `+` | Addition (`x + y`) |
+| `-` | Subtraction (`x - y`) |
+| `*` | Multiplication (`x * y`) |
+| `/` | Division (`x / y`) |
+| `%` | Modulus (`x % y`) |
+| `^` | Exponentiation (`x ^ y`) |
+| `:=` | Assignment (`y := x`) |
+| `+=`, `-=`, `*=`, `/=`, `%=` | Compound assignment |
+
+## Equalities and inequalities
+
+| Operator | Definition |
+|----------|------------|
+| `==` or `=` | Equal (`x == y`) |
+| `<>` or `!=` | Not equal |
+| `<`, `<=`, `>`, `>=` | Inequality comparisons |
+
+## Boolean operations
+
+| Operator | Definition |
+|----------|------------|
+| `true` / `false` | Boolean literals |
+| `and`, `or`, `not` | Logical operators |
+| `xor`, `nand`, `nor`, `mand`, `mor` | Extended logical ops |
+
+## General-purpose functions
+
+| Function | Definition |
+|----------|------------|
+| `abs(x)` | Absolute value |
+| `avg(x, y, ...)` | Mean of arguments |
+| `ceil(x)`, `floor(x)` | Rounding |
+| `sqrt(x)` | Square root (x ≥ 0) |
+| `log(x)`, `exp(x)` | Log and exponential |
+| `pow(x, y)` | Power |
+| `max(...)`, `min(...)` | Extrema |
+| `clamp(lo, x, hi)` | Clamp x to \[lo, hi\] |
+
+## Trigonometry
+
+Arguments are in radians unless you convert with `deg2rad` / `rad2deg`.
+
+| Function | Definition |
+|----------|------------|
+| `sin`, `cos`, `tan` | Basic trig |
+| `asin`, `acos`, `atan` | Inverses |
+| `deg2rad(x)`, `rad2deg(x)` | Unit conversion |
+
+## Constants
+
+| Name | Role |
+|------|------|
+| `pi` | Built-in |
+| `e` | Built-in |
+
+You can also use numeric literals (e.g. `3.14159`).
+
+## Tips
+
+- **Grouping** uses parentheses: `(x + y) * z`.
+- **Mixing coordinates** is valid, e.g. `rho * sin(phis) + z`.
+- **Colors and fractions** often need **clamp**: `clamp(0, expr, 1)` for channels that must stay in \[0, 1\].

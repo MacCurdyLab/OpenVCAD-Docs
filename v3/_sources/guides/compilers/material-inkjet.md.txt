@@ -20,12 +20,12 @@ Inkjet 3D printers commonly consume a **stack of PNG files**. Each PNG is one Z 
 
 OpenVCAD provides a programmable way to generate these stacks from implicit geometry and material fields. This matters because the voxel count is far beyond what a designer can draw manually in traditional image-editing software. A large J750-class build can contain **over 400 billion addressable voxels**, so the practical workflow is to model the part and its material distribution parametrically, then let OpenVCAD compile the PNG stack.
 
-OpenVCAD produces the PNG stack, but it does not perform the final printer setup. Downstream software such as **Stratasys GrabCAD Print** or the **Voxel Print Utility** is still responsible for mapping the PNG color palette into printer material channels. The compiler itself does not invent support material. If you want to author the downward-facing support volume as OpenVCAD geometry first, use the [Inkjet support volumes](../support-analyzer.md) guide and union that solid into the compiled tree.
+OpenVCAD produces the PNG stack, but it does not perform the final printer setup. Downstream software such as **Stratasys GrabCAD Print** or the **Voxel Print Utility** is still responsible for mapping the PNG color palette into printer material channels. The compiler itself does not invent support material. If you want to author the downward-facing support volume as OpenVCAD geometry first, use the [Inkjet support volumes](../analysis/support-analyzer.md) guide and union that solid into the compiled tree.
 
 ## Prerequisites
 
 - OpenVCAD installed with **`pyvcad`** and **`pyvcad_compilers`** (see the installation guide and repository **`examples/project_example`**).
-- Familiarity with **`VOLUME_FRACTIONS`** on geometry (see {ref}`guide-getting-started`, especially **Lesson 6: Volume Fractions**, and the [Functional Grading Guide](../gradients.md)).
+- Familiarity with **`VOLUME_FRACTIONS`** on geometry (see {ref}`guide-getting-started`, especially **Lesson 6: Volume Fractions**, and the [Functional Grading Guide](../fields/gradients.md)).
 
 ## What this compiler is for
 
@@ -90,7 +90,24 @@ The two modes below compile the same uniform 50/50 red-blue field. The metrics m
 (liquid-keep-out)=
 ### Liquid keep-out
 
-If **`liquid_keep_out_distance > 0`**, the **liquid** material is removed from the local mixture when the sample lies within that distance of the **surface** (using the signed distance). Your **`MaterialDefs`** must include a material named **`"liquid"`** or **`"M.Cleanser"`** in that mode, or **`compile()`** raises an error. Use this when your process should avoid assigning liquid near boundaries.
+If **`liquid_keep_out_distance > 0`**, the **liquid** material is removed from the local mixture when the sample lies within that distance of the **surface** (using the signed distance). By default, your **`MaterialDefs`** must include a material named **`"liquid"`** or **`"M.Cleanser"`** in that mode, or **`compile()`** raises an error. Use this when your process should avoid assigning liquid near boundaries.
+
+To keep other materials away from the surface, pass a list of material names to **`set_liquid_keep_out_materials()`**. The list can hold any number of materials. It replaces the default, so include **`"M.Cleanser"`** yourself if you still want it kept out. Every name must exist in your **`MaterialDefs`**, or **`compile()`** raises an error. The list does nothing unless **`liquid_keep_out_distance > 0`**. **`GCVFCompiler`** has the same method.
+
+```python
+compiler = pvc.MaterialInkjetCompiler(root, voxel_size, output_dir, "slice_", material_defs, 0.5)
+compiler.set_liquid_keep_out_materials(["M.Cleanser", "support"])
+compiler.compile()
+```
+
+**`examples/compilers/material_inkjet/03_liquid_keep_out.py`** compiles a red / liquid / support mixture three times: with no keep-out, with the default keep-out, and with **`["liquid", "support"]`** as a custom list. The middle slices below use a 1.5 mm keep-out distance. The default removes only liquid from the band near the surface. The custom list removes both listed materials there, so only red is left in the band.
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">No keep-out, default keep-out, and a custom keep-out list</p>
+<img src="../images/compilers_material_inkjet_liquid_keep_out.png" alt="Three middle slices of a red, liquid and support mixture: mixed to the edge with no keep-out, liquid cleared from a 1.5 millimeter border by the default keep-out, and liquid and support both cleared from the border by a custom keep-out list" width="100%">
+</div>
+</div>
 
 ### Missing **`VOLUME_FRACTIONS`** inside the solid
 
@@ -232,6 +249,8 @@ With **`viz.Render(root, materials)`**, use the renderer's attribute selection t
 | `material_voxel_counts()` | **`dict`** mapping **material ID** to **active voxel count**. |
 | `set_strict_mode(bool)` | Require **`VOLUME_FRACTIONS`** at every inside voxel. |
 | `set_fallback_material_id(id)` | Material ID when strict mode is off and samples are missing. |
+| `set_liquid_keep_out_materials(names)` | Materials removed within **`liquid_keep_out_distance`** of the surface (default: **`liquid`** or **`M.Cleanser`**). See [liquid keep-out](#liquid-keep-out). |
+| `liquid_keep_out_materials()` | The custom keep-out list; empty means the default is used. |
 
 For full autodoc signatures, see the **pyvcad_compilers** section (**`MaterialInkjetCompiler`** and **`CompilerBase`**).
 
@@ -248,4 +267,5 @@ For full autodoc signatures, see the **pyvcad_compilers** section (**`MaterialIn
 
 - **`examples/compilers/material_inkjet/01_basic_png_stack.py`** - end-to-end compile + render (this guide).
 - **`examples/compilers/material_inkjet/02_compare_export_modes.py`** - compile the same 50/50 mixture with stochastic and 3D error-diffused assignment, then compare the PNG stacks and voxel counts.
+- **`examples/compilers/material_inkjet/03_liquid_keep_out.py`** - compare no keep-out, the default liquid keep-out, and a custom keep-out list from **`set_liquid_keep_out_materials()`**.
 - **`examples/attributes_by_type/undefined/material_inkjet_example.py`** - default fallback, custom fallback, and strict mode with **partial** **`VOLUME_FRACTIONS`** on a union.

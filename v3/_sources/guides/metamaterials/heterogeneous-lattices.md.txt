@@ -6,7 +6,7 @@
 
 A single `CellMap` can lay out several kinds of lattice in one part. The map is the shared grid: it tells every cell where to sit in the finished shape. You can then use a smooth TPMS sheet in one area and a beam-based graph lattice in another without losing that shared layout.
 
-This guide shows three ways to join those areas: make a clean cut, blend two similar TPMS patterns, or let two unlike patterns overlap. It assumes you have worked through the [metamaterial concepts](concepts.md) and [functionally graded geometry](geometry-grading.md) guides.
+This guide shows three ways to join those areas: make a clean cut, blend two similar TPMS patterns, or let two unlike patterns overlap. It then applies them to a curved mesh part and shows how to check that the result is one connected piece. It assumes you have worked through the [metamaterial concepts](concepts.md) and [functionally graded geometry](geometry-grading.md) guides.
 
 ## Build sharp topology regions
 
@@ -68,12 +68,14 @@ weight = mm.ramp(-8.0, 8.0, axis="x", smooth=True)
 root = mm.mix(gyroid, schwarz_d, weight)
 ```
 
-For a transition that follows cell positions rather than millimetres, use the map's logical coordinates explicitly:
+For a transition that follows cell positions rather than millimetres, pass the map itself as the coordinates. The ramp then reads the map's logical position, counted in cells:
 
 ```python
-weight = mm.ramp(2.0, 4.0, axis="u", coordinates=cell_map.logical_position)
+weight = mm.ramp(2.0, 4.0, axis="u", coordinates=cell_map)
 root = mm.mix(gyroid, schwarz_d, weight)
 ```
+
+Logical coordinates exist only inside the map. A mix still asks for its weight everywhere in its bounding box, including the empty corners around a curved map. There the ramp returns its `outside` value, `0` by default, which selects the first body. That is harmless because both mapped lattices are empty outside the map. Choose another value with `outside=1.0`, or pass `outside=None` to raise an error instead. Hand-built fields get the same protection from `field.with_fallback(0.0, cell_map)`.
 
 `mm.idw_weight` can create a weight from the distance to chosen seed points, and `mm.mix_many` can combine more than two bodies. Keep the bodies on the same `CellMap`. They may have different outer boundaries, but expect an abrupt change where only one body exists.
 
@@ -150,12 +152,102 @@ The same choices work on a curved part. The examples below create a shared map f
   <div class="guide-figure-cell"><a href="../images/mm_heterogeneous_04_tpms_graph_paired.png" data-lightbox="heterogeneous"><img src="../images/mm_heterogeneous_04_tpms_graph_paired.png" alt="Cylindrical shell with Schwarz-P sheet lattice below and octet beam lattice above"></a><div class="guide-figure-label">Inside one curved shell, a lower Schwarz-P sheet changes sharply to upper octet beams.</div></div>
 </div>
 
+## Divide a curved mesh part into zones
+
+The same tools work on a conformal map built from a triangle-mesh patch, such
+as the dome in the [conformal meshes guide](conformal-meshes.md).
+`mm.zones` assigns one structure per region and joins neighbours in the same
+way throughout. [`06_dome_mesh_zones.py`](../../../../examples/metamaterials/heterogeneous/06_dome_mesh_zones.py)
+puts a gyroid on the crown of a dome, an octet band below it, and Kelvin cells
+at the rim:
+
+```python
+cell_map = mm.cell_map_from_surface(surface, cells=(12, 12, 2), height=8.0)
+
+crown = mm.gyroid(cell_map, wall_thickness=0.7)
+middle = mm.octet(cell_map, beam_radius=0.45)
+rim = mm.kelvin(cell_map, beam_radius=0.5)
+
+above_crown = pv.RectPrism.FromMinAndMax(pv.Vec3(-50, -50, 21), pv.Vec3(50, 50, 60))
+above_rim = pv.RectPrism.FromMinAndMax(pv.Vec3(-50, -50, 13), pv.Vec3(50, 50, 60))
+root = mm.zones(
+    [crown, middle, rim],
+    [above_crown, above_rim],
+    mode="overlap",
+    half_width=2.0,
+)
+```
+
+There is always one more structure than regions. The first region wins where
+regions overlap, and the last structure fills everything outside them. `mode`
+chooses how neighbours meet: `"sharp"` cuts at each region surface, `"mix"`
+blends distance fields across a `2 * half_width` band (compatible families
+only), and `"overlap"` keeps both structures through that band, as in the
+earlier TPMS-to-beam example. `mm.overlap(inside, outside, region, half_width)`
+makes a single overlap join.
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_heterogeneous_06_dome_mesh_zones.png" data-lightbox="heterogeneous-mesh"><img src="../images/mm_heterogeneous_06_dome_mesh_zones.png" alt="Domed lattice with a gyroid crown, an octet band and Kelvin cells at the rim"></a><div class="guide-figure-label">Three zones on one mesh-based map, joined by overlap bands</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_heterogeneous_07_dome_mesh_uvw_ramps.png" data-lightbox="heterogeneous-mesh"><img src="../images/mm_heterogeneous_07_dome_mesh_uvw_ramps.png" alt="Cutaway of a domed TPMS lattice changing from gyroid at the patch to Schwarz-D on the outside"></a><div class="guide-figure-label">Cutaway: gyroid on the patch becomes Schwarz-D through the thickness</div></div>
+</div>
+
+### Ramp along u, v, or w
+
+On any map, logical `u` and `v` run across the patch and `w` runs from the
+patch to the outer surface. A ramp along `w` therefore changes a structure
+through the thickness, whatever the shape of the part.
+[`07_dome_mesh_uvw_ramps.py`](../../../../examples/metamaterials/heterogeneous/07_dome_mesh_uvw_ramps.py)
+changes the TPMS family through the thickness and the wall thickness across
+the patch:
+
+```python
+through_thickness = mm.ramp(0.5, 2.5, axis="w", coordinates=cell_map)
+mixed_cell = pv.ImplicitUnitCell.mixed(
+    pv.ImplicitUnitCell.standard("gyroid"),
+    pv.ImplicitUnitCell.standard("schwarz_d"),
+    through_thickness,
+)
+across = mm.ramp(2.0, 10.0, axis="u", coordinates=cell_map, smooth=False)
+root = mm.tpms(cell_map, mixed_cell, wall_thickness=across.map_range(0.0, 1.0, 0.45, 1.0))
+```
+
+`mm.ramp` is `0` at `start`, `1` at `end` and clamped beyond them, so the ends
+may be given in either order. `smooth=True` (the default) eases in and out of
+the band; `smooth=False` is linear. Equal ends raise an error: use a sharp
+region instead of a zero-width band.
+
+## Check that a transition is one piece
+
+Any join can separate: a field blend can pinch apart, and clipping can leave
+loose pieces at a region or host boundary. `mm.check_connectivity` samples the
+finished design and counts its separate solid pieces:
+
+```python
+report = mm.check_connectivity(root, voxel_size=0.2)
+print(report)
+assert report.connected
+```
+
+Choose a voxel size of at most about half the thinnest wall or beam radius.
+The report lists the volume and location of every extra piece, so you can see
+which band to widen or which members to thicken. The section *Keep clipped
+foams in one piece* of the [stochastic lattices guide](stochastic-lattices.md)
+explains the options in more detail.
+
+## Transitions with stochastic foams
+
+Random Voronoi foams can join this kind of design too. The
+[stochastic lattices guide](stochastic-lattices.md) shows how a foam becomes a
+regular Kelvin, cubic, or rhombic-dodecahedron lattice by moving its seeds,
+how to attach a foam to a mapped strut lattice, and how to join a foam to a
+TPMS through an overlap band.
+
 ## Choose sharp clipping, field mixing, or overlap
 
 Use **sharp clipping** when the boundary location matters most and you want both patterns unchanged right up to it. It can leave beams or sheets abruptly cut off, so align the boundary with cell vertices where possible, enlarge important beam joints, or add a deliberate connector where the load must cross.
 
 Use **smooth mixing** for compatible patterns with matching features, especially two TPMS patterns. `ImplicitUnitCell.mixed` is the best choice for that case. A continuous change in the underlying shape values does not promise one connected, printable solid, so inspect the result for islands, thin necks, and trapped voids.
 
-Use **overlap** as the safer starting point for unlike families such as TPMS-to-graph. It keeps both source structures through a finite band, which costs material but gives their connections a clear physical form. Check connected components, load paths, and manufacturability before relying on any transition.
+Use **overlap** as the safer starting point for unlike families such as TPMS-to-graph. It keeps both source structures through a finite band, which costs material but gives their connections a clear physical form. Check connected components with `mm.check_connectivity`, then load paths and manufacturability, before relying on any transition. For a random foam, prefer moving its seeds (see the stochastic lattices guide) over any of these joins.
 
-The complete interactive examples are [`01_tpms_to_tpms.py`](../../../../examples/metamaterials/heterogeneous/01_tpms_to_tpms.py), [`02_tpms_to_tpms_surface_conformal.py`](../../../../examples/metamaterials/heterogeneous/02_tpms_to_tpms_surface_conformal.py), [`03_tpms_to_graph_overlap.py`](../../../../examples/metamaterials/heterogeneous/03_tpms_to_graph_overlap.py), [`04_tpms_to_graph_between_surfaces.py`](../../../../examples/metamaterials/heterogeneous/04_tpms_to_graph_between_surfaces.py), and [`05_graph_to_graph.py`](../../../../examples/metamaterials/heterogeneous/05_graph_to_graph.py).
+The complete interactive examples are [`01_tpms_to_tpms.py`](../../../../examples/metamaterials/heterogeneous/01_tpms_to_tpms.py), [`02_tpms_to_tpms_surface_conformal.py`](../../../../examples/metamaterials/heterogeneous/02_tpms_to_tpms_surface_conformal.py), [`03_tpms_to_graph_overlap.py`](../../../../examples/metamaterials/heterogeneous/03_tpms_to_graph_overlap.py), [`04_tpms_to_graph_between_surfaces.py`](../../../../examples/metamaterials/heterogeneous/04_tpms_to_graph_between_surfaces.py), [`05_graph_to_graph.py`](../../../../examples/metamaterials/heterogeneous/05_graph_to_graph.py), [`06_dome_mesh_zones.py`](../../../../examples/metamaterials/heterogeneous/06_dome_mesh_zones.py), and [`07_dome_mesh_uvw_ramps.py`](../../../../examples/metamaterials/heterogeneous/07_dome_mesh_uvw_ramps.py).

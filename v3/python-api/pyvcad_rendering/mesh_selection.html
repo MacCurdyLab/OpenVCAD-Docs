@@ -1,0 +1,962 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Mesh selections &#8212; OpenVCAD 3.2 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_theme.css?v=8cc8a5a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_branding.css?v=c43e02c9" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="../../_static/documentation_options.js?v=828ea960"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'python-api/pyvcad_rendering/mesh_selection';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../../_static/openvcad_lightbox.js?v=e11fca97"></script>
+    <script src="../../_static/openvcad_comparison.js?v=0e3a0b21"></script>
+    <script src="../../_static/openvcad_carousel.js?v=954187e7"></script>
+    <link rel="icon" href="../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="VTK data export" href="vtk_data_export.html" />
+    <link rel="prev" title="Headless (no GUI)" href="headless.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="OpenVCAD - Home"/>
+    <img src="../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="OpenVCAD - Home"/>
+  
+  
+    <p class="title logo__title">
+      <span class="logo__title-full">OpenVCAD Documentation</span>
+      <span class="logo__title-compact" aria-hidden="true">Documentation</span>
+      <span class="logo__title-short" aria-hidden="true">Docs</span>
+    </p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+
+
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item dropdown">
+      <button class="btn dropdown-toggle nav-link" type="button" id="pst-nav-dd-guides" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Guides
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-guides">
+        <li><a class="dropdown-item" href="../../guides/index.html">All guides</a></li>
+        <li><hr class="dropdown-divider"></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/introduction/index.html">Introduction</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/modeling/index.html">Shape modeling</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/fields/index.html">Field-driven design</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/imports/index.html">Imported geometry</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/metamaterials/index.html">Metamaterials</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/analysis/index.html">Analysis</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/compilers/index.html">Compilers and export</a></li>
+        
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../gallery.html">Gallery</a>
+    </li>
+    <li class="nav-item dropdown active">
+      <button class="btn dropdown-toggle nav-link active" type="button" id="pst-nav-dd-py" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Python API
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-py">
+        <li><a class="dropdown-item" href="../pyvcad/index.html">pyvcad module</a></li>
+        <li><a class="dropdown-item" href="../pyvcad_compilers/index.html">pyvcad_compilers module</a></li>
+        <li><a class="dropdown-item" href="index.html">pyvcad_rendering module</a></li>
+        <li><a class="dropdown-item" href="../pyvcad_attribute_resolver/index.html">pyvcad_attribute_resolver module</a></li>
+        <li><a class="dropdown-item" href="../pyvcad_metamaterials/index.html">pyvcad_metamaterials module</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../cpp-api/index.html">C++ API</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../papers.html">Papers</a>
+    </li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="openvcad-mobile-nav" aria-label="Site navigation">
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item"><a class="nav-link" href="../../index.html">Home</a></li>
+    <li class="nav-item">
+      <details class="openvcad-mobile-nav__group">
+        <summary>Guides</summary>
+        <ul>
+          <li><a class="nav-link" href="../../guides/index.html">All guides</a></li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Introduction</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/introduction/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../install.html">Installation</a></li>
+                
+                <li><a class="nav-link" href="../../guides/introduction/theory-and-motivation.html">Theory and Motivation</a></li>
+                
+                <li><a class="nav-link" href="../../guides/introduction/getting-started.html">Getting Started with OpenVCAD</a></li>
+                
+                <li><a class="nav-link" href="../../guides/introduction/moving-from-v2-to-v3.html">Moving from Version 2 to 3</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Shape modeling</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/modeling/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/primitives.html">Primitive catalog</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/offsets-blends-arrays.html">Offsets, blends and arrays</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/curves-profiles-sweeps.html">Curves, profiles and sweeps</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/sketching.html">Sketching and extruding</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/deforming-space.html">Deforming space</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/surface-relief.html">Physical surface relief</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Field-driven design</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/fields/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/gradients.html">Functional grading</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/fields.html">Fields</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/math-expressions.html">Math expressions</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/numba-attributes.html">Python functions for attributes</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/attribute-conflicts.html">Attribute conflict resolution</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/volumes.html">Working with volumes</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/simulation-driven-design.html">Simulation-driven design</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Imported geometry</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/imports/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/imports/cadquery.html">CAD with CadQuery</a></li>
+                
+                <li><a class="nav-link" href="../../guides/imports/textured-mesh.html">Importing textured solids</a></li>
+                
+                <li><a class="nav-link" href="../../guides/imports/3mf-beam-lattice.html">Importing 3MF beam lattices</a></li>
+                
+                <li><a class="nav-link" href="../../guides/imports/mesh-selection.html">Selecting triangle-mesh patches</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Metamaterials</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/concepts.html">Concepts and representation</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/catalog.html">TPMS and lattice catalog</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/custom-unit-cells.html">Custom unit cells</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/stochastic-lattices.html">Stochastic lattices</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/geometry-grading.html">Functionally graded geometry</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/attribute-modeling.html">Attribute modeling</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/cylindrical-spherical-cell-maps.html">Cylindrical and spherical cell maps</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/conformal-cad.html">Conformal mapping CAD surfaces</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/conformal-meshes.html">Conformal mapping triangle meshes</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/properties.html">Geometric characterization</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Analysis</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/analysis/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/analysis/analysing-designs.html">Analysing designs</a></li>
+                
+                <li><a class="nav-link" href="../../guides/analysis/support-analyzer.html">Inkjet support volumes</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Compilers and export</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/compilers/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/material-inkjet.html">Material Inkjet</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/multi-material-vat.html">Multi-material VAT</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/color-inkjet.html">Color Inkjet</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/vat-photo.html">VAT Photo</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/slicer-project.html">Slicer Project</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/simulation-compiler.html">Simulation Compiler</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/attribute-resolver.html">Attribute modifier and resolver</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/meshing-and-export.html">Meshing and export</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/custom-python-compiler.html">Creating a compiler in Python</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+        </ul>
+      </details>
+    </li>
+    <li class="nav-item"><a class="nav-link" href="../../gallery.html">Gallery</a></li>
+    <li class="nav-item"><a class="nav-link active" href="../index.html">Python API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../cpp-api/index.html">C++ API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../papers.html">Papers</a></li>
+  </ul>
+</nav>
+</div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+
+  
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../pyvcad/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> module</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/utilities.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/geometry.html">Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/curves.html">Curves and Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/tree.html">Tree — base classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/leaves.html">Tree — leaf nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/attribute_nodes.html">Tree — attribute nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/composition.html">Tree — composition nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/attributes.html">Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/analysis.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/volumes.html">Volumes</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../pyvcad_compilers/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code> module</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_compilers/overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_compilers/compilers.html">Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_compilers/utilities.html">Utilities</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code> module</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="interactive.html">Interactive (GUI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="headless.html">Headless (no GUI)</a></li>
+<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">Mesh selections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="vtk_data_export.html">VTK data export</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../pyvcad_attribute_resolver/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_attribute_resolver</span></code> module</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_attribute_resolver/overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_attribute_resolver/api.html">Core API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_attribute_resolver/modules.html">Built-in Modules</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../pyvcad_metamaterials/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_metamaterials</span></code> module</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_metamaterials/cell_maps.html">Cell maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_metamaterials/structures.html">TPMS, strut, and face lattices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_metamaterials/grading.html">Grading, mixing, stochastic lattices, and transitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_metamaterials/properties.html">Geometric properties</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../pyvcad_medical/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_medical</span></code> module</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_medical/api.html">API reference</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Python API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code> module</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Mesh selections</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="mesh-selections">
+<h1>Mesh selections<a class="headerlink" href="#mesh-selections" title="Link to this heading">#</a></h1>
+<p>Helpers for building, saving and replaying triangle selections on a
+<code class="docutils literal notranslate"><span class="pre">pyvcad.SurfaceMesh</span></code> without opening a window. A selection file records the
+triangle IDs together with a fingerprint of the mesh they belong to, so it can
+refuse to load onto changed geometry, and the recipe that made it, so a point or
+ray seed can be rerun after a deliberate remesh. Use
+<a class="reference internal" href="interactive.html#pyvcad_rendering.select_mesh_patch" title="pyvcad_rendering.select_mesh_patch"><code class="xref py py-func docutils literal notranslate"><span class="pre">select_mesh_patch()</span></code></a> (see <a class="reference internal" href="interactive.html"><span class="doc">Interactive (GUI)</span></a>) to pick a
+selection by hand. See the <a class="reference internal" href="../../guides/imports/mesh-selection.html"><span class="doc">Select triangle-mesh patches</span></a> guide for a
+walkthrough.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_rendering.resolve_selection_mesh">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_rendering.</span></span><span class="sig-name descname"><span class="pre">resolve_selection_mesh</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_rendering/mesh_selection.html#resolve_selection_mesh"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_rendering.resolve_selection_mesh" title="Link to this definition">#</a></dt>
+<dd><p>Return a <code class="docutils literal notranslate"><span class="pre">SurfaceMesh</span></code> from an existing mesh or an OpenVCAD tree.</p>
+<p>Tree resolution always requires an explicit voxel size. The resulting triangle IDs are tied to
+that exact resolved mesh and must not be reused after changing the resolution.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>source</strong> (<a class="reference internal" href="../pyvcad/geometry.html#pyvcad.SurfaceMesh" title="pyvcad.SurfaceMesh"><em>SurfaceMesh</em></a><em> | </em><a class="reference internal" href="../pyvcad/tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – A mesh to use as is, or a tree to mesh.</p></li>
+<li><p><strong>voxel_size</strong> (<em>float</em><em>, </em><em>optional</em>) – Meshing voxel size in mm. Required for a <code class="docutils literal notranslate"><span class="pre">Node</span></code>, and must be
+None for a <code class="docutils literal notranslate"><span class="pre">SurfaceMesh</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The mesh that triangle IDs refer to.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../pyvcad/geometry.html#pyvcad.SurfaceMesh" title="pyvcad.SurfaceMesh">SurfaceMesh</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">voxel_size</span></code> is missing for a <code class="docutils literal notranslate"><span class="pre">Node</span></code> or given for a <code class="docutils literal notranslate"><span class="pre">SurfaceMesh</span></code>.</p></li>
+<li><p><strong>TypeError</strong> – If <code class="docutils literal notranslate"><span class="pre">source</span></code> is neither type.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_rendering.mesh_selection_recipe">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_rendering.</span></span><span class="sig-name descname"><span class="pre">mesh_selection_recipe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">method</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangle_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">vertex_id</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">point</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ray_origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ray_direction</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_angle_degrees</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">blocked_edges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">triangle_regions</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_edges</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_rendering/mesh_selection.html#mesh_selection_recipe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_rendering.mesh_selection_recipe" title="Link to this definition">#</a></dt>
+<dd><p>Build a validated, JSON-serializable selection recipe.</p>
+<p>A point or ray seed is geometrically replayable after deliberate remeshing. A triangle-ID seed
+is exact but is only safe while the mesh fingerprint remains unchanged.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>method</strong> (<em>str</em>) – “manual”, “linked”, “linked_by_face_angle”, “linked_constrained”,
+“enclosed_region” or “geodesic_radius”. A “manual” recipe takes no other arguments.</p></li>
+<li><p><strong>triangle_id</strong> (<em>int</em><em>, </em><em>optional</em>) – Seed triangle. Not valid for “geodesic_radius”.</p></li>
+<li><p><strong>vertex_id</strong> (<em>int</em><em>, </em><em>optional</em>) – Seed vertex. Only valid for “geodesic_radius”.</p></li>
+<li><p><strong>point</strong> (<a class="reference internal" href="../pyvcad/geometry.html#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a><em> | </em><em>sequence</em><em>, </em><em>optional</em>) – Seed point; the nearest triangle or vertex is used.</p></li>
+<li><p><strong>ray_origin</strong> (<a class="reference internal" href="../pyvcad/geometry.html#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a><em> | </em><em>sequence</em><em>, </em><em>optional</em>) – Ray seed origin. Requires <code class="docutils literal notranslate"><span class="pre">ray_direction</span></code>.</p></li>
+<li><p><strong>ray_direction</strong> (<a class="reference internal" href="../pyvcad/geometry.html#pyvcad.Vec3" title="pyvcad.Vec3"><em>Vec3</em></a><em> | </em><em>sequence</em><em>, </em><em>optional</em>) – Ray seed direction; the first hit is used.</p></li>
+<li><p><strong>max_angle_degrees</strong> (<em>float</em><em>, </em><em>optional</em>) – Face-angle limit in [0, 180]. Required for
+“linked_by_face_angle”, optional for “linked_constrained”.</p></li>
+<li><p><strong>radius</strong> (<em>float</em><em>, </em><em>optional</em>) – Geodesic radius in mm. Required for “geodesic_radius”.</p></li>
+<li><p><strong>blocked_edges</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Mesh edges growth cannot cross, for
+“linked_constrained”.</p></li>
+<li><p><strong>triangle_regions</strong> (<em>list</em><em>[</em><em>int</em><em>]</em><em>, </em><em>optional</em>) – Per-triangle labels; unequal labels stop growth, for
+“linked_constrained”.</p></li>
+<li><p><strong>boundary_edges</strong> (<em>list</em><em>[</em><em>tuple</em><em>[</em><em>int</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>optional</em>) – Closed loop of at least three edges.
+Required for “enclosed_region”.</p></li>
+</ul>
+</dd>
+</dl>
+<p>Exactly one seed (<code class="docutils literal notranslate"><span class="pre">triangle_id</span></code>, <code class="docutils literal notranslate"><span class="pre">vertex_id</span></code>, <code class="docutils literal notranslate"><span class="pre">point</span></code>, or the ray pair) is required for
+every method except “manual”.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>The recipe, ready for <a class="reference internal" href="#pyvcad_rendering.apply_mesh_selection_recipe" title="pyvcad_rendering.apply_mesh_selection_recipe"><code class="xref py py-func docutils literal notranslate"><span class="pre">apply_mesh_selection_recipe()</span></code></a> or
+<a class="reference internal" href="#pyvcad_rendering.save_mesh_selection" title="pyvcad_rendering.save_mesh_selection"><code class="xref py py-func docutils literal notranslate"><span class="pre">save_mesh_selection()</span></code></a>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>dict</p>
+</dd>
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>ValueError</strong> – If the method is unknown or the seed and parameters do not fit it.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_rendering.apply_mesh_selection_recipe">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_rendering.</span></span><span class="sig-name descname"><span class="pre">apply_mesh_selection_recipe</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipe</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_rendering/mesh_selection.html#apply_mesh_selection_recipe"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_rendering.apply_mesh_selection_recipe" title="Link to this definition">#</a></dt>
+<dd><p>Run a selection recipe on a resolved <code class="docutils literal notranslate"><span class="pre">SurfaceMesh</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh</strong> (<a class="reference internal" href="../pyvcad/geometry.html#pyvcad.SurfaceMesh" title="pyvcad.SurfaceMesh"><em>SurfaceMesh</em></a>) – The mesh to select on, for example from <a class="reference internal" href="#pyvcad_rendering.resolve_selection_mesh" title="pyvcad_rendering.resolve_selection_mesh"><code class="xref py py-func docutils literal notranslate"><span class="pre">resolve_selection_mesh()</span></code></a>.</p></li>
+<li><p><strong>recipe</strong> (<em>dict</em>) – A recipe from <a class="reference internal" href="#pyvcad_rendering.mesh_selection_recipe" title="pyvcad_rendering.mesh_selection_recipe"><code class="xref py py-func docutils literal notranslate"><span class="pre">mesh_selection_recipe()</span></code></a>. “manual” recipes hold no seed and
+are rejected.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The selected triangles.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../pyvcad/geometry.html#pyvcad.MeshSelection" title="pyvcad.MeshSelection">MeshSelection</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>ValueError</strong> – If the recipe is invalid or “manual”.</p></li>
+<li><p><strong>RuntimeError</strong> – If a ray seed misses the mesh.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_rendering.save_mesh_selection">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_rendering.</span></span><span class="sig-name descname"><span class="pre">save_mesh_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">selection</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recipe</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_rendering/mesh_selection.html#save_mesh_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_rendering.save_mesh_selection" title="Link to this definition">#</a></dt>
+<dd><p>Write a versioned triangle-ID selection file with source safety metadata.</p>
+<p>The JSON file stores the triangle IDs, the source mesh fingerprint and counts, and the recipe,
+so <a class="reference internal" href="#pyvcad_rendering.load_mesh_selection" title="pyvcad_rendering.load_mesh_selection"><code class="xref py py-func docutils literal notranslate"><span class="pre">load_mesh_selection()</span></code></a> can refuse a changed mesh and <a class="reference internal" href="#pyvcad_rendering.replay_mesh_selection" title="pyvcad_rendering.replay_mesh_selection"><code class="xref py py-func docutils literal notranslate"><span class="pre">replay_mesh_selection()</span></code></a> can
+rerun a point or ray seed on it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>selection</strong> (<a class="reference internal" href="../pyvcad/geometry.html#pyvcad.MeshSelection" title="pyvcad.MeshSelection"><em>MeshSelection</em></a>) – The selection to save. Its source mesh must be unchanged.</p></li>
+<li><p><strong>path</strong> (<em>str</em><em> | </em><em>Path</em>) – Output file. Parent directories are created.</p></li>
+<li><p><strong>recipe</strong> (<em>dict</em><em>, </em><em>optional</em>) – The recipe that made the selection. Defaults to a “manual” recipe.</p></li>
+<li><p><strong>voxel_size</strong> (<em>float</em><em>, </em><em>optional</em>) – The voxel size the source tree was meshed at, recorded for
+reference.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>TypeError</strong> – If <code class="docutils literal notranslate"><span class="pre">selection</span></code> is not a <code class="docutils literal notranslate"><span class="pre">MeshSelection</span></code>.</p></li>
+<li><p><strong>RuntimeError</strong> – If the selection’s source mesh has changed.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_rendering.load_mesh_selection">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_rendering.</span></span><span class="sig-name descname"><span class="pre">load_mesh_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_rendering/mesh_selection.html#load_mesh_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_rendering.load_mesh_selection" title="Link to this definition">#</a></dt>
+<dd><p>Load exact triangle IDs, rejecting any source fingerprint mismatch.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em><em> | </em><em>Path</em>) – A file written by <a class="reference internal" href="#pyvcad_rendering.save_mesh_selection" title="pyvcad_rendering.save_mesh_selection"><code class="xref py py-func docutils literal notranslate"><span class="pre">save_mesh_selection()</span></code></a>.</p></li>
+<li><p><strong>source</strong> (<a class="reference internal" href="../pyvcad/geometry.html#pyvcad.SurfaceMesh" title="pyvcad.SurfaceMesh"><em>SurfaceMesh</em></a><em> | </em><a class="reference internal" href="../pyvcad/tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The mesh, or the tree to mesh, that the selection was made on.</p></li>
+<li><p><strong>voxel_size</strong> (<em>float</em><em>, </em><em>optional</em>) – Meshing voxel size in mm. Required for a <code class="docutils literal notranslate"><span class="pre">Node</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The saved triangles on the resolved mesh.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../pyvcad/geometry.html#pyvcad.MeshSelection" title="pyvcad.MeshSelection">MeshSelection</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>RuntimeError</strong> – If the resolved mesh’s fingerprint differs from the saved one.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_rendering.replay_mesh_selection">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_rendering.</span></span><span class="sig-name descname"><span class="pre">replay_mesh_selection</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_rendering/mesh_selection.html#replay_mesh_selection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_rendering.replay_mesh_selection" title="Link to this definition">#</a></dt>
+<dd><p>Replay a saved point/ray recipe on intentionally changed or remeshed geometry.</p>
+<p>Exact IDs are returned when the fingerprint still matches. Manual selections and triangle-ID
+recipes cannot be replayed when it differs because they contain no geometry-stable seed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>path</strong> (<em>str</em><em> | </em><em>Path</em>) – A file written by <a class="reference internal" href="#pyvcad_rendering.save_mesh_selection" title="pyvcad_rendering.save_mesh_selection"><code class="xref py py-func docutils literal notranslate"><span class="pre">save_mesh_selection()</span></code></a>.</p></li>
+<li><p><strong>source</strong> (<a class="reference internal" href="../pyvcad/geometry.html#pyvcad.SurfaceMesh" title="pyvcad.SurfaceMesh"><em>SurfaceMesh</em></a><em> | </em><a class="reference internal" href="../pyvcad/tree.html#pyvcad.Node" title="pyvcad.Node"><em>Node</em></a>) – The current mesh, or the tree to mesh.</p></li>
+<li><p><strong>voxel_size</strong> (<em>float</em><em>, </em><em>optional</em>) – Meshing voxel size in mm. Required for a <code class="docutils literal notranslate"><span class="pre">Node</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The saved triangles, or the recipe rerun on the changed mesh.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="../pyvcad/geometry.html#pyvcad.MeshSelection" title="pyvcad.MeshSelection">MeshSelection</a></p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>RuntimeError</strong> – If the mesh changed and the recipe has no point or ray seed, or uses a
+    topology-specific method (“linked_constrained” or “enclosed_region”).</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyvcad_rendering.SELECTION_FILE_FORMAT">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_rendering.</span></span><span class="sig-name descname"><span class="pre">SELECTION_FILE_FORMAT</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">'openvcad-mesh-selection'</span></span><a class="headerlink" href="#pyvcad_rendering.SELECTION_FILE_FORMAT" title="Link to this definition">#</a></dt>
+<dd><p>Value of the <code class="docutils literal notranslate"><span class="pre">format</span></code> field in a saved mesh-selection JSON file.</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="pyvcad_rendering.SELECTION_FILE_VERSION">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_rendering.</span></span><span class="sig-name descname"><span class="pre">SELECTION_FILE_VERSION</span></span><span class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></span><span class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></span><a class="headerlink" href="#pyvcad_rendering.SELECTION_FILE_VERSION" title="Link to this definition">#</a></dt>
+<dd><p>Version of the mesh-selection file format written by <a class="reference internal" href="#pyvcad_rendering.save_mesh_selection" title="pyvcad_rendering.save_mesh_selection"><code class="xref py py-func docutils literal notranslate"><span class="pre">save_mesh_selection()</span></code></a>.</p>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="headless.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Headless (no GUI)</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="vtk_data_export.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">VTK data export</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_rendering.resolve_selection_mesh"><code class="docutils literal notranslate"><span class="pre">resolve_selection_mesh()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_rendering.mesh_selection_recipe"><code class="docutils literal notranslate"><span class="pre">mesh_selection_recipe()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_rendering.apply_mesh_selection_recipe"><code class="docutils literal notranslate"><span class="pre">apply_mesh_selection_recipe()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_rendering.save_mesh_selection"><code class="docutils literal notranslate"><span class="pre">save_mesh_selection()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_rendering.load_mesh_selection"><code class="docutils literal notranslate"><span class="pre">load_mesh_selection()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_rendering.replay_mesh_selection"><code class="docutils literal notranslate"><span class="pre">replay_mesh_selection()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_rendering.SELECTION_FILE_FORMAT"><code class="docutils literal notranslate"><span class="pre">SELECTION_FILE_FORMAT</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_rendering.SELECTION_FILE_VERSION"><code class="docutils literal notranslate"><span class="pre">SELECTION_FILE_VERSION</span></code></a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/python-api/pyvcad_rendering/mesh_selection.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Charles Wade and Robert MacCurdy.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.2.0.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

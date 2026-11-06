@@ -1,0 +1,320 @@
+(guide-primitive-catalog)=
+# Primitive catalog
+
+```{include} ../_guide-sidebar-compiler-membership.md
+```
+
+Every OpenVCAD design starts from **leaf nodes**: the primitives at the bottom of the tree that define geometry. This page shows each one with a render, a link to its Python API entry, and the example script it came from. Where a primitive has more than one useful form, use the arrows on its image to step through them.
+
+Leaves combine with booleans, transforms and the other operations in this section, and each one carries attributes like any other node. If those are new to you, start with [Getting Started](../introduction/getting-started.md). Every example lives in `examples/geometry/` and runs on its own.
+
+## Basic solids
+
+::::{container} openvcad-catalog
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_rect_prism.png" alt="Two rectangular prisms">
+</div>
+
+{py:class}`~pyvcad.RectPrism`
+
+A box from a center and size, or from two corners with `RectPrism.FromMinAndMax`.
+
+[rect_prism.py](../../../../examples/geometry/rect_prism.py)
+:::
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_sphere.png" alt="A sphere">
+</div>
+
+{py:class}`~pyvcad.Sphere`
+
+[sphere.py](../../../../examples/geometry/sphere.py)
+:::
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_cylinder.png" alt="An upright cylinder and a rotated cylinder">
+</div>
+
+{py:class}`~pyvcad.Cylinder`
+
+Always upright along Z; wrap it in `Rotate` to tip it over.
+
+[cylinder.py](../../../../examples/geometry/cylinder.py)
+:::
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_cone.png" alt="A narrow cone and a wide cone">
+</div>
+
+{py:class}`~pyvcad.Cone`
+
+Tip at the origin, opening along -Y. The angle is the half-angle in radians.
+
+[cone.py](../../../../examples/geometry/cone.py)
+:::
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_torus.png" alt="A torus">
+</div>
+
+{py:class}`~pyvcad.Torus`
+
+Lies in the XY plane, centered on the origin.
+
+[torus.py](../../../../examples/geometry/torus.py)
+:::
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_strut_wireframe.png" alt="A tetrahedral wireframe built from capsule struts">
+<img src="../images/primitives_strut_tapered.png" alt="A tapered strut with a flat bottom and a rounded top">
+</div>
+
+{py:class}`~pyvcad.Strut`
+
+A rod between two points: a capsule, or a tapered rod with a sphere, hemisphere or flat cap at each end.
+
+[strut.py](../../../../examples/geometry/strut.py)
+:::
+
+::::
+
+## Implicit functions
+
+::::{container} openvcad-catalog
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_function_flower.png" alt="A six-petal flower outline extruded into a thick disc">
+<img src="../images/primitives_function_rounded_cube.png" alt="A cube with softly rounded edges">
+</div>
+
+{py:class}`~pyvcad.Function`
+
+Any implicit surface from a [math expression](../fields/math-expressions.md) or a Python callable, cut to a bounding box.
+
+[function.py](../../../../examples/geometry/function.py)
+:::
+
+::::
+
+## Profiles, curves and text
+
+These leaves build solids from 2D outlines and 3D curves. [Curves, profiles and sweeps](curves-profiles-sweeps.md) covers them in depth, including grading material along a path.
+
+::::{container} openvcad-catalog
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_text.png" alt="Two lines of extruded italic text">
+</div>
+
+{py:class}`~pyvcad.Text`
+
+Extruded text in a system font, on one or more lines.
+
+[text.py](../../../../examples/geometry/text.py)
+:::
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_polygon_extrude.png" alt="An extruded hexagon">
+</div>
+
+{py:class}`~pyvcad.PolygonExtrude`
+
+A prism from a list of coplanar 3D points.
+
+[polygon_extrude.py](../../../../examples/geometry/polygon_extrude.py)
+:::
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_polygon_revolve.png" alt="A vase profile revolved 270 degrees">
+</div>
+
+{py:class}`~pyvcad.PolygonRevolve`
+
+A solid of revolution from 3D points, about any axis.
+
+[polygon_revolve.py](../../../../examples/geometry/polygon_revolve.py)
+:::
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_extrude_plate.png" alt="An extruded plate with a hole and a slot">
+<img src="../images/primitives_extrude_column.png" alt="A hexagonal column with draft and twist">
+</div>
+
+{py:class}`~pyvcad.Extrude`
+
+A 2D `Profile` lifted from its sketch plane, with optional draft, twist and a wall offset law.
+
+[extrude.py](../../../../examples/geometry/extrude.py)
+:::
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_revolve_cup.png" alt="A cup revolved 360 degrees">
+<img src="../images/primitives_revolve_cutaway.png" alt="The same cup revolved 270 degrees to show its wall">
+</div>
+
+{py:class}`~pyvcad.Revolve`
+
+A 2D `Profile` spun about an axis in its sketch plane (Z by default), fully or through part of a turn.
+
+[revolve.py](../../../../examples/geometry/revolve.py)
+:::
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_sweep_flared.png" alt="A rounded rectangle swept along a spline, growing and twisting">
+<img src="../images/primitives_sweep_ring.png" alt="A T-section swept around a closed loop">
+</div>
+
+{py:class}`~pyvcad.Sweep`
+
+A 2D `Profile` carried along a 3D curve, with optional scale and twist along the way.
+
+[sweep.py](../../../../examples/geometry/sweep.py)
+:::
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_loft_duct.png" alt="A duct lofted from a circle to a rounded rectangle to a smaller circle">
+<img src="../images/primitives_loft_split.png" alt="A disc lofted into two separate legs">
+</div>
+
+{py:class}`~pyvcad.Loft`
+
+A blend between 2D `Profile` sections at chosen heights, even between different shapes and topologies.
+
+[loft.py](../../../../examples/geometry/loft.py)
+:::
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_tube_coil.png" alt="A tube along a helix with flat ends">
+<img src="../images/primitives_tube_knot.png" alt="A tube along a closed trefoil knot">
+<img src="../images/primitives_tube_horn.png" alt="A tube whose radius tapers along its length">
+</div>
+
+{py:class}`~pyvcad.Tube`
+
+A round section along a curve, with rounded or flat ends. The radius can vary along its length.
+
+[tube.py](../../../../examples/geometry/tube.py)
+:::
+
+::::
+
+## Lattices
+
+```{tip}
+**Building a lattice? Start with the [Metamaterials](../metamaterials/index.md) guides.** The `pyvcad_metamaterials` package builds TPMS, strut, plate and stochastic lattices, fills parts with them, grades them, and maps them onto curved surfaces. The [TPMS and lattice catalog](../metamaterials/catalog.md) shows every built-in cell.
+```
+
+The two leaves below are lower level. They describe a beam lattice one beam at a time, written by hand or read from a 3MF file. Reach for them when you already have explicit node and beam lists, such as a lattice designed in another tool.
+
+::::{container} openvcad-catalog
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_beam_lattice.png" alt="A cube frame with tapered diagonals and balls at the nodes">
+</div>
+
+{py:class}`~pyvcad.BeamLattice`
+
+Beams indexed into one shared vertex list, with optional tapering and balls at the nodes.
+
+[beam_lattice.py](../../../../examples/geometry/beam_lattice.py)
+:::
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_three_mf_beam_lattice.png" alt="A pyramid lattice imported from a 3MF file">
+</div>
+
+{py:class}`~pyvcad.ThreeMFBeamLattice`
+
+A lattice imported from a 3MF file that uses the Beam Lattice Extension. See [Importing 3MF beam lattices](../imports/3mf-beam-lattice.md).
+
+[three_mf_beam_lattice.py](../../../../examples/geometry/three_mf_beam_lattice.py)
+:::
+
+::::
+
+## Imported and sampled geometry
+
+These leaves bring in geometry made elsewhere. The [Imported geometry](../imports/index.md) section covers them in more detail.
+
+::::{container} openvcad-catalog
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_mesh.png" alt="The 3DBenchy boat imported from an STL file">
+</div>
+
+{py:class}`~pyvcad.Mesh`
+
+A closed triangle mesh from a file or a `SurfaceMesh`, converted to a signed distance field.
+
+[meshes/3D_benchy.py](../../../../examples/geometry/meshes/3D_benchy.py)
+:::
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_textured_mesh.png" alt="A textured bison model shown in its imported colors">
+</div>
+
+{py:class}`~pyvcad.TexturedMesh`
+
+A colored 3MF or OBJ model; this one is an OBJ with an image texture. Its colors become a `COLOR_RGBA` field. See [Importing textured solids](../imports/textured-mesh.md).
+
+[textured_mesh/02_bison_texture.py](../../../../examples/geometry/textured_mesh/02_bison_texture.py)
+:::
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_cad.png" alt="A bracket imported from a STEP file">
+</div>
+
+{py:class}`~pyvcad.CAD`
+
+A STEP or IGES solid. See [Authoring CAD with CadQuery](../imports/cadquery.md).
+
+[cad/bracket_import.py](../../../../examples/geometry/cad/bracket_import.py)
+:::
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_signed_distance_field.png" alt="An original part and three copies rebuilt from a voxel grid with increasing smoothing">
+</div>
+
+{py:class}`~pyvcad.SignedDistanceField`
+
+A distance or occupancy grid from an OpenVDB file or grid. The render compares an original part with copies rebuilt at three smoothing levels.
+
+[signed_distance_field/vdb_roundtrip_smoothing.py](../../../../examples/geometry/signed_distance_field/vdb_roundtrip_smoothing.py)
+:::
+
+:::{container} openvcad-catalog-card
+<div class="openvcad-carousel" data-openvcad-carousel>
+<img class="is-active" src="../images/primitives_surface_relief.png" alt="A wave relief volume on its own">
+<img src="../images/primitives_surface_relief_union.png" alt="The wave relief joined to the domed tile it was built on">
+</div>
+
+{py:class}`~pyvcad.SurfaceReliefVolume`
+
+Raised relief on a selected patch of a mesh or CAD surface, from an image or a function. See [Physical surface relief](surface-relief.md).
+
+[surface_relief/functional_wave_relief.py](../../../../examples/geometry/surface_relief/functional_wave_relief.py)
+:::
+
+::::

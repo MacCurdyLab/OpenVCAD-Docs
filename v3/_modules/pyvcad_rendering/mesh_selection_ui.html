@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyvcad_rendering.mesh_selection_ui &#8212; OpenVCAD 3.2 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_theme.css?v=8cc8a5a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_branding.css?v=c43e02c9" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="../../_static/documentation_options.js?v=828ea960"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyvcad_rendering/mesh_selection_ui';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../../_static/openvcad_lightbox.js?v=e11fca97"></script>
+    <script src="../../_static/openvcad_comparison.js?v=0e3a0b21"></script>
+    <script src="../../_static/openvcad_carousel.js?v=954187e7"></script>
+    <link rel="icon" href="../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="OpenVCAD - Home"/>
+    <img src="../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="OpenVCAD - Home"/>
+  
+  
+    <p class="title logo__title">
+      <span class="logo__title-full">OpenVCAD Documentation</span>
+      <span class="logo__title-compact" aria-hidden="true">Documentation</span>
+      <span class="logo__title-short" aria-hidden="true">Docs</span>
+    </p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+
+
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item dropdown">
+      <button class="btn dropdown-toggle nav-link" type="button" id="pst-nav-dd-guides" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Guides
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-guides">
+        <li><a class="dropdown-item" href="../../guides/index.html">All guides</a></li>
+        <li><hr class="dropdown-divider"></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/introduction/index.html">Introduction</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/modeling/index.html">Shape modeling</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/fields/index.html">Field-driven design</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/imports/index.html">Imported geometry</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/metamaterials/index.html">Metamaterials</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/analysis/index.html">Analysis</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/compilers/index.html">Compilers and export</a></li>
+        
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../gallery.html">Gallery</a>
+    </li>
+    <li class="nav-item dropdown">
+      <button class="btn dropdown-toggle nav-link" type="button" id="pst-nav-dd-py" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Python API
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-py">
+        <li><a class="dropdown-item" href="../../python-api/pyvcad/index.html">pyvcad module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_compilers/index.html">pyvcad_compilers module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_rendering/index.html">pyvcad_rendering module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_attribute_resolver/index.html">pyvcad_attribute_resolver module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_metamaterials/index.html">pyvcad_metamaterials module</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../cpp-api/index.html">C++ API</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../papers.html">Papers</a>
+    </li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="openvcad-mobile-nav" aria-label="Site navigation">
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item"><a class="nav-link" href="../../index.html">Home</a></li>
+    <li class="nav-item">
+      <details class="openvcad-mobile-nav__group">
+        <summary>Guides</summary>
+        <ul>
+          <li><a class="nav-link" href="../../guides/index.html">All guides</a></li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Introduction</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/introduction/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../install.html">Installation</a></li>
+                
+                <li><a class="nav-link" href="../../guides/introduction/theory-and-motivation.html">Theory and Motivation</a></li>
+                
+                <li><a class="nav-link" href="../../guides/introduction/getting-started.html">Getting Started with OpenVCAD</a></li>
+                
+                <li><a class="nav-link" href="../../guides/introduction/moving-from-v2-to-v3.html">Moving from Version 2 to 3</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Shape modeling</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/modeling/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/primitives.html">Primitive catalog</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/offsets-blends-arrays.html">Offsets, blends and arrays</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/curves-profiles-sweeps.html">Curves, profiles and sweeps</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/sketching.html">Sketching and extruding</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/deforming-space.html">Deforming space</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/surface-relief.html">Physical surface relief</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Field-driven design</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/fields/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/gradients.html">Functional grading</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/fields.html">Fields</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/math-expressions.html">Math expressions</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/numba-attributes.html">Python functions for attributes</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/attribute-conflicts.html">Attribute conflict resolution</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/volumes.html">Working with volumes</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/simulation-driven-design.html">Simulation-driven design</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Imported geometry</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/imports/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/imports/cadquery.html">CAD with CadQuery</a></li>
+                
+                <li><a class="nav-link" href="../../guides/imports/textured-mesh.html">Importing textured solids</a></li>
+                
+                <li><a class="nav-link" href="../../guides/imports/3mf-beam-lattice.html">Importing 3MF beam lattices</a></li>
+                
+                <li><a class="nav-link" href="../../guides/imports/mesh-selection.html">Selecting triangle-mesh patches</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Metamaterials</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/concepts.html">Concepts and representation</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/catalog.html">TPMS and lattice catalog</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/custom-unit-cells.html">Custom unit cells</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/stochastic-lattices.html">Stochastic lattices</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/geometry-grading.html">Functionally graded geometry</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/attribute-modeling.html">Attribute modeling</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/cylindrical-spherical-cell-maps.html">Cylindrical and spherical cell maps</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/conformal-cad.html">Conformal mapping CAD surfaces</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/conformal-meshes.html">Conformal mapping triangle meshes</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/properties.html">Geometric characterization</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Analysis</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/analysis/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/analysis/analysing-designs.html">Analysing designs</a></li>
+                
+                <li><a class="nav-link" href="../../guides/analysis/support-analyzer.html">Inkjet support volumes</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Compilers and export</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/compilers/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/material-inkjet.html">Material Inkjet</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/multi-material-vat.html">Multi-material VAT</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/color-inkjet.html">Color Inkjet</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/vat-photo.html">VAT Photo</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/slicer-project.html">Slicer Project</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/simulation-compiler.html">Simulation Compiler</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/attribute-resolver.html">Attribute modifier and resolver</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/meshing-and-export.html">Meshing and export</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/custom-python-compiler.html">Creating a compiler in Python</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+        </ul>
+      </details>
+    </li>
+    <li class="nav-item"><a class="nav-link" href="../../gallery.html">Gallery</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../python-api/index.html">Python API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../cpp-api/index.html">C++ API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../papers.html">Papers</a></li>
+  </ul>
+</nav>
+</div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyvcad_rendering.mesh_selection_ui</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pyvcad_rendering.mesh_selection_ui</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Standalone VTK/wx auxiliary tool for authoring reusable mesh triangle selections."""</span>
+
+<span class="c1"># STD</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># VTK</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkCommonCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">vtkPoints</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkCommonDataModel</span><span class="w"> </span><span class="kn">import</span> <span class="n">vtkCellArray</span><span class="p">,</span> <span class="n">vtkPolyData</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkFiltersCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">vtkPolyDataNormals</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkInteractionStyle</span><span class="w"> </span><span class="kn">import</span> <span class="n">vtkInteractorStyleTrackballCamera</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">vtkmodules.vtkRenderingCore</span><span class="w"> </span><span class="kn">import</span> <span class="n">vtkActor</span><span class="p">,</span> <span class="n">vtkCellPicker</span><span class="p">,</span> <span class="n">vtkPolyDataMapper</span><span class="p">,</span> <span class="n">vtkRenderer</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">vtkmodules.vtkRenderingOpenGL2</span>  <span class="c1"># noqa: F401 - registers the OpenGL backend</span>
+
+<span class="c1"># GUI</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">wx</span>
+
+<span class="c1"># OpenVCAD</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+
+<span class="kn">from</span><span class="w"> </span><span class="nn">.dpi_aware_interactor</span><span class="w"> </span><span class="kn">import</span> <span class="n">DPIAwareVTKInteractor</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.mesh_selection</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">mesh_selection_recipe</span><span class="p">,</span>
+    <span class="n">resolve_selection_mesh</span><span class="p">,</span>
+    <span class="n">save_mesh_selection</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<span class="n">METHOD_LABELS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">"Manual triangles"</span><span class="p">,</span>
+    <span class="s2">"Select linked"</span><span class="p">,</span>
+    <span class="s2">"Linked by face angle"</span><span class="p">,</span>
+    <span class="s2">"Geodesic radius"</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">METHOD_IDS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"manual"</span><span class="p">,</span> <span class="s2">"linked"</span><span class="p">,</span> <span class="s2">"linked_by_face_angle"</span><span class="p">,</span> <span class="s2">"geodesic_radius"</span><span class="p">)</span>
+<span class="n">ACTION_LABELS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"Replace"</span><span class="p">,</span> <span class="s2">"Add"</span><span class="p">,</span> <span class="s2">"Remove"</span><span class="p">)</span>
+<span class="n">ACTION_IDS</span> <span class="o">=</span> <span class="p">(</span><span class="s2">"replace"</span><span class="p">,</span> <span class="s2">"add"</span><span class="p">,</span> <span class="s2">"remove"</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_polydata</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">triangles</span><span class="p">,</span> <span class="n">triangle_ids</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="n">vtkPoints</span><span class="p">()</span>
+    <span class="n">points</span><span class="o">.</span><span class="n">SetNumberOfPoints</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vertices</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vertices</span><span class="p">):</span>
+        <span class="n">points</span><span class="o">.</span><span class="n">SetPoint</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">vertex</span><span class="o">.</span><span class="n">x</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">vertex</span><span class="o">.</span><span class="n">y</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">vertex</span><span class="o">.</span><span class="n">z</span><span class="p">))</span>
+
+    <span class="n">cells</span> <span class="o">=</span> <span class="n">vtkCellArray</span><span class="p">()</span>
+    <span class="n">ids</span> <span class="o">=</span> <span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">triangles</span><span class="p">))</span> <span class="k">if</span> <span class="n">triangle_ids</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="n">triangle_ids</span>
+    <span class="k">for</span> <span class="n">triangle_id</span> <span class="ow">in</span> <span class="n">ids</span><span class="p">:</span>
+        <span class="n">triangle</span> <span class="o">=</span> <span class="n">triangles</span><span class="p">[</span><span class="n">triangle_id</span><span class="p">]</span>
+        <span class="n">cells</span><span class="o">.</span><span class="n">InsertNextCell</span><span class="p">(</span><span class="mi">3</span><span class="p">)</span>
+        <span class="n">cells</span><span class="o">.</span><span class="n">InsertCellPoint</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">triangle</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+        <span class="n">cells</span><span class="o">.</span><span class="n">InsertCellPoint</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">triangle</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+        <span class="n">cells</span><span class="o">.</span><span class="n">InsertCellPoint</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">triangle</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+
+    <span class="n">data</span> <span class="o">=</span> <span class="n">vtkPolyData</span><span class="p">()</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">SetPoints</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">SetPolys</span><span class="p">(</span><span class="n">cells</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_actor_for_polydata</span><span class="p">(</span><span class="n">polydata</span><span class="p">,</span> <span class="n">color</span><span class="p">,</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">edges</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">offset</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
+    <span class="n">normals</span> <span class="o">=</span> <span class="n">vtkPolyDataNormals</span><span class="p">()</span>
+    <span class="n">normals</span><span class="o">.</span><span class="n">SetInputData</span><span class="p">(</span><span class="n">polydata</span><span class="p">)</span>
+    <span class="n">normals</span><span class="o">.</span><span class="n">ComputePointNormalsOff</span><span class="p">()</span>
+    <span class="n">normals</span><span class="o">.</span><span class="n">ComputeCellNormalsOn</span><span class="p">()</span>
+    <span class="n">mapper</span> <span class="o">=</span> <span class="n">vtkPolyDataMapper</span><span class="p">()</span>
+    <span class="n">mapper</span><span class="o">.</span><span class="n">SetInputConnection</span><span class="p">(</span><span class="n">normals</span><span class="o">.</span><span class="n">GetOutputPort</span><span class="p">())</span>
+    <span class="n">mapper</span><span class="o">.</span><span class="n">ScalarVisibilityOff</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">offset</span><span class="p">:</span>
+        <span class="n">mapper</span><span class="o">.</span><span class="n">SetResolveCoincidentTopologyToPolygonOffset</span><span class="p">()</span>
+        <span class="n">mapper</span><span class="o">.</span><span class="n">SetRelativeCoincidentTopologyPolygonOffsetParameters</span><span class="p">(</span><span class="o">-</span><span class="mf">4.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">4.0</span><span class="p">)</span>
+    <span class="n">actor</span> <span class="o">=</span> <span class="n">vtkActor</span><span class="p">()</span>
+    <span class="n">actor</span><span class="o">.</span><span class="n">SetMapper</span><span class="p">(</span><span class="n">mapper</span><span class="p">)</span>
+    <span class="n">actor</span><span class="o">.</span><span class="n">GetProperty</span><span class="p">()</span><span class="o">.</span><span class="n">SetColor</span><span class="p">(</span><span class="o">*</span><span class="n">color</span><span class="p">)</span>
+    <span class="n">actor</span><span class="o">.</span><span class="n">GetProperty</span><span class="p">()</span><span class="o">.</span><span class="n">SetOpacity</span><span class="p">(</span><span class="n">opacity</span><span class="p">)</span>
+    <span class="n">actor</span><span class="o">.</span><span class="n">GetProperty</span><span class="p">()</span><span class="o">.</span><span class="n">SetEdgeVisibility</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">edges</span><span class="p">))</span>
+    <span class="n">actor</span><span class="o">.</span><span class="n">GetProperty</span><span class="p">()</span><span class="o">.</span><span class="n">SetEdgeColor</span><span class="p">(</span><span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.17</span><span class="p">,</span> <span class="mf">0.20</span><span class="p">)</span>
+    <span class="n">actor</span><span class="o">.</span><span class="n">GetProperty</span><span class="p">()</span><span class="o">.</span><span class="n">SetLineWidth</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">actor</span><span class="p">,</span> <span class="n">mapper</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_line_polydata</span><span class="p">(</span><span class="n">vertices</span><span class="p">,</span> <span class="n">edges</span><span class="p">):</span>
+    <span class="n">points</span> <span class="o">=</span> <span class="n">vtkPoints</span><span class="p">()</span>
+    <span class="n">points</span><span class="o">.</span><span class="n">SetNumberOfPoints</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">vertices</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">index</span><span class="p">,</span> <span class="n">vertex</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">vertices</span><span class="p">):</span>
+        <span class="n">points</span><span class="o">.</span><span class="n">SetPoint</span><span class="p">(</span><span class="n">index</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">vertex</span><span class="o">.</span><span class="n">x</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">vertex</span><span class="o">.</span><span class="n">y</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">vertex</span><span class="o">.</span><span class="n">z</span><span class="p">))</span>
+    <span class="n">lines</span> <span class="o">=</span> <span class="n">vtkCellArray</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">first</span><span class="p">,</span> <span class="n">second</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">InsertNextCell</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">InsertCellPoint</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">first</span><span class="p">))</span>
+        <span class="n">lines</span><span class="o">.</span><span class="n">InsertCellPoint</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">second</span><span class="p">))</span>
+    <span class="n">data</span> <span class="o">=</span> <span class="n">vtkPolyData</span><span class="p">()</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">SetPoints</span><span class="p">(</span><span class="n">points</span><span class="p">)</span>
+    <span class="n">data</span><span class="o">.</span><span class="n">SetLines</span><span class="p">(</span><span class="n">lines</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">data</span>
+
+
+<div class="viewcode-block" id="MeshSelectionFrame">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/interactive.html#pyvcad_rendering.MeshSelectionFrame">[docs]</a>
+<span class="k">class</span><span class="w"> </span><span class="nc">MeshSelectionFrame</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">Frame</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Purpose-built mesh picker kept separate from the normal OpenVCAD renderer."""</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">mesh</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_selection</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">parent</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">parent</span><span class="p">,</span> <span class="n">title</span><span class="o">=</span><span class="s2">"OpenVCAD Mesh Selection"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">SurfaceMesh</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"mesh must be a pyvcad.SurfaceMesh"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">initial_selection</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">initial_selection</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">MeshSelection</span><span class="p">):</span>
+                <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"initial_selection must be a pyvcad.MeshSelection"</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">initial_selection</span><span class="o">.</span><span class="n">source_fingerprint</span> <span class="o">!=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">fingerprint</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"initial_selection belongs to different source geometry"</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span> <span class="o">=</span> <span class="n">mesh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">voxel_size</span> <span class="o">=</span> <span class="n">voxel_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_accepted</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertices</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_triangles</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">triangles</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">initial_selection</span><span class="o">.</span><span class="n">triangle_ids</span> <span class="k">if</span> <span class="n">initial_selection</span> <span class="k">else</span> <span class="p">[])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_recipe</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"method"</span><span class="p">:</span> <span class="s2">"manual"</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_preview</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_painting</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_paint_base</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_painted_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_paint_action</span> <span class="o">=</span> <span class="s2">"replace"</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetSize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FromDIP</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">Size</span><span class="p">(</span><span class="mi">1180</span><span class="p">,</span> <span class="mi">760</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetMinSize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FromDIP</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">Size</span><span class="p">(</span><span class="mi">920</span><span class="p">,</span> <span class="mi">620</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_build_ui</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_build_scene</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bind_events</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_refresh_selection</span><span class="p">(</span><span class="n">render</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Centre</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Show</span><span class="p">()</span>
+        <span class="c1"># Reapply native Choice defaults after the macOS controls are realized. Some wx builds</span>
+        <span class="c1"># transiently advance a newly created popup by one item during window realization.</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">method_choice</span><span class="o">.</span><span class="n">SetStringSelection</span><span class="p">(</span><span class="s2">"Linked by face angle"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_choice</span><span class="o">.</span><span class="n">SetStringSelection</span><span class="p">(</span><span class="s2">"Replace"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">angle_control</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">angle_label</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_build_ui</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="n">content</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Panel</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="n">layout</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">HORIZONTAL</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vtk_widget</span> <span class="o">=</span> <span class="n">DPIAwareVTKInteractor</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vtk_widget</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">vtk_widget</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span><span class="p">)</span>
+
+        <span class="n">controls</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Panel</span><span class="p">(</span><span class="n">content</span><span class="p">)</span>
+        <span class="n">controls</span><span class="o">.</span><span class="n">SetMinSize</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FromDIP</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">Size</span><span class="p">(</span><span class="mi">310</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)))</span>
+        <span class="n">control_layout</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">VERTICAL</span><span class="p">)</span>
+
+        <span class="n">title</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Mesh patch selection"</span><span class="p">)</span>
+        <span class="n">font</span> <span class="o">=</span> <span class="n">title</span><span class="o">.</span><span class="n">GetFont</span><span class="p">()</span>
+        <span class="n">font</span><span class="o">.</span><span class="n">SetPointSize</span><span class="p">(</span><span class="n">font</span><span class="o">.</span><span class="n">GetPointSize</span><span class="p">()</span> <span class="o">+</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">font</span><span class="o">.</span><span class="n">SetWeight</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">FONTWEIGHT_BOLD</span><span class="p">)</span>
+        <span class="n">title</span><span class="o">.</span><span class="n">SetFont</span><span class="p">(</span><span class="n">font</span><span class="p">)</span>
+        <span class="n">control_layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">title</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">RIGHT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">TOP</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="n">help_text</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span>
+            <span class="n">controls</span><span class="p">,</span>
+            <span class="n">label</span><span class="o">=</span><span class="s2">"Choose a method, then click the mesh. Switch to Navigate to orbit the camera."</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="n">help_text</span><span class="o">.</span><span class="n">Wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FromDIP</span><span class="p">(</span><span class="mi">275</span><span class="p">))</span>
+        <span class="n">control_layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">help_text</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+
+        <span class="n">control_layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Interaction"</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">RIGHT</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interaction_choice</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Choice</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="p">(</span><span class="s2">"Select triangles"</span><span class="p">,</span> <span class="s2">"Navigate camera"</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">interaction_choice</span><span class="o">.</span><span class="n">SetSelection</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">control_layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">interaction_choice</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">RIGHT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">BOTTOM</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+
+        <span class="n">control_layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Selection method"</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">RIGHT</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">method_choice</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Choice</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">METHOD_LABELS</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">method_choice</span><span class="o">.</span><span class="n">SetSelection</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="n">control_layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">method_choice</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">RIGHT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">BOTTOM</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">angle_label</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Maximum local face angle"</span><span class="p">)</span>
+        <span class="n">control_layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle_label</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">RIGHT</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">angle_control</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">SpinCtrlDouble</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">180.0</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="mf">30.0</span><span class="p">,</span> <span class="n">inc</span><span class="o">=</span><span class="mf">1.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">angle_control</span><span class="o">.</span><span class="n">SetDigits</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">control_layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">angle_control</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">RIGHT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">BOTTOM</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius_label</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Geodesic radius (mm)"</span><span class="p">)</span>
+        <span class="n">control_layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radius_label</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">RIGHT</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius_control</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">SpinCtrlDouble</span><span class="p">(</span>
+            <span class="n">controls</span><span class="p">,</span> <span class="nb">min</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="mf">1000000.0</span><span class="p">,</span> <span class="n">initial</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">inc</span><span class="o">=</span><span class="mf">1.0</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius_control</span><span class="o">.</span><span class="n">SetDigits</span><span class="p">(</span><span class="mi">2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius_label</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius_control</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">control_layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">radius_control</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">RIGHT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">BOTTOM</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+
+        <span class="n">control_layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Edit action"</span><span class="p">),</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">RIGHT</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_choice</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Choice</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">choices</span><span class="o">=</span><span class="n">ACTION_LABELS</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">action_choice</span><span class="o">.</span><span class="n">SetSelection</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+        <span class="n">control_layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">action_choice</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">RIGHT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">BOTTOM</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+
+        <span class="n">quick_buttons</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">HORIZONTAL</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_button</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Clear"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">invert_button</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Invert"</span><span class="p">)</span>
+        <span class="n">quick_buttons</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">clear_button</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">RIGHT</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="n">quick_buttons</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">invert_button</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">control_layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">quick_buttons</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">RIGHT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">BOTTOM</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+
+        <span class="n">ring_buttons</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">HORIZONTAL</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grow_button</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Grow one ring"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shrink_button</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Shrink one ring"</span><span class="p">)</span>
+        <span class="n">ring_buttons</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">grow_button</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">RIGHT</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="n">ring_buttons</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">shrink_button</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">control_layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">ring_buttons</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">RIGHT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">BOTTOM</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">summary_label</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">""</span><span class="p">)</span>
+        <span class="n">control_layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">summary_label</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">RIGHT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">BOTTOM</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validation_label</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StaticText</span><span class="p">(</span>
+            <span class="n">controls</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Conformal validation has not been run."</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validation_label</span><span class="o">.</span><span class="n">Wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FromDIP</span><span class="p">(</span><span class="mi">275</span><span class="p">))</span>
+        <span class="n">control_layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validation_label</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">RIGHT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">BOTTOM</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_button</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Validate conformal patch"</span><span class="p">)</span>
+        <span class="n">control_layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">validate_button</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">RIGHT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">BOTTOM</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+
+        <span class="n">control_layout</span><span class="o">.</span><span class="n">AddStretchSpacer</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">output_buttons</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">HORIZONTAL</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">copy_button</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Copy IDs"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_button</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Save JSON…"</span><span class="p">)</span>
+        <span class="n">output_buttons</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">copy_button</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">RIGHT</span><span class="p">,</span> <span class="mi">6</span><span class="p">)</span>
+        <span class="n">output_buttons</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">save_button</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+        <span class="n">control_layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">output_buttons</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">LEFT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">RIGHT</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">BOTTOM</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+
+        <span class="n">finish_buttons</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">StdDialogButtonSizer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cancel_button</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ID_CANCEL</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accept_button</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">Button</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">ID_OK</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">"Use Selection"</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accept_button</span><span class="o">.</span><span class="n">SetDefault</span><span class="p">()</span>
+        <span class="n">finish_buttons</span><span class="o">.</span><span class="n">AddButton</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">cancel_button</span><span class="p">)</span>
+        <span class="n">finish_buttons</span><span class="o">.</span><span class="n">AddButton</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">accept_button</span><span class="p">)</span>
+        <span class="n">finish_buttons</span><span class="o">.</span><span class="n">Realize</span><span class="p">()</span>
+        <span class="n">control_layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">finish_buttons</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ALL</span><span class="p">,</span> <span class="mi">16</span><span class="p">)</span>
+
+        <span class="n">controls</span><span class="o">.</span><span class="n">SetSizer</span><span class="p">(</span><span class="n">control_layout</span><span class="p">)</span>
+        <span class="n">layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">controls</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span><span class="p">)</span>
+        <span class="n">content</span><span class="o">.</span><span class="n">SetSizer</span><span class="p">(</span><span class="n">layout</span><span class="p">)</span>
+        <span class="n">frame_layout</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">BoxSizer</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">VERTICAL</span><span class="p">)</span>
+        <span class="n">frame_layout</span><span class="o">.</span><span class="n">Add</span><span class="p">(</span><span class="n">content</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">EXPAND</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">SetSizer</span><span class="p">(</span><span class="n">frame_layout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">CreateStatusBar</span><span class="p">()</span><span class="o">.</span><span class="n">SetStatusText</span><span class="p">(</span><span class="s2">"Click a mesh face to begin."</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_build_scene</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span> <span class="o">=</span> <span class="n">vtkRenderer</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">SetBackground</span><span class="p">(</span><span class="mf">0.96</span><span class="p">,</span> <span class="mf">0.97</span><span class="p">,</span> <span class="mf">0.98</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">vtk_widget</span><span class="o">.</span><span class="n">GetRenderWindow</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">AddRenderer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="p">)</span>
+        <span class="n">interactor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">GetInteractor</span><span class="p">()</span>
+        <span class="n">interactor</span><span class="o">.</span><span class="n">SetInteractorStyle</span><span class="p">(</span><span class="n">vtkInteractorStyleTrackballCamera</span><span class="p">())</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_polydata</span> <span class="o">=</span> <span class="n">_polydata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_triangles</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">base_actor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">base_mapper</span> <span class="o">=</span> <span class="n">_actor_for_polydata</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">base_polydata</span><span class="p">,</span> <span class="p">(</span><span class="mf">0.70</span><span class="p">,</span> <span class="mf">0.73</span><span class="p">,</span> <span class="mf">0.78</span><span class="p">),</span> <span class="n">opacity</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">edges</span><span class="o">=</span><span class="kc">True</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selection_actor</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">selection_mapper</span> <span class="o">=</span> <span class="n">_actor_for_polydata</span><span class="p">(</span>
+            <span class="n">_polydata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_triangles</span><span class="p">,</span> <span class="p">[]),</span>
+            <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">,</span> <span class="mf">0.05</span><span class="p">),</span>
+            <span class="n">opacity</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
+            <span class="n">edges</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+            <span class="n">offset</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">boundary_mapper</span> <span class="o">=</span> <span class="n">vtkPolyDataMapper</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">boundary_mapper</span><span class="o">.</span><span class="n">SetInputData</span><span class="p">(</span><span class="n">_line_polydata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span><span class="p">,</span> <span class="p">[]))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">boundary_actor</span> <span class="o">=</span> <span class="n">vtkActor</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">boundary_actor</span><span class="o">.</span><span class="n">SetMapper</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary_mapper</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">boundary_actor</span><span class="o">.</span><span class="n">GetProperty</span><span class="p">()</span><span class="o">.</span><span class="n">SetColor</span><span class="p">(</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">boundary_actor</span><span class="o">.</span><span class="n">GetProperty</span><span class="p">()</span><span class="o">.</span><span class="n">SetLineWidth</span><span class="p">(</span><span class="mf">4.0</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">AddActor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_actor</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">AddActor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">selection_actor</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">AddActor</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">boundary_actor</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="o">.</span><span class="n">ResetCamera</span><span class="p">()</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">picker</span> <span class="o">=</span> <span class="n">vtkCellPicker</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">picker</span><span class="o">.</span><span class="n">SetTolerance</span><span class="p">(</span><span class="mf">0.002</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">picker</span><span class="o">.</span><span class="n">InitializePickList</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">picker</span><span class="o">.</span><span class="n">AddPickList</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">base_actor</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">picker</span><span class="o">.</span><span class="n">PickFromListOn</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_left_press_tag</span> <span class="o">=</span> <span class="n">interactor</span><span class="o">.</span><span class="n">AddObserver</span><span class="p">(</span>
+            <span class="s2">"LeftButtonPressEvent"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_left_button_press</span><span class="p">,</span> <span class="mf">10.0</span>
+        <span class="p">)</span>
+        <span class="n">interactor</span><span class="o">.</span><span class="n">AddObserver</span><span class="p">(</span><span class="s2">"MouseMoveEvent"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_mouse_move</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
+        <span class="n">interactor</span><span class="o">.</span><span class="n">AddObserver</span><span class="p">(</span><span class="s2">"LeftButtonReleaseEvent"</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_left_button_release</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_bind_events</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_CLOSE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_close</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">method_choice</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_CHOICE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_method_change</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">angle_control</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_SPINCTRLDOUBLE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_angle_change</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">angle_control</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_TEXT</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_angle_change</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius_control</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_SPINCTRLDOUBLE</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_radius_change</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius_control</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_TEXT</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_radius_change</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">clear_button</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_clear</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">invert_button</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_invert</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">grow_button</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_grow</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">shrink_button</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_shrink</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_button</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_validate</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">copy_button</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_copy</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_button</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_save</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accept_button</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_accept</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cancel_button</span><span class="o">.</span><span class="n">Bind</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">EVT_BUTTON</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_cancel</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_left_button_press</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">caller</span><span class="p">,</span> <span class="n">_event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction_choice</span><span class="o">.</span><span class="n">GetSelection</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">interactor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">GetInteractor</span><span class="p">()</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">interactor</span><span class="o">.</span><span class="n">GetEventPosition</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">picker</span><span class="o">.</span><span class="n">Pick</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="p">):</span>
+            <span class="k">return</span>
+        <span class="n">triangle_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">picker</span><span class="o">.</span><span class="n">GetCellId</span><span class="p">())</span>
+        <span class="k">if</span> <span class="n">triangle_id</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">point</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">picker</span><span class="o">.</span><span class="n">GetPickPosition</span><span class="p">())</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="n">METHOD_IDS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">method_choice</span><span class="o">.</span><span class="n">GetSelection</span><span class="p">()]</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"manual"</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_start_paint</span><span class="p">(</span><span class="n">triangle_id</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_begin_selection</span><span class="p">(</span><span class="n">triangle_id</span><span class="p">,</span> <span class="n">point</span><span class="p">)</span>
+        <span class="n">command</span> <span class="o">=</span> <span class="n">caller</span><span class="o">.</span><span class="n">GetCommand</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_left_press_tag</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">command</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">command</span><span class="o">.</span><span class="n">SetAbortFlag</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_start_paint</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">triangle_id</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_painting</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_paint_base</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_painted_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_paint_action</span> <span class="o">=</span> <span class="n">ACTION_IDS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">action_choice</span><span class="o">.</span><span class="n">GetSelection</span><span class="p">()]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_paint_triangle</span><span class="p">(</span><span class="n">triangle_id</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_paint_triangle</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">triangle_id</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">triangle_id</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_painted_ids</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_painted_ids</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">triangle_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_paint_action</span> <span class="o">==</span> <span class="s2">"replace"</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_painted_ids</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">_paint_action</span> <span class="o">==</span> <span class="s2">"add"</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_paint_base</span> <span class="o">|</span> <span class="bp">self</span><span class="o">.</span><span class="n">_painted_ids</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_paint_base</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_painted_ids</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_recipe</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"method"</span><span class="p">:</span> <span class="s2">"manual"</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_preview</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_refresh_selection</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_mouse_move</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_caller</span><span class="p">,</span> <span class="n">_event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_painting</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">interaction_choice</span><span class="o">.</span><span class="n">GetSelection</span><span class="p">()</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">interactor</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">GetInteractor</span><span class="p">()</span>
+        <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">interactor</span><span class="o">.</span><span class="n">GetEventPosition</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">picker</span><span class="o">.</span><span class="n">Pick</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">renderer</span><span class="p">):</span>
+            <span class="n">triangle_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">picker</span><span class="o">.</span><span class="n">GetCellId</span><span class="p">())</span>
+            <span class="k">if</span> <span class="n">triangle_id</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_paint_triangle</span><span class="p">(</span><span class="n">triangle_id</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_left_button_release</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_caller</span><span class="p">,</span> <span class="n">_event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_painting</span> <span class="o">=</span> <span class="kc">False</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_begin_selection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">triangle_id</span><span class="p">,</span> <span class="n">point</span><span class="p">):</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="n">METHOD_IDS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">method_choice</span><span class="o">.</span><span class="n">GetSelection</span><span class="p">()]</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="n">ACTION_IDS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">action_choice</span><span class="o">.</span><span class="n">GetSelection</span><span class="p">()]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_preview</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"base"</span><span class="p">:</span> <span class="nb">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span><span class="p">),</span>
+            <span class="s2">"triangle_id"</span><span class="p">:</span> <span class="n">triangle_id</span><span class="p">,</span>
+            <span class="s2">"point"</span><span class="p">:</span> <span class="n">point</span><span class="p">,</span>
+            <span class="s2">"method"</span><span class="p">:</span> <span class="n">method</span><span class="p">,</span>
+            <span class="s2">"action"</span><span class="p">:</span> <span class="n">action</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_apply_preview</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_apply_preview</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preview</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preview</span><span class="p">[</span><span class="s2">"method"</span><span class="p">]</span>
+        <span class="n">triangle_id</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preview</span><span class="p">[</span><span class="s2">"triangle_id"</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"manual"</span><span class="p">:</span>
+            <span class="n">candidate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_triangles</span><span class="p">([</span><span class="n">triangle_id</span><span class="p">])</span>
+            <span class="n">recipe</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"method"</span><span class="p">:</span> <span class="s2">"manual"</span><span class="p">}</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"linked"</span><span class="p">:</span>
+            <span class="n">candidate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_linked</span><span class="p">(</span><span class="n">triangle_id</span><span class="p">)</span>
+            <span class="n">recipe</span> <span class="o">=</span> <span class="n">mesh_selection_recipe</span><span class="p">(</span><span class="s2">"linked"</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_preview</span><span class="p">[</span><span class="s2">"point"</span><span class="p">])</span>
+        <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"linked_by_face_angle"</span><span class="p">:</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">angle_control</span><span class="o">.</span><span class="n">GetValue</span><span class="p">()</span>
+            <span class="n">candidate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_linked_by_face_angle</span><span class="p">(</span><span class="n">triangle_id</span><span class="p">,</span> <span class="n">angle</span><span class="p">)</span>
+            <span class="n">recipe</span> <span class="o">=</span> <span class="n">mesh_selection_recipe</span><span class="p">(</span>
+                <span class="s2">"linked_by_face_angle"</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_preview</span><span class="p">[</span><span class="s2">"point"</span><span class="p">],</span>
+                <span class="n">max_angle_degrees</span><span class="o">=</span><span class="n">angle</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">radius</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">radius_control</span><span class="o">.</span><span class="n">GetValue</span><span class="p">()</span>
+            <span class="n">seed_vertex</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">nearest_vertex</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_preview</span><span class="p">[</span><span class="s2">"point"</span><span class="p">]))</span>
+            <span class="n">candidate</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_by_geodesic_radius</span><span class="p">(</span><span class="n">seed_vertex</span><span class="p">,</span> <span class="n">radius</span><span class="p">)</span>
+            <span class="n">recipe</span> <span class="o">=</span> <span class="n">mesh_selection_recipe</span><span class="p">(</span>
+                <span class="s2">"geodesic_radius"</span><span class="p">,</span> <span class="n">point</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_preview</span><span class="p">[</span><span class="s2">"point"</span><span class="p">],</span> <span class="n">radius</span><span class="o">=</span><span class="n">radius</span>
+            <span class="p">)</span>
+
+        <span class="n">candidate_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">candidate</span><span class="o">.</span><span class="n">triangle_ids</span><span class="p">)</span>
+        <span class="n">base</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preview</span><span class="p">[</span><span class="s2">"base"</span><span class="p">]</span>
+        <span class="n">action</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preview</span><span class="p">[</span><span class="s2">"action"</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">"replace"</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span> <span class="o">=</span> <span class="n">candidate_ids</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_recipe</span> <span class="o">=</span> <span class="n">recipe</span>
+        <span class="k">elif</span> <span class="n">action</span> <span class="o">==</span> <span class="s2">"add"</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span> <span class="o">=</span> <span class="n">base</span> <span class="o">|</span> <span class="n">candidate_ids</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_recipe</span> <span class="o">=</span> <span class="n">recipe</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">base</span> <span class="k">else</span> <span class="p">{</span><span class="s2">"method"</span><span class="p">:</span> <span class="s2">"manual"</span><span class="p">}</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span> <span class="o">=</span> <span class="n">base</span> <span class="o">-</span> <span class="n">candidate_ids</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_recipe</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"method"</span><span class="p">:</span> <span class="s2">"manual"</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_refresh_selection</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_refresh_selection</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">render</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="n">selected</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selection_mapper</span><span class="o">.</span><span class="n">SetInputData</span><span class="p">(</span><span class="n">_polydata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_triangles</span><span class="p">,</span> <span class="n">selected</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">selection_mapper</span><span class="o">.</span><span class="n">Update</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">selected</span><span class="p">:</span>
+            <span class="n">selection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_triangles</span><span class="p">(</span><span class="n">selected</span><span class="p">)</span>
+            <span class="n">area</span> <span class="o">=</span> <span class="n">selection</span><span class="o">.</span><span class="n">area</span>
+            <span class="n">boundary_edges</span> <span class="o">=</span> <span class="n">selection</span><span class="o">.</span><span class="n">boundary_edges</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">area</span> <span class="o">=</span> <span class="mf">0.0</span>
+            <span class="n">boundary_edges</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">boundary_mapper</span><span class="o">.</span><span class="n">SetInputData</span><span class="p">(</span><span class="n">_line_polydata</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_vertices</span><span class="p">,</span> <span class="n">boundary_edges</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">boundary_mapper</span><span class="o">.</span><span class="n">Update</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">summary_label</span><span class="o">.</span><span class="n">SetLabel</span><span class="p">(</span>
+            <span class="s2">"</span><span class="si">{}</span><span class="s2"> of </span><span class="si">{}</span><span class="s2"> triangles</span><span class="se">\n</span><span class="s2">Selected area: </span><span class="si">{:.3f}</span><span class="s2"> mm²"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">selected</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_triangles</span><span class="p">),</span> <span class="n">area</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validation_label</span><span class="o">.</span><span class="n">SetLabel</span><span class="p">(</span><span class="s2">"Conformal validation has not been run."</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">accept_button</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">selected</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">copy_button</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">selected</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">save_button</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">selected</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validate_button</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">selected</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">render</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">render_window</span><span class="o">.</span><span class="n">Render</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_method_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_event</span><span class="p">):</span>
+        <span class="n">method</span> <span class="o">=</span> <span class="n">METHOD_IDS</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">method_choice</span><span class="o">.</span><span class="n">GetSelection</span><span class="p">()]</span>
+        <span class="n">is_angle</span> <span class="o">=</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"linked_by_face_angle"</span>
+        <span class="n">is_radius</span> <span class="o">=</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"geodesic_radius"</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">angle_control</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="n">is_angle</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">angle_label</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="n">is_angle</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius_control</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="n">is_radius</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">radius_label</span><span class="o">.</span><span class="n">Enable</span><span class="p">(</span><span class="n">is_radius</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_preview</span> <span class="o">=</span> <span class="kc">None</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_angle_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preview</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preview</span><span class="p">[</span><span class="s2">"method"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"linked_by_face_angle"</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_apply_preview</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_radius_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preview</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_preview</span><span class="p">[</span><span class="s2">"method"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"geodesic_radius"</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_apply_preview</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_clear</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span><span class="o">.</span><span class="n">clear</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_recipe</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"method"</span><span class="p">:</span> <span class="s2">"manual"</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_preview</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_refresh_selection</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_invert</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">range</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_triangles</span><span class="p">)))</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_recipe</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"method"</span><span class="p">:</span> <span class="s2">"manual"</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_preview</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_refresh_selection</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_grow</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">selection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_triangles</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span><span class="p">))</span><span class="o">.</span><span class="n">grown</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">selection</span><span class="o">.</span><span class="n">triangle_ids</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_recipe</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"method"</span><span class="p">:</span> <span class="s2">"manual"</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_preview</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_refresh_selection</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_shrink</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="n">selection</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_triangles</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span><span class="p">))</span><span class="o">.</span><span class="n">shrunk</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">selection</span><span class="o">.</span><span class="n">triangle_ids</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_recipe</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"method"</span><span class="p">:</span> <span class="s2">"manual"</span><span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_preview</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_refresh_selection</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_event</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">surface</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_triangles</span><span class="p">(</span>
+                <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span><span class="p">)</span>
+            <span class="p">)</span><span class="o">.</span><span class="n">to_triangle_mesh_surface</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">validation_label</span><span class="o">.</span><span class="n">SetLabel</span><span class="p">(</span>
+                <span class="s2">"Conformal patch ready: one connected open disk, </span><span class="si">{}</span><span class="s2"> triangles."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span>
+                    <span class="n">surface</span><span class="o">.</span><span class="n">triangle_count</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+        <span class="k">except</span> <span class="ne">RuntimeError</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">validation_label</span><span class="o">.</span><span class="n">SetLabel</span><span class="p">(</span><span class="s2">"Not a conformal disk: </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">validation_label</span><span class="o">.</span><span class="n">Wrap</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">FromDIP</span><span class="p">(</span><span class="mi">275</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Layout</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_copy</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_event</span><span class="p">):</span>
+        <span class="n">text</span> <span class="o">=</span> <span class="nb">repr</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span><span class="p">))</span>
+        <span class="k">if</span> <span class="n">wx</span><span class="o">.</span><span class="n">TheClipboard</span><span class="o">.</span><span class="n">Open</span><span class="p">():</span>
+            <span class="n">wx</span><span class="o">.</span><span class="n">TheClipboard</span><span class="o">.</span><span class="n">SetData</span><span class="p">(</span><span class="n">wx</span><span class="o">.</span><span class="n">TextDataObject</span><span class="p">(</span><span class="n">text</span><span class="p">))</span>
+            <span class="n">wx</span><span class="o">.</span><span class="n">TheClipboard</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SetStatusText</span><span class="p">(</span><span class="s2">"Copied </span><span class="si">{}</span><span class="s2"> triangle IDs."</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span><span class="p">)))</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_save</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_event</span><span class="p">):</span>
+        <span class="n">dialog</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">FileDialog</span><span class="p">(</span>
+            <span class="bp">self</span><span class="p">,</span>
+            <span class="n">message</span><span class="o">=</span><span class="s2">"Save mesh selection"</span><span class="p">,</span>
+            <span class="n">wildcard</span><span class="o">=</span><span class="s2">"OpenVCAD mesh selection (*.selection.json)|*.selection.json|JSON (*.json)|*.json"</span><span class="p">,</span>
+            <span class="n">style</span><span class="o">=</span><span class="n">wx</span><span class="o">.</span><span class="n">FD_SAVE</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">FD_OVERWRITE_PROMPT</span><span class="p">,</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">dialog</span><span class="o">.</span><span class="n">ShowModal</span><span class="p">()</span> <span class="o">!=</span> <span class="n">wx</span><span class="o">.</span><span class="n">ID_OK</span><span class="p">:</span>
+            <span class="n">dialog</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+            <span class="k">return</span>
+        <span class="n">path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">dialog</span><span class="o">.</span><span class="n">GetPath</span><span class="p">())</span>
+        <span class="n">dialog</span><span class="o">.</span><span class="n">Destroy</span><span class="p">()</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">path</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">".json"</span><span class="p">):</span>
+            <span class="n">path</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">with_name</span><span class="p">(</span><span class="n">path</span><span class="o">.</span><span class="n">name</span> <span class="o">+</span> <span class="s2">".selection.json"</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">save_mesh_selection</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_triangles</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span><span class="p">)),</span>
+                <span class="n">path</span><span class="p">,</span>
+                <span class="n">recipe</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">_recipe</span><span class="p">,</span>
+                <span class="n">voxel_size</span><span class="o">=</span><span class="bp">self</span><span class="o">.</span><span class="n">voxel_size</span><span class="p">,</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">SetStatusText</span><span class="p">(</span><span class="s2">"Saved selection to </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">path</span><span class="p">))</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="ne">RuntimeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="n">wx</span><span class="o">.</span><span class="n">MessageBox</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">error</span><span class="p">),</span> <span class="s2">"Unable to save selection"</span><span class="p">,</span> <span class="n">wx</span><span class="o">.</span><span class="n">OK</span> <span class="o">|</span> <span class="n">wx</span><span class="o">.</span><span class="n">ICON_ERROR</span><span class="p">,</span> <span class="bp">self</span><span class="p">)</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_accept</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mesh</span><span class="o">.</span><span class="n">select_triangles</span><span class="p">(</span><span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_selected_ids</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_accepted</span> <span class="o">=</span> <span class="kc">True</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_cancel</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">_event</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Close</span><span class="p">()</span>
+
+    <span class="k">def</span><span class="w"> </span><span class="nf">_on_close</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event</span><span class="p">):</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_accepted</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">result</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">event</span><span class="o">.</span><span class="n">Skip</span><span class="p">()</span></div>
+
+
+
+<div class="viewcode-block" id="select_mesh_patch">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/interactive.html#pyvcad_rendering.select_mesh_patch">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">select_mesh_patch</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_selection</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Open the auxiliary picker and return a ``pyvcad.MeshSelection`` or ``None``.</span>
+
+<span class="sd">    ``source`` may be an existing ``SurfaceMesh`` or an OpenVCAD ``Node``. Tree inputs require an</span>
+<span class="sd">    explicit voxel size because the selected triangle IDs are resolution-specific.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">      source (SurfaceMesh | Node): The mesh, or the tree to mesh.</span>
+<span class="sd">      voxel_size (float, optional): Meshing voxel size in mm. Required for a ``Node``.</span>
+<span class="sd">      initial_selection (MeshSelection, optional): Triangles to show as selected when the picker opens.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      MeshSelection | None: The accepted selection, or None if the picker was closed without one.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">      RuntimeError: If called while a wx event loop is already running.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">wx</span><span class="o">.</span><span class="n">App</span><span class="o">.</span><span class="n">Get</span><span class="p">()</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"select_mesh_patch must be launched outside an existing wx event loop"</span><span class="p">)</span>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">resolve_selection_mesh</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">=</span><span class="n">voxel_size</span><span class="p">)</span>
+    <span class="k">with</span> <span class="n">wx</span><span class="o">.</span><span class="n">LogNull</span><span class="p">():</span>
+        <span class="n">app</span> <span class="o">=</span> <span class="n">wx</span><span class="o">.</span><span class="n">App</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+        <span class="n">app</span><span class="o">.</span><span class="n">frame</span> <span class="o">=</span> <span class="n">MeshSelectionFrame</span><span class="p">(</span>
+            <span class="n">mesh</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">=</span><span class="n">voxel_size</span><span class="p">,</span> <span class="n">initial_selection</span><span class="o">=</span><span class="n">initial_selection</span>
+        <span class="p">)</span>
+    <span class="n">app</span><span class="o">.</span><span class="n">MainLoop</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">app</span><span class="o">.</span><span class="n">frame</span><span class="o">.</span><span class="n">result</span></div>
+
+
+
+<div class="viewcode-block" id="Select_Mesh_Patch">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/interactive.html#pyvcad_rendering.Select_Mesh_Patch">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">Select_Mesh_Patch</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">initial_selection</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Alias for :func:`select_mesh_patch`."""</span>
+    <span class="k">return</span> <span class="n">select_mesh_patch</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">=</span><span class="n">voxel_size</span><span class="p">,</span> <span class="n">initial_selection</span><span class="o">=</span><span class="n">initial_selection</span><span class="p">)</span></div>
+
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">"MeshSelectionFrame"</span><span class="p">,</span> <span class="s2">"Select_Mesh_Patch"</span><span class="p">,</span> <span class="s2">"select_mesh_patch"</span><span class="p">]</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Charles Wade and Robert MacCurdy.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.2.0.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

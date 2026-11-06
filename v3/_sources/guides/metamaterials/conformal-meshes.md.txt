@@ -7,7 +7,7 @@
 Use this guide when the surface you want to lattice is a scan, an STL region, or a mesh made by your own script rather than CAD. A **triangle mesh** is simply a list of points connected by triangles. `TriangleMeshSurface` turns one open mesh patch into a surface that OpenVCAD can follow: it creates a flat internal coordinate system for the patch, then `mm.cell_map_from_surface(...)` and `mm.cell_map_between_surfaces(...)` can use it just as they use a `CADFace` in the [CAD guide](conformal-cad.md). You do not need CadQuery for this workflow.
 
 If your input is a complete mesh rather than an already extracted patch, see [Selecting
-triangle-mesh patches](../mesh-selection.md). OpenVCAD provides an auxiliary interactive picker as
+triangle-mesh patches](../imports/mesh-selection.md). OpenVCAD provides an auxiliary interactive picker as
 well as advanced Python APIs for connected, angle-limited, geodesic, constrained, and
 boundary-defined selection. The result converts directly to the `TriangleMeshSurface` used here.
 
@@ -21,7 +21,7 @@ Here, `vertices` is a list of `pv.Vec3` points and `triangles` is a list of trip
 
 ## What the patch must be
 
-The patch must be an **open disk**: one connected piece of surface with one outer edge, no holes, and consistently ordered triangles. Think of a single sheet cut from the surface, not a complete solid. The top of a part, a scanned region, or a height-field strip usually qualifies. A closed solid, a ring-shaped patch, or two separate pieces does not; each produces a specific error described in [Troubleshooting](#limitations-and-troubleshooting). You can make a closed solid usable by extracting one open region, as shown [below](#select-a-region-of-an-imported-mesh).
+The patch must be one connected, **open** piece of surface with consistently ordered triangles: a single sheet cut from the surface, not a complete solid. It has one outer edge and may also have **holes** -- vents, cut-outs, or a ring shape -- which OpenVCAD treats as trims (see [Patches with holes](#patches-with-holes)). The top of a part, a scanned region, the inside of a shell with vents, or a height-field strip usually qualifies. A closed solid, a patch with a handle (like a punctured torus), or two separate pieces does not; each produces a specific error described in [Troubleshooting](#limitations-and-troubleshooting). You can make a closed solid usable by extracting one open region, as shown [below](#select-a-region-of-an-imported-mesh).
 
 The patch's **shape** is unrestricted. Circular, elongated, off-center, and irregular outlines all work — the boundary does not need to be square, straight-edged, or convex.
 
@@ -88,6 +88,21 @@ cell_map = mm.cell_map_from_surface(surface, cells=(15, 15, 4), height=25.0, sta
 
 `standoff` shares the sign convention of `height`: both follow the surface's oriented normal, so a negative stand-off on a positive-height map starts the volume behind the surface.
 
+`cell_map_between_surfaces(...)` accepts a `standoff` too. It moves only the **first** surface along its oriented normal before the two surfaces are interpolated, so the lattice keeps a clearance from the first surface and still ends on the second. Zero (the default) leaves the map unchanged. [`29_paired_surfaces_with_standoff.py`](../../../../examples/metamaterials/conformal_meshes/29_paired_surfaces_with_standoff.py) fills the space between two saddles 2 mm above the lower one:
+
+```python
+lower = grid_surface(40.0, 40.0, 21, 21, lower_saddle)
+upper = grid_surface(40.0, 40.0, 21, 21, upper_saddle)
+cell_map = mm.cell_map_between_surfaces(lower, upper, cells=(6, 6, 2), standoff=2.0)
+root = mm.octet(cell_map, beam_radius=0.6)
+```
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_triangle_surface_paired_standoff.png" data-lightbox="triangle-surface-standoff"><img src="../images/mm_triangle_surface_paired_standoff.png" alt="Octet lattice between two saddle patches, standing 2 mm off the lower one"></a><div class="guide-figure-label">An octet lattice between two saddles with a 2 mm stand-off from the lower one</div></div>
+</div>
+
+Interpolating between two surfaces depends on how well their charts correspond. When the second surface is really just "the end of the cells", a [variable-height map](#end-the-cells-on-another-surface) from the first surface is often more robust.
+
 (sealing-the-cropped-edge-with-a-rim)=
 ## Sealing the cropped edge with a rim
 
@@ -101,6 +116,130 @@ root = pv.Union(
 ```
 
 The rim is an ordinary node (`pv.MappedRim`), so materials and attributes attach to it like any other leaf, and `width` may be a `pv.FloatAttribute` to grade the band. For maps without a boundary trim the band follows the lateral sides of the cell grid instead; only the map's base and offset surfaces are never treated as edges. Stand-off, rim, and flattening-method choices can be combined on the same mapped patch.
+
+(patches-with-holes)=
+## Patches with holes
+
+A patch may have openings: vents in the inside of a shell, cut-outs, or a ring-shaped region. OpenVCAD treats each opening as a **trim**, the way a trimmed CAD face is mapped through its untrimmed parent surface:
+
+1. The longest boundary loop is the outer edge; every other loop is a hole.
+2. Each hole is filled internally with a smooth, faired patch, only so the whole patch can be flattened as one disk. The fill keeps the chart smooth across the opening, so the cells around a vent are not distorted.
+3. The filled area is then reported as **off the surface**. The default `trim="boundary"` cuts the lattice at every hole edge exactly as it cuts the outer edge, and `mm.rim(...)` seals the hole walls as well as the outer edge.
+
+```python
+surface = pv.TriangleMeshSurface(vertices, triangles)   # a patch with five vents
+surface.hole_count                                      # 5
+cell_map = mm.cell_map_from_surface(surface, cells=(10, 10, 1), height=5.0)
+root = pv.Union(
+    mm.gyroid(cell_map, wall_thickness=0.6),
+    mm.rim(cell_map, width=1.2),
+)
+```
+
+[`27_vented_dome_holes_as_trims.py`](../../../../examples/metamaterials/conformal_meshes/27_vented_dome_holes_as_trims.py) builds a domed patch with five round vents. The helper `indexed_holed_grid(...)` in [`_triangle_surface_examples.py`](../../../../examples/metamaterials/conformal_meshes/_triangle_surface_examples.py) makes such patches procedurally; an imported shell surface with vents works the same way.
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_triangle_surface_vented_dome.png" data-lightbox="triangle-surface-holes"><img src="../images/mm_triangle_surface_vented_dome.png" alt="Gyroid on a domed patch with five vents; the lattice stops at each vent and a rim seals every vent wall"></a><div class="guide-figure-label">Holes as trims: no lattice in the vents, and the rim seals every vent wall</div></div>
+</div>
+
+Things to know about holes:
+
+- `trim="cells"` removes whole cells that lie inside a hole and keeps cells that only overlap one. `trim="none"` keeps the fill, so the lattice runs across the openings.
+- `surface.vertices`, `triangles`, `uv_coordinates`, and `mesh()` still describe your input patch. `surface.filled_mesh()` returns the patch plus its internal fill, and `surface.filled_triangle_count` reports how many triangles were added.
+- Small holes are resolved automatically: the map refines its trim sampling until each hole is cut, down to holes about 1/1000 of the patch's longer side across (0.3 mm on a 300 mm patch). Smaller holes are not cut.
+- A hole that touches the outer edge at a **single vertex** pinches the patch and is rejected as a non-manifold vertex. A cut-out that opens onto the edge along a whole edge is simply part of the outer boundary and needs nothing special.
+- An open tube has two boundary loops of similar length. It is accepted, but one end is filled as a "hole", which flattens like a deep cup and can make cells uneven. Cut the tube open along its length instead.
+
+(end-the-cells-on-another-surface)=
+## End the cells on another surface
+
+A constant `height` grows every column of cells by the same distance. When the lattice must fill the gap between a surface and something else -- an inner surface and an outer shell -- give `height` a value that varies over the patch instead. `cell_map_from_surface(...)` accepts:
+
+- a number: one constant height;
+- a `pv.FloatAttribute` (or a numba callable): sampled once per column of cells, at the column's base point on the surface;
+- for a `TriangleMeshSurface`, a list or NumPy array with **one value per vertex**, interpolated across the patch.
+
+The height must stay non-zero and keep one sign over the whole map. To end the cells on a target, measure the gap along the surface normal with `mm.surface_gap(surface, target, max_distance)`. It casts a ray from every vertex along its normal and returns the distances as an array:
+
+```python
+inner = disk_surface(30.0, 12, 48, inner_dome)
+outer = pv.Sphere(pv.Vec3(6.0, 0.0, -60.0), 69.0)           # off-centre: the gap varies
+
+gap = mm.surface_gap(inner, outer, max_distance=40.0)        # one distance per vertex, in mm
+cell_map = mm.cell_map_from_surface(inner, cells=(10, 10, 2), height=gap)
+root = pv.Union(mm.gyroid(cell_map, wall_thickness=0.7), mm.rim(cell_map, width=1.5))
+```
+
+In [`28_variable_height_to_outer_surface.py`](../../../../examples/metamaterials/conformal_meshes/28_variable_height_to_outer_surface.py) the gap varies from about 6 to 12 mm, and the outer cells end on the sphere everywhere:
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_triangle_surface_variable_height.png" data-lightbox="triangle-surface-variable-height"><img src="../images/mm_triangle_surface_variable_height.png" alt="Side view of a gyroid shell that is thin on one side and thick on the other, ending on an off-centre outer sphere"></a><div class="guide-figure-label">A variable-height map: the cells end on an off-centre outer surface</div></div>
+</div>
+
+The target can be:
+
+- a `pv.TriangleMeshSurface` or `pv.SurfaceMesh`, hit by exact ray-triangle intersection. Open and non-watertight meshes work, so the inside surface of a shell exported from CAD can be used directly;
+- any other OpenVCAD node, which is sphere-traced against its signed distance field.
+
+Pass `offset=` to subtract a clearance, or combine the gap with `standoff` (subtract the stand-off from the gap so the cells still end on the target). Rays that miss the target raise an error by default; `missing="nearest"` copies the nearest hit instead, and a number fills misses with that value. Very uneven heights on a strongly curved patch can still fold the volume; construction reports that as a [map validation error](#map-validation-errors).
+
+(use-the-map-volume-as-a-solid)=
+## Use the map volume as a solid
+
+`mm.domain(cell_map)` returns the map's trimmed volume as an ordinary solid node, `pv.CellMapDomain`. Its signed distance is negative inside the mapped volume and positive outside it, in trimmed margins, and in holes. Use it to:
+
+- clip another node to the mapped shell: `pv.Intersection(node, mm.domain(cell_map))`;
+- keep other geometry out of it: `pv.Difference(node, mm.domain(cell_map))`;
+- host a stochastic lattice that follows the curved shell.
+
+[`30_liner_volume_voronoi_host.py`](../../../../examples/metamaterials/conformal_meshes/30_liner_volume_voronoi_host.py) fills a vented dome shell with a random Voronoi strut lattice:
+
+```python
+cell_map = mm.cell_map_from_surface(surface, cells=(10, 10, 1), height=8.0)
+host = mm.domain(cell_map)
+host.prepare(pv.Vec3(0.5, 0.5, 0.5), 1.0)
+seeds = mm.sample_points_in_host(host, spacing=5.0, seed=7, boundary_clearance=0.5)
+root = pv.Union(
+    mm.voronoi_graph_lattice(host, seeds, beam_thickness=0.9),
+    mm.rim(cell_map, width=1.2),
+)
+```
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_triangle_surface_domain_voronoi.png" data-lightbox="triangle-surface-domain"><img src="../images/mm_triangle_surface_domain_voronoi.png" alt="Random Voronoi struts confined to a curved, vented dome shell with a rim"></a><div class="guide-figure-label">The map volume as a stochastic host: Voronoi struts follow the vented shell</div></div>
+</div>
+
+The [stochastic-lattices guide](stochastic-lattices.md) covers seeds, spacing, and boundary options in detail.
+
+(wrap-flat-geometry-onto-the-map)=
+## Wrap flat geometry onto the map
+
+`mm.map_node(cell_map, node)` evaluates any node in the map's own coordinates, so geometry designed flat follows the curved map: pads, bosses, labels, or cut-outs on a liner. With the default `space="physical"`, map coordinates are scaled to approximate millimetres. `pv.MappedNode(...).child_bounds` gives the flat box that covers the whole map; X runs along U, Y along V, and Z through the map's thickness:
+
+```python
+cell_map = pv.CellMap.cylindrical(pv.Vec3(0, 0, 0), 30.0, 36.0, 40.0, (24, 6, 1))
+lower, upper = pv.MappedNode(cell_map, pv.Sphere(pv.Vec3(0, 0, 0), 1.0)).child_bounds
+length, height, thickness = upper.x, upper.y, upper.z         # about 207 x 40 x 6 mm
+
+pad = pv.RectPrism(pv.Vec3(0.25 * length, 0.5 * height, 0.5 * thickness),
+                   pv.Vec3(24.0, 14.0, thickness + 2.0))
+boss = pv.Cylinder(pv.Vec3(0.5 * length, 0.5 * height, 0.5 * thickness), 7.0, thickness + 2.0)
+root = pv.Union(mm.gyroid(cell_map, wall_thickness=0.7),
+                mm.map_node(cell_map, pv.Union(pad, boss)))
+```
+
+[`31_wrap_pads_through_a_cell_map.py`](../../../../examples/metamaterials/conformal_meshes/31_wrap_pads_through_a_cell_map.py) places two pads and a round boss on a cylindrical gyroid shell:
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_triangle_surface_wrapped_pads.png" data-lightbox="triangle-surface-wrap"><img src="../images/mm_triangle_surface_wrapped_pads.png" alt="Solid rectangular pads and a round boss wrapped onto a cylindrical gyroid shell"></a><div class="guide-figure-label">Flat pads and a boss wrapped through the map onto a curved shell</div></div>
+</div>
+
+Keep in mind:
+
+- The wrapped node exists only inside the map volume; anything outside it is clipped away, just like a mapped lattice.
+- `space="logical"` uses cell units instead of millimetres, and `scale=(sx, sy, sz)` sets explicit child units per cell.
+- The returned distance is a first-order estimate that uses the map's local stretch. It is accurate near the surface, which is what meshing needs, but not a true distance far from it, so do not use a wrapped node where exact distances matter (for example as a distance-graded body).
+- Periodic directions wrap, so a node crossing a cylinder's seam is cut there; place features away from the seam or shift it with the map's start angle.
 
 ## Choosing the chart orientation
 
@@ -201,9 +340,9 @@ The extracted top is an open disk, so it can go straight into `TriangleMeshSurfa
 </div>
 
 Choose the selection rule that matches the region boundary. The [advanced mesh-selection
-guide](../mesh-selection.md) covers interactive selection, ring refinement, data delimiters,
+guide](../imports/mesh-selection.md) covers interactive selection, ring refinement, data delimiters,
 surface-distance patches, and path-defined outlines. The result must still be one connected patch
-with one boundary loop before it can drive conformal mapping.
+(holes are fine) before it can drive conformal mapping.
 
 (pair-a-mesh-with-a-cad-surface)=
 ## Pair a mesh with a CAD surface
@@ -231,6 +370,62 @@ The two boundaries need compatible surface coordinates for the interpolation to 
 
 Once built, these lattices are ordinary OpenVCAD nodes. You can grade them as in the previous guide, combine them in [heterogeneous lattices](heterogeneous-lattices.md), or send them to a compatible [compiler](../compilers/index.md).
 
+## Build a lattice from the mesh cells themselves
+
+Every lattice so far repeats one unit cell through a cell map. Some parts are easier to mesh than to map. In that case, the cells of the mesh can be the lattice cells instead, and you do not need a cell map at all.
+
+A volume mesh splits the inside of a part into small solid cells: tetrahedra (four triangular faces) or hexahedra (six faces, like voxels). A surface mesh covers only the outside, with triangles. `mm.mesh_lattice(...)` places struts in the cells of either kind of mesh, so the lattice fills whatever shape the mesher can fill. It returns a `pv.BeamLattice`, a node made of round struts joined at their ends.
+
+A rule chooses where the struts go in each mesh cell. These are the same rules the tessellation builders use in [Custom unit cells](custom-unit-cells.md):
+
+| Rule | Struts on mesh cells |
+| --- | --- |
+| `"edges"` | every mesh edge |
+| `"cell_vertex_centroid"` | each cell's centre joined to its corners (BCC in hexahedra) |
+| `"facet_vertex_centroid"` | each face's centre joined to its corners |
+| `"dual"` | the centres of cells that share a face; on a triangle surface, a strut across every interior edge |
+| `"central_axes"` | each cell's centre joined to the centres of its faces |
+
+The example meshes one part, `body` (two overlapping spheres), in three ways and builds a lattice from each:
+
+- the edges of a tetrahedral mesh, with struts that get thicker towards the bottom,
+- the `"dual"` of the surface triangles, which gives a cell-like net on the skin, and
+- each voxel of a hexahedral mesh joined from its centre to its corners (BCC in voxels).
+
+```python
+settings = pv.TetrahedralMeshFixedSettings()
+settings.cell_size = 5.0
+settings.facet_size = 5.0
+settings.facet_distance = 0.5
+tets = pv.TetrahedralMesh.from_tree(body, settings)
+tet_struts = mm.mesh_lattice(tets, "edges", beam_radius=lambda x, y, z, d: 0.7 - 0.012 * z)
+
+surface = pv.SurfaceMesh(body, 0.5).remeshed(4.0)       # even 4 mm triangles
+skin_net = mm.mesh_lattice(surface, "dual", beam_radius=0.5)
+
+hex_settings = pv.HexahedralMeshSettings()
+hex_settings.voxel_size = pv.Vec3(5.0, 5.0, 5.0)
+voxel_bcc = mm.mesh_lattice(pv.HexahedralMesh.from_tree(body, hex_settings),
+                            "cell_vertex_centroid", beam_radius=0.5)
+```
+
+<div class="guide-figure-stack">
+  <a href="../images/mm_mesh_lattices.png" data-lightbox="mesh-lattices"><img src="../images/mm_mesh_lattices.png" alt="Three lattices built from mesh cells: tetrahedral edges, the dual of a surface mesh, and voxel centre-to-corner struts"></a>
+  <div class="guide-figure-label">Tetrahedral mesh edges, the dual of the surface triangles, and voxel BCC</div>
+</div>
+
+You can give `beam_radius` in three ways: one number, a list with one value per mesh vertex, or a field such as the `lambda` above, which is sampled at both ends of every strut. With per-vertex values, a strut end at a cell or face centre takes the average of that cell's or face's vertex values. The optional `node_radius` adds a ball at every joint and accepts the same three forms.
+
+To combine rules, pass a list of them. You get the struts of every rule in the list, and a strut that two neighbouring cells share appears only once.
+
+The struts are centred on the mesh, so the ones that run along the part's surface stick halfway out of it. To trim them, intersect the lattice with the part, as the example does.
+
+The mesh also sets the cell size. Smaller mesh cells give shorter struts, so a mesh with smaller tetrahedra near curved surfaces gives a finer lattice there.
+
+For foams grown from seed points, and Voronoi ribs on a surface, see [Stochastic lattices](stochastic-lattices.md).
+
+Run [`33_lattices_from_meshes.py`](../../../../examples/metamaterials/conformal_meshes/33_lattices_from_meshes.py) to see all three lattices in the interactive preview.
+
 (limitations-and-troubleshooting)=
 ## Limitations and troubleshooting
 
@@ -241,8 +436,8 @@ OpenVCAD reports each invalid input with a specific `RuntimeError` rather than g
 | Input | Error |
 | --- | --- |
 | Closed solid (a sphere) | *"the mesh is closed and has no boundary loop"* |
-| Annulus / two boundary loops | *"requires exactly one boundary loop"* |
-| Punctured torus (a handle) | *"requires a genus-0 disk … carries at least one handle"* |
+| Punctured torus (a handle) | *"requires a genus-0 patch … carries at least one handle"* |
+| A hole touching the outer edge at one vertex | *"has a non-manifold vertex"* |
 | Two disconnected disks | *"requires a single connected patch"* |
 | Three triangles on one edge | *"has a non-manifold edge"* |
 | Two fans joined at a point | *"has a non-manifold vertex"* |
@@ -259,11 +454,13 @@ surface.parameterization_method   # "free_boundary_lscm" or "convex_border_mean_
 
 If a patch you expected to flatten cleanly uses the fallback, it is usually more curved or twisted than intended. Splitting it into flatter regions often restores the natural-outline chart. Only when both mappings fail is the patch rejected; the error includes both reasons.
 
+(map-validation-errors)=
 ### Map validation errors
 
 Making a valid chart does not guarantee that the offset or interpolated **volume** is valid. Construction always checks the volume for folds or collapsed cells:
 
 - *"Surface CellMap is folded or singular"* — `height` is too large for a concave surface and the offset intersects itself, or a distorted fallback chart collapses cells at the requested resolution. Reduce `height`, add cells, or split the patch.
+- *"height field must be finite and non-zero"* or *"must keep one sign"* — a variable `height` reached zero or changed sign somewhere on the map (including the trimmed margin, where the field is sampled at extrapolated points). Keep the field strictly positive or strictly negative.
 - *"No valid paired-surface correspondence was found"* — the two surfaces in `between_surfaces` cannot be aligned, or their charts slide against each other. The message lists the checks it tried. Use surfaces over a common footprint and make sure both normals point along the intended W direction.
 
 ### Other limits to keep in mind

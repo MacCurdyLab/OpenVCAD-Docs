@@ -1,0 +1,35 @@
+``pyvcad_metamaterials`` module
+===============================
+
+The ``pyvcad_metamaterials`` package builds TPMS, strut (graph), and face
+(plate and honeycomb) lattices through a ``CellMap``: the map decides where each
+cell sits, and the builders fill every cell with one repeat of a unit cell. It
+also builds stochastic Delaunay and Voronoi lattices from seed points, grades
+and mixes structures, makes random-to-regular transitions, checks connectivity,
+and measures geometric properties such as relative density. Builders return
+ordinary ``pyvcad`` nodes, so lattices can be clipped, combined, and given
+attributes like any other geometry. All lengths are in millimetres.
+
+.. code-block:: python
+
+   import pyvcad as pv
+   import pyvcad_metamaterials as mm
+
+   cell_map = mm.rectangular_cell_map(
+       (pv.Vec3(-15, -15, -15), pv.Vec3(15, 15, 15)),
+       cells=(3, 3, 3),
+   )
+   gyroid = mm.gyroid(cell_map, wall_thickness=1.2)
+   octet = mm.octet(cell_map, beam_radius=0.7)
+   honeycomb = mm.hexagonal_honeycomb(cell_map, wall_thickness=0.6)
+
+The :doc:`/guides/metamaterials/index` guides walk through these functions
+with rendered examples.
+
+.. toctree::
+   :maxdepth: 1
+
+   cell_maps
+   structures
+   grading
+   properties

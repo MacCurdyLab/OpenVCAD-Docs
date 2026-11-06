@@ -4,8 +4,8 @@
 ```{include} ../_guide-sidebar-compiler-membership.md
 ```
 
-`pyvcad_metamaterials` supplies nine periodic implicit cells, ten graph cells, and
-seven face/plate cells. This guide compares those cells on consistent rectangular
+`pyvcad_metamaterials` supplies nine periodic implicit cells, twenty-five graph
+cells, and eleven face/plate cells. This guide compares those cells on consistent rectangular
 maps, then uses ordinary CSG to fill more familiar part geometries.
 
 ## Build a finite rectangular map
@@ -109,8 +109,8 @@ The new graph presets retain explicit junctions:
 | --- | ---: | ---: | --- |
 | `isotruss` | 15 | 26 | cube edges + center-to-corner + center-to-face-center |
 | `fluorite` | 22 | 32 | FCC sites joined to eight tetrahedral sites |
-| `hex_prism_edge` | 32 | 48 | extruded regular-hexagonal edge network |
-| `reentrant_hex_prism` | 32 | 48 | extruded re-entrant hexagonal edge network |
+| `hex_prism_edge` | 32 | 42 | extruded regular-hexagonal edge network |
+| `reentrant_hex_prism` | 32 | 42 | extruded re-entrant hexagonal edge network |
 
 The counts describe one authored cell before neighboring periodic vertices are
 welded.
@@ -133,6 +133,98 @@ the same angle and rib ratio. The default \(h/l=2\), \(-30^\circ\) geometry
 follows the conventional re-entrant hexagonal parameterization described by
 [Zhang and Yang](https://doi.org/10.3390/ma9110900).
 
+### Foams, prisms and tessellation cells
+
+The rest of the graph catalog adds foams, prism lattices, crystal lattices and
+a few more. You use them exactly like the cells above. Each one has its own
+builder, such as `mm.weaire_phelan(...)` or `mm.hex_prism_diamond(...)`, and
+you can also pass its name to `mm.graph_lattice(...)`.
+
+Most of these cells were generated rather than typed in by hand, in one of
+three ways:
+
+- **Foams** come from Voronoi cells. Scatter a few points, called seeds, through
+  the cell. Each seed's Voronoi cell is the region of space closer to it than
+  to any other seed. The edges where those regions meet become the struts.
+- **Crystal lattices** join neighbouring atom sites of a crystal with struts.
+- **Prism and honeycomb lattices** apply a rule, such as "keep every edge", to
+  a tessellation: a set of solid shapes that fill space with no gaps.
+
+[Custom unit cells](custom-unit-cells.md) shows how to use the same builders
+to make cells of your own.
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_rhombic_dodecahedron.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_rhombic_dodecahedron.png" alt="Rhombic dodecahedron foam"></a><div class="guide-figure-label">Rhombic dodecahedron</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_weaire_phelan.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_weaire_phelan.png" alt="Weaire-Phelan foam"></a><div class="guide-figure-label">Weaire-Phelan</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_truncated_cube.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_truncated_cube.png" alt="Truncated cube lattice"></a><div class="guide-figure-label">Truncated cube</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_column.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_column.png" alt="Column lattice"></a><div class="guide-figure-label">Column</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_columns.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_columns.png" alt="Two-column lattice"></a><div class="guide-figure-label">Columns</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_reentrant_3d.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_reentrant_3d.png" alt="Three-dimensional re-entrant lattice"></a><div class="guide-figure-label">3D re-entrant</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_triangular_prism_edge.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_triangular_prism_edge.png" alt="Triangular prism edge lattice"></a><div class="guide-figure-label">Triangular prism</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_rotated_triangular_prism_edge.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_rotated_triangular_prism_edge.png" alt="Rotated triangular prism lattice"></a><div class="guide-figure-label">Rotated triangular prism</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_rotated_square_prism_edge.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_rotated_square_prism_edge.png" alt="Rotated square prism lattice"></a><div class="guide-figure-label">Rotated square prism</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_hex_prism_vertex_centroid.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_hex_prism_vertex_centroid.png" alt="Hexagonal prism vertex centroid lattice"></a><div class="guide-figure-label">Hex-prism vertex-centroid</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_hex_prism_central_axis.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_hex_prism_central_axis.png" alt="Hexagonal prism central axis lattice"></a><div class="guide-figure-label">Hex-prism central axis</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_hex_prism_diamond.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_hex_prism_diamond.png" alt="Hexagonal diamond lattice"></a><div class="guide-figure-label">Hex-prism diamond (lonsdaleite)</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_hex_prism_laves.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_hex_prism_laves.png" alt="Hexagonal Laves phase lattice"></a><div class="guide-figure-label">Hex-prism Laves</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_tet_oct_vertex_centroid.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_tet_oct_vertex_centroid.png" alt="Tetrahedral-octahedral vertex centroid lattice"></a><div class="guide-figure-label">Tet-oct vertex-centroid</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_lattice_oct_vertex_centroid.png" data-lightbox="graph-catalog"><img src="../images/mm_lattice_oct_vertex_centroid.png" alt="Octahedral face vertex centroid lattice"></a><div class="guide-figure-label">Oct vertex-centroid</div></div>
+</div>
+
+The table lists how each cell is made. As in the table above, the counts are
+for one cell.
+
+| Name | Vertices | Edges | Construction |
+| --- | ---: | ---: | --- |
+| `rhombic_dodecahedron` | 21 | 32 | Voronoi edges of FCC sites |
+| `weaire_phelan` | 88 | 122 | Voronoi edges of the eight A15 sites; four struts at every node |
+| `truncated_cube` | 24 | 36 | edges of truncated cubes and octahedra; every strut in a cell face |
+| `column` | 11 | 10 | a W column through the centre, tied to the cell corners by X struts in the top and bottom faces |
+| `columns` | 22 | 32 | the column rule on squares turned 45°: two columns per cell, tied by a half-pitch square grid |
+| `reentrant_3d` | 56 | 60 | the planar re-entrant pattern in U-W and V-W walls that share their W ribs |
+| `triangular_prism_edge` | 14 | 21 | edges of triangular prisms, one edge family along U |
+| `rotated_triangular_prism_edge` | 14 | 21 | the same turned 90°, one edge family along V |
+| `rotated_square_prism_edge` | 10 | 13 | edges of square prisms turned 45° about W |
+| `hex_prism_vertex_centroid` | 27 | 52 | each hexagonal prism's centre joined to its twelve corners |
+| `hex_prism_central_axis` | 53 | 108 | hexagonal-prism edges plus a W column per prism, joined to the cap corners by spokes |
+| `hex_prism_diamond` | 37 | 42 | hexagonal diamond (lonsdaleite): tetrahedral bonds, puckered hexagons joined along W |
+| `hex_prism_laves` | 71 | 112 | the small-atom net of the hexagonal (C14) Laves phase: corner- and face-sharing tetrahedra |
+| `tet_oct_vertex_centroid` | 35 | 86 | every tetrahedron's and octahedron's centre in the tet-oct honeycomb joined to its corners |
+| `oct_vertex_centroid` | 46 | 96 | the face centres of the tet-oct honeycomb's octahedra joined to their three corners |
+
+Some familiar shapes are already in the catalog under another name. A lattice
+of truncated octahedra is the `kelvin` cell, and a square honeycomb made of
+struts is `cubic`. The Voronoi foams of simple cubic (SC) and body-centred
+cubic (BCC) seeds are `cubic` and `kelvin` as well.
+
+`mm.reentrant_3d(...)` takes the same `angle_degrees` and `rib_ratio` as
+`mm.reentrant_hex_prism(...)`. When you compress it along W, its walls fold
+inward along both U and V.
+
+Some of these cells only keep their intended shape when the map's cells have
+the right proportions: hexagons and triangles stay regular, crystal bonds meet
+at their ideal angles, and re-entrant cells show the requested angle.
+`mm.reference_cell_size(name)` returns those proportions as three numbers, one
+each for U, V and W. Scale them to the size you want and build the map from
+them:
+
+```python
+u, v, w = mm.reference_cell_size("hex_prism_diamond")
+pitch = 10.0 / v   # 10 mm along V
+cell_map = mm.rectangular_cell_map(
+    (pv.Vec3(0.0, 0.0, 0.0), pv.Vec3(3 * u * pitch, 3 * v * pitch, 3 * w * pitch)),
+    cells=(3, 3, 3),
+)
+root = mm.hex_prism_diamond(cell_map, beam_radius=0.6)
+```
+
+Here `pitch` scales the proportions so each cell is 10 mm along V. The map
+holds three such cells along each axis.
+
+Run [`06_tessellation_cells.py`](../../../../examples/metamaterials/basics/06_tessellation_cells.py)
+to compare six of these cells, and a triangular wall honeycomb, side by side in
+the interactive preview.
+
 ## Face and plate lattice catalog
 
 Face lattices thicken tiled center surfaces into walls. This is geometrically
@@ -146,7 +238,18 @@ different from replacing the same diagram with beams.
   <div class="guide-figure-cell"><a href="../images/mm_face_cubic_octet_plate.png" data-lightbox="face-catalog"><img src="../images/mm_face_cubic_octet_plate.png" alt="Cubic and octet hybrid plate lattice"></a><div class="guide-figure-label">Cubic+octet plate</div></div>
   <div class="guide-figure-cell"><a href="../images/mm_face_hexagonal_honeycomb.png" data-lightbox="face-catalog"><img src="../images/mm_face_hexagonal_honeycomb.png" alt="Hexagonal wall honeycomb"></a><div class="guide-figure-label">Hexagonal wall honeycomb</div></div>
   <div class="guide-figure-cell"><a href="../images/mm_face_reentrant_honeycomb.png" data-lightbox="face-catalog"><img src="../images/mm_face_reentrant_honeycomb.png" alt="Re-entrant wall honeycomb"></a><div class="guide-figure-label">Re-entrant wall honeycomb</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_face_square_honeycomb.png" data-lightbox="face-catalog"><img src="../images/mm_face_square_honeycomb.png" alt="Square wall honeycomb"></a><div class="guide-figure-label">Square honeycomb</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_face_rotated_square_honeycomb.png" data-lightbox="face-catalog"><img src="../images/mm_face_rotated_square_honeycomb.png" alt="Square wall honeycomb turned 45 degrees"></a><div class="guide-figure-label">Rotated square honeycomb</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_face_triangular_honeycomb.png" data-lightbox="face-catalog"><img src="../images/mm_face_triangular_honeycomb.png" alt="Triangular wall honeycomb"></a><div class="guide-figure-label">Triangular honeycomb</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_face_rotated_triangular_honeycomb.png" data-lightbox="face-catalog"><img src="../images/mm_face_rotated_triangular_honeycomb.png" alt="Triangular wall honeycomb turned 90 degrees"></a><div class="guide-figure-label">Rotated triangular honeycomb</div></div>
 </div>
+
+The square and triangular honeycombs are the side walls of square and
+triangular prisms that fill space. The rotated versions are the same walls
+turned 45° (square) or 90° (triangular). [Custom unit cells](custom-unit-cells.md)
+shows how they are made. For triangles with three equal sides, build the map
+with the proportions from `mm.reference_cell_size(name)`, as shown above for the
+graph cells.
 
 The crystallographic plate cells use the conventional plane families:
 

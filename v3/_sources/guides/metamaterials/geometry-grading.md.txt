@@ -8,7 +8,7 @@ A functionally graded metamaterial changes across a part instead of repeating on
 
 In OpenVCAD, an `Attribute` supplies the changing value. The same attribute system used for sampled object data can directly control lattice geometry and cell spacing. This guide begins with simple scalar controls, then introduces vectors and the coordinate choices that are specific to lattices.
 
-The complete walkthroughs are numbered `01` through `10` in `examples/metamaterials/geometry_grading/`.
+The complete walkthroughs are numbered `01` through `13` in `examples/metamaterials/geometry_grading/`.
 
 ## Compose scalar attributes
 
@@ -98,6 +98,25 @@ These values remain physical distances in millimetres. Only the value-producing 
 <div class="guide-figure-stack">
   <div class="guide-figure-cell"><a href="../images/mm_grade_radius.png" data-lightbox="metamaterial-attributes"><img src="../images/mm_grade_radius.png" alt="BCC lattice with beam radius increasing across the block"></a><div class="guide-figure-label">A scalar attribute turns one constant beam radius into a continuous taper.</div></div>
 </div>
+
+(grade-by-distance-to-a-body)=
+## Grade by distance to another body
+
+Many parts need a lattice that changes with distance from something else: thicker struts next to a mounting boss or a contact surface, thinner ones farther away. `mm.distance_field(body)` returns a native `pv.FloatAttribute` holding the distance in millimetres to any node -- a primitive, an imported `pv.Mesh`, a CAD part, or a whole tree. It is negative inside the body (pass `signed=False` for an unsigned distance), and it composes with the modifiers above:
+
+```python
+body = pv.Sphere(pv.Vec3(-14.0, 0.0, -14.0), 10.0)
+radius = mm.distance_field(body, bandwidth=40.0).map_range(0.0, 30.0, 1.3, 0.35).clamp(0.35, 1.3)
+root = mm.bcc(cell_map, beam_radius=radius)
+```
+
+[`32_distance_graded_struts.py`](../../../../examples/metamaterials/conformal_meshes/32_distance_graded_struts.py) grades a BCC lattice on a dome by distance from a sphere under one side of it:
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_distance_graded_struts.png" data-lightbox="distance-grading"><img src="../images/mm_distance_graded_struts.png" alt="BCC struts on a dome, thick on the side next to a sphere and thin on the far side"></a><div class="guide-figure-label">Strut radius graded by distance from a body</div></div>
+</div>
+
+The body is copied and prepared once with `voxel_size`, so your node is not changed, and every sample is evaluated in native code; there is no Python callback in the loop. `pv.FloatAttribute.distance_to(body, ...)` is the same field. The distance is exact for primitives and voxel-accurate for meshes within `bandwidth` of the body's bounding box; farther away a smaller, still increasing value is returned. Set `bandwidth` at least as large as the distances your grading uses.
 
 ## Compose vector attributes
 
@@ -198,6 +217,81 @@ The short expression turns `0, 1, 2, 3, ...` into `0, 1, 0, 1, ...`. Those two v
 </div>
 
 If a sample lands exactly between two cells, OpenVCAD counts it as part of the next cell. The map's final outer face remains part of the last cell. This keeps boundary results consistent: position inside a cell is `0` where a new cell begins and reaches `1` only at the map's final outer face.
+
+## Ramp between two values
+
+Many gradings simply go from one value to another across a band: thick near
+the rim, thin at the crown; one wall thickness per layer; stiffer near a
+mounting point. `mm.ramp` builds that band as a scalar from `0` to `1`, and
+`map_range` turns it into millimetres:
+
+```python
+height = mm.ramp(10.0, 22.0, axis="z")          # 0 at z = 10, 1 at z = 22
+beam_radius = height.map_range(0.0, 1.0, 0.75, 0.35)
+root = mm.octet(cell_map, beam_radius=beam_radius)
+```
+
+The ramp is clamped to `0` before the start and `1` after the end, so the
+radius stays between `0.75` and `0.35` mm everywhere, even far from the part.
+That matters more than it seems: a lattice also samples its controls slightly
+outside its visible surface. A few rules keep ramps predictable:
+
+- The ends may be given in either order; `mm.ramp(22.0, 10.0, axis="z")` runs
+  the other way.
+- Equal ends raise an error. A zero-width ramp is a step, so use a sharp region
+  (see the heterogeneous lattices guide) instead.
+- `smooth=True` (the default) eases in and out of the band. `smooth=False`
+  is linear.
+- `map_range` also accepts its input range in either order, and
+  `map_range(..., clamp=True)` keeps the result between the two output values.
+  Without `clamp`, values outside the input range continue in a straight line.
+
+[`11_ramp_by_height.py`](../../../../examples/metamaterials/geometry_grading/11_ramp_by_height.py)
+grades octet struts on a domed mesh patch by height.
+
+### Ramp by distance from a body
+
+Any scalar attribute can drive a ramp through `coordinates`. `mm.distance_field`
+gives the distance in millimetres to any node, which makes "thicker close to
+this part" a two-line control:
+
+```python
+boss = pv.Cylinder(pv.Vec3(12.0, 0.0, 0.0), 6.0, 12.0)
+near_boss = mm.ramp(0.0, 12.0, coordinates=mm.distance_field(boss, bandwidth=18.0))
+wall_thickness = near_boss.map_range(0.0, 1.0, 1.4, 0.5)
+```
+
+Choose `bandwidth` at least as large as the distances you ramp over.
+[`13_ramp_by_distance.py`](../../../../examples/metamaterials/geometry_grading/13_ramp_by_distance.py)
+thickens gyroid walls around a mounting boss in a plate.
+
+### Ramp in cell coordinates
+
+Pass a `CellMap` (or one of its vector attributes) as `coordinates` to ramp in
+cell units. `axis` then picks `u`, `v`, or `w`. With `cell_map.cell_index`,
+which is constant inside each cell, a linear ramp gives one value per cell
+layer:
+
+```python
+layer = mm.ramp(0.0, 2.0, axis="w", coordinates=cell_map.cell_index, smooth=False)
+wall_thickness = layer.map_range(0.0, 1.0, 1.1, 0.4)
+root = mm.gyroid(cell_map, wall_thickness=wall_thickness)
+```
+
+[`12_ramp_by_cell_index.py`](../../../../examples/metamaterials/geometry_grading/12_ramp_by_cell_index.py)
+uses this to give the three layers of a dome lattice three wall thicknesses.
+
+Cell coordinates exist only inside the map. Wherever something samples the
+ramp outside it (a mix of two lattices does, across its whole bounding box),
+the ramp returns its `outside` value, `0` unless you choose another. Use
+`outside=None` to get an error instead. For a field you build by hand, add
+the same protection with `field.with_fallback(0.0, cell_map)`.
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_grading_13_ramp_by_distance.png" data-lightbox="metamaterial-ramps"><img src="../images/mm_grading_13_ramp_by_distance.png" alt="Gyroid plate whose walls thicken around a cylindrical boss"></a><div class="guide-figure-label">Distance ramp: walls thicken around the boss</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_grading_11_ramp_by_height.png" data-lightbox="metamaterial-ramps"><img src="../images/mm_grading_11_ramp_by_height.png" alt="Octet lattice on a dome with thick struts at the rim and thin struts at the crown"></a><div class="guide-figure-label">Height ramp: thick struts at the rim, thin at the crown</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_grading_12_ramp_by_cell_index.png" data-lightbox="metamaterial-ramps"><img src="../images/mm_grading_12_ramp_by_cell_index.png" alt="Cutaway of a three-layer gyroid dome with a different wall thickness in each layer"></a><div class="guide-figure-label">Cell-index ramp: one wall thickness per layer (cutaway)</div></div>
+</div>
 
 ## Express a movement in cell units
 

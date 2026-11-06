@@ -13,7 +13,7 @@ Conceptually, each attribute implements a **sample** at ``(x, y, z)`` together w
 * **``Vec3Attribute``** — three components per point, with composition methods for directions and displacements.
 * **``Vec4Attribute``** — four components per point (typical use: linear RGBA in ``[0, 1]``).
 * **``VolumeFractionsAttribute``** — maps material IDs to fractions at each point; fractions should sum to 1 where mixtures apply.
-* Python function support is **Numba-only**. Use ``numba.cfunc`` with the signature ``float64(float64, float64, float64, float64)``.
+* Python function support is **Numba-only**. Use ``numba.cfunc`` with the signature ``float64(float64, float64, float64, float64)``. Field-valued parameters also accept a plain callable and compile it with numba for you (see ``as_float_attribute``).
 
 Attributes are only evaluated where the geometry exists (inside or on the surface), so expensive expressions are not run in empty space.
 
@@ -78,7 +78,7 @@ The patterns below mirror the getting-started guide (lessons 4–6); they show t
        ),
    )
 
-See :ref:`guide-getting-started` for full lessons, hierarchy/priority rules, and expression details. See also the Python functions guide at :doc:`/guides/numba-attributes`.
+See :ref:`guide-getting-started` for full lessons, hierarchy/priority rules, and expression details. See also the Python functions guide at :doc:`/guides/fields/numba-attributes`.
 
 .. currentmodule:: pyvcad
 
@@ -115,10 +115,236 @@ Core types
    :undoc-members:
    :special-members: __init__
 
+.. autoclass:: DistanceFieldAttribute
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: CoordinateFieldAttribute
+   :members:
+   :undoc-members:
+
 .. autoclass:: AttributeSamples
    :members:
    :undoc-members:
    :special-members: __init__
+
+Attributes attached to a mapped lattice (``MappedGraphLattice``, ``MappedFaceLattice``,
+``MappedImplicitLattice`` and ``MappedStructureCollection``) can be sampled in one of several
+coordinate frames. Their ``set_attribute`` methods take the name of an :class:`AttributeCoordinates`
+value as the ``coordinates`` string (default ``"node"``).
+
+.. autoclass:: AttributeCoordinates
+   :members:
+   :undoc-members:
+
+Fields: make, change, use
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+An attribute is a **field**: a value at every point. There is one field system, and every tool below
+is either a way to **make** a field, an operation that **changes** one into a new field, or a place
+that **uses** one. Each field source has one spelling, a method on ``FloatAttribute`` (one number per
+point) or ``Vec3Attribute`` (three numbers per point); the classes below are what those methods
+return.
+
+* **Make**: a constant, an expression string, a numba function, a volume
+  (``FloatAttribute(volume)``), simulation results (``UnstructuredFieldDataset``), and
+  ``FloatAttribute.distance_to(body)``, ``.surface_angle(body)``, ``.curvature(body)``,
+  ``.between(first, second)``, ``.noise(...)``, ``.from_points(points, values)``; ``Vec3Attribute.surface_normal(body)``,
+  ``.noise(...)``, ``.from_points(points, vectors)``.
+* **Change**: ``+ - * /``, ``clamp``, ``normalize``, ``map_range``, ``ease``, ``transfer``;
+  ``Vec3Attribute.dot``, ``.angle``, ``.magnitude``, ``.component``. Each returns a new field.
+* **Use**: grade material with ``node.set_attribute(name, field)`` or
+  ``VolumeFractionsAttribute([(field, material), ...])``; drive geometry by passing a field wherever
+  an operator takes a size (offset, shell thickness, blend radius, twist rate) or a vector
+  (``Warp``, ``Warp.displace``).
+* **Convert** (a separate, later stage): the converters further down work on *named* values after a
+  subtree has been sampled and its parts merged, inside an ``AttributeModifier`` node, for example
+  modulus to printer volume fractions. Shape fields with the operations above; use converters only
+  for that last step.
+
+Shaping fields
+^^^^^^^^^^^^^^
+
+Every ``FloatAttribute`` has methods that return a new, shaped field: arithmetic operators,
+``clamp``, ``normalize``, ``map_range``, and two shaping curves. ``ease`` clamps a field to
+``[0, 1]`` and passes it through an easing curve (``Easing``); ``transfer`` maps it through a curve
+drawn through control points, straight or smooth. The result is an ordinary attribute, so it can
+grade material (``VolumeFractionsAttribute`` takes fields directly) or drive geometry.
+
+.. code-block:: python
+
+   import pyvcad as pv
+
+   ramp = pv.FloatAttribute("z").normalize(0.0, 40.0)
+   soft = ramp.ease("smootherstep")
+   stiffness = ramp.transfer([(0.0, 1.0), (0.5, 2.0), (1.0, 8.0)], interpolation="smooth")
+   fractions = pv.VolumeFractionsAttribute([(soft, 1), (1.0 - soft, 2)])
+
+.. autoclass:: Easing
+   :members:
+   :undoc-members:
+
+Noise
+^^^^^
+
+Native noise fields for organic variation. ``FloatAttribute.noise(...)`` (a ``NoiseFloatAttribute``)
+is simplex (gradient) noise in ``[-1, 1]`` or a cellular distance (round cells, or the walls between
+them), with fractal octaves; ``Vec3Attribute.noise(...)`` (a ``NoiseVec3Attribute``) gives three
+unrelated components, for displacement. They are deterministic: the same seed gives the same field on
+every platform and in every thread. They know their range and slope, so they can drive geometry
+directly.
+
+.. code-block:: python
+
+   import pyvcad as pv
+
+   bumps = pv.FloatAttribute.noise("simplex", seed=2, frequency=0.08, octaves=4)
+   rough = pv.Offset(bumps.map_range(-1.0, 1.0, 0.0, 3.0), pv.Sphere(pv.Vec3(0, 0, 0), 20.0))
+   web = pv.FloatAttribute.noise("cellular_f2_minus_f1", frequency=0.12)
+
+.. autoclass:: NoiseType
+   :members:
+   :undoc-members:
+
+.. autoclass:: NoiseFloatAttribute
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: NoiseVec3Attribute
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+Fields from other bodies
+^^^^^^^^^^^^^^^^^^^^^^^^
+
+Fields measured from other geometry, next to ``FloatAttribute.distance_to(body)`` (a
+``DistanceFieldAttribute``):
+
+* ``Vec3Attribute.surface_normal(body)`` (a ``NormalFieldAttribute``): the body's unit surface
+  normal, extended through space (each point takes the normal of its closest surface point).
+  ``Vec3Attribute.angle(other)`` turns it into an angle field.
+* ``FloatAttribute.surface_angle(body, direction)``: the angle between the surface normal and a
+  direction, for example the build direction: 0 on skin facing it, 180 on overhangs facing away.
+* ``FloatAttribute.curvature(body, kind)`` (a ``CurvatureAttribute``): the surface's curvature in
+  1/mm: ``"mean"`` (positive on convex skin, negative in hollows), ``"gaussian"`` (negative on
+  saddles) or ``"maximum"`` (1 / the tightest bend radius; sharp edges read high, so it shows where a
+  fillet may be needed).
+* ``FloatAttribute.between(first, second)``: 0 at the first body, 1 at the second, graded by the
+  distances to both.
+* ``FloatAttribute.inverse_distance_weight(distances, index)``: the normalized inverse-distance weight
+  of one of several distance fields (seeds or bodies). ``between`` is its two-body case.
+
+.. code-block:: python
+
+   import pyvcad as pv
+
+   part = pv.Sphere(pv.Vec3(0, 0, 0), 20.0)
+   overhang = pv.FloatAttribute.surface_angle(part).normalize(110.0, 150.0).ease("smoothstep")
+   blend = pv.FloatAttribute.between(pv.Sphere(pv.Vec3(-30, 0, 0), 6.0), part, bandwidth=40.0)
+
+.. autoclass:: NormalFieldAttribute
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: CurvatureAttribute
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+Fields from scattered points
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Values known only at scattered points (measurements, sensor readings, simulation results exported
+as points) become a field defined everywhere with ``FloatAttribute.from_points(points, values)`` or
+``Vec3Attribute.from_points(points, vectors)``, from NumPy arrays. The points are indexed by a k-d
+tree. Three methods fill the space between them:
+
+* ``"nearest"``: the value of the nearest point.
+* ``"idw"`` (default): a weighted average of the nearest points; exact at the points, continuous,
+  and always within the range of the data, so it can drive geometry without hints.
+* ``"rbf"``: a smooth surface through every point. ``kernel="thin_plate_spline"`` is global (up to
+  2,500 points; fitting is a dense solve, about a second for 2,000 points, and each sample visits
+  every point). ``kernel="wendland"`` reaches only ``radius`` from each point, so it scales to many
+  points; away from the data it returns to the mean value. ``smoothing`` fits noisy data loosely.
+
+.. code-block:: python
+
+   import numpy as np
+   import pyvcad as pv
+
+   sensors = np.array([[0, 0, 0], [40, 0, 0], [0, 30, 0], [40, 30, 0], [20, 15, 5]], dtype=float)
+   readings = np.array([1.0, 3.0, 2.0, 5.0, 2.5])
+   smooth = pv.FloatAttribute.from_points(sensors, readings, method="rbf")
+   bounded = pv.FloatAttribute.from_points(sensors, readings, method="idw", neighbors=4)
+
+.. autoclass:: ScatteredFloatAttribute
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: ScatteredVec3Attribute
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+Field-valued geometry parameters
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Some operators take geometry parameters that may vary in space, such as an offset distance or a
+blend radius. Every such parameter accepts the same inputs: a ``float``, any ``FloatAttribute``,
+a ``numba.cfunc`` with signature ``float64(float64, float64, float64, float64)``, or a plain Python
+callable ``f(x, y, z, d)``, which is compiled with numba. Wrap a field in ``ScalarParameter`` only
+to attach hints: the range it stays in (used to size bounding boxes) and a bound on its slope.
+A field that knows its range or slope by construction reports it itself (``value_bounds()`` and
+``lipschitz_bound()``): constants, clamped, eased and transferred fields, noise, and arithmetic on
+such fields. Then no ``ScalarParameter`` is needed.
+
+.. code-block:: python
+
+   import pyvcad as pv
+
+   thickness = pv.FloatAttribute("1 + 0.05 * z")
+   parameter = pv.ScalarParameter(thickness, minimum=0.5, maximum=3.0, lipschitz=0.05)
+
+.. autoclass:: ScalarParameter
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autofunction:: as_float_attribute
+
+Vector-valued parameters, such as a ``Warp`` map or a displacement, take the same kinds of inputs in
+vector form: a ``Vec3Attribute``, a ``Vec3sVolume``, a ``Vec3`` or three numbers, three expression
+strings, three component callbacks, one ``numba.cfunc`` with signature
+``void(float64, float64, float64, float64, CPointer(float64))`` that writes the three components into
+its last argument, or a plain callable ``f(x, y, z, d)`` returning three numbers, compiled with numba.
+
+.. code-block:: python
+
+   import math
+   import pyvcad as pv
+
+   ripple = pv.as_vec3_attribute(lambda x, y, z, d: (x, y, z + 0.5 * math.sin(x)))
+   lean = pv.as_vec3_attribute(("x - 0.2 * z", "y", "z"))
+
+.. autofunction:: as_vec3_attribute
+
+Operators that grow material their child never had take a ``GrowthPolicy``, which decides the
+attributes of the grown material. Every node says how accurate its distance is, for its whole
+subtree, with ``DistanceAccuracy`` (``Node.distance_accuracy()``, with ``Node.lipschitz_bound()``
+for the factor of a bound).
+
+.. autoclass:: GrowthPolicy
+   :members:
+   :undoc-members:
+
+.. autoclass:: DistanceAccuracy
+   :members:
+   :undoc-members:
 
 Converters
 ^^^^^^^^^^
@@ -133,12 +359,21 @@ Converters
    :undoc-members:
    :special-members: __init__
 
+.. autoclass:: InterpolationMode
+   :members:
+   :undoc-members:
+
 .. autoclass:: LookupTableConverter
    :members:
    :undoc-members:
    :special-members: __init__
 
 .. autoclass:: ExpressionConverter
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: VolumeFractionsExpressionConverter
    :members:
    :undoc-members:
    :special-members: __init__
@@ -162,6 +397,73 @@ Converters
    :members:
    :undoc-members:
    :special-members: __init__
+
+.. autoclass:: RgbToRgbaConverter
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: RgbaToRgbConverter
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+Conflict resolvers
+------------------
+
+Where several children of a :class:`Binary` or :class:`NAry` node overlap and carry the same
+attribute, a resolver decides the combined value. Assign one per attribute name with
+``set_attribute_conflict_resolver(name, resolver)``. The resolvers live in the ``pyvcad.resolvers``
+submodule. See :doc:`/guides/fields/attribute-conflicts` for a walkthrough.
+
+.. code-block:: python
+
+   import pyvcad as pv
+
+   union = pv.Union([pv.Sphere(pv.Vec3(-3, 0, 0), 5), pv.Sphere(pv.Vec3(3, 0, 0), 5)])
+   union.set_attribute_conflict_resolver(pv.DefaultAttributes.MODULUS, pv.resolvers.MaxConflictResolver())
+
+.. currentmodule:: pyvcad.resolvers
+
+.. autoclass:: Vec4Mode
+   :members:
+   :undoc-members:
+
+.. autoclass:: AttributeConflictResolver
+   :members:
+   :undoc-members:
+
+.. autoclass:: AverageConflictResolver
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: SumConflictResolver
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: MinConflictResolver
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: MaxConflictResolver
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: CustomFloatConflictResolver
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: CustomVec4ConflictResolver
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. currentmodule:: pyvcad
 
 .. _pyvcad-default-attribute-names-and-types:
 
@@ -216,9 +518,17 @@ and your own code agree on which field is which. Each ``*_TYPE`` value is the
    :type: str
    :annotation: = 'color_rgb'
 
+.. py:data:: INTENSITY
+   :type: str
+   :annotation: = 'intensity'
+
 .. py:data:: DENSITY
    :type: str
    :annotation: = 'density'
+
+.. py:data:: POISSONS_RATIO
+   :type: str
+   :annotation: = 'poissons_ratio'
 
 .. py:data:: INFILL_DENSITY
    :type: str
@@ -236,15 +546,106 @@ and your own code agree on which field is which. Each ``*_TYPE`` value is the
    :type: str
    :annotation: = 'flow_rate'
 
+.. rubric:: Slicer setting names
+
+Per-region PrusaSlicer settings. ``pyvcad_compilers.PrusaSlicerProjectCompiler``
+reads these scalar fields and writes them as per-volume settings in the project file.
+
+.. py:data:: BRIDGE_SPEED
+   :type: str
+   :annotation: = 'bridge_speed'
+
+.. py:data:: EXTERNAL_PERIMETER_EXTRUSION_WIDTH
+   :type: str
+   :annotation: = 'external_perimeter_extrusion_width'
+
+.. py:data:: EXTERNAL_PERIMETER_SPEED
+   :type: str
+   :annotation: = 'external_perimeter_speed'
+
+.. py:data:: EXTRUSION_WIDTH
+   :type: str
+   :annotation: = 'extrusion_width'
+
+.. py:data:: GAP_FILL_SPEED
+   :type: str
+   :annotation: = 'gap_fill_speed'
+
+.. py:data:: INFILL_EXTRUSION_WIDTH
+   :type: str
+   :annotation: = 'infill_extrusion_width'
+
+.. py:data:: INFILL_SPEED
+   :type: str
+   :annotation: = 'infill_speed'
+
+.. py:data:: IRONING_FLOWRATE
+   :type: str
+   :annotation: = 'ironing_flowrate'
+
+.. py:data:: IRONING_SPEED
+   :type: str
+   :annotation: = 'ironing_speed'
+
+.. py:data:: LAYER_HEIGHT
+   :type: str
+   :annotation: = 'layer_height'
+
+.. py:data:: PERIMETER_EXTRUSION_WIDTH
+   :type: str
+   :annotation: = 'perimeter_extrusion_width'
+
+.. py:data:: PERIMETER_SPEED
+   :type: str
+   :annotation: = 'perimeter_speed'
+
+.. py:data:: PERIMETERS
+   :type: str
+   :annotation: = 'perimeters'
+
+.. py:data:: SMALL_PERIMETER_SPEED
+   :type: str
+   :annotation: = 'small_perimeter_speed'
+
+.. py:data:: SOLID_INFILL_EXTRUSION_WIDTH
+   :type: str
+   :annotation: = 'solid_infill_extrusion_width'
+
+.. py:data:: SOLID_INFILL_SPEED
+   :type: str
+   :annotation: = 'solid_infill_speed'
+
+.. py:data:: SUPPORT_MATERIAL_EXTRUSION_WIDTH
+   :type: str
+   :annotation: = 'support_material_extrusion_width'
+
+.. py:data:: TOP_INFILL_EXTRUSION_WIDTH
+   :type: str
+   :annotation: = 'top_infill_extrusion_width'
+
+.. py:data:: TOP_SOLID_INFILL_SPEED
+   :type: str
+   :annotation: = 'top_solid_infill_speed'
+
 .. rubric:: Return-type helpers
 
+.. py:data:: NONE_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.none
+
 .. py:data:: MODULUS_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
+.. py:data:: TOUGHNESS_TYPE
    :type: Attribute.ReturnType
    :annotation: = Attribute.ReturnType.dbl
 
 .. py:data:: TOUGHNSS_TYPE
    :type: Attribute.ReturnType
    :annotation: = Attribute.ReturnType.dbl
+
+   Deprecated misspelled alias of :data:`TOUGHNESS_TYPE`, kept so existing code still works.
 
 .. py:data:: ELONGATION_TYPE
    :type: Attribute.ReturnType
@@ -274,7 +675,15 @@ and your own code agree on which field is which. Each ``*_TYPE`` value is the
    :type: Attribute.ReturnType
    :annotation: = Attribute.ReturnType.vec3
 
+.. py:data:: INTENSITY_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
 .. py:data:: DENSITY_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
+.. py:data:: POISSONS_RATIO_TYPE
    :type: Attribute.ReturnType
    :annotation: = Attribute.ReturnType.dbl
 
@@ -291,6 +700,82 @@ and your own code agree on which field is which. Each ``*_TYPE`` value is the
    :annotation: = Attribute.ReturnType.dbl
 
 .. py:data:: FLOW_RATE_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
+.. py:data:: BRIDGE_SPEED_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
+.. py:data:: EXTERNAL_PERIMETER_EXTRUSION_WIDTH_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
+.. py:data:: EXTERNAL_PERIMETER_SPEED_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
+.. py:data:: EXTRUSION_WIDTH_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
+.. py:data:: GAP_FILL_SPEED_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
+.. py:data:: INFILL_EXTRUSION_WIDTH_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
+.. py:data:: INFILL_SPEED_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
+.. py:data:: IRONING_FLOWRATE_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
+.. py:data:: IRONING_SPEED_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
+.. py:data:: LAYER_HEIGHT_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
+.. py:data:: PERIMETER_EXTRUSION_WIDTH_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
+.. py:data:: PERIMETER_SPEED_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
+.. py:data:: PERIMETERS_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
+.. py:data:: SMALL_PERIMETER_SPEED_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
+.. py:data:: SOLID_INFILL_EXTRUSION_WIDTH_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
+.. py:data:: SOLID_INFILL_SPEED_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
+.. py:data:: SUPPORT_MATERIAL_EXTRUSION_WIDTH_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
+.. py:data:: TOP_INFILL_EXTRUSION_WIDTH_TYPE
+   :type: Attribute.ReturnType
+   :annotation: = Attribute.ReturnType.dbl
+
+.. py:data:: TOP_SOLID_INFILL_SPEED_TYPE
    :type: Attribute.ReturnType
    :annotation: = Attribute.ReturnType.dbl
 

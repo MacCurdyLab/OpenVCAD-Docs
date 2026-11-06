@@ -1,0 +1,30 @@
+``pyvcad_medical`` module
+=========================
+
+The ``pyvcad_medical`` package holds helpers for printing medical images
+(CT and MRI) with OpenVCAD: named color palettes, opacity curves, and
+Hounsfield-unit (HU) lookup tables that a ``pyvcad.LookupTableConverter`` turns
+into ``color_rgba``, plus a summary printer for a loaded DICOM series. Loading
+the DICOM data itself is part of ``pyvcad`` (:class:`pyvcad.DICOMLoader`, see
+:doc:`/python-api/pyvcad/volumes`).
+
+.. code-block:: python
+
+   import pyvcad as pv
+   import pyvcad_medical as med
+
+   loader = pv.DICOMLoader("path/to/dicom_series")
+   med.print_loaded_dicom_info(loader)
+
+   opacity = lambda t: med.re_range_opacity(t, med.sigmoid_opacity_base, 0.1, 0.9)
+   entries = med.create_linear_gradient_hu_map(
+       100, 1000, palette=med.get_color_palette("rainbow"), steps=30, opacity_function=opacity
+   )
+   to_color = pv.LookupTableConverter(
+       [pv.DefaultAttributes.HU], [pv.DefaultAttributes.COLOR_RGBA], entries, pv.InterpolationMode.STEP
+   )
+
+.. toctree::
+   :maxdepth: 1
+
+   api

@@ -9,8 +9,10 @@ Typical uses include mapping Hounsfield units or bone density to material proper
 
 * **Typed volumes** — ``FloatVolume``, ``Vec2sVolume``, ``Vec3sVolume``, and ``Vec4sVolume`` wrap scalar or vector VDB grids. Call ``sample(x, y, z)`` for a value, ``bounding_box()`` for world-space bounds, and ``clone()`` when you need a thread-safe copy for concurrent evaluation.
 * **VDB files** — Use ``pyvcad.vdb_loader`` (``load_float_volume``, ``load_vec3s_volume``, ``load_vec4s_volume``) to open a named grid from a ``.vdb`` file, optionally centered on the origin.
-* **DICOM stacks** — ``DICOMLoader`` reads a directory of slices, applies real-world spacing and rescale metadata where available, and builds a scalar ``FloatVolume`` (commonly HU). Call ``as_volume()`` when you are ready to sample.
+* **PNG images** — ``PNGLoader.FromImage`` extrudes one image and ``PNGLoader.FromStack`` stacks a directory of slices. Depending on the ``PNGColorMode``, ``as_rgb_volume()`` returns a ``Vec3sVolume`` or ``as_rgba_volume()`` a ``Vec4sVolume`` with channels in ``[0, 1]``.
+* **DICOM stacks** — ``DICOMLoader`` reads a directory of slices, applies real-world spacing and rescale metadata where available, and builds a scalar ``FloatVolume`` (commonly HU). Call ``as_volume()`` when you are ready to sample. Slices are stacked in Instance Number (0020,0013) order when every file carries a unique one, and otherwise in natural (digit-aware) filename order, so ``1/2/10``, ``001/002/010`` and ``IMG_0000_0001`` style exports all stack correctly. Pass ``slice_order`` to force a strategy (``pv.DICOMSliceOrder.INSTANCE_NUMBER``, ``SLICE_POSITION`` or ``FILENAME``) and ``filename_prefix`` to ignore a leading part of the filename whose digits should not take part in the ordering.
 * **Unstructured result fields** — ``UnstructuredFieldDataset`` copies TET4 point/connectivity arrays, stores named point- or cell-associated scalar and three-component vector results, and exposes them as ordinary ``FloatAttribute`` and ``Vec3Attribute`` objects. ``XDMFFieldLoader`` provides the same dataset from the supported XDMF 3/HDF5 subset.
+* **Scattered points** — Values at points with no connectivity (measurements, sensors, point exports) become a field with ``FloatAttribute.from_points`` or ``Vec3Attribute.from_points`` from NumPy arrays; see the scattered-point fields on the :doc:`attributes` page.
 * **Attributes** — A ``FloatVolume`` is a continuous field; pass it to ``FloatAttribute(volume)`` (or ``set_volume`` on an existing ``FloatAttribute``) and attach that attribute to geometry with ``set_attribute``, same as expression-driven fields. Evaluation runs where your solid exists, using the volume’s values inside the part.
 
 Examples
@@ -39,6 +41,29 @@ The patterns below mirror the getting-started discussion of **sampled** scalar f
    vol = loader.as_volume()
    solid = pv.RectPrism.FromMinAndMax(*vol.bounding_box())
    solid.set_attribute(pv.DefaultAttributes.HU, pv.FloatAttribute(vol))
+
+**DICOM series with an awkward naming convention**
+
+When an export writes filenames such as ``scan2024_001.dcm``, the constant ``2024`` would otherwise
+dominate a filename sort. Ignore it with ``filename_prefix``, and force the filename strategy when the
+files carry no usable Instance Number:
+
+.. code-block:: python
+
+   import pyvcad as pv
+
+   loader = pv.DICOMLoader(
+       "path/to/dicom_series",
+       slice_order=pv.DICOMSliceOrder.FILENAME,
+       filename_prefix="scan2024_",
+   )
+
+   # Inspect the resolved order without loading any pixel data.
+   files = pv.sort_dicom_slices(
+       pv.collect_dicom_files("path/to/dicom_series"),
+       pv.DICOMSliceOrder.FILENAME,
+       "scan2024_",
+   )
 
 Unstructured TET4 result fields
 --------------------------------
@@ -167,6 +192,22 @@ Loaders
    :undoc-members:
    :special-members: __init__
 
+.. autoclass:: DICOMSliceOrder
+   :members:
+   :undoc-members:
+
+.. autofunction:: collect_dicom_files
+
+.. autofunction:: sort_dicom_slices
+
+.. autoclass:: PNGLoader
+   :members:
+   :undoc-members:
+
+.. autoclass:: PNGColorMode
+   :members:
+   :undoc-members:
+
 .. autoclass:: TetrahedralDomain
    :members:
    :undoc-members:
@@ -208,4 +249,16 @@ Loaders
 ---------------------
 
 .. automodule:: pyvcad.vdb_loader
-   :members:
+   :no-members:
+
+.. currentmodule:: pyvcad.vdb_loader
+
+.. autofunction:: load_float_volume
+
+.. autofunction:: load_vec3s_volume
+
+.. autofunction:: load_vec4s_volume
+
+.. autofunction:: save_float_volume
+
+.. autofunction:: save_vec3s_volume

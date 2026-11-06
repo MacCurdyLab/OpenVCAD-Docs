@@ -1,12 +1,90 @@
 Analysis
 ========
 
-Inkjet support-volume helper :class:`pyvcad.SupportAnalyzer`. See the
-:doc:`/guides/support-analyzer` guide for a tutorial.
+Tools that measure a design: inkjet support volume (:class:`pyvcad.SupportAnalyzer`, see the
+:doc:`/guides/analysis/support-analyzer` guide), mass properties (:func:`pyvcad.mass_properties`), and
+wall thickness and pore size (:func:`pyvcad.local_thickness`, :func:`pyvcad.pore_size`), and
+connected pieces of material (:func:`pyvcad.analyze_connected_components`).
 
 .. currentmodule:: pyvcad
+
+Support volume
+--------------
 
 .. autoclass:: SupportAnalyzer
    :members:
    :undoc-members:
    :special-members: __init__
+
+Mass properties
+---------------
+
+:func:`mass_properties` integrates a design over a voxel grid with partial-volume weighting at
+the surface. It returns volume, surface area, centroid, mass, centre of mass, the inertia tensor
+and principal axes, per-material volumes, volume integrals of any scalar attribute, and an
+estimate of the sampling error. Units are mm, g/cm^3, g and g mm^2.
+
+Mass needs a density. It comes from a modelled ``density`` attribute, from volume fractions
+times each material's density (the optional ``"density"`` key of a material configuration,
+:meth:`MaterialDefs.density` and :meth:`MaterialDefs.set_density`), or from one uniform
+``density`` for a design that is only geometry. :class:`MassSource` picks one when a design
+offers several.
+
+.. autofunction:: mass_properties
+
+.. autoclass:: MassProperties
+   :members:
+   :undoc-members:
+
+.. autoclass:: MassSource
+   :members:
+   :undoc-members:
+
+.. autoclass:: AttributeIntegral
+   :members:
+   :undoc-members:
+
+Wall thickness and pore size
+----------------------------
+
+:func:`local_thickness` gives, at every point of the material, the diameter of the largest ball
+that fits there and contains the point; :func:`pore_size` does the same in the empty space. The
+result is a volume-backed :class:`FloatAttribute` (set it on the analysed node to colour, grade or
+drive geometry by thickness) plus a summary: the thinnest wall, a volume histogram and the
+connected regions thinner than a threshold. Sharp convex edges read small in the field, as every
+ball misses them, but only walls, struts, necks and gaps count as thin in the summary.
+
+.. autofunction:: local_thickness
+
+.. autofunction:: pore_size
+
+.. autoclass:: LocalThickness
+   :members:
+   :undoc-members:
+
+.. autoclass:: ThinRegion
+   :members:
+   :undoc-members:
+
+.. autoclass:: ThicknessPhase
+   :members:
+   :undoc-members:
+
+Connected components
+--------------------
+
+:func:`analyze_connected_components` samples a node on a voxel grid and counts the separate pieces
+of solid material, for example to find floating islands in a lattice before printing.
+:func:`label_connected_components` does the same for an occupancy array you already have.
+
+.. autofunction:: analyze_connected_components
+
+.. autofunction:: label_connected_components
+
+.. autoclass:: ConnectedComponentReport
+   :members:
+   :undoc-members:
+
+.. autoclass:: SolidComponent
+   :members:
+   :undoc-members:

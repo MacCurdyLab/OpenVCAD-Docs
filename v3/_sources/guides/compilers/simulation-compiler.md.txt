@@ -9,13 +9,14 @@ The **SimulationCompiler** turns an OpenVCAD design into a finite-element mesh p
 - **`GENERIC`** for a solver-neutral **`SimulationModel`** returned to Python or C++
 - **`FENICSX_XDMF`** for **`.xdmf` + `.h5`** mesh/data bundles
 - **`ABAQUS_INP`** for **`.inp`** mesh export
+- **`LSDYNA_K`** for a geometry-only **LS-DYNA keyword deck (`.k`)**
 
-This page is a hands-on guide to the exporter workflow. It is organized as four
+This page is a hands-on guide to the exporter workflow. It is organized as five
 lessons: a volume-fractions export, an export-only direct-mechanical beam, a
-self-contained OpenVCAD-to-FEniCSx beam solve, and generic in-memory model
-access. It covers tetrahedral **XDMF/H5**, hexahedral **Abaqus**, and both mesh
-families through Python objects. It also explains the two cell-data modes that
-matter most:
+self-contained OpenVCAD-to-FEniCSx beam solve, generic in-memory model
+access, and an LS-DYNA keyword export. It covers tetrahedral **XDMF/H5**,
+hexahedral **Abaqus**, tetrahedral **LS-DYNA**, and both mesh families through
+Python objects. It also explains the two cell-data modes that matter most:
 
 - **`volume_fractions`** exported as both a stochastic **`material_id`** field and raw **`volume_fraction_*`** fields
 - direct scalar fields such as **`modulus`**, **`poissons_ratio`**, and **`density`** exported directly per element
@@ -23,7 +24,7 @@ matter most:
 ## Prerequisites
 
 - OpenVCAD installed with **`pip install OpenVCAD`**
-- Familiarity with the [Getting Started guide](../getting-started.md) and the [Functional Grading Guide](../gradients.md)
+- Familiarity with the [Getting Started guide](../introduction/getting-started.md) and the [Functional Grading Guide](../fields/gradients.md)
 
 The guide example files live under **`examples/compilers/simulation/`**:
 
@@ -31,6 +32,7 @@ The guide example files live under **`examples/compilers/simulation/`**:
 - **`02_direct_mechanical_properties_export.py`**
 - **`03_fenicsx_load_exported_design.py`**
 - **`04_generic_in_memory_model.py`**
+- **`05_lsdyna_graded_gyroid.py`**
 
 ## What this compiler exports
 
@@ -41,7 +43,7 @@ The simulation compiler always starts from the same ingredients:
 3. one transport backend
 4. the attributes you want carried into the simulation mesh
 
-The backend selects transport, not meshing behavior. All three consume the
+The backend selects transport, not meshing behavior. All backends consume the
 same compact prepared model, so callers can switch destinations without
 changing geometry or cell-data semantics. `GENERIC` creates no files; after
 `compile()`, call `model()` to access topology, nodes, flattened zero-based
@@ -412,8 +414,8 @@ That means the beam is progressively easier to deform as you move toward the
 tip, so we should expect larger displacements there once the load is applied.
 
 The lesson-3 beam definition lives in
-**`examples/compilers/simulation/lesson3_beam_definition.py`** so the guide
-asset generator and the simulation example use the same geometry and attributes:
+**`examples/compilers/simulation/lesson3_beam_definition.py`** so the FEniCSx
+example in this lesson can import the same geometry and attributes:
 
 ```python
 def build_design():
@@ -611,21 +613,384 @@ owned by its compiler, so keep the compiler alive while using the returned
 Python object. `model()` is available only after compiling with `GENERIC`, and
 `written_files()` is empty for that backend.
 
+## Lesson 5: LS-DYNA keyword export
+
+The **`LSDYNA_K`** backend writes **`<file_prefix>.k`**, an LS-DYNA keyword deck
+of the meshed design. It is a **geometry-only** export: nodes, solid elements,
+one part per material, placeholder elastic materials, and part sets. It does
+not write loads, boundary conditions, contact, or control cards; you add those
+in your own LS-DYNA model.
+
+```{admonition} Verified with LS-DYNA R16.1, SMP double precision
+:class: note
+
+**Checked:**
+
+- **Input phase.** Decks of tetrahedra (ELFORM 13, 10, 4, 60) and hexahedra
+  (ELFORM 1, 2), with one and two materials, with and without void elements,
+  and in long format (automatic and forced), read and initialise without errors.
+- **What LS-DYNA reports matches the export.** Node and element counts, the
+  part, section and material IDs, ELFORM, the `*MAT_ELASTIC` values, and the
+  part masses agree with the exported element volumes to 1e-6.
+- **Short explicit run.** With a test-only main deck that fixes the bottom,
+  presses the top, and runs for 2 ms, the tetrahedral cube, the hexahedral
+  cubes and the graded gyroid block of this lesson terminate normally. The
+  energy ratio stays within 1.000 to 1.003, and hourglass energy on ELFORM 1
+  hexahedra stays below 0.01 % of the internal energy.
+
+**Not checked:** real material models, contact, impact or test validation,
+single-precision builds, and MPP builds.
+```
+
+The script **`examples/compilers/simulation/05_lsdyna_graded_gyroid.py`** builds
+a 20 x 20 x 10 mm gyroid block. Its walls thicken along **x**, and its material
+blends from a soft polymer at the bottom to a stiff polymer at the top. The
+script exports the block as linear tetrahedra:
+
+```python
+import os
+
+import pyvcad as pv
+import pyvcad_compilers as pvc
+import pyvcad_metamaterials as mm
+import pyvcad_rendering as viz
+
+script_dir = os.path.dirname(os.path.abspath(__file__))
+
+# The material table names the two parts. Its optional density (tonne/mm^3),
+# modulus (MPa) and poissons_ratio entries fill the placeholder *MAT_ELASTIC
+# cards; materials without them get the writer defaults.
+materials = pv.MaterialDefs(os.path.join(script_dir, "lsdyna_materials.json"))
+
+block_min = pv.Vec3(-10.0, -10.0, -5.0)
+block_max = pv.Vec3(10.0, 10.0, 5.0)
+cell_map = mm.rectangular_cell_map((block_min, block_max), cells=(2, 2, 1))
+
+# Gyroid walls grow from 0.8 mm at x = -10 to 2.0 mm at x = +10.
+wall_thickness = pv.FloatAttribute("0.8 + 1.2 * (x + 10.0) / 20.0")
+gyroid = mm.gyroid(cell_map, wall_thickness=wall_thickness)
+
+# Soft polymer at the bottom (z = -5), stiff polymer at the top (z = +5).
+gyroid.set_attribute(
+    pv.DefaultAttributes.VOLUME_FRACTIONS,
+    pv.VolumeFractionsAttribute(
+        [
+            ("1 - clamp((z + 5.0) / 10.0, 0, 1)", materials.id("soft_polymer")),
+            ("clamp((z + 5.0) / 10.0, 0, 1)", materials.id("stiff_polymer")),
+        ]
+    ),
+)
+root = gyroid
+
+tet_settings = pvc.SimulationTetFixedMeshSettings()
+tet_settings.facet_size = 0.6
+tet_settings.facet_distance = 0.1
+tet_settings.cell_size = 0.6
+
+settings = pvc.SimulationCompilerSettings()
+settings.output_directory = os.path.join(script_dir, "output")
+settings.file_prefix = "graded_gyroid"
+settings.backend = pvc.SimulationBackend.LSDYNA_K
+settings.mesh_kind = pvc.SimulationMeshKind.TET
+settings.tet_fixed_settings = tet_settings
+settings.random_seed = 7
+settings.material_defs = materials
+
+# LS-DYNA options: tets are written as degenerate 8-node solids. ELFORM 13 is
+# the default, but the two polymers have different bulk moduli and share
+# nodes, which ELFORM 13 does not allow, so this deck gets
+# mixed_material_tet_element_formulation (ELFORM 10). Void elements are
+# dropped by default.
+settings.lsdyna_settings.title = "OpenVCAD graded gyroid block"
+settings.lsdyna_settings.tet_element_formulation = 13
+settings.lsdyna_settings.mixed_material_tet_element_formulation = 10
+
+compiler = pvc.SimulationCompiler(root, settings)
+compiler.compile()
+print("LS-DYNA deck:", compiler.written_files())
+print("Nodes:", compiler.node_count(), "Elements:", compiler.element_count())
+
+viz.Render(root, materials)
+```
+
+From the repository root, with the project virtual environment activated:
+
+```bash
+python examples/compilers/simulation/05_lsdyna_graded_gyroid.py
+```
+
+It writes **`examples/compilers/simulation/output/graded_gyroid.k`**, with
+about 39,000 tetrahedra in two parts. `compiler.element_count()` counts the
+whole mesh; the deck header states how many elements were written and how many
+void elements were left out.
+
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">OpenVCAD preview — volume_fractions</p>
+<img src="../images/compilers_simulation_lsdyna_gyroid_volume_fractions.png" alt="Gyroid block whose walls thicken along x, blending from an orange soft polymer at the bottom to a blue stiff polymer at the top" width="100%">
+</div>
+</div>
+
+### What the deck contains
+
+| Keyword | Content |
+| ------- | ------- |
+| **`*KEYWORD`**, **`*TITLE`** | First card, then `lsdyna_settings.title`. A comment header states the units, the placeholder materials, the element formulation, the counts, and what was checked in LS-DYNA. |
+| **`*PART`** | One per material. The heading is the material name. |
+| **`*SECTION_SOLID`** | One per part, with the element formulation (`ELFORM`). |
+| **`*MAT_ELASTIC`** | One placeholder elastic material per part (density, Young's modulus, Poisson's ratio). |
+| **`*SET_PART_LIST_TITLE`** | One set per part, plus one set (`all_parts`) that holds every part, which is handy for single-surface contact. |
+| **`*NODE`**, **`*ELEMENT_SOLID`** | The mesh. |
+| **`*END`** | End of input. |
+
+Part **i** uses section **i**, material **i**, and part set **i**, so the IDs
+always match. The set with every part has the next ID after the last part.
+
+### Elements and formulations
+
+**Tetrahedra** (`TET`) are written as degenerate 8-node solids: nodes 5 to 8
+repeat node 4, which is how `*ELEMENT_SOLID` takes 4-node tetrahedra.
+
+- **`ELFORM 13`** (default, `tet_element_formulation`) is the 1-point
+  tetrahedron with nodal pressure averaging. It resists volumetric locking, so
+  it suits soft, nearly incompressible polymers.
+- ELFORM 13 averages pressures over all tetrahedra around a node. The LS-DYNA
+  Keyword Manual (Vol. I, `*SECTION_SOLID`, remark 12) states that ELFORM 13
+  parts with **different bulk moduli must not share nodes**, and LS-DYNA prints
+  warning 30490 for such decks. In a check with LS-DYNA R16.1, the graded
+  gyroid block above developed negative internal energy within 0.2 ms with
+  ELFORM 13, and its time step collapsed near 0.8 ms. With equal bulk moduli,
+  or with ELFORM 10, it ran stably.
+  The exporter therefore writes **`mixed_material_tet_element_formulation`**
+  (default **10**, the plain 1-point tetrahedron, which LS-DYNA's warning
+  suggests) when the parts' bulk moduli `E / (3 (1 - 2 nu))` differ and the
+  parts share nodes. The deck header says so. Decks with one material, or with
+  equal bulk moduli (for example the placeholder defaults), keep ELFORM 13.
+- ELFORM 10 has no pressure averaging, so it can lock with nearly
+  incompressible materials. ELFORM **60** averages too and, unlike 13, allows
+  shared nodes between different bulk moduli (remark 15; explicit analysis,
+  still under development for implicit). In the same gyroid press, ELFORM 60
+  also ran stably. It needed about half the internal energy of ELFORM 10 for
+  the same top displacement, a sign that ELFORM 10 locks with the
+  `poissons_ratio = 0.45` soft polymer, and it took about three times as long.
+  For explicit runs of nearly incompressible graded materials, set
+  `mixed_material_tet_element_formulation = 60`.
+- Any other `tet_element_formulation` is written as given. ELFORM **4**,
+  **10**, **13** and **60** were checked with LS-DYNA R16.1.
+- ELFORM **16** and **17** are 10-node tetrahedra (remark 11). LS-DYNA stops
+  with error 21299 when they are used on 4-node tetrahedra, so the exporter
+  raises an error instead.
+
+**Hexahedra** (`HEX`) are written natively (`hex_element_formulation`):
+
+- **`ELFORM 1`** (default) is the constant-stress solid, with one integration
+  point. Watch hourglass energy in long or large-deformation runs.
+- **`ELFORM 2`** is the fully integrated solid.
+- Tetrahedron formulations (4, 10, 13, 60) and 20-node or higher-order
+  formulations (23 to 29) raise an error, because LS-DYNA cannot use them on
+  8-node hexahedra.
+
+### Units
+
+Keyword decks store no units; they only have to be consistent. The exporter
+uses this set, which is stated in every deck header:
+
+| Quantity | Unit |
+| -------- | ---- |
+| Length | mm |
+| Time | s |
+| Mass | tonne (1000 kg) |
+| Force | N |
+| Stress, Young's modulus | MPa (N/mm²) |
+| Density | tonne/mm³ (`1.2e-9` is 1200 kg/m³) |
+| Energy | mJ (N·mm) |
+| Velocity | mm/s |
+
+OpenVCAD node coordinates are in millimetres. If your main deck uses another
+consistent set, convert the material values, or scale the mesh, to match.
+
+### Placeholder materials and how to replace them
+
+The `*MAT_ELASTIC` cards are placeholders that keep the deck complete and let
+it initialise. For each material, the values come from its entry in
+`material_defs` when the entry has `density` (tonne/mm³), `modulus` (MPa), or
+`poissons_ratio` keys. Missing values use `default_density` (1e-9),
+`default_modulus` (100) and `default_poissons_ratio` (0.3). The example's
+material table looks like this:
+
+```json
+{
+    "materials": [
+        {"name": "soft_polymer", "r": 235, "g": 120, "b": 40, "a": 255,
+         "density": 1.1e-9, "modulus": 30.0, "poissons_ratio": 0.45},
+        {"name": "stiff_polymer", "r": 40, "g": 110, "b": 210, "a": 255,
+         "density": 1.2e-9, "modulus": 1500.0, "poissons_ratio": 0.35}
+    ]
+}
+```
+
+To use real materials, replace each `*MAT_ELASTIC` card with your own material
+card (for example a foam or hyperelastic model) and **keep the same material
+ID**, which is the part ID. Every `*PART` already points at its material and
+section by that ID. If you change materials in your own deck rather than in
+the material table, check the ELFORM choice above: it was made from the
+placeholder bulk moduli.
+
+Per-element `direct_attributes` are not written to the deck. LS-DYNA assigns
+materials per part, so graded properties need your own binning into parts.
+
+### Void elements and IDs
+
+**Void elements.** Elements whose sampled material is void (material ID 0,
+including boundary elements whose centroid sample has no material) are left
+out by default, together with nodes that only they use. Set
+`include_void_elements = True` to keep them as their own part (named `void`,
+with the placeholder material). The example drops 32 such boundary elements.
+Both variants were checked with LS-DYNA R16.1.
+
+**IDs.** Node IDs are the node index + 1 and element IDs are the element index
++ 1, so they match the `GENERIC` model and the Abaqus export. Dropped void
+elements leave gaps, which LS-DYNA allows. `node_id_offset`,
+`element_id_offset`, and `part_id_offset` shift the IDs so the deck can be
+included in a larger model without clashes.
+
+**Large IDs.** Standard keyword fields hold node and element IDs up to
+99,999,999. If any ID is larger, the whole deck switches to long format
+(`*KEYWORD LONG=Y`, 20-column fields). Set `long_format = True` to force it.
+IDs above 2,147,483,647 are rejected with an error.
+
+### Limits
+
+- Linear elements only: 4-node tetrahedra (as degenerate solids) and 8-node
+  hexahedra. 10-node formulations are rejected.
+- One part per material, and at most 255 materials. Grading inside a material
+  is not carried into the deck.
+- Placeholder `*MAT_ELASTIC` only. No loads, boundary conditions, contact,
+  controls, or output requests.
+- Tetrahedral meshes can contain thin elements that set the explicit time
+  step. The example block's smallest step is about 3e-8 s with the placeholder
+  stiff polymer. LS-DYNA lists the smallest steps under
+  `100 smallest timesteps` in `d3hsp`. Coarser meshing, or mass scaling in
+  your own main deck, raises it.
+
+### Using the deck in an LS-DYNA model
+
+Keep the exported file unchanged and include it from your own main deck, which
+adds the analysis setup:
+
+```text
+*KEYWORD
+*TITLE
+Drop test using the OpenVCAD gyroid block
+*INCLUDE
+graded_gyroid.k
+$ ... your *CONTROL, *BOUNDARY, *LOAD, *CONTACT and output cards ...
+*END
+```
+
+The exported file ends with `*END`, which ends an included file.
+
+### Checking a deck in LS-DYNA
+
+The exported deck runs on its own as an input check. Without
+`*CONTROL_TERMINATION`, LS-DYNA reads it, initialises every element, writes
+the model summary, and stops at time 0:
+
+```bash
+python examples/compilers/simulation/05_lsdyna_graded_gyroid.py
+cd examples/compilers/simulation/output
+<path to ls-dyna> i=graded_gyroid.k ncpu=1 memory=200m
+```
+
+Then look at the files LS-DYNA writes next to the deck:
+
+- **`messag`** and **`d3hsp`** end with `N o r m a l    t e r m i n a t i o n`,
+  and `messag` has no `*** Error` lines. Warning 20006 (the d3plot output
+  interval was reset) is expected for a geometry-only deck. Warning 30490
+  appears only when ELFORM 13 parts share nodes.
+- **`d3hsp`** lists `number of nodal+scalar points` and
+  `number of solid elements`, which match `Nodes:` and `Elements:` in the deck
+  header.
+- Each part block in **`d3hsp`** shows `part id`, `section id` and
+  `material id` (all equal), `material type 1` (`*MAT_ELASTIC`), and
+  `solid formulation` (the ELFORM).
+- **`summary of mass`** in **`d3hsp`** gives the mass of each part, which is
+  the part volume times its density.
+
+An inverted or zero-volume element stops LS-DYNA in this input phase, so a
+normal termination also confirms the element orientation.
+
+OpenVCAD includes this check as an opt-in test. It exports small cubes and the
+gyroid block, runs each deck alone, compares what LS-DYNA reports with the
+export, and runs the short explicit press through a test-only main deck that
+`*INCLUDE`s the export. It is skipped unless `OPENVCAD_LSDYNA_EXE` points at an
+LS-DYNA executable. Licensing comes from your usual LS-DYNA environment
+variables.
+
+```bash
+OPENVCAD_LSDYNA_EXE=/path/to/ls-dyna python -m pytest compilers/tests/python/test_simulation_lsdyna_solver.py -v
+```
+
+### Checking a deck without LS-DYNA
+
+The Ansys PyDyna package reads keyword decks without a license:
+
+```bash
+pip install ansys-dyna-core
+```
+
+```python
+from ansys.dyna.core import Deck
+
+deck = Deck()
+with open("examples/compilers/simulation/output/graded_gyroid.k") as handle:
+    result = deck.loads(handle.read())
+
+print(result.get_summary() or "every keyword was recognised")
+for keyword in deck.keywords:
+    print(type(keyword).__name__)
+```
+
+PyDyna 0.12.1 reads every keyword this backend writes in standard format. For
+long-format decks it reads all of them except the `*ELEMENT_SOLID` fields,
+which it misreads (it cannot read its own long-format solids either). LS-DYNA
+itself reads them correctly.
+
+### LS-DYNA settings
+
+`settings.lsdyna_settings` is a **`SimulationLsDynaSettings`** object:
+
+| Setting | Default | Meaning |
+| ------- | ------- | ------- |
+| **`tet_element_formulation`** | `13` | `*SECTION_SOLID` `ELFORM` for tetrahedral meshes. |
+| **`mixed_material_tet_element_formulation`** | `10` | `ELFORM` used instead of 13 when parts with different bulk moduli share nodes. Set it to `13` to keep 13. |
+| **`hex_element_formulation`** | `1` | `*SECTION_SOLID` `ELFORM` for hexahedral meshes. |
+| **`include_void_elements`** | `False` | Keep void elements as their own part. |
+| **`long_format`** | `False` | Force `*KEYWORD LONG=Y`; chosen automatically for IDs above 99,999,999. |
+| **`title`** | `"OpenVCAD simulation export"` | `*TITLE` text (up to 80 characters). |
+| **`default_density`** | `1e-9` | Placeholder density in tonne/mm³. |
+| **`default_modulus`** | `100.0` | Placeholder Young's modulus in MPa. |
+| **`default_poissons_ratio`** | `0.3` | Placeholder Poisson's ratio. |
+| **`node_id_offset`** | `0` | Added to every node ID. |
+| **`element_id_offset`** | `0` | Added to every element ID. |
+| **`part_id_offset`** | `0` | Added to every part, section, material, and part-set ID. |
+
 ## Practical settings reference
 
 | Setting | Meaning |
 | ------- | ------- |
 | **`output_directory`** | Folder used by file backends; ignored by **`GENERIC`**. |
 | **`file_prefix`** | Prefix used by file backends; ignored by **`GENERIC`**. |
-| **`backend`** | Transport: **`GENERIC`**, **`FENICSX_XDMF`**, or **`ABAQUS_INP`**. |
+| **`backend`** | Transport: **`GENERIC`**, **`FENICSX_XDMF`**, **`ABAQUS_INP`**, or **`LSDYNA_K`**. |
 | **`mesh_kind`** | Element family: **`HEX`** or **`TET`**. |
 | **`hex_settings.voxel_size`** | Regular hexahedral cell size in millimeters. |
 | **`tet_fixed_settings.facet_size`** | Surface triangle size target for fixed tet meshing. |
 | **`tet_fixed_settings.facet_distance`** | Surface approximation tolerance for fixed tet meshing. |
 | **`tet_fixed_settings.cell_size`** | Interior tetrahedral size target. |
 | **`random_seed`** | Seed used for deterministic tet generation and stochastic material assignment. |
-| **`material_defs`** | Base material definitions used when exporting **`volume_fractions`**. |
+| **`material_defs`** | Base material definitions used when exporting **`volume_fractions`**. **`LSDYNA_K`** also reads optional `density`, `modulus`, and `poissons_ratio` entries. |
 | **`direct_attributes`** | List of scalar attributes to export directly as cell data. |
+| **`lsdyna_settings`** | **`SimulationLsDynaSettings`** for the **`LSDYNA_K`** backend (see Lesson 5). |
 
 ## Further examples
 
@@ -633,3 +998,4 @@ Python object. `model()` is available only after compiling with `GENERIC`, and
 - **`examples/compilers/simulation/02_direct_mechanical_properties_export.py`** — export-only direct scalar mechanical fields with **`poissons_ratio`** varying through **z**
 - **`examples/compilers/simulation/03_fenicsx_load_exported_design.py`** — self-contained DOLFINx/FEniCSx cantilever solve with a stiff-to-soft modulus gradient along **x**
 - **`examples/compilers/simulation/04_generic_in_memory_model.py`** — direct Python access to compact solver-neutral `HEX8` and `TET4` models
+- **`examples/compilers/simulation/05_lsdyna_graded_gyroid.py`** — geometry-only LS-DYNA keyword deck of a graded two-material gyroid block

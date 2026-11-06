@@ -3,6 +3,8 @@ Tree — leaf nodes
 
 **Leaves** are terminal :class:`Node` subclasses: they do not wrap other nodes as children. They are where concrete implicit geometry and sources live—analytic primitives, meshes, CAD imports, lattices, extruded profiles, and signed-distance fields.
 
+The enums documented next to a node configure that node. Classes that are not nodes themselves, such as the beams and balls of a :class:`BeamLattice`, the 3MF import helpers, and the component and provenance records of the mapped and stochastic lattices, are grouped at the end under `Supporting types (not nodes)`_.
+
 Nodes that combine or transform subtrees are **composition** operators; see :doc:`composition`.
 
 .. currentmodule:: pyvcad
@@ -37,6 +39,10 @@ Nodes that combine or transform subtrees are **composition** operators; see :doc
    :undoc-members:
    :special-members: __init__
 
+.. autoclass:: CapMode
+   :members:
+   :undoc-members:
+
 .. autoclass:: CAD
    :members:
    :undoc-members:
@@ -62,35 +68,27 @@ Nodes that combine or transform subtrees are **composition** operators; see :doc
    :undoc-members:
    :special-members: __init__
 
+.. autoclass:: LatticeType
+   :members:
+   :undoc-members:
+
 .. autoclass:: BeamLattice
    :members:
    :undoc-members:
    :special-members: __init__
 
-.. autoclass:: Beam
+.. autoclass:: BallMode
    :members:
    :undoc-members:
-   :special-members: __init__
-
-.. autoclass:: Ball
-   :members:
-   :undoc-members:
-   :special-members: __init__
 
 .. autoclass:: ThreeMFBeamLattice
    :members:
    :undoc-members:
    :special-members: __init__
 
-.. autoclass:: ThreeMFBeamLatticeObject
+.. autoclass:: ClipMode
    :members:
    :undoc-members:
-
-.. autoclass:: ThreeMFBeamLatticeScene
-   :members:
-   :undoc-members:
-
-.. autofunction:: read_3mf_beam_lattice
 
 .. autoclass:: MappedImplicitLattice
    :members:
@@ -102,13 +100,37 @@ Nodes that combine or transform subtrees are **composition** operators; see :doc
    :undoc-members:
    :special-members: __init__
 
-.. autoclass:: MappedGraphSegmentInfo
+.. autoclass:: MappedFaceLattice
    :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: MappedRim
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: CellMapDomain
+   :members:
+   :undoc-members:
+   :special-members: __init__
 
 .. autoclass:: Text
    :members:
    :undoc-members:
    :special-members: __init__
+
+.. autoclass:: FontAspect
+   :members:
+   :undoc-members:
+
+.. autoclass:: HorizontalAlignment
+   :members:
+   :undoc-members:
+
+.. autoclass:: VerticalAlignment
+   :members:
+   :undoc-members:
 
 .. autoclass:: SignedDistanceField
    :members:
@@ -124,3 +146,165 @@ Nodes that combine or transform subtrees are **composition** operators; see :doc
    :members:
    :undoc-members:
    :special-members: __init__
+
+.. autoclass:: PolygonRevolve
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+Stochastic lattices
+-------------------
+
+Non-periodic Delaunay or Voronoi lattices built from world-space seed points and confined to a host
+:class:`Node`. They take the host as an input but, like the other lattices, are terminal geometry.
+See :func:`sample_poisson_seeds`, :func:`blend_seed_sets` and :func:`jitter_seed_sites` on the
+:doc:`geometry` page for making seed sets.
+
+.. autoclass:: StochasticGraphLattice
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: StochasticFaceLattice
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: StochasticGraphExtraction
+   :members:
+   :undoc-members:
+
+.. autoclass:: StochasticFaceExtraction
+   :members:
+   :undoc-members:
+
+.. autoclass:: StochasticBoundaryMode
+   :members:
+   :undoc-members:
+
+Curves and profiles
+-------------------
+
+Solids built from :doc:`curves and profiles <curves>`.
+
+.. autoclass:: Tube
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: Extrude
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: Revolve
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: Sweep
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: Loft
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+Supporting types (not nodes)
+----------------------------
+
+These classes describe the parts of a lattice or its provenance. They are not :class:`Node`
+subclasses: they are passed to, or returned by, the leaf nodes above.
+
+**3MF beam lattices**
+
+.. autoclass:: Beam
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: Ball
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: ThreeMFBeamLatticeObject
+   :members:
+   :undoc-members:
+
+.. autoclass:: ThreeMFBeamLatticeScene
+   :members:
+   :undoc-members:
+
+.. autofunction:: read_3mf_beam_lattice
+
+**Mapped lattice components and provenance**
+
+.. autoclass:: MappedGraphSegmentInfo
+   :members:
+
+.. autoclass:: MappedGraphComponent
+   :members:
+   :undoc-members:
+
+.. autoclass:: MappedGraphComponents
+   :members:
+   :undoc-members:
+
+.. autoclass:: MappedImplicitShell
+   :members:
+   :undoc-members:
+
+.. autoclass:: MappedFaceComponent
+   :members:
+   :undoc-members:
+
+.. autoclass:: MappedFaceComponents
+   :members:
+   :undoc-members:
+
+.. autoclass:: MappedFaceInfo
+   :members:
+   :undoc-members:
+
+.. autoclass:: MappedFacePatch
+   :members:
+   :undoc-members:
+
+.. autoclass:: MappedFaceVertex
+   :members:
+   :undoc-members:
+
+**Stochastic lattice products**
+
+Inspection records returned by :class:`StochasticGraphLattice` and :class:`StochasticFaceLattice`.
+
+.. autoclass:: StochasticEdgeProduct
+   :members:
+   :undoc-members:
+
+.. autoclass:: StochasticBoundaryCapProduct
+   :members:
+   :undoc-members:
+
+.. autoclass:: StochasticFaceProduct
+   :members:
+   :undoc-members:
+
+.. autoclass:: StochasticBoundaryContactProduct
+   :members:
+   :undoc-members:
+
+.. autoclass:: StochasticBoundarySeamProduct
+   :members:
+   :undoc-members:
+
+.. autoclass:: DelaunayCellProduct
+   :members:
+   :undoc-members:
+
+.. autoclass:: VoronoiCellProduct
+   :members:
+   :undoc-members:

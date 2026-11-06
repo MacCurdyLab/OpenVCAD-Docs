@@ -1,0 +1,1594 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Grading, mixing, stochastic lattices, and transitions &#8212; OpenVCAD 3.2 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_theme.css?v=8cc8a5a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_branding.css?v=c43e02c9" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="../../_static/documentation_options.js?v=828ea960"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'python-api/pyvcad_metamaterials/grading';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../../_static/openvcad_lightbox.js?v=e11fca97"></script>
+    <script src="../../_static/openvcad_comparison.js?v=0e3a0b21"></script>
+    <script src="../../_static/openvcad_carousel.js?v=954187e7"></script>
+    <link rel="icon" href="../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Geometric properties" href="properties.html" />
+    <link rel="prev" title="TPMS, strut, and face lattices" href="structures.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="OpenVCAD - Home"/>
+    <img src="../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="OpenVCAD - Home"/>
+  
+  
+    <p class="title logo__title">
+      <span class="logo__title-full">OpenVCAD Documentation</span>
+      <span class="logo__title-compact" aria-hidden="true">Documentation</span>
+      <span class="logo__title-short" aria-hidden="true">Docs</span>
+    </p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+
+
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item dropdown">
+      <button class="btn dropdown-toggle nav-link" type="button" id="pst-nav-dd-guides" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Guides
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-guides">
+        <li><a class="dropdown-item" href="../../guides/index.html">All guides</a></li>
+        <li><hr class="dropdown-divider"></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/introduction/index.html">Introduction</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/modeling/index.html">Shape modeling</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/fields/index.html">Field-driven design</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/imports/index.html">Imported geometry</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/metamaterials/index.html">Metamaterials</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/analysis/index.html">Analysis</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/compilers/index.html">Compilers and export</a></li>
+        
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../gallery.html">Gallery</a>
+    </li>
+    <li class="nav-item dropdown active">
+      <button class="btn dropdown-toggle nav-link active" type="button" id="pst-nav-dd-py" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Python API
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-py">
+        <li><a class="dropdown-item" href="../pyvcad/index.html">pyvcad module</a></li>
+        <li><a class="dropdown-item" href="../pyvcad_compilers/index.html">pyvcad_compilers module</a></li>
+        <li><a class="dropdown-item" href="../pyvcad_rendering/index.html">pyvcad_rendering module</a></li>
+        <li><a class="dropdown-item" href="../pyvcad_attribute_resolver/index.html">pyvcad_attribute_resolver module</a></li>
+        <li><a class="dropdown-item" href="index.html">pyvcad_metamaterials module</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../cpp-api/index.html">C++ API</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../papers.html">Papers</a>
+    </li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="openvcad-mobile-nav" aria-label="Site navigation">
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item"><a class="nav-link" href="../../index.html">Home</a></li>
+    <li class="nav-item">
+      <details class="openvcad-mobile-nav__group">
+        <summary>Guides</summary>
+        <ul>
+          <li><a class="nav-link" href="../../guides/index.html">All guides</a></li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Introduction</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/introduction/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../install.html">Installation</a></li>
+                
+                <li><a class="nav-link" href="../../guides/introduction/theory-and-motivation.html">Theory and Motivation</a></li>
+                
+                <li><a class="nav-link" href="../../guides/introduction/getting-started.html">Getting Started with OpenVCAD</a></li>
+                
+                <li><a class="nav-link" href="../../guides/introduction/moving-from-v2-to-v3.html">Moving from Version 2 to 3</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Shape modeling</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/modeling/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/primitives.html">Primitive catalog</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/offsets-blends-arrays.html">Offsets, blends and arrays</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/curves-profiles-sweeps.html">Curves, profiles and sweeps</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/sketching.html">Sketching and extruding</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/deforming-space.html">Deforming space</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/surface-relief.html">Physical surface relief</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Field-driven design</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/fields/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/gradients.html">Functional grading</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/fields.html">Fields</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/math-expressions.html">Math expressions</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/numba-attributes.html">Python functions for attributes</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/attribute-conflicts.html">Attribute conflict resolution</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/volumes.html">Working with volumes</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/simulation-driven-design.html">Simulation-driven design</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Imported geometry</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/imports/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/imports/cadquery.html">CAD with CadQuery</a></li>
+                
+                <li><a class="nav-link" href="../../guides/imports/textured-mesh.html">Importing textured solids</a></li>
+                
+                <li><a class="nav-link" href="../../guides/imports/3mf-beam-lattice.html">Importing 3MF beam lattices</a></li>
+                
+                <li><a class="nav-link" href="../../guides/imports/mesh-selection.html">Selecting triangle-mesh patches</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Metamaterials</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/concepts.html">Concepts and representation</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/catalog.html">TPMS and lattice catalog</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/custom-unit-cells.html">Custom unit cells</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/stochastic-lattices.html">Stochastic lattices</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/geometry-grading.html">Functionally graded geometry</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/attribute-modeling.html">Attribute modeling</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/cylindrical-spherical-cell-maps.html">Cylindrical and spherical cell maps</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/conformal-cad.html">Conformal mapping CAD surfaces</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/conformal-meshes.html">Conformal mapping triangle meshes</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/properties.html">Geometric characterization</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Analysis</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/analysis/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/analysis/analysing-designs.html">Analysing designs</a></li>
+                
+                <li><a class="nav-link" href="../../guides/analysis/support-analyzer.html">Inkjet support volumes</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Compilers and export</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/compilers/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/material-inkjet.html">Material Inkjet</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/multi-material-vat.html">Multi-material VAT</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/color-inkjet.html">Color Inkjet</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/vat-photo.html">VAT Photo</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/slicer-project.html">Slicer Project</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/simulation-compiler.html">Simulation Compiler</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/attribute-resolver.html">Attribute modifier and resolver</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/meshing-and-export.html">Meshing and export</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/custom-python-compiler.html">Creating a compiler in Python</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+        </ul>
+      </details>
+    </li>
+    <li class="nav-item"><a class="nav-link" href="../../gallery.html">Gallery</a></li>
+    <li class="nav-item"><a class="nav-link active" href="../index.html">Python API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../cpp-api/index.html">C++ API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../papers.html">Papers</a></li>
+  </ul>
+</nav>
+</div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+
+  
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../pyvcad/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad</span></code> module</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/utilities.html">Utilities</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/geometry.html">Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/curves.html">Curves and Profiles</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/tree.html">Tree — base classes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/leaves.html">Tree — leaf nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/attribute_nodes.html">Tree — attribute nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/composition.html">Tree — composition nodes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/attributes.html">Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/analysis.html">Analysis</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad/volumes.html">Volumes</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../pyvcad_compilers/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_compilers</span></code> module</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_compilers/overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_compilers/compilers.html">Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_compilers/utilities.html">Utilities</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../pyvcad_rendering/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_rendering</span></code> module</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_rendering/interactive.html">Interactive (GUI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_rendering/headless.html">Headless (no GUI)</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_rendering/mesh_selection.html">Mesh selections</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_rendering/vtk_data_export.html">VTK data export</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../pyvcad_attribute_resolver/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_attribute_resolver</span></code> module</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_attribute_resolver/overview.html">Overview</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_attribute_resolver/api.html">Core API</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_attribute_resolver/modules.html">Built-in Modules</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_metamaterials</span></code> module</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="cell_maps.html">Cell maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="structures.html">TPMS, strut, and face lattices</a></li>
+<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">Grading, mixing, stochastic lattices, and transitions</a></li>
+<li class="toctree-l2"><a class="reference internal" href="properties.html">Geometric properties</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../pyvcad_medical/index.html"><code class="docutils literal notranslate"><span class="pre">pyvcad_medical</span></code> module</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../pyvcad_medical/api.html">API reference</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Python API</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link"><code class="docutils literal notranslate"><span class="pre">pyvcad_metamaterials</span></code> module</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Grading, mixing, stochastic lattices, and transitions</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section id="grading-mixing-stochastic-lattices-and-transitions">
+<h1>Grading, mixing, stochastic lattices, and transitions<a class="headerlink" href="#grading-mixing-stochastic-lattices-and-transitions" title="Link to this heading">#</a></h1>
+<section id="material-grading">
+<h2>Material grading<a class="headerlink" href="#material-grading" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.skin_core_tpms">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">skin_core_tpms</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skin_material</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">core_material</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'gyroid'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wall_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">skin_ratio</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.35</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">transition</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.15</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/grading.html#skin_core_tpms"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.skin_core_tpms" title="Link to this definition">#</a></dt>
+<dd><p>Build a mapped TPMS with material graded through each wall’s depth.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.per_strut_material">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">per_strut_material</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">unit_cell</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">selector</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.8</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/grading.html#per_strut_material"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.per_strut_material" title="Link to this definition">#</a></dt>
+<dd><p>Assign native material tags to unit-cell edges selected by orientation or position.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.distance_field">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">distance_field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bandwidth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">signed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/fields.html#distance_field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.distance_field" title="Link to this definition">#</a></dt>
+<dd><p>Return a fast native <code class="docutils literal notranslate"><span class="pre">pv.FloatAttribute</span></code> giving the distance in mm to a body node.</p>
+<p>This is <code class="docutils literal notranslate"><span class="pre">pv.FloatAttribute.distance_to(body,</span> <span class="pre">...)</span></code>, the core spelling, kept here so lattice
+scripts can stay within <code class="docutils literal notranslate"><span class="pre">mm</span></code>. Use it to grade lattices by distance from another part, for
+example strut radius or wall thickness falling off with distance from a head form:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">radius</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">distance_field</span><span class="p">(</span><span class="n">head</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="mf">30.0</span><span class="p">)</span><span class="o">.</span><span class="n">map_range</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">clamp</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The body (any node, including meshes and CAD) is cloned and prepared with <code class="docutils literal notranslate"><span class="pre">voxel_size</span></code>;
+your node is not modified. The value is signed (negative inside) unless <code class="docutils literal notranslate"><span class="pre">signed=False</span></code>. It
+is accurate within <code class="docutils literal notranslate"><span class="pre">bandwidth</span></code> of the body’s bounding box; farther away a monotone lower
+bound is returned, so choose <code class="docutils literal notranslate"><span class="pre">bandwidth</span></code> at least as large as the distances you grade over.</p>
+</dd></dl>
+
+</section>
+<section id="mixing-structures">
+<h2>Mixing structures<a class="headerlink" href="#mixing-structures" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.ramp">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">ramp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">start</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">end</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'x'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">smooth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outside</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">easing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">shape</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bandwidth</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/mixing.html#ramp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.ramp" title="Link to this definition">#</a></dt>
+<dd><p>Return a composed, clamped scalar attribute along an axis, between points or between bodies.</p>
+<p>The result is 0 at <code class="docutils literal notranslate"><span class="pre">start</span></code>, 1 at <code class="docutils literal notranslate"><span class="pre">end</span></code> and clamped to [0, 1] beyond them, so the
+endpoints may be given in either order. <code class="docutils literal notranslate"><span class="pre">smooth=True</span></code> applies a smoothstep so the
+ramp starts and ends with zero slope; <code class="docutils literal notranslate"><span class="pre">smooth=False</span></code> keeps it linear. <code class="docutils literal notranslate"><span class="pre">easing</span></code> picks
+any curve of <code class="docutils literal notranslate"><span class="pre">FloatAttribute.ease</span></code> instead (<code class="docutils literal notranslate"><span class="pre">&quot;linear&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;smoothstep&quot;</span></code>,
+<code class="docutils literal notranslate"><span class="pre">&quot;smootherstep&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;power&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;sine&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;exponential&quot;</span></code>, with <code class="docutils literal notranslate"><span class="pre">shape</span></code> for the
+exponent of power or the rate of exponential) and overrides <code class="docutils literal notranslate"><span class="pre">smooth</span></code>. Equal endpoints
+raise <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>: use a sharp region (<code class="docutils literal notranslate"><span class="pre">pv.Intersection</span></code>/<code class="docutils literal notranslate"><span class="pre">pv.Difference</span></code>) for a
+step instead of a zero-width band.</p>
+<p>The endpoints may be numbers (positions along <code class="docutils literal notranslate"><span class="pre">axis</span></code>), points, or two nodes. Between
+two nodes the ramp is <code class="docutils literal notranslate"><span class="pre">pv.FloatAttribute.between(start,</span> <span class="pre">end)</span></code>: 0 on and inside the
+first body, 1 on and inside the second, graded by the distances to both; <code class="docutils literal notranslate"><span class="pre">voxel_size</span></code>
+and <code class="docutils literal notranslate"><span class="pre">bandwidth</span></code> prepare the bodies (choose a bandwidth at least as large as the gap).</p>
+<p><code class="docutils literal notranslate"><span class="pre">coordinates</span></code> may be a scalar attribute for scalar endpoints, a Vec3Attribute (or a
+<code class="docutils literal notranslate"><span class="pre">pv.CellMap</span></code>, meaning its <code class="docutils literal notranslate"><span class="pre">logical_position</span></code>) for axis ramps along u/v/w, or a
+Vec3Attribute for point endpoints. It defaults to ordinary Cartesian consumer
+coordinates. Custom coordinates such as a CellMap’s logical position are undefined
+outside the map’s domain; there the ramp returns <code class="docutils literal notranslate"><span class="pre">outside</span></code> (default 0) instead of
+raising. Pass <code class="docutils literal notranslate"><span class="pre">outside=None</span></code> to keep the strict behaviour.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.idw_weight">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">idw_weight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">index</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exponent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outside</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/mixing.html#idw_weight"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.idw_weight" title="Link to this definition">#</a></dt>
+<dd><p>Return one seed’s normalized inverse-distance weight as a scalar attribute.</p>
+<p>The weight is 1 at its own seed, 0 at the other seeds, and the weights of all seeds
+sum to 1 everywhere. Seeds must be distinct. <code class="docutils literal notranslate"><span class="pre">coordinates</span></code> (a Vec3Attribute or a
+<code class="docutils literal notranslate"><span class="pre">pv.CellMap</span></code>) measures distances in another space, for example logical cell units;
+where those coordinates are undefined the weight is <code class="docutils literal notranslate"><span class="pre">outside</span></code> (<code class="docutils literal notranslate"><span class="pre">None</span></code> raises).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.mix">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">mix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">left</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">right</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weight</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="keyword-only-separator o"><abbr title="Keyword-only parameters separator (PEP 3102)"><span class="pre">*</span></abbr></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">half_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/mixing.html#mix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.mix" title="Link to this definition">#</a></dt>
+<dd><p>Mix two nodes with a scalar attribute or native region-distance ramp.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.mix_many">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">mix_many</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exponent</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coordinates</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outside</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/mixing.html#mix_many"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.mix_many" title="Link to this definition">#</a></dt>
+<dd><p>Fold N nodes into one binary Mix tree using partial IDW weights.</p>
+<p>Node <code class="docutils literal notranslate"><span class="pre">i</span></code> dominates near <code class="docutils literal notranslate"><span class="pre">points[i]</span></code>. Where custom <code class="docutils literal notranslate"><span class="pre">coordinates</span></code> are undefined
+(outside a CellMap domain) every partial weight is <code class="docutils literal notranslate"><span class="pre">outside</span></code>; the default 0 keeps the
+first node there.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.overlap">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">overlap</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">inside</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">outside</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">half_width</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/mixing.html#overlap"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.overlap" title="Link to this definition">#</a></dt>
+<dd><p>Join two structures by keeping both in a band around a region surface.</p>
+<p><code class="docutils literal notranslate"><span class="pre">inside</span></code> is kept within <code class="docutils literal notranslate"><span class="pre">region</span></code> grown by <code class="docutils literal notranslate"><span class="pre">half_width</span></code>; <code class="docutils literal notranslate"><span class="pre">outside</span></code> is kept outside
+<code class="docutils literal notranslate"><span class="pre">region</span></code> shrunk by <code class="docutils literal notranslate"><span class="pre">half_width</span></code>. In the <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">half_width</span></code> band both are present and
+their physical intersections form the join. This is the robust choice for unlike
+families (TPMS to graph, Voronoi to TPMS) where blending the two distance fields can
+pinch apart. <code class="docutils literal notranslate"><span class="pre">region</span></code> can be any closed node, for example a box, sphere, or CAD body.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.zones">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">zones</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">nodes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regions</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sharp'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">half_width</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/mixing.html#zones"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.zones" title="Link to this definition">#</a></dt>
+<dd><p>Assign one structure per region with N-way priority.</p>
+<p><code class="docutils literal notranslate"><span class="pre">nodes[i]</span></code> fills <code class="docutils literal notranslate"><span class="pre">regions[i]</span></code> (minus earlier regions) and the last node fills the
+rest, so <code class="docutils literal notranslate"><span class="pre">len(nodes)</span></code> must be <code class="docutils literal notranslate"><span class="pre">len(regions)</span> <span class="pre">+</span> <span class="pre">1</span></code>. <code class="docutils literal notranslate"><span class="pre">mode</span></code> chooses how neighbours
+meet: <code class="docutils literal notranslate"><span class="pre">&quot;sharp&quot;</span></code> cuts at the region surface, <code class="docutils literal notranslate"><span class="pre">&quot;mix&quot;</span></code> blends distance fields across a
+<code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">half_width</span></code> band (compatible families only, see <a class="reference internal" href="#pyvcad_metamaterials.mix" title="pyvcad_metamaterials.mix"><code class="xref py py-func docutils literal notranslate"><span class="pre">mix()</span></code></a>), and <code class="docutils literal notranslate"><span class="pre">&quot;overlap&quot;</span></code>
+keeps both structures in the band (see <a class="reference internal" href="#pyvcad_metamaterials.overlap" title="pyvcad_metamaterials.overlap"><code class="xref py py-func docutils literal notranslate"><span class="pre">overlap()</span></code></a>). Build every structure on the
+same CellMap so cells line up across zones.</p>
+</dd></dl>
+
+</section>
+<section id="stochastic-lattices">
+<h2>Stochastic lattices<a class="headerlink" href="#stochastic-lattices" title="Link to this heading">#</a></h2>
+<p>Delaunay and Voronoi lattices built from seed points inside a host. The graph
+builders make struts; the plate builders make walls.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.sample_points_in_host">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">sample_points_in_host</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">density</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">relaxation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_clearance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attempts_per_point</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">80</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/points.html#sample_points_in_host"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.sample_points_in_host" title="Link to this definition">#</a></dt>
+<dd><p>Sample deterministic, variably spaced world-space points in a prepared host.</p>
+<p>Exactly one of <code class="docutils literal notranslate"><span class="pre">spacing</span></code> or <code class="docutils literal notranslate"><span class="pre">density</span></code> is required. Each may be a positive
+number, <code class="docutils literal notranslate"><span class="pre">FloatAttribute</span></code>, or scalar callable accepted by OpenVCAD. Density is
+interpreted as target points per cubic world unit and converted locally to
+<code class="docutils literal notranslate"><span class="pre">density</span> <span class="pre">**</span> <span class="pre">(-1/3)</span></code> spacing. Two samples are accepted when their separation is
+at least the mean of their local spacings.</p>
+<p>The host must already have been prepared. A point is inside when its host SDF is
+at most <code class="docutils literal notranslate"><span class="pre">-boundary_clearance</span></code>. Rejection sampling therefore remains correct for
+disconnected and non-convex hosts, but a loose bounding box can be expensive.
+<code class="docutils literal notranslate"><span class="pre">relaxation</span></code> applies deterministic separation-preserving jitter passes.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.StochasticPointSet">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">StochasticPointSet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_spacings</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">candidate_count</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rejected_count</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/points.html#StochasticPointSet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.StochasticPointSet" title="Link to this definition">#</a></dt>
+<dd><p>Inspectable output from <a class="reference internal" href="#pyvcad_metamaterials.sample_points_in_host" title="pyvcad_metamaterials.sample_points_in_host"><code class="xref py py-func docutils literal notranslate"><span class="pre">sample_points_in_host()</span></code></a>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.StochasticPointSet.candidate_count">
+<span class="sig-name descname"><span class="pre">candidate_count</span></span><a class="headerlink" href="#pyvcad_metamaterials.StochasticPointSet.candidate_count" title="Link to this definition">#</a></dt>
+<dd><p>Number of random candidates drawn before relaxation.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.StochasticPointSet.local_spacings">
+<span class="sig-name descname"><span class="pre">local_spacings</span></span><a class="headerlink" href="#pyvcad_metamaterials.StochasticPointSet.local_spacings" title="Link to this definition">#</a></dt>
+<dd><p>Local target spacing in mm at each accepted point.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.StochasticPointSet.points">
+<span class="sig-name descname"><span class="pre">points</span></span><a class="headerlink" href="#pyvcad_metamaterials.StochasticPointSet.points" title="Link to this definition">#</a></dt>
+<dd><p>Accepted points as a list of <code class="docutils literal notranslate"><span class="pre">pv.Vec3</span></code>.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.StochasticPointSet.rejected_count">
+<span class="sig-name descname"><span class="pre">rejected_count</span></span><a class="headerlink" href="#pyvcad_metamaterials.StochasticPointSet.rejected_count" title="Link to this definition">#</a></dt>
+<dd><p>Candidates that were not kept (<code class="docutils literal notranslate"><span class="pre">candidate_count</span> <span class="pre">-</span> <span class="pre">len(points)</span></code>).</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.StochasticPointSet.seed">
+<span class="sig-name descname"><span class="pre">seed</span></span><a class="headerlink" href="#pyvcad_metamaterials.StochasticPointSet.seed" title="Link to this definition">#</a></dt>
+<dd><p>Random seed the points were drawn with.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.stochastic_graph_lattice">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">stochastic_graph_lattice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extraction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'open'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_blend_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prune_loose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_outside_seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/stochastic.html#stochastic_graph_lattice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.stochastic_graph_lattice" title="Link to this definition">#</a></dt>
+<dd><p>Build a native host-confined graph lattice from explicit seed points.</p>
+<p><code class="docutils literal notranslate"><span class="pre">prune_loose=True</span></code> drops strut pieces that the host cuts off at both ends (chords
+through a corner or a concave part of the host), which would otherwise print as loose
+fragments. <code class="docutils literal notranslate"><span class="pre">allow_outside_seeds=True</span></code> accepts seeds outside the host, for example a
+layer that bounds the Voronoi cells at the host surface; the host still clips the
+geometry.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.delaunay_graph_lattice">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">delaunay_graph_lattice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mode</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'mesh_edges'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'open'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_blend_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prune_loose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_outside_seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/stochastic.html#delaunay_graph_lattice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.delaunay_graph_lattice" title="Link to this definition">#</a></dt>
+<dd><p>Build Delaunay beams using mesh-edge, vertex-centroid, or dual extraction.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.voronoi_graph_lattice">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">voronoi_graph_lattice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'open'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_blend_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prune_loose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">allow_outside_seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/stochastic.html#voronoi_graph_lattice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.voronoi_graph_lattice" title="Link to this definition">#</a></dt>
+<dd><p>Build beams along bounded Voronoi-cell edges.</p>
+<p>See <a class="reference internal" href="#pyvcad_metamaterials.stochastic_graph_lattice" title="pyvcad_metamaterials.stochastic_graph_lattice"><code class="xref py py-func docutils literal notranslate"><span class="pre">stochastic_graph_lattice()</span></code></a> for <code class="docutils literal notranslate"><span class="pre">prune_loose</span></code> and <code class="docutils literal notranslate"><span class="pre">allow_outside_seeds</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.stochastic_plate_lattice">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">stochastic_plate_lattice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">extraction</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wall_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'open'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_blend_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/stochastic.html#stochastic_plate_lattice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.stochastic_plate_lattice" title="Link to this definition">#</a></dt>
+<dd><p>Build a native host-confined plate lattice from explicit seed points.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>host</strong> (<em>pv.Node</em>) – Solid that confines the lattice.</p></li>
+<li><p><strong>points</strong> (<em>list</em><em>[</em><em>pv.Vec3</em><em>] </em><em>| </em><a class="reference internal" href="#pyvcad_metamaterials.StochasticPointSet" title="pyvcad_metamaterials.StochasticPointSet"><em>StochasticPointSet</em></a>) – Unique world-space seed points inside
+the host.</p></li>
+<li><p><strong>extraction</strong> (<em>pv.StochasticFaceExtraction</em>) – <code class="docutils literal notranslate"><span class="pre">DELAUNAY_FACETS</span></code> or <code class="docutils literal notranslate"><span class="pre">VORONOI_FACES</span></code>.</p></li>
+<li><p><strong>wall_thickness</strong> (<em>float</em><em> | </em><em>pv.FloatAttribute</em><em> | </em><em>callable</em>) – Full plate thickness in mm,
+default <code class="docutils literal notranslate"><span class="pre">1.0</span></code>.</p></li>
+<li><p><strong>boundary</strong> (<em>str</em><em> | </em><em>pv.StochasticBoundaryMode</em>) – <code class="docutils literal notranslate"><span class="pre">&quot;open&quot;</span></code> (default, <code class="docutils literal notranslate"><span class="pre">OPEN_CLIP</span></code>)
+cuts plates at the host surface and leaves them open; <code class="docutils literal notranslate"><span class="pre">&quot;closed&quot;</span></code>
+(<code class="docutils literal notranslate"><span class="pre">CLOSED_CONFINE</span></code>) confines them and closes them against the host surface with
+contact patches and seams.</p></li>
+<li><p><strong>surface_tolerance</strong> (<em>float</em>) – Largest thickness interpolation error in mm, default
+<code class="docutils literal notranslate"><span class="pre">0.05</span></code>.</p></li>
+<li><p><strong>boundary_tolerance</strong> (<em>float</em>) – Host-boundary tolerance in mm, default <code class="docutils literal notranslate"><span class="pre">0.1</span></code>.</p></li>
+<li><p><strong>member_blend_radius</strong> (<em>float</em>) – Smooth-union radius between plates in mm, default
+<code class="docutils literal notranslate"><span class="pre">0.0</span></code> (sharp).</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The plate lattice node.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pv.StochasticFaceLattice</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><strong>ValueError</strong> – If <code class="docutils literal notranslate"><span class="pre">boundary</span></code> is not <code class="docutils literal notranslate"><span class="pre">&quot;open&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;closed&quot;</span></code> or a
+    <code class="docutils literal notranslate"><span class="pre">pv.StochasticBoundaryMode</span></code>.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.delaunay_plate_lattice">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">delaunay_plate_lattice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wall_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'open'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_blend_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/stochastic.html#delaunay_plate_lattice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.delaunay_plate_lattice" title="Link to this definition">#</a></dt>
+<dd><p>Build symmetric plates around Delaunay tetrahedron facets.</p>
+<p>See <a class="reference internal" href="#pyvcad_metamaterials.stochastic_plate_lattice" title="pyvcad_metamaterials.stochastic_plate_lattice"><code class="xref py py-func docutils literal notranslate"><span class="pre">stochastic_plate_lattice()</span></code></a> for the arguments.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.voronoi_plate_lattice">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">voronoi_plate_lattice</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wall_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'open'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_blend_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/stochastic.html#voronoi_plate_lattice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.voronoi_plate_lattice" title="Link to this definition">#</a></dt>
+<dd><p>Build symmetric plates around bounded Voronoi-cell faces.</p>
+<p>See <a class="reference internal" href="#pyvcad_metamaterials.stochastic_plate_lattice" title="pyvcad_metamaterials.stochastic_plate_lattice"><code class="xref py py-func docutils literal notranslate"><span class="pre">stochastic_plate_lattice()</span></code></a> for the arguments.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.random_seeds">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">random_seeds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_clearance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attempts_per_point</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/transitions.html#random_seeds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.random_seeds" title="Link to this definition">#</a></dt>
+<dd><p>Sample Poisson-disk seeds in a prepared host quickly (native, ~10^5 points).</p>
+<p><code class="docutils literal notranslate"><span class="pre">spacing</span></code> is a positive number, <code class="docutils literal notranslate"><span class="pre">FloatAttribute</span></code> or scalar callable (mm). Two seeds
+are accepted together when their distance is at least the mean of their local spacings,
+the same rule as <a class="reference internal" href="#pyvcad_metamaterials.sample_points_in_host" title="pyvcad_metamaterials.sample_points_in_host"><code class="xref py py-func docutils literal notranslate"><span class="pre">sample_points_in_host()</span></code></a>, but the native sampler grows the point
+set front by front instead of testing every pair, so it suits large hosts. Results are
+deterministic for a given <code class="docutils literal notranslate"><span class="pre">seed</span></code> but differ from <a class="reference internal" href="#pyvcad_metamaterials.sample_points_in_host" title="pyvcad_metamaterials.sample_points_in_host"><code class="xref py py-func docutils literal notranslate"><span class="pre">sample_points_in_host()</span></code></a>.
+Returns a <a class="reference internal" href="#pyvcad_metamaterials.StochasticPointSet" title="pyvcad_metamaterials.StochasticPointSet"><code class="xref py py-class docutils literal notranslate"><span class="pre">StochasticPointSet</span></code></a>.</p>
+</dd></dl>
+
+</section>
+<section id="voronoi-ribs-on-a-surface">
+<h2>Voronoi ribs on a surface<a class="headerlink" href="#voronoi-ribs-on-a-surface" title="Link to this heading">#</a></h2>
+<p>Seeds spread over a triangle surface own the parts of it closest to them; the
+boundaries between those cells become ribs or walls.</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.surface_seeds">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">surface_seeds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">attempts_per_point</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">30</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/surface_ribs.html#surface_seeds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.surface_seeds" title="Link to this definition">#</a></dt>
+<dd><p>Sample variable-spacing Poisson-disk seeds on a triangle surface.</p>
+<p>Darts land uniformly by area and are kept when their straight-line distance to every kept
+seed is at least the mean of the two local spacings, until a long run of darts finds no
+room. Each dart needs only its own triangle, so open, non-manifold and noisy scanned meshes
+work. Keep the spacing below the thickness of thin walls: distances are straight-line, so
+seeds on the two sides of a thin wall would see each other.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh</strong> (<em>pv.SurfaceMesh</em>) – The surface. Build one from a node with
+<code class="docutils literal notranslate"><span class="pre">pv.SurfaceMesh(node,</span> <span class="pre">voxel_size)</span></code> or load a file with <code class="docutils literal notranslate"><span class="pre">pv.SurfaceMesh(path)</span></code>.</p></li>
+<li><p><strong>spacing</strong> (<em>float</em><em> | </em><em>pv.FloatAttribute</em><em> | </em><em>callable</em>) – Local spacing in mm, positive. A field
+is sampled on the surface (with <code class="docutils literal notranslate"><span class="pre">d</span> <span class="pre">=</span> <span class="pre">0</span></code>), so it can grade the cell size.</p></li>
+<li><p><strong>seed</strong> (<em>int</em>) – Random seed, default <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+<li><p><strong>max_count</strong> (<em>int</em><em> | </em><em>None</em>) – Largest number of seeds; <code class="docutils literal notranslate"><span class="pre">None</span></code> (default) fills the surface.</p></li>
+<li><p><strong>attempts_per_point</strong> (<em>int</em>) – Rejected darts allowed per kept seed before sampling stops.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The seeds, with <code class="docutils literal notranslate"><span class="pre">local_spacings</span></code> and a <code class="docutils literal notranslate"><span class="pre">triangle_ids</span></code> list
+giving the triangle each seed lies on.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#pyvcad_metamaterials.StochasticPointSet" title="pyvcad_metamaterials.StochasticPointSet">StochasticPointSet</a></p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">mesh</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">SurfaceMesh</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">20.0</span><span class="p">),</span> <span class="mf">0.5</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">seeds</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">surface_seeds</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="mf">6.0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.surface_voronoi">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">surface_voronoi</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seeds</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/surface_ribs.html#surface_voronoi"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.surface_voronoi" title="Link to this definition">#</a></dt>
+<dd><p>Return the Voronoi diagram of seeds restricted to a triangle surface.</p>
+<p>Each seed owns the part of the surface closer to it (in a straight line) than to any other
+seed. The result’s <code class="docutils literal notranslate"><span class="pre">segments</span></code> (an <code class="docutils literal notranslate"><span class="pre">(N,</span> <span class="pre">2,</span> <span class="pre">3)</span></code> array) are the boundaries between those
+cells, one straight piece per triangle crossed, with <code class="docutils literal notranslate"><span class="pre">seed_pairs</span></code>, <code class="docutils literal notranslate"><span class="pre">triangle_ids</span></code> and
+each seed’s <code class="docutils literal notranslate"><span class="pre">cell_areas</span></code>. Computed per triangle, exactly, so scanned meshes work.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh</strong> (<em>pv.SurfaceMesh</em>) – The surface.</p></li>
+<li><p><strong>seeds</strong> (<a class="reference internal" href="#pyvcad_metamaterials.StochasticPointSet" title="pyvcad_metamaterials.StochasticPointSet"><em>StochasticPointSet</em></a><em> | </em><em>list</em><em> | </em><em>numpy.ndarray</em>) – Seed points, usually from
+<a class="reference internal" href="#pyvcad_metamaterials.surface_seeds" title="pyvcad_metamaterials.surface_seeds"><code class="xref py py-func docutils literal notranslate"><span class="pre">surface_seeds()</span></code></a>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The restricted diagram.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pv.SurfaceVoronoi</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">diagram</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">surface_voronoi</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">seeds</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">diagram</span><span class="o">.</span><span class="n">segments</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.surface_voronoi_ribs">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">surface_voronoi_ribs</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">mesh</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seeds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">simplify_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/surface_ribs.html#surface_voronoi_ribs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.surface_voronoi_ribs" title="Link to this definition">#</a></dt>
+<dd><p>Build round ribs along the Voronoi cell boundaries of seeds on a surface.</p>
+<p>The ribs follow the restricted Voronoi diagram (<a class="reference internal" href="#pyvcad_metamaterials.surface_voronoi" title="pyvcad_metamaterials.surface_voronoi"><code class="xref py py-func docutils literal notranslate"><span class="pre">surface_voronoi()</span></code></a>): the struts are
+centred on the surface, so half of each rib stands proud of it and half sinks in. Union
+them with the part to stiffen its skin, or use them alone as a surface net. Chains of
+short pieces are merged into longer straight struts that stay within
+<code class="docutils literal notranslate"><span class="pre">simplify_tolerance</span></code> of the exact boundary.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>mesh</strong> (<em>pv.SurfaceMesh</em>) – The surface.</p></li>
+<li><p><strong>seeds</strong> (<a class="reference internal" href="#pyvcad_metamaterials.StochasticPointSet" title="pyvcad_metamaterials.StochasticPointSet"><em>StochasticPointSet</em></a><em> | </em><em>list</em><em> | </em><em>numpy.ndarray</em>) – Seed points, usually from
+<a class="reference internal" href="#pyvcad_metamaterials.surface_seeds" title="pyvcad_metamaterials.surface_seeds"><code class="xref py py-func docutils literal notranslate"><span class="pre">surface_seeds()</span></code></a>.</p></li>
+<li><p><strong>beam_thickness</strong> (<em>float</em><em> | </em><em>pv.FloatAttribute</em><em> | </em><em>callable</em>) – Rib diameter in mm. A field is
+sampled at both ends of every strut (with <code class="docutils literal notranslate"><span class="pre">d</span> <span class="pre">=</span> <span class="pre">0</span></code>), so the thickness can vary
+along the surface.</p></li>
+<li><p><strong>node_radius</strong> (<em>float</em><em> | </em><em>pv.FloatAttribute</em><em> | </em><em>callable</em><em> | </em><em>None</em>) – Radius in mm of a ball at
+every junction of three or more ribs; <code class="docutils literal notranslate"><span class="pre">None</span></code> (default) adds none.</p></li>
+<li><p><strong>simplify_tolerance</strong> (<em>float</em>) – Largest distance in mm a merged strut may leave the exact
+boundary, default <code class="docutils literal notranslate"><span class="pre">0.05</span></code>. <code class="docutils literal notranslate"><span class="pre">0</span></code> keeps one strut per triangle crossed.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The ribs (new geometry; its distance is exact outside the struts and a
+bound inside, like any union of struts).</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pv.BeamLattice</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">seeds</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">surface_seeds</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">spacing</span><span class="o">=</span><span class="mf">6.0</span><span class="p">)</span>
+<span class="gp">&gt;&gt;&gt; </span><span class="n">ribs</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">surface_voronoi_ribs</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">seeds</span><span class="p">,</span> <span class="n">beam_thickness</span><span class="o">=</span><span class="mf">1.2</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.surface_voronoi_plates">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">surface_voronoi_plates</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">body</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seeds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rib_height</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wall_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_blend_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">surface_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/surface_ribs.html#surface_voronoi_plates"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.surface_voronoi_plates" title="Link to this definition">#</a></dt>
+<dd><p>Build walls along the Voronoi cell boundaries of seeds on the surface of a body.</p>
+<p>The walls are the faces of the seeds’ 3D Voronoi cells, kept within <code class="docutils literal notranslate"><span class="pre">rib_height</span> <span class="pre">/</span> <span class="pre">2</span></code> of
+the body’s surface (inside <code class="docutils literal notranslate"><span class="pre">pv.Thicken(rib_height,</span> <span class="pre">body)</span></code>). For seeds on the surface those
+faces cut it exactly along the restricted Voronoi diagram, so every wall is centred on a cell
+boundary and stands across the surface. Use the body’s mesh for the seeds, for example
+<code class="docutils literal notranslate"><span class="pre">mm.surface_seeds(pv.SurfaceMesh(body,</span> <span class="pre">0.5),</span> <span class="pre">6.0)</span></code>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>body</strong> (<em>pv.Node</em>) – A closed body; its surface carries the walls.</p></li>
+<li><p><strong>seeds</strong> (<a class="reference internal" href="#pyvcad_metamaterials.StochasticPointSet" title="pyvcad_metamaterials.StochasticPointSet"><em>StochasticPointSet</em></a><em> | </em><em>list</em><em> | </em><em>numpy.ndarray</em>) – Seeds on the body’s surface.</p></li>
+<li><p><strong>rib_height</strong> (<em>float</em><em> | </em><em>pv.FloatAttribute</em><em> | </em><em>pv.ScalarParameter</em><em> | </em><em>callable</em>) – Total wall
+height in mm across the surface (half outside, half inside).</p></li>
+<li><p><strong>wall_thickness</strong> (<em>float</em><em> | </em><em>pv.FloatAttribute</em><em> | </em><em>callable</em>) – Wall thickness in mm; a field may
+vary it along the surface.</p></li>
+<li><p><strong>member_blend_radius</strong> (<em>float</em>) – Fillet radius in mm where walls meet, default <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+<li><p><strong>surface_tolerance</strong> (<em>float</em>) – Largest thickness interpolation error in mm.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>The walls.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>pv.StochasticFaceLattice</p>
+</dd>
+</dl>
+<p class="rubric">Example</p>
+<div class="doctest highlight-default notranslate"><div class="highlight"><pre><span></span><span class="gp">&gt;&gt;&gt; </span><span class="n">walls</span> <span class="o">=</span> <span class="n">mm</span><span class="o">.</span><span class="n">surface_voronoi_plates</span><span class="p">(</span><span class="n">body</span><span class="p">,</span> <span class="n">seeds</span><span class="p">,</span> <span class="n">rib_height</span><span class="o">=</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">wall_thickness</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+</pre></div>
+</div>
+</dd></dl>
+
+</section>
+<section id="random-to-regular-transitions">
+<h2>Random-to-regular transitions<a class="headerlink" href="#random-to-regular-transitions" title="Link to this heading">#</a></h2>
+<dl class="py data">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.SITE_KINDS">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">SITE_KINDS</span></span><a class="headerlink" href="#pyvcad_metamaterials.SITE_KINDS" title="Link to this definition">#</a></dt>
+<dd><p>Built-in immutable sequence.</p>
+<p>If no argument is given, the constructor returns an empty tuple.
+If iterable is specified the tuple is initialized from iterable’s items.</p>
+<p>If the argument is a tuple, the return value is the same object.</p>
+<p>Regular point sets accepted by the transition helpers: <code class="docutils literal notranslate"><span class="pre">sc</span></code>, <code class="docutils literal notranslate"><span class="pre">bcc</span></code>,
+<code class="docutils literal notranslate"><span class="pre">fcc</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.voronoi_transition">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">voronoi_transition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regularity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bcc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seeds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ghost_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'open'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_blend_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prune_loose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">seed_options</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/transitions.html#voronoi_transition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.voronoi_transition" title="Link to this definition">#</a></dt>
+<dd><p>One call: a Voronoi strut lattice that turns from random foam into a regular lattice.</p>
+<p>Builds <a class="reference internal" href="#pyvcad_metamaterials.transition_seeds" title="pyvcad_metamaterials.transition_seeds"><code class="xref py py-func docutils literal notranslate"><span class="pre">transition_seeds()</span></code></a> (pass seed options such as <code class="docutils literal notranslate"><span class="pre">method</span></code>, <code class="docutils literal notranslate"><span class="pre">seed</span></code> or
+<code class="docutils literal notranslate"><span class="pre">random_points</span></code> as keywords) and a Voronoi graph lattice from them. Where
+<code class="docutils literal notranslate"><span class="pre">regularity</span></code> is 1 the struts are the edges of cubes (<code class="docutils literal notranslate"><span class="pre">&quot;sc&quot;</span></code>), Kelvin cells
+(<code class="docutils literal notranslate"><span class="pre">&quot;bcc&quot;</span></code>) or rhombic dodecahedra (<code class="docutils literal notranslate"><span class="pre">&quot;fcc&quot;</span></code>). Both regions belong to one Voronoi graph,
+so they share nodes and the transition itself cannot pinch apart.</p>
+<p><code class="docutils literal notranslate"><span class="pre">ghost_layer</span></code> (mm, default one site spacing) also places seeds in a layer just outside
+the host; the host still clips the geometry. Without that layer the outermost Voronoi
+cells are unbounded, so regular cells at the surface lose the struts that lie on it.
+<code class="docutils literal notranslate"><span class="pre">prune_loose=True</span></code> (default) drops strut pieces that the host cuts off at both ends
+(chords through a corner or a concave part of the host), which would otherwise print as
+loose fragments. With precomputed <code class="docutils literal notranslate"><span class="pre">seeds</span></code> no ghost layer is added unless requested.</p>
+<p>The host must be prepared. Check the result with
+<a class="reference internal" href="#pyvcad_metamaterials.check_connectivity" title="pyvcad_metamaterials.check_connectivity"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyvcad_metamaterials.check_connectivity()</span></code></a>; a very thin host can still split.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.voronoi_tpms_transition">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">voronoi_tpms_transition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">region</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">tpms</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">half_width</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regularity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bcc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_voxel_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">options</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/transitions.html#voronoi_tpms_transition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.voronoi_tpms_transition" title="Link to this definition">#</a></dt>
+<dd><p>Join a Voronoi foam inside <code class="docutils literal notranslate"><span class="pre">region</span></code> to a TPMS outside it through an overlap band.</p>
+<p>A TPMS sheet and a strut foam have nothing in common to blend, so this keeps both
+structures in a <code class="docutils literal notranslate"><span class="pre">2</span> <span class="pre">*</span> <span class="pre">half_width</span></code> band around the region surface and lets them
+intersect (see <a class="reference internal" href="#pyvcad_metamaterials.overlap" title="pyvcad_metamaterials.overlap"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyvcad_metamaterials.overlap()</span></code></a>). The foam is built by
+<a class="reference internal" href="#pyvcad_metamaterials.voronoi_transition" title="pyvcad_metamaterials.voronoi_transition"><code class="xref py py-func docutils literal notranslate"><span class="pre">voronoi_transition()</span></code></a> on <code class="docutils literal notranslate"><span class="pre">host</span></code> grown into the band, with loose strut pieces
+pruned against exactly that boundary, so the band edge leaves no loose fragments.
+<code class="docutils literal notranslate"><span class="pre">regularity</span></code> (0 = random foam) and <code class="docutils literal notranslate"><span class="pre">kind</span></code>/<code class="docutils literal notranslate"><span class="pre">cell_size</span></code>/<code class="docutils literal notranslate"><span class="pre">cell_map</span></code> set the foam’s
+seeds; use the TPMS’s own <code class="docutils literal notranslate"><span class="pre">cell_map</span></code> so the foam cells match the TPMS cell size.
+<code class="docutils literal notranslate"><span class="pre">beam_thickness</span></code> and the TPMS wall thickness may be fields, for example ramps that
+thin each structure as it crosses the band. Extra <code class="docutils literal notranslate"><span class="pre">options</span></code> go to
+<a class="reference internal" href="#pyvcad_metamaterials.voronoi_transition" title="pyvcad_metamaterials.voronoi_transition"><code class="xref py py-func docutils literal notranslate"><span class="pre">voronoi_transition()</span></code></a>.</p>
+<p>Choose <code class="docutils literal notranslate"><span class="pre">half_width</span></code> between a quarter and a half of the cell size: narrower bands give
+few contacts, much wider ones double the material. With <code class="docutils literal notranslate"><span class="pre">check_voxel_size</span></code> the result
+is checked with <a class="reference internal" href="#pyvcad_metamaterials.require_connected" title="pyvcad_metamaterials.require_connected"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyvcad_metamaterials.require_connected()</span></code></a> (raises <code class="docutils literal notranslate"><span class="pre">ValueError</span></code>
+when it is not one piece). Returns the joined node, clipped to <code class="docutils literal notranslate"><span class="pre">host</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.voronoi_foam">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">voronoi_foam</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">spacing</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">beam_thickness</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">node_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ghost_layer</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prune_loose</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member_blend_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'open'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.05</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_tolerance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.1</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/transitions.html#voronoi_foam"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.voronoi_foam" title="Link to this definition">#</a></dt>
+<dd><p>One call: a random Voronoi strut foam that fills a prepared host in one piece.</p>
+<p>Seeds come from <a class="reference internal" href="#pyvcad_metamaterials.random_seeds" title="pyvcad_metamaterials.random_seeds"><code class="xref py py-func docutils literal notranslate"><span class="pre">random_seeds()</span></code></a> with <code class="docutils literal notranslate"><span class="pre">spacing</span></code> (mm; a number, <code class="docutils literal notranslate"><span class="pre">FloatAttribute</span></code>
+or scalar callable), so a spacing field grades the cell size, for example smaller cells
+near a head with <code class="docutils literal notranslate"><span class="pre">mm.ramp(0,</span> <span class="pre">15,</span> <span class="pre">coordinates=mm.distance_field(head))</span></code>. Seeds are also
+placed in a <code class="docutils literal notranslate"><span class="pre">ghost_layer</span></code> just outside the host (default: the typical local spacing)
+so the cells at the surface are closed, and <code class="docutils literal notranslate"><span class="pre">prune_loose</span></code> drops strut pieces the host
+cuts off at both ends. A spacing field must therefore be defined a little outside the
+host as well. The host can be any prepared node, including <code class="docutils literal notranslate"><span class="pre">mm.domain(cell_map)</span></code> for
+a conformal liner volume. Returns <code class="docutils literal notranslate"><span class="pre">voronoi_graph_lattice(host,</span> <span class="pre">...)</span></code>.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.transition_seeds">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">transition_seeds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">regularity</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'bcc'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_map</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'match'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_points</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_spacing</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jitter</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">match_radius</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">minimum_separation</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">seed</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary_clearance</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">site_margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/transitions.html#transition_seeds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.transition_seeds" title="Link to this definition">#</a></dt>
+<dd><p>Build Voronoi seeds that change from random to a regular lattice.</p>
+<p><code class="docutils literal notranslate"><span class="pre">regularity</span></code> (number, <code class="docutils literal notranslate"><span class="pre">FloatAttribute</span></code> or callable) is 0 where the foam should be
+random and 1 where it should be the regular lattice; ramps from <a class="reference internal" href="#pyvcad_metamaterials.ramp" title="pyvcad_metamaterials.ramp"><code class="xref py py-func docutils literal notranslate"><span class="pre">ramp()</span></code></a> work well.
+Where it cannot be evaluated (for example outside a CellMap domain) it counts as 0.</p>
+<p>The regular sites are <code class="docutils literal notranslate"><span class="pre">kind</span></code> (<code class="docutils literal notranslate"><span class="pre">&quot;sc&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;bcc&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;fcc&quot;</span></code>) sites either on an
+axis-aligned grid with <code class="docutils literal notranslate"><span class="pre">cell_size</span></code> (and optional lattice <code class="docutils literal notranslate"><span class="pre">origin</span></code>) or, with
+<code class="docutils literal notranslate"><span class="pre">cell_map</span></code>, placed through the map (see <a class="reference internal" href="#pyvcad_metamaterials.cell_map_sites" title="pyvcad_metamaterials.cell_map_sites"><code class="xref py py-func docutils literal notranslate"><span class="pre">cell_map_sites()</span></code></a>). Only sites inside the
+prepared <code class="docutils literal notranslate"><span class="pre">host</span></code> are used.</p>
+<p><code class="docutils literal notranslate"><span class="pre">method=&quot;match&quot;</span></code> (default) pairs each site with a nearby random seed and slides the
+seed onto the site by the local regularity, so the seed count and cell size stay
+continuous. The random seeds are <code class="docutils literal notranslate"><span class="pre">random_points</span></code> (for example a graded
+<a class="reference internal" href="#pyvcad_metamaterials.sample_points_in_host" title="pyvcad_metamaterials.sample_points_in_host"><code class="xref py py-func docutils literal notranslate"><span class="pre">sample_points_in_host()</span></code></a> result) or, by default, a Poisson-disk sample whose density
+matches the sites (<code class="docutils literal notranslate"><span class="pre">random_spacing</span></code> overrides it). <code class="docutils literal notranslate"><span class="pre">method=&quot;jitter&quot;</span></code> instead displaces
+every site by up to <code class="docutils literal notranslate"><span class="pre">(1</span> <span class="pre">-</span> <span class="pre">regularity)</span> <span class="pre">*</span> <span class="pre">jitter</span> <span class="pre">*</span> <span class="pre">nearest_neighbour</span></code> (a perturbed
+lattice), which needs no random set.</p>
+<p><code class="docutils literal notranslate"><span class="pre">match_radius</span></code> (default 0.75 x the site nearest-neighbour distance) limits pairing and
+<code class="docutils literal notranslate"><span class="pre">minimum_separation</span></code> (default 0.3 x) removes seeds that would make sliver cells.
+<code class="docutils literal notranslate"><span class="pre">site_margin</span></code> (cells) extends CellMap sites past the map boundary (see
+<a class="reference internal" href="#pyvcad_metamaterials.cell_map_sites" title="pyvcad_metamaterials.cell_map_sites"><code class="xref py py-func docutils literal notranslate"><span class="pre">cell_map_sites()</span></code></a>). Returns <a class="reference internal" href="#pyvcad_metamaterials.TransitionSeeds" title="pyvcad_metamaterials.TransitionSeeds"><code class="xref py py-class docutils literal notranslate"><span class="pre">TransitionSeeds</span></code></a>.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.TransitionSeeds">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">TransitionSeeds</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sites</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">random_points</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">nearest_neighbor</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">method</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/transitions.html#TransitionSeeds"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.TransitionSeeds" title="Link to this definition">#</a></dt>
+<dd><p>Seeds from <a class="reference internal" href="#pyvcad_metamaterials.transition_seeds" title="pyvcad_metamaterials.transition_seeds"><code class="xref py py-func docutils literal notranslate"><span class="pre">transition_seeds()</span></code></a> with provenance for inspection.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.TransitionSeeds.points">
+<span class="sig-name descname"><span class="pre">points</span></span><a class="headerlink" href="#pyvcad_metamaterials.TransitionSeeds.points" title="Link to this definition">#</a></dt>
+<dd><p>Seeds to pass to a Voronoi lattice.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[pv.Vec3]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.TransitionSeeds.regularity">
+<span class="sig-name descname"><span class="pre">regularity</span></span><a class="headerlink" href="#pyvcad_metamaterials.TransitionSeeds.regularity" title="Link to this definition">#</a></dt>
+<dd><p>Regularity weight that placed each seed.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.TransitionSeeds.sites">
+<span class="sig-name descname"><span class="pre">sites</span></span><a class="headerlink" href="#pyvcad_metamaterials.TransitionSeeds.sites" title="Link to this definition">#</a></dt>
+<dd><p>Regular sites inside the host.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[pv.Vec3]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.TransitionSeeds.random_points">
+<span class="sig-name descname"><span class="pre">random_points</span></span><a class="headerlink" href="#pyvcad_metamaterials.TransitionSeeds.random_points" title="Link to this definition">#</a></dt>
+<dd><p>Random seeds used (empty for <code class="docutils literal notranslate"><span class="pre">method=&quot;jitter&quot;</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[pv.Vec3]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">regular_index,</span> <span class="pre">random_index</span></span></dt>
+<dd><p>Source site / random seed of each point or -1.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[int]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.TransitionSeeds.matched_count">
+<span class="sig-name descname"><span class="pre">matched_count</span></span><a class="headerlink" href="#pyvcad_metamaterials.TransitionSeeds.matched_count" title="Link to this definition">#</a></dt>
+<dd><p>Random seeds paired with a site (<code class="docutils literal notranslate"><span class="pre">method=&quot;match&quot;</span></code>).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.TransitionSeeds.dropped_count">
+<span class="sig-name descname"><span class="pre">dropped_count</span></span><a class="headerlink" href="#pyvcad_metamaterials.TransitionSeeds.dropped_count" title="Link to this definition">#</a></dt>
+<dd><p>Seeds removed by the minimum-separation check.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.TransitionSeeds.nearest_neighbor">
+<span class="sig-name descname"><span class="pre">nearest_neighbor</span></span><a class="headerlink" href="#pyvcad_metamaterials.TransitionSeeds.nearest_neighbor" title="Link to this definition">#</a></dt>
+<dd><p>Site nearest-neighbour distance in mm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.lattice_sites">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">lattice_sites</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/transitions.html#lattice_sites"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.lattice_sites" title="Link to this definition">#</a></dt>
+<dd><p>Return regular <code class="docutils literal notranslate"><span class="pre">&quot;sc&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;bcc&quot;</span></code> or <code class="docutils literal notranslate"><span class="pre">&quot;fcc&quot;</span></code> sites inside an axis-aligned box.</p>
+<p><code class="docutils literal notranslate"><span class="pre">bounds</span></code> is a <code class="docutils literal notranslate"><span class="pre">(minimum,</span> <span class="pre">maximum)</span></code> pair; <code class="docutils literal notranslate"><span class="pre">cell_size</span></code> is a number or three numbers in
+mm; <code class="docutils literal notranslate"><span class="pre">origin</span></code> is a lattice corner (defaults to <code class="docutils literal notranslate"><span class="pre">minimum</span></code>). Sites within <code class="docutils literal notranslate"><span class="pre">margin</span></code> of
+the box are included. To line the sites up with a rectangular map’s graph lattice, use
+the map’s minimum corner as <code class="docutils literal notranslate"><span class="pre">origin</span></code> and its cell size.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.cell_map_sites">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">cell_map_sites</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cell_map</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">margin</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/transitions.html#cell_map_sites"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.cell_map_sites" title="Link to this definition">#</a></dt>
+<dd><p>Return <code class="docutils literal notranslate"><span class="pre">kind</span></code> sites placed through a CellMap (“align to graph points”).</p>
+<p>Sites are generated in logical cell coordinates and mapped to world space, so the
+regular region of a transition follows the map, and its Voronoi cells line up with a
+graph lattice of <a class="reference internal" href="#pyvcad_metamaterials.voronoi_unit_cell" title="pyvcad_metamaterials.voronoi_unit_cell"><code class="xref py py-func docutils literal notranslate"><span class="pre">voronoi_unit_cell()</span></code></a> on the same map. Sites in trimmed-away
+elements are skipped, periodic seams are not duplicated, and a
+<code class="docutils literal notranslate"><span class="pre">pv.CellMapCollection</span></code> contributes the sites of every map.</p>
+<p><code class="docutils literal notranslate"><span class="pre">margin</span></code> (in cells) also returns sites up to that far outside the map’s logical box
+on non-periodic axes, continuing the map linearly from its boundary. These outside
+sites bound the Voronoi cells at the map surface (see <a class="reference internal" href="#pyvcad_metamaterials.voronoi_transition" title="pyvcad_metamaterials.voronoi_transition"><code class="xref py py-func docutils literal notranslate"><span class="pre">voronoi_transition()</span></code></a>).</p>
+<p>Voronoi cells are only similarity-invariant: the alignment is exact for cubic cells on a
+rectangular map and approximate where the map stretches or bends cells. Keep cells near
+cubic (similar size along U, V and W).</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.voronoi_unit_cell">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">voronoi_unit_cell</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kind</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/transitions.html#voronoi_unit_cell"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.voronoi_unit_cell" title="Link to this definition">#</a></dt>
+<dd><p>Return the graph unit cell whose tiling equals the Voronoi edges of <code class="docutils literal notranslate"><span class="pre">kind</span></code> sites.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;sc&quot;</span></code> gives the cubic cell, <code class="docutils literal notranslate"><span class="pre">&quot;bcc&quot;</span></code> the Kelvin cell (truncated octahedra) and
+<code class="docutils literal notranslate"><span class="pre">&quot;fcc&quot;</span></code> the rhombic-dodecahedron cell. The edges are in the same origin-centred,
+normalized <code class="docutils literal notranslate"><span class="pre">[-0.5,</span> <span class="pre">0.5]</span></code> convention as the built-in cells, so the result can be passed
+to <a class="reference internal" href="structures.html#pyvcad_metamaterials.graph_lattice" title="pyvcad_metamaterials.graph_lattice"><code class="xref py py-func docutils literal notranslate"><span class="pre">pyvcad_metamaterials.graph_lattice()</span></code></a> with the same CellMap used for
+<a class="reference internal" href="#pyvcad_metamaterials.cell_map_sites" title="pyvcad_metamaterials.cell_map_sites"><code class="xref py py-func docutils literal notranslate"><span class="pre">cell_map_sites()</span></code></a>. It is <a class="reference internal" href="structures.html#pyvcad_metamaterials.periodic_voronoi" title="pyvcad_metamaterials.periodic_voronoi"><code class="xref py py-func docutils literal notranslate"><span class="pre">periodic_voronoi()</span></code></a> of the sites, so other seed sets
+work the same way.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.matched_spacing">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">matched_spacing</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">kind</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cell_size</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/transitions.html#matched_spacing"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.matched_spacing" title="Link to this definition">#</a></dt>
+<dd><p>Return the Poisson-disk spacing whose seed density equals <code class="docutils literal notranslate"><span class="pre">kind</span></code> sites.</p>
+<p><code class="docutils literal notranslate"><span class="pre">cell_size</span></code> is the cubic cell edge in mm (or three edges). Random seeds sampled with
+this spacing make Voronoi cells of the same average size as the regular lattice, so the
+cell size stays continuous across a transition.</p>
+</dd></dl>
+
+</section>
+<section id="connectivity-checks">
+<h2>Connectivity checks<a class="headerlink" href="#connectivity-checks" title="Link to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.check_connectivity">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">check_connectivity</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">26</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_island_volume</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">cull_far_cells</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/connectivity.html#check_connectivity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.check_connectivity" title="Link to this definition">#</a></dt>
+<dd><p>Count the separate solid pieces of a node on a voxel grid.</p>
+<p>A lattice transition that pinches apart, or clipping that leaves loose strut fragments,
+shows up as more than one component. The node is sampled at voxel centres over its
+bounding box (or <code class="docutils literal notranslate"><span class="pre">bounds</span></code>, a <code class="docutils literal notranslate"><span class="pre">(minimum,</span> <span class="pre">maximum)</span></code> pair of <code class="docutils literal notranslate"><span class="pre">pv.Vec3</span></code>) in parallel,
+and solid voxels are joined through face, edge and corner neighbours
+(<code class="docutils literal notranslate"><span class="pre">connectivity=26</span></code>) or faces only (<code class="docutils literal notranslate"><span class="pre">6</span></code>).</p>
+<p>Resolution matters: choose <code class="docutils literal notranslate"><span class="pre">voxel_size</span></code> at most about half the thinnest strut radius
+or wall thickness. Thinner necks may be reported as breaks, and gaps narrower than one
+voxel may be bridged. Where a member leaves the part at a grazing angle the grid can also
+catch a sliver as a separate one- or two-voxel speck that shrinks with finer voxels.
+<code class="docutils literal notranslate"><span class="pre">min_island_volume</span></code> (mm^3) ignores pieces smaller than that volume when deciding
+<code class="docutils literal notranslate"><span class="pre">connected</span></code>; the default <code class="docutils literal notranslate"><span class="pre">None</span></code> ignores pieces of fewer than 8 voxels. Pass <code class="docutils literal notranslate"><span class="pre">0</span></code> to
+count every piece.</p>
+<p><code class="docutils literal notranslate"><span class="pre">cull_far_cells=True</span></code> decides whole 8x8x8 voxel blocks from one probe when the field
+there is far from zero, which skips empty space around a curved part (about twice as fast
+on a dome liner). It is exact for true distances, such as stochastic strut lattices,
+primitives and their booleans, but TPMS fields can change faster than distance, so keep
+the default <code class="docutils literal notranslate"><span class="pre">False</span></code> for designs that contain them.</p>
+<p>Returns a <a class="reference internal" href="#pyvcad_metamaterials.ConnectivityReport" title="pyvcad_metamaterials.ConnectivityReport"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConnectivityReport</span></code></a>; <code class="docutils literal notranslate"><span class="pre">bool(report)</span></code> is True for one piece.</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.require_connected">
+<span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">require_connected</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">node</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">voxel_size</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connectivity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">26</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bounds</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_island_volume</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/connectivity.html#require_connected"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.require_connected" title="Link to this definition">#</a></dt>
+<dd><p>Raise <code class="docutils literal notranslate"><span class="pre">ValueError</span></code> unless <a class="reference internal" href="#pyvcad_metamaterials.check_connectivity" title="pyvcad_metamaterials.check_connectivity"><code class="xref py py-func docutils literal notranslate"><span class="pre">check_connectivity()</span></code></a> finds exactly one piece.</p>
+<p>The message lists where the extra pieces are so the transition band, beam thickness or
+seed settings can be adjusted. Returns the report when the node is connected.</p>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.ConnectivityReport">
+<span class="property"><span class="k"><span class="pre">class</span></span><span class="w"> </span></span><span class="sig-prename descclassname"><span class="pre">pyvcad_metamaterials.</span></span><span class="sig-name descname"><span class="pre">ConnectivityReport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">report</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min_island_volume</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../../_modules/pyvcad_metamaterials/connectivity.html#ConnectivityReport"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#pyvcad_metamaterials.ConnectivityReport" title="Link to this definition">#</a></dt>
+<dd><p>Readable result of <a class="reference internal" href="#pyvcad_metamaterials.check_connectivity" title="pyvcad_metamaterials.check_connectivity"><code class="xref py py-func docutils literal notranslate"><span class="pre">check_connectivity()</span></code></a>.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.ConnectivityReport.component_count">
+<span class="sig-name descname"><span class="pre">component_count</span></span><a class="headerlink" href="#pyvcad_metamaterials.ConnectivityReport.component_count" title="Link to this definition">#</a></dt>
+<dd><p>Number of separate solid pieces.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.ConnectivityReport.connected">
+<span class="sig-name descname"><span class="pre">connected</span></span><a class="headerlink" href="#pyvcad_metamaterials.ConnectivityReport.connected" title="Link to this definition">#</a></dt>
+<dd><p>True when the solid is one piece (or empty pieces were ignored).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.ConnectivityReport.volumes">
+<span class="sig-name descname"><span class="pre">volumes</span></span><a class="headerlink" href="#pyvcad_metamaterials.ConnectivityReport.volumes" title="Link to this definition">#</a></dt>
+<dd><p>Component volumes in mm^3, largest first.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[float]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.ConnectivityReport.sample_points">
+<span class="sig-name descname"><span class="pre">sample_points</span></span><a class="headerlink" href="#pyvcad_metamaterials.ConnectivityReport.sample_points" title="Link to this definition">#</a></dt>
+<dd><p>One solid point inside each component (x, y, z) in mm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[tuple]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.ConnectivityReport.bounds">
+<span class="sig-name descname"><span class="pre">bounds</span></span><a class="headerlink" href="#pyvcad_metamaterials.ConnectivityReport.bounds" title="Link to this definition">#</a></dt>
+<dd><p><code class="docutils literal notranslate"><span class="pre">(minimum,</span> <span class="pre">maximum)</span></code> sample box of each component.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>list[tuple]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.ConnectivityReport.voxel_size">
+<span class="sig-name descname"><span class="pre">voxel_size</span></span><a class="headerlink" href="#pyvcad_metamaterials.ConnectivityReport.voxel_size" title="Link to this definition">#</a></dt>
+<dd><p>Sampling pitch in mm.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.ConnectivityReport.ignored_count">
+<span class="sig-name descname"><span class="pre">ignored_count</span></span><a class="headerlink" href="#pyvcad_metamaterials.ConnectivityReport.ignored_count" title="Link to this definition">#</a></dt>
+<dd><p>Components smaller than <code class="docutils literal notranslate"><span class="pre">min_island_volume</span></code> that were ignored.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>int</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.ConnectivityReport.islands">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">islands</span></span><a class="headerlink" href="#pyvcad_metamaterials.ConnectivityReport.islands" title="Link to this definition">#</a></dt>
+<dd><p>Every component except the largest, as <code class="docutils literal notranslate"><span class="pre">(volume,</span> <span class="pre">sample_point)</span></code> pairs.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="pyvcad_metamaterials.ConnectivityReport.largest_fraction">
+<span class="property"><span class="k"><span class="pre">property</span></span><span class="w"> </span></span><span class="sig-name descname"><span class="pre">largest_fraction</span></span><a class="headerlink" href="#pyvcad_metamaterials.ConnectivityReport.largest_fraction" title="Link to this definition">#</a></dt>
+<dd><p>Fraction of the kept solid volume in the largest component.</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="structures.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">TPMS, strut, and face lattices</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="properties.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Geometric properties</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#material-grading">Material grading</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.skin_core_tpms"><code class="docutils literal notranslate"><span class="pre">skin_core_tpms()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.per_strut_material"><code class="docutils literal notranslate"><span class="pre">per_strut_material()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.distance_field"><code class="docutils literal notranslate"><span class="pre">distance_field()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mixing-structures">Mixing structures</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.ramp"><code class="docutils literal notranslate"><span class="pre">ramp()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.idw_weight"><code class="docutils literal notranslate"><span class="pre">idw_weight()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.mix"><code class="docutils literal notranslate"><span class="pre">mix()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.mix_many"><code class="docutils literal notranslate"><span class="pre">mix_many()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.overlap"><code class="docutils literal notranslate"><span class="pre">overlap()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.zones"><code class="docutils literal notranslate"><span class="pre">zones()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#stochastic-lattices">Stochastic lattices</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.sample_points_in_host"><code class="docutils literal notranslate"><span class="pre">sample_points_in_host()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.StochasticPointSet"><code class="docutils literal notranslate"><span class="pre">StochasticPointSet</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.StochasticPointSet.candidate_count"><code class="docutils literal notranslate"><span class="pre">StochasticPointSet.candidate_count</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.StochasticPointSet.local_spacings"><code class="docutils literal notranslate"><span class="pre">StochasticPointSet.local_spacings</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.StochasticPointSet.points"><code class="docutils literal notranslate"><span class="pre">StochasticPointSet.points</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.StochasticPointSet.rejected_count"><code class="docutils literal notranslate"><span class="pre">StochasticPointSet.rejected_count</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.StochasticPointSet.seed"><code class="docutils literal notranslate"><span class="pre">StochasticPointSet.seed</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.stochastic_graph_lattice"><code class="docutils literal notranslate"><span class="pre">stochastic_graph_lattice()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.delaunay_graph_lattice"><code class="docutils literal notranslate"><span class="pre">delaunay_graph_lattice()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.voronoi_graph_lattice"><code class="docutils literal notranslate"><span class="pre">voronoi_graph_lattice()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.stochastic_plate_lattice"><code class="docutils literal notranslate"><span class="pre">stochastic_plate_lattice()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.delaunay_plate_lattice"><code class="docutils literal notranslate"><span class="pre">delaunay_plate_lattice()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.voronoi_plate_lattice"><code class="docutils literal notranslate"><span class="pre">voronoi_plate_lattice()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.random_seeds"><code class="docutils literal notranslate"><span class="pre">random_seeds()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#voronoi-ribs-on-a-surface">Voronoi ribs on a surface</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.surface_seeds"><code class="docutils literal notranslate"><span class="pre">surface_seeds()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.surface_voronoi"><code class="docutils literal notranslate"><span class="pre">surface_voronoi()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.surface_voronoi_ribs"><code class="docutils literal notranslate"><span class="pre">surface_voronoi_ribs()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.surface_voronoi_plates"><code class="docutils literal notranslate"><span class="pre">surface_voronoi_plates()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#random-to-regular-transitions">Random-to-regular transitions</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.SITE_KINDS"><code class="docutils literal notranslate"><span class="pre">SITE_KINDS</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.voronoi_transition"><code class="docutils literal notranslate"><span class="pre">voronoi_transition()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.voronoi_tpms_transition"><code class="docutils literal notranslate"><span class="pre">voronoi_tpms_transition()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.voronoi_foam"><code class="docutils literal notranslate"><span class="pre">voronoi_foam()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.transition_seeds"><code class="docutils literal notranslate"><span class="pre">transition_seeds()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.TransitionSeeds"><code class="docutils literal notranslate"><span class="pre">TransitionSeeds</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.TransitionSeeds.points"><code class="docutils literal notranslate"><span class="pre">TransitionSeeds.points</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.TransitionSeeds.regularity"><code class="docutils literal notranslate"><span class="pre">TransitionSeeds.regularity</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.TransitionSeeds.sites"><code class="docutils literal notranslate"><span class="pre">TransitionSeeds.sites</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.TransitionSeeds.random_points"><code class="docutils literal notranslate"><span class="pre">TransitionSeeds.random_points</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.TransitionSeeds.matched_count"><code class="docutils literal notranslate"><span class="pre">TransitionSeeds.matched_count</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.TransitionSeeds.dropped_count"><code class="docutils literal notranslate"><span class="pre">TransitionSeeds.dropped_count</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.TransitionSeeds.nearest_neighbor"><code class="docutils literal notranslate"><span class="pre">TransitionSeeds.nearest_neighbor</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.lattice_sites"><code class="docutils literal notranslate"><span class="pre">lattice_sites()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.cell_map_sites"><code class="docutils literal notranslate"><span class="pre">cell_map_sites()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.voronoi_unit_cell"><code class="docutils literal notranslate"><span class="pre">voronoi_unit_cell()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.matched_spacing"><code class="docutils literal notranslate"><span class="pre">matched_spacing()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#connectivity-checks">Connectivity checks</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.check_connectivity"><code class="docutils literal notranslate"><span class="pre">check_connectivity()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.require_connected"><code class="docutils literal notranslate"><span class="pre">require_connected()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.ConnectivityReport"><code class="docutils literal notranslate"><span class="pre">ConnectivityReport</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.ConnectivityReport.component_count"><code class="docutils literal notranslate"><span class="pre">ConnectivityReport.component_count</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.ConnectivityReport.connected"><code class="docutils literal notranslate"><span class="pre">ConnectivityReport.connected</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.ConnectivityReport.volumes"><code class="docutils literal notranslate"><span class="pre">ConnectivityReport.volumes</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.ConnectivityReport.sample_points"><code class="docutils literal notranslate"><span class="pre">ConnectivityReport.sample_points</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.ConnectivityReport.bounds"><code class="docutils literal notranslate"><span class="pre">ConnectivityReport.bounds</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.ConnectivityReport.voxel_size"><code class="docutils literal notranslate"><span class="pre">ConnectivityReport.voxel_size</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.ConnectivityReport.ignored_count"><code class="docutils literal notranslate"><span class="pre">ConnectivityReport.ignored_count</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.ConnectivityReport.islands"><code class="docutils literal notranslate"><span class="pre">ConnectivityReport.islands</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#pyvcad_metamaterials.ConnectivityReport.largest_fraction"><code class="docutils literal notranslate"><span class="pre">ConnectivityReport.largest_fraction</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/python-api/pyvcad_metamaterials/grading.rst.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Charles Wade and Robert MacCurdy.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.2.0.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

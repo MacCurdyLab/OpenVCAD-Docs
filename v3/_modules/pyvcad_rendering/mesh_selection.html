@@ -1,0 +1,1137 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>pyvcad_rendering.mesh_selection &#8212; OpenVCAD 3.2 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_theme.css?v=8cc8a5a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_branding.css?v=c43e02c9" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="../../_static/documentation_options.js?v=828ea960"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/pyvcad_rendering/mesh_selection';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../../_static/openvcad_lightbox.js?v=e11fca97"></script>
+    <script src="../../_static/openvcad_comparison.js?v=0e3a0b21"></script>
+    <script src="../../_static/openvcad_carousel.js?v=954187e7"></script>
+    <link rel="icon" href="../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="OpenVCAD - Home"/>
+    <img src="../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="OpenVCAD - Home"/>
+  
+  
+    <p class="title logo__title">
+      <span class="logo__title-full">OpenVCAD Documentation</span>
+      <span class="logo__title-compact" aria-hidden="true">Documentation</span>
+      <span class="logo__title-short" aria-hidden="true">Docs</span>
+    </p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+
+
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item dropdown">
+      <button class="btn dropdown-toggle nav-link" type="button" id="pst-nav-dd-guides" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Guides
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-guides">
+        <li><a class="dropdown-item" href="../../guides/index.html">All guides</a></li>
+        <li><hr class="dropdown-divider"></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/introduction/index.html">Introduction</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/modeling/index.html">Shape modeling</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/fields/index.html">Field-driven design</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/imports/index.html">Imported geometry</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/metamaterials/index.html">Metamaterials</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/analysis/index.html">Analysis</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../../guides/compilers/index.html">Compilers and export</a></li>
+        
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../gallery.html">Gallery</a>
+    </li>
+    <li class="nav-item dropdown">
+      <button class="btn dropdown-toggle nav-link" type="button" id="pst-nav-dd-py" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Python API
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-py">
+        <li><a class="dropdown-item" href="../../python-api/pyvcad/index.html">pyvcad module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_compilers/index.html">pyvcad_compilers module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_rendering/index.html">pyvcad_rendering module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_attribute_resolver/index.html">pyvcad_attribute_resolver module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_metamaterials/index.html">pyvcad_metamaterials module</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../cpp-api/index.html">C++ API</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../papers.html">Papers</a>
+    </li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar hide-on-wide">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="openvcad-mobile-nav" aria-label="Site navigation">
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item"><a class="nav-link" href="../../index.html">Home</a></li>
+    <li class="nav-item">
+      <details class="openvcad-mobile-nav__group">
+        <summary>Guides</summary>
+        <ul>
+          <li><a class="nav-link" href="../../guides/index.html">All guides</a></li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Introduction</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/introduction/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../install.html">Installation</a></li>
+                
+                <li><a class="nav-link" href="../../guides/introduction/theory-and-motivation.html">Theory and Motivation</a></li>
+                
+                <li><a class="nav-link" href="../../guides/introduction/getting-started.html">Getting Started with OpenVCAD</a></li>
+                
+                <li><a class="nav-link" href="../../guides/introduction/moving-from-v2-to-v3.html">Moving from Version 2 to 3</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Shape modeling</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/modeling/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/primitives.html">Primitive catalog</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/offsets-blends-arrays.html">Offsets, blends and arrays</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/curves-profiles-sweeps.html">Curves, profiles and sweeps</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/sketching.html">Sketching and extruding</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/deforming-space.html">Deforming space</a></li>
+                
+                <li><a class="nav-link" href="../../guides/modeling/surface-relief.html">Physical surface relief</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Field-driven design</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/fields/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/gradients.html">Functional grading</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/fields.html">Fields</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/math-expressions.html">Math expressions</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/numba-attributes.html">Python functions for attributes</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/attribute-conflicts.html">Attribute conflict resolution</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/volumes.html">Working with volumes</a></li>
+                
+                <li><a class="nav-link" href="../../guides/fields/simulation-driven-design.html">Simulation-driven design</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Imported geometry</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/imports/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/imports/cadquery.html">CAD with CadQuery</a></li>
+                
+                <li><a class="nav-link" href="../../guides/imports/textured-mesh.html">Importing textured solids</a></li>
+                
+                <li><a class="nav-link" href="../../guides/imports/3mf-beam-lattice.html">Importing 3MF beam lattices</a></li>
+                
+                <li><a class="nav-link" href="../../guides/imports/mesh-selection.html">Selecting triangle-mesh patches</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Metamaterials</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/concepts.html">Concepts and representation</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/catalog.html">TPMS and lattice catalog</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/custom-unit-cells.html">Custom unit cells</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/stochastic-lattices.html">Stochastic lattices</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/geometry-grading.html">Functionally graded geometry</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/attribute-modeling.html">Attribute modeling</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/cylindrical-spherical-cell-maps.html">Cylindrical and spherical cell maps</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/conformal-cad.html">Conformal mapping CAD surfaces</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/conformal-meshes.html">Conformal mapping triangle meshes</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
+                
+                <li><a class="nav-link" href="../../guides/metamaterials/properties.html">Geometric characterization</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Analysis</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/analysis/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/analysis/analysing-designs.html">Analysing designs</a></li>
+                
+                <li><a class="nav-link" href="../../guides/analysis/support-analyzer.html">Inkjet support volumes</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Compilers and export</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../../guides/compilers/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/material-inkjet.html">Material Inkjet</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/multi-material-vat.html">Multi-material VAT</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/color-inkjet.html">Color Inkjet</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/vat-photo.html">VAT Photo</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/slicer-project.html">Slicer Project</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/simulation-compiler.html">Simulation Compiler</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/attribute-resolver.html">Attribute modifier and resolver</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/meshing-and-export.html">Meshing and export</a></li>
+                
+                <li><a class="nav-link" href="../../guides/compilers/custom-python-compiler.html">Creating a compiler in Python</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+        </ul>
+      </details>
+    </li>
+    <li class="nav-item"><a class="nav-link" href="../../gallery.html">Gallery</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../python-api/index.html">Python API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../cpp-api/index.html">C++ API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../papers.html">Papers</a></li>
+  </ul>
+</nav>
+</div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Module code</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">pyvcad_rendering.mesh_selection</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <h1>Source code for pyvcad_rendering.mesh_selection</h1><div class="highlight"><pre>
+<span></span><span class="sd">"""Persistence and reproducible workflows for core ``pyvcad.MeshSelection`` objects."""</span>
+
+<span class="c1"># STD</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">json</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pathlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">Path</span>
+
+<span class="c1"># OpenVCAD</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+
+
+<span class="c1">#: Value of the ``format`` field in a saved mesh-selection JSON file.</span>
+<span class="n">SELECTION_FILE_FORMAT</span> <span class="o">=</span> <span class="s2">"openvcad-mesh-selection"</span>
+<span class="c1">#: Version of the mesh-selection file format written by :func:`save_mesh_selection`.</span>
+<span class="n">SELECTION_FILE_VERSION</span> <span class="o">=</span> <span class="mi">1</span>
+<span class="n">SELECTION_METHODS</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="s2">"manual"</span><span class="p">,</span>
+    <span class="s2">"linked"</span><span class="p">,</span>
+    <span class="s2">"linked_by_face_angle"</span><span class="p">,</span>
+    <span class="s2">"linked_constrained"</span><span class="p">,</span>
+    <span class="s2">"enclosed_region"</span><span class="p">,</span>
+    <span class="s2">"geodesic_radius"</span><span class="p">,</span>
+<span class="p">)</span>
+
+
+<div class="viewcode-block" id="resolve_selection_mesh">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/mesh_selection.html#pyvcad_rendering.resolve_selection_mesh">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">resolve_selection_mesh</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Return a ``SurfaceMesh`` from an existing mesh or an OpenVCAD tree.</span>
+
+<span class="sd">    Tree resolution always requires an explicit voxel size. The resulting triangle IDs are tied to</span>
+<span class="sd">    that exact resolved mesh and must not be reused after changing the resolution.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">      source (SurfaceMesh | Node): A mesh to use as is, or a tree to mesh.</span>
+<span class="sd">      voxel_size (float, optional): Meshing voxel size in mm. Required for a ``Node``, and must be</span>
+<span class="sd">        None for a ``SurfaceMesh``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      SurfaceMesh: The mesh that triangle IDs refer to.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">      ValueError: If ``voxel_size`` is missing for a ``Node`` or given for a ``SurfaceMesh``.</span>
+<span class="sd">      TypeError: If ``source`` is neither type.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">SurfaceMesh</span><span class="p">):</span>
+        <span class="k">if</span> <span class="n">voxel_size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"voxel_size is only valid when resolving an OpenVCAD Node"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">source</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">Node</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"source must be a pyvcad.SurfaceMesh or pyvcad.Node"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">voxel_size</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">voxel_size</span><span class="p">))</span> <span class="ow">or</span> <span class="nb">float</span><span class="p">(</span><span class="n">voxel_size</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"resolving an OpenVCAD Node requires a positive finite voxel_size"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pv</span><span class="o">.</span><span class="n">SurfaceMesh</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="nb">float</span><span class="p">(</span><span class="n">voxel_size</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="mesh_selection_recipe">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/mesh_selection.html#pyvcad_rendering.mesh_selection_recipe">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">mesh_selection_recipe</span><span class="p">(</span>
+    <span class="n">method</span><span class="p">,</span>
+    <span class="n">triangle_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">vertex_id</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">point</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">ray_origin</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">ray_direction</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">max_angle_degrees</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">radius</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">blocked_edges</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">triangle_regions</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+    <span class="n">boundary_edges</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Build a validated, JSON-serializable selection recipe.</span>
+
+<span class="sd">    A point or ray seed is geometrically replayable after deliberate remeshing. A triangle-ID seed</span>
+<span class="sd">    is exact but is only safe while the mesh fingerprint remains unchanged.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">      method (str): "manual", "linked", "linked_by_face_angle", "linked_constrained",</span>
+<span class="sd">        "enclosed_region" or "geodesic_radius". A "manual" recipe takes no other arguments.</span>
+<span class="sd">      triangle_id (int, optional): Seed triangle. Not valid for "geodesic_radius".</span>
+<span class="sd">      vertex_id (int, optional): Seed vertex. Only valid for "geodesic_radius".</span>
+<span class="sd">      point (Vec3 | sequence, optional): Seed point; the nearest triangle or vertex is used.</span>
+<span class="sd">      ray_origin (Vec3 | sequence, optional): Ray seed origin. Requires ``ray_direction``.</span>
+<span class="sd">      ray_direction (Vec3 | sequence, optional): Ray seed direction; the first hit is used.</span>
+<span class="sd">      max_angle_degrees (float, optional): Face-angle limit in [0, 180]. Required for</span>
+<span class="sd">        "linked_by_face_angle", optional for "linked_constrained".</span>
+<span class="sd">      radius (float, optional): Geodesic radius in mm. Required for "geodesic_radius".</span>
+<span class="sd">      blocked_edges (list[tuple[int, int]], optional): Mesh edges growth cannot cross, for</span>
+<span class="sd">        "linked_constrained".</span>
+<span class="sd">      triangle_regions (list[int], optional): Per-triangle labels; unequal labels stop growth, for</span>
+<span class="sd">        "linked_constrained".</span>
+<span class="sd">      boundary_edges (list[tuple[int, int]], optional): Closed loop of at least three edges.</span>
+<span class="sd">        Required for "enclosed_region".</span>
+
+<span class="sd">    Exactly one seed (``triangle_id``, ``vertex_id``, ``point``, or the ray pair) is required for</span>
+<span class="sd">    every method except "manual".</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      dict: The recipe, ready for :func:`apply_mesh_selection_recipe` or</span>
+<span class="sd">      :func:`save_mesh_selection`.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">      ValueError: If the method is unknown or the seed and parameters do not fit it.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">SELECTION_METHODS</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"unsupported mesh-selection recipe method"</span><span class="p">)</span>
+
+    <span class="n">modes</span> <span class="o">=</span> <span class="p">[</span>
+        <span class="n">triangle_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">vertex_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">point</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">ray_origin</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">ray_direction</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">]</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"manual"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="nb">any</span><span class="p">(</span><span class="n">modes</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="n">max_angle_degrees</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="n">radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="n">blocked_edges</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="n">triangle_regions</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="ow">or</span> <span class="n">boundary_edges</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"manual selections do not use a seed recipe"</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"method"</span><span class="p">:</span> <span class="s2">"manual"</span><span class="p">}</span>
+    <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span> <span class="k">for</span> <span class="n">mode</span> <span class="ow">in</span> <span class="n">modes</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"provide exactly one seed: triangle_id, point, or ray origin/direction"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"geodesic_radius"</span> <span class="ow">and</span> <span class="n">triangle_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"geodesic_radius uses vertex_id, point, or ray seeds"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">!=</span> <span class="s2">"geodesic_radius"</span> <span class="ow">and</span> <span class="n">vertex_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"vertex_id seeds are only valid for geodesic_radius"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">triangle_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">triangle_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">triangle_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">triangle_id</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"triangle_id must be non-negative"</span><span class="p">)</span>
+        <span class="n">seed</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"mode"</span><span class="p">:</span> <span class="s2">"triangle_id"</span><span class="p">,</span> <span class="s2">"triangle_id"</span><span class="p">:</span> <span class="n">triangle_id</span><span class="p">}</span>
+    <span class="k">elif</span> <span class="n">vertex_id</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">vertex_id</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">vertex_id</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">vertex_id</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"vertex_id must be non-negative"</span><span class="p">)</span>
+        <span class="n">seed</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"mode"</span><span class="p">:</span> <span class="s2">"vertex_id"</span><span class="p">,</span> <span class="s2">"vertex_id"</span><span class="p">:</span> <span class="n">vertex_id</span><span class="p">}</span>
+    <span class="k">elif</span> <span class="n">point</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">seed</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"mode"</span><span class="p">:</span> <span class="s2">"point"</span><span class="p">,</span> <span class="s2">"point"</span><span class="p">:</span> <span class="n">_vector_values</span><span class="p">(</span><span class="n">point</span><span class="p">,</span> <span class="s2">"point"</span><span class="p">)}</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">ray_origin</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">ray_direction</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"ray seeds require both ray_origin and ray_direction"</span><span class="p">)</span>
+        <span class="n">direction</span> <span class="o">=</span> <span class="n">_vector_values</span><span class="p">(</span><span class="n">ray_direction</span><span class="p">,</span> <span class="s2">"ray_direction"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">sum</span><span class="p">(</span><span class="n">component</span> <span class="o">*</span> <span class="n">component</span> <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">direction</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"ray_direction must be non-zero"</span><span class="p">)</span>
+        <span class="n">seed</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">"mode"</span><span class="p">:</span> <span class="s2">"ray"</span><span class="p">,</span>
+            <span class="s2">"origin"</span><span class="p">:</span> <span class="n">_vector_values</span><span class="p">(</span><span class="n">ray_origin</span><span class="p">,</span> <span class="s2">"ray_origin"</span><span class="p">),</span>
+            <span class="s2">"direction"</span><span class="p">:</span> <span class="n">direction</span><span class="p">,</span>
+        <span class="p">}</span>
+
+    <span class="n">recipe</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"method"</span><span class="p">:</span> <span class="n">method</span><span class="p">,</span> <span class="s2">"seed"</span><span class="p">:</span> <span class="n">seed</span><span class="p">}</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"linked_by_face_angle"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">max_angle_degrees</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"linked_by_face_angle requires max_angle_degrees"</span><span class="p">)</span>
+        <span class="n">angle</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">max_angle_degrees</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="ow">or</span> <span class="n">angle</span> <span class="o">&lt;</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">angle</span> <span class="o">&gt;</span> <span class="mf">180.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"max_angle_degrees must be finite and between 0 and 180"</span><span class="p">)</span>
+        <span class="n">recipe</span><span class="p">[</span><span class="s2">"max_angle_degrees"</span><span class="p">]</span> <span class="o">=</span> <span class="n">angle</span>
+    <span class="k">elif</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"linked_constrained"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">max_angle_degrees</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">angle</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">max_angle_degrees</span><span class="p">)</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">angle</span><span class="p">)</span> <span class="ow">or</span> <span class="n">angle</span> <span class="o">&lt;</span> <span class="mf">0.0</span> <span class="ow">or</span> <span class="n">angle</span> <span class="o">&gt;</span> <span class="mf">180.0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"max_angle_degrees must be finite and between 0 and 180"</span><span class="p">)</span>
+            <span class="n">recipe</span><span class="p">[</span><span class="s2">"max_angle_degrees"</span><span class="p">]</span> <span class="o">=</span> <span class="n">angle</span>
+        <span class="n">recipe</span><span class="p">[</span><span class="s2">"blocked_edges"</span><span class="p">]</span> <span class="o">=</span> <span class="n">_edge_values</span><span class="p">(</span><span class="n">blocked_edges</span> <span class="ow">or</span> <span class="p">[],</span> <span class="s2">"blocked_edges"</span><span class="p">)</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">recipe</span><span class="p">[</span><span class="s2">"triangle_regions"</span><span class="p">]</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="p">(</span><span class="n">triangle_regions</span> <span class="ow">or</span> <span class="p">[])]</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"triangle_regions must contain integer labels"</span><span class="p">)</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+    <span class="k">elif</span> <span class="n">max_angle_degrees</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">"max_angle_degrees is only valid for linked_by_face_angle or linked_constrained"</span>
+        <span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"enclosed_region"</span><span class="p">:</span>
+        <span class="n">recipe</span><span class="p">[</span><span class="s2">"boundary_edges"</span><span class="p">]</span> <span class="o">=</span> <span class="n">_edge_values</span><span class="p">(</span><span class="n">boundary_edges</span> <span class="ow">or</span> <span class="p">[],</span> <span class="s2">"boundary_edges"</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">recipe</span><span class="p">[</span><span class="s2">"boundary_edges"</span><span class="p">])</span> <span class="o">&lt;</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"enclosed_region requires a closed boundary of at least three edges"</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">boundary_edges</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"boundary_edges is only valid for enclosed_region"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"geodesic_radius"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">radius</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"geodesic_radius requires radius"</span><span class="p">)</span>
+        <span class="n">distance</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">radius</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">distance</span><span class="p">)</span> <span class="ow">or</span> <span class="n">distance</span> <span class="o">&lt;</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"radius must be finite and non-negative"</span><span class="p">)</span>
+        <span class="n">recipe</span><span class="p">[</span><span class="s2">"radius"</span><span class="p">]</span> <span class="o">=</span> <span class="n">distance</span>
+    <span class="k">elif</span> <span class="n">radius</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"radius is only valid for geodesic_radius"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="o">!=</span> <span class="s2">"linked_constrained"</span> <span class="ow">and</span> <span class="p">(</span><span class="n">blocked_edges</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">triangle_regions</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"blocked_edges and triangle_regions are only valid for linked_constrained"</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">recipe</span></div>
+
+
+
+<div class="viewcode-block" id="apply_mesh_selection_recipe">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/mesh_selection.html#pyvcad_rendering.apply_mesh_selection_recipe">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">apply_mesh_selection_recipe</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">recipe</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Run a selection recipe on a resolved ``SurfaceMesh``.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">      mesh (SurfaceMesh): The mesh to select on, for example from :func:`resolve_selection_mesh`.</span>
+<span class="sd">      recipe (dict): A recipe from :func:`mesh_selection_recipe`. "manual" recipes hold no seed and</span>
+<span class="sd">        are rejected.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      MeshSelection: The selected triangles.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">      ValueError: If the recipe is invalid or "manual".</span>
+<span class="sd">      RuntimeError: If a ray seed misses the mesh.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">SurfaceMesh</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"mesh must be a pyvcad.SurfaceMesh"</span><span class="p">)</span>
+    <span class="n">recipe</span> <span class="o">=</span> <span class="n">_validated_recipe</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="n">recipe</span><span class="p">[</span><span class="s2">"method"</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"manual"</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"manual selection files contain IDs and cannot be replayed geometrically"</span><span class="p">)</span>
+
+    <span class="n">seed</span> <span class="o">=</span> <span class="n">recipe</span><span class="p">[</span><span class="s2">"seed"</span><span class="p">]</span>
+    <span class="n">hit</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="k">if</span> <span class="n">seed</span><span class="p">[</span><span class="s2">"mode"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"ray"</span><span class="p">:</span>
+        <span class="n">hit</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">ray_intersection</span><span class="p">(</span><span class="n">_vec3</span><span class="p">(</span><span class="n">seed</span><span class="p">[</span><span class="s2">"origin"</span><span class="p">]),</span> <span class="n">_vec3</span><span class="p">(</span><span class="n">seed</span><span class="p">[</span><span class="s2">"direction"</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">hit</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"mesh-selection recipe ray does not intersect the resolved mesh"</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"geodesic_radius"</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">seed</span><span class="p">[</span><span class="s2">"mode"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"vertex_id"</span><span class="p">:</span>
+            <span class="n">vertex_id</span> <span class="o">=</span> <span class="n">seed</span><span class="p">[</span><span class="s2">"vertex_id"</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">seed</span><span class="p">[</span><span class="s2">"mode"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"point"</span><span class="p">:</span>
+            <span class="n">vertex_id</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">nearest_vertex</span><span class="p">(</span><span class="n">_vec3</span><span class="p">(</span><span class="n">seed</span><span class="p">[</span><span class="s2">"point"</span><span class="p">]))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">vertex_id</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">nearest_vertex</span><span class="p">(</span><span class="n">hit</span><span class="o">.</span><span class="n">point</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">mesh</span><span class="o">.</span><span class="n">select_by_geodesic_radius</span><span class="p">(</span><span class="n">vertex_id</span><span class="p">,</span> <span class="n">recipe</span><span class="p">[</span><span class="s2">"radius"</span><span class="p">])</span>
+
+    <span class="k">if</span> <span class="n">seed</span><span class="p">[</span><span class="s2">"mode"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"triangle_id"</span><span class="p">:</span>
+        <span class="n">triangle_id</span> <span class="o">=</span> <span class="n">seed</span><span class="p">[</span><span class="s2">"triangle_id"</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">seed</span><span class="p">[</span><span class="s2">"mode"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"point"</span><span class="p">:</span>
+        <span class="n">triangle_id</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">nearest_triangle</span><span class="p">(</span><span class="n">_vec3</span><span class="p">(</span><span class="n">seed</span><span class="p">[</span><span class="s2">"point"</span><span class="p">]))</span><span class="o">.</span><span class="n">triangle_id</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">triangle_id</span> <span class="o">=</span> <span class="n">hit</span><span class="o">.</span><span class="n">triangle_id</span>
+
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"linked"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">mesh</span><span class="o">.</span><span class="n">select_linked</span><span class="p">(</span><span class="n">triangle_id</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"linked_by_face_angle"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">mesh</span><span class="o">.</span><span class="n">select_linked_by_face_angle</span><span class="p">(</span><span class="n">triangle_id</span><span class="p">,</span> <span class="n">recipe</span><span class="p">[</span><span class="s2">"max_angle_degrees"</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"linked_constrained"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">mesh</span><span class="o">.</span><span class="n">select_linked_constrained</span><span class="p">(</span>
+            <span class="n">triangle_id</span><span class="p">,</span>
+            <span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"max_angle_degrees"</span><span class="p">),</span>
+            <span class="n">recipe</span><span class="p">[</span><span class="s2">"blocked_edges"</span><span class="p">],</span>
+            <span class="n">recipe</span><span class="p">[</span><span class="s2">"triangle_regions"</span><span class="p">],</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">mesh</span><span class="o">.</span><span class="n">select_enclosed_region</span><span class="p">(</span><span class="n">recipe</span><span class="p">[</span><span class="s2">"boundary_edges"</span><span class="p">],</span> <span class="n">triangle_id</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="save_mesh_selection">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/mesh_selection.html#pyvcad_rendering.save_mesh_selection">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">save_mesh_selection</span><span class="p">(</span><span class="n">selection</span><span class="p">,</span> <span class="n">path</span><span class="p">,</span> <span class="n">recipe</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Write a versioned triangle-ID selection file with source safety metadata.</span>
+
+<span class="sd">    The JSON file stores the triangle IDs, the source mesh fingerprint and counts, and the recipe,</span>
+<span class="sd">    so :func:`load_mesh_selection` can refuse a changed mesh and :func:`replay_mesh_selection` can</span>
+<span class="sd">    rerun a point or ray seed on it.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">      selection (MeshSelection): The selection to save. Its source mesh must be unchanged.</span>
+<span class="sd">      path (str | Path): Output file. Parent directories are created.</span>
+<span class="sd">      recipe (dict, optional): The recipe that made the selection. Defaults to a "manual" recipe.</span>
+<span class="sd">      voxel_size (float, optional): The voxel size the source tree was meshed at, recorded for</span>
+<span class="sd">        reference.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">      TypeError: If ``selection`` is not a ``MeshSelection``.</span>
+<span class="sd">      RuntimeError: If the selection's source mesh has changed.</span>
+<span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">selection</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">MeshSelection</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">"selection must be a pyvcad.MeshSelection"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">selection</span><span class="o">.</span><span class="n">source_is_current</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s2">"cannot save a selection whose source mesh has changed"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">recipe</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">recipe</span> <span class="o">=</span> <span class="p">{</span><span class="s2">"method"</span><span class="p">:</span> <span class="s2">"manual"</span><span class="p">}</span>
+    <span class="n">recipe</span> <span class="o">=</span> <span class="n">_validated_recipe</span><span class="p">(</span><span class="n">recipe</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">voxel_size</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">voxel_size</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">voxel_size</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">voxel_size</span><span class="p">)</span> <span class="ow">or</span> <span class="n">voxel_size</span> <span class="o">&lt;=</span> <span class="mf">0.0</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"voxel_size must be positive and finite"</span><span class="p">)</span>
+
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">selection</span><span class="o">.</span><span class="n">source_mesh</span>
+    <span class="n">document</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">"format"</span><span class="p">:</span> <span class="n">SELECTION_FILE_FORMAT</span><span class="p">,</span>
+        <span class="s2">"version"</span><span class="p">:</span> <span class="n">SELECTION_FILE_VERSION</span><span class="p">,</span>
+        <span class="s2">"source"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"fingerprint"</span><span class="p">:</span> <span class="n">selection</span><span class="o">.</span><span class="n">source_fingerprint</span><span class="p">,</span>
+            <span class="s2">"vertex_count"</span><span class="p">:</span> <span class="n">mesh</span><span class="o">.</span><span class="n">vertex_count</span><span class="p">,</span>
+            <span class="s2">"triangle_count"</span><span class="p">:</span> <span class="n">mesh</span><span class="o">.</span><span class="n">triangle_count</span><span class="p">,</span>
+            <span class="s2">"voxel_size"</span><span class="p">:</span> <span class="n">voxel_size</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"selection"</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">"triangle_ids"</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">selection</span><span class="o">.</span><span class="n">triangle_ids</span><span class="p">),</span>
+            <span class="s2">"triangle_count"</span><span class="p">:</span> <span class="n">selection</span><span class="o">.</span><span class="n">triangle_count</span><span class="p">,</span>
+            <span class="s2">"area_mm2"</span><span class="p">:</span> <span class="n">selection</span><span class="o">.</span><span class="n">area</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">"recipe"</span><span class="p">:</span> <span class="n">recipe</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">output</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">parent</span><span class="o">.</span><span class="n">mkdir</span><span class="p">(</span><span class="n">parents</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">output</span><span class="o">.</span><span class="n">write_text</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">+</span> <span class="s2">"</span><span class="se">\n</span><span class="s2">"</span><span class="p">,</span> <span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="load_mesh_selection">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/mesh_selection.html#pyvcad_rendering.load_mesh_selection">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_mesh_selection</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Load exact triangle IDs, rejecting any source fingerprint mismatch.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">      path (str | Path): A file written by :func:`save_mesh_selection`.</span>
+<span class="sd">      source (SurfaceMesh | Node): The mesh, or the tree to mesh, that the selection was made on.</span>
+<span class="sd">      voxel_size (float, optional): Meshing voxel size in mm. Required for a ``Node``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      MeshSelection: The saved triangles on the resolved mesh.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">      RuntimeError: If the resolved mesh's fingerprint differs from the saved one.</span>
+<span class="sd">    """</span>
+    <span class="n">document</span> <span class="o">=</span> <span class="n">_load_document</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">resolve_selection_mesh</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">=</span><span class="n">voxel_size</span><span class="p">)</span>
+    <span class="n">expected</span> <span class="o">=</span> <span class="n">document</span><span class="p">[</span><span class="s2">"source"</span><span class="p">][</span><span class="s2">"fingerprint"</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">fingerprint</span> <span class="o">!=</span> <span class="n">expected</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="s2">"mesh-selection source fingerprint mismatch; triangle IDs are unsafe for this mesh. "</span>
+            <span class="s2">"Use replay_mesh_selection() only when the saved point/ray recipe should be rerun."</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">mesh</span><span class="o">.</span><span class="n">select_triangles</span><span class="p">(</span><span class="n">document</span><span class="p">[</span><span class="s2">"selection"</span><span class="p">][</span><span class="s2">"triangle_ids"</span><span class="p">])</span></div>
+
+
+
+<div class="viewcode-block" id="replay_mesh_selection">
+<a class="viewcode-back" href="../../python-api/pyvcad_rendering/mesh_selection.html#pyvcad_rendering.replay_mesh_selection">[docs]</a>
+<span class="k">def</span><span class="w"> </span><span class="nf">replay_mesh_selection</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Replay a saved point/ray recipe on intentionally changed or remeshed geometry.</span>
+
+<span class="sd">    Exact IDs are returned when the fingerprint still matches. Manual selections and triangle-ID</span>
+<span class="sd">    recipes cannot be replayed when it differs because they contain no geometry-stable seed.</span>
+
+<span class="sd">    Arguments:</span>
+<span class="sd">      path (str | Path): A file written by :func:`save_mesh_selection`.</span>
+<span class="sd">      source (SurfaceMesh | Node): The current mesh, or the tree to mesh.</span>
+<span class="sd">      voxel_size (float, optional): Meshing voxel size in mm. Required for a ``Node``.</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">      MeshSelection: The saved triangles, or the recipe rerun on the changed mesh.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">      RuntimeError: If the mesh changed and the recipe has no point or ray seed, or uses a</span>
+<span class="sd">        topology-specific method ("linked_constrained" or "enclosed_region").</span>
+<span class="sd">    """</span>
+    <span class="n">document</span> <span class="o">=</span> <span class="n">_load_document</span><span class="p">(</span><span class="n">path</span><span class="p">)</span>
+    <span class="n">mesh</span> <span class="o">=</span> <span class="n">resolve_selection_mesh</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">voxel_size</span><span class="o">=</span><span class="n">voxel_size</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mesh</span><span class="o">.</span><span class="n">fingerprint</span> <span class="o">==</span> <span class="n">document</span><span class="p">[</span><span class="s2">"source"</span><span class="p">][</span><span class="s2">"fingerprint"</span><span class="p">]:</span>
+        <span class="k">return</span> <span class="n">mesh</span><span class="o">.</span><span class="n">select_triangles</span><span class="p">(</span><span class="n">document</span><span class="p">[</span><span class="s2">"selection"</span><span class="p">][</span><span class="s2">"triangle_ids"</span><span class="p">])</span>
+    <span class="n">recipe</span> <span class="o">=</span> <span class="n">document</span><span class="p">[</span><span class="s2">"recipe"</span><span class="p">]</span>
+    <span class="n">topology_specific</span> <span class="o">=</span> <span class="n">recipe</span><span class="p">[</span><span class="s2">"method"</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"linked_constrained"</span><span class="p">,</span> <span class="s2">"enclosed_region"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span>
+        <span class="n">recipe</span><span class="p">[</span><span class="s2">"method"</span><span class="p">]</span> <span class="o">==</span> <span class="s2">"manual"</span>
+        <span class="ow">or</span> <span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"seed"</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mode"</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">"triangle_id"</span><span class="p">,</span> <span class="s2">"vertex_id"</span><span class="p">)</span>
+        <span class="ow">or</span> <span class="n">topology_specific</span>
+    <span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span>
+            <span class="s2">"mesh-selection source changed and the saved selection has no replayable point/ray seed"</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">apply_mesh_selection_recipe</span><span class="p">(</span><span class="n">mesh</span><span class="p">,</span> <span class="n">recipe</span><span class="p">)</span></div>
+
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_load_document</span><span class="p">(</span><span class="n">path</span><span class="p">):</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">document</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">Path</span><span class="p">(</span><span class="n">path</span><span class="p">)</span><span class="o">.</span><span class="n">read_text</span><span class="p">(</span><span class="n">encoding</span><span class="o">=</span><span class="s2">"utf-8"</span><span class="p">))</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">OSError</span><span class="p">,</span> <span class="n">json</span><span class="o">.</span><span class="n">JSONDecodeError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"unable to read mesh-selection JSON: </span><span class="si">{}</span><span class="s2">"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">error</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">document</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"mesh-selection file must contain a JSON object"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">document</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"format"</span><span class="p">)</span> <span class="o">!=</span> <span class="n">SELECTION_FILE_FORMAT</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"not an OpenVCAD mesh-selection file"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">document</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"version"</span><span class="p">)</span> <span class="o">!=</span> <span class="n">SELECTION_FILE_VERSION</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"unsupported mesh-selection file version"</span><span class="p">)</span>
+    <span class="n">source</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"source"</span><span class="p">)</span>
+    <span class="n">selection</span> <span class="o">=</span> <span class="n">document</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"selection"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">source</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"fingerprint"</span><span class="p">),</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"mesh-selection file is missing source fingerprint metadata"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">selection</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">selection</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"triangle_ids"</span><span class="p">),</span> <span class="nb">list</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"mesh-selection file is missing triangle IDs"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="n">value</span> <span class="o">&gt;=</span> <span class="mi">0</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">selection</span><span class="p">[</span><span class="s2">"triangle_ids"</span><span class="p">]):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"mesh-selection triangle IDs must be non-negative integers"</span><span class="p">)</span>
+    <span class="n">document</span><span class="p">[</span><span class="s2">"recipe"</span><span class="p">]</span> <span class="o">=</span> <span class="n">_validated_recipe</span><span class="p">(</span><span class="n">document</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"recipe"</span><span class="p">,</span> <span class="p">{</span><span class="s2">"method"</span><span class="p">:</span> <span class="s2">"manual"</span><span class="p">}))</span>
+    <span class="k">return</span> <span class="n">document</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_validated_recipe</span><span class="p">(</span><span class="n">recipe</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">recipe</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"mesh-selection recipe must be a dictionary"</span><span class="p">)</span>
+    <span class="n">method</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"method"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">method</span> <span class="o">==</span> <span class="s2">"manual"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s2">"method"</span><span class="p">:</span> <span class="s2">"manual"</span><span class="p">}</span>
+    <span class="n">seed</span> <span class="o">=</span> <span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"seed"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">seed</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"linked mesh-selection recipe is missing its seed"</span><span class="p">)</span>
+    <span class="n">mode</span> <span class="o">=</span> <span class="n">seed</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"mode"</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"triangle_id"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">mesh_selection_recipe</span><span class="p">(</span>
+            <span class="n">method</span><span class="p">,</span>
+            <span class="n">triangle_id</span><span class="o">=</span><span class="n">seed</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"triangle_id"</span><span class="p">),</span>
+            <span class="n">max_angle_degrees</span><span class="o">=</span><span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"max_angle_degrees"</span><span class="p">),</span>
+            <span class="n">blocked_edges</span><span class="o">=</span><span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"blocked_edges"</span><span class="p">),</span>
+            <span class="n">triangle_regions</span><span class="o">=</span><span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"triangle_regions"</span><span class="p">),</span>
+            <span class="n">boundary_edges</span><span class="o">=</span><span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"boundary_edges"</span><span class="p">),</span>
+            <span class="n">radius</span><span class="o">=</span><span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"radius"</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"vertex_id"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">mesh_selection_recipe</span><span class="p">(</span>
+            <span class="n">method</span><span class="p">,</span>
+            <span class="n">vertex_id</span><span class="o">=</span><span class="n">seed</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"vertex_id"</span><span class="p">),</span>
+            <span class="n">radius</span><span class="o">=</span><span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"radius"</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"point"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">mesh_selection_recipe</span><span class="p">(</span>
+            <span class="n">method</span><span class="p">,</span>
+            <span class="n">point</span><span class="o">=</span><span class="n">seed</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"point"</span><span class="p">),</span>
+            <span class="n">max_angle_degrees</span><span class="o">=</span><span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"max_angle_degrees"</span><span class="p">),</span>
+            <span class="n">blocked_edges</span><span class="o">=</span><span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"blocked_edges"</span><span class="p">),</span>
+            <span class="n">triangle_regions</span><span class="o">=</span><span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"triangle_regions"</span><span class="p">),</span>
+            <span class="n">boundary_edges</span><span class="o">=</span><span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"boundary_edges"</span><span class="p">),</span>
+            <span class="n">radius</span><span class="o">=</span><span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"radius"</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">if</span> <span class="n">mode</span> <span class="o">==</span> <span class="s2">"ray"</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">mesh_selection_recipe</span><span class="p">(</span>
+            <span class="n">method</span><span class="p">,</span>
+            <span class="n">ray_origin</span><span class="o">=</span><span class="n">seed</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"origin"</span><span class="p">),</span>
+            <span class="n">ray_direction</span><span class="o">=</span><span class="n">seed</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"direction"</span><span class="p">),</span>
+            <span class="n">max_angle_degrees</span><span class="o">=</span><span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"max_angle_degrees"</span><span class="p">),</span>
+            <span class="n">blocked_edges</span><span class="o">=</span><span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"blocked_edges"</span><span class="p">),</span>
+            <span class="n">triangle_regions</span><span class="o">=</span><span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"triangle_regions"</span><span class="p">),</span>
+            <span class="n">boundary_edges</span><span class="o">=</span><span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"boundary_edges"</span><span class="p">),</span>
+            <span class="n">radius</span><span class="o">=</span><span class="n">recipe</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">"radius"</span><span class="p">),</span>
+        <span class="p">)</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"mesh-selection recipe has an unsupported seed mode"</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_vector_values</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">):</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">x</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">y</span><span class="p">),</span> <span class="nb">float</span><span class="p">(</span><span class="n">value</span><span class="o">.</span><span class="n">z</span><span class="p">)]</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">component</span><span class="p">)</span> <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">value</span><span class="p">]</span>
+        <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"</span><span class="si">{}</span><span class="s2"> must contain three finite coordinates"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">result</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">3</span> <span class="ow">or</span> <span class="ow">not</span> <span class="nb">all</span><span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">isfinite</span><span class="p">(</span><span class="n">component</span><span class="p">)</span> <span class="k">for</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">result</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"</span><span class="si">{}</span><span class="s2"> must contain three finite coordinates"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_vec3</span><span class="p">(</span><span class="n">values</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">values</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_edge_values</span><span class="p">(</span><span class="n">edges</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">edge</span> <span class="ow">in</span> <span class="n">edges</span><span class="p">:</span>
+            <span class="n">values</span> <span class="o">=</span> <span class="p">[</span><span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span> <span class="k">for</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">edge</span><span class="p">]</span>
+            <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">values</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">values</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">values</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">&lt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span>
+            <span class="n">result</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">values</span><span class="p">)</span>
+    <span class="k">except</span> <span class="p">(</span><span class="ne">TypeError</span><span class="p">,</span> <span class="ne">ValueError</span><span class="p">)</span> <span class="k">as</span> <span class="n">error</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">"</span><span class="si">{}</span><span class="s2"> must contain non-negative vertex-index pairs"</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="n">name</span><span class="p">))</span> <span class="kn">from</span><span class="w"> </span><span class="nn">error</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">"SELECTION_FILE_FORMAT"</span><span class="p">,</span>
+    <span class="s2">"SELECTION_FILE_VERSION"</span><span class="p">,</span>
+    <span class="s2">"apply_mesh_selection_recipe"</span><span class="p">,</span>
+    <span class="s2">"load_mesh_selection"</span><span class="p">,</span>
+    <span class="s2">"mesh_selection_recipe"</span><span class="p">,</span>
+    <span class="s2">"replay_mesh_selection"</span><span class="p">,</span>
+    <span class="s2">"resolve_selection_mesh"</span><span class="p">,</span>
+    <span class="s2">"save_mesh_selection"</span><span class="p">,</span>
+<span class="p">]</span>
+</pre></div>
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Charles Wade and Robert MacCurdy.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.2.0.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

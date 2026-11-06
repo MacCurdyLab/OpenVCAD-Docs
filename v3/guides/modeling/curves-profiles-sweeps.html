@@ -1,0 +1,1225 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Curves, Profiles and Sweeps &#8212; OpenVCAD 3.2 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_theme.css?v=8cc8a5a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_branding.css?v=c43e02c9" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="../../_static/documentation_options.js?v=828ea960"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'guides/modeling/curves-profiles-sweeps';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../../_static/openvcad_lightbox.js?v=e11fca97"></script>
+    <script src="../../_static/openvcad_comparison.js?v=0e3a0b21"></script>
+    <script src="../../_static/openvcad_carousel.js?v=954187e7"></script>
+    <link rel="icon" href="../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Sketching and Extruding" href="sketching.html" />
+    <link rel="prev" title="Offsets, Blends and Arrays" href="offsets-blends-arrays.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="OpenVCAD - Home"/>
+    <img src="../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="OpenVCAD - Home"/>
+  
+  
+    <p class="title logo__title">
+      <span class="logo__title-full">OpenVCAD Documentation</span>
+      <span class="logo__title-compact" aria-hidden="true">Documentation</span>
+      <span class="logo__title-short" aria-hidden="true">Docs</span>
+    </p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+
+
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item dropdown active">
+      <button class="btn dropdown-toggle nav-link active" type="button" id="pst-nav-dd-guides" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Guides
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-guides">
+        <li><a class="dropdown-item" href="../index.html">All guides</a></li>
+        <li><hr class="dropdown-divider"></li>
+        
+        
+        <li><a class="dropdown-item" href="../introduction/index.html">Introduction</a></li>
+        
+        
+        <li><a class="dropdown-item active" href="index.html">Shape modeling</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../fields/index.html">Field-driven design</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../imports/index.html">Imported geometry</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../metamaterials/index.html">Metamaterials</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../analysis/index.html">Analysis</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../compilers/index.html">Compilers and export</a></li>
+        
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../gallery.html">Gallery</a>
+    </li>
+    <li class="nav-item dropdown">
+      <button class="btn dropdown-toggle nav-link" type="button" id="pst-nav-dd-py" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Python API
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-py">
+        <li><a class="dropdown-item" href="../../python-api/pyvcad/index.html">pyvcad module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_compilers/index.html">pyvcad_compilers module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_rendering/index.html">pyvcad_rendering module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_attribute_resolver/index.html">pyvcad_attribute_resolver module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_metamaterials/index.html">pyvcad_metamaterials module</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../cpp-api/index.html">C++ API</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../papers.html">Papers</a>
+    </li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="openvcad-mobile-nav" aria-label="Site navigation">
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item"><a class="nav-link" href="../../index.html">Home</a></li>
+    <li class="nav-item">
+      <details class="openvcad-mobile-nav__group">
+        <summary>Guides</summary>
+        <ul>
+          <li><a class="nav-link" href="../index.html">All guides</a></li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Introduction</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../introduction/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../install.html">Installation</a></li>
+                
+                <li><a class="nav-link" href="../introduction/theory-and-motivation.html">Theory and Motivation</a></li>
+                
+                <li><a class="nav-link" href="../introduction/getting-started.html">Getting Started with OpenVCAD</a></li>
+                
+                <li><a class="nav-link" href="../introduction/moving-from-v2-to-v3.html">Moving from Version 2 to 3</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Shape modeling</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="primitives.html">Primitive catalog</a></li>
+                
+                <li><a class="nav-link" href="offsets-blends-arrays.html">Offsets, blends and arrays</a></li>
+                
+                <li><a class="nav-link active" href="#">Curves, profiles and sweeps</a></li>
+                
+                <li><a class="nav-link" href="sketching.html">Sketching and extruding</a></li>
+                
+                <li><a class="nav-link" href="deforming-space.html">Deforming space</a></li>
+                
+                <li><a class="nav-link" href="surface-relief.html">Physical surface relief</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Field-driven design</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../fields/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../fields/gradients.html">Functional grading</a></li>
+                
+                <li><a class="nav-link" href="../fields/fields.html">Fields</a></li>
+                
+                <li><a class="nav-link" href="../fields/math-expressions.html">Math expressions</a></li>
+                
+                <li><a class="nav-link" href="../fields/numba-attributes.html">Python functions for attributes</a></li>
+                
+                <li><a class="nav-link" href="../fields/attribute-conflicts.html">Attribute conflict resolution</a></li>
+                
+                <li><a class="nav-link" href="../fields/volumes.html">Working with volumes</a></li>
+                
+                <li><a class="nav-link" href="../fields/simulation-driven-design.html">Simulation-driven design</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Imported geometry</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../imports/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../imports/cadquery.html">CAD with CadQuery</a></li>
+                
+                <li><a class="nav-link" href="../imports/textured-mesh.html">Importing textured solids</a></li>
+                
+                <li><a class="nav-link" href="../imports/3mf-beam-lattice.html">Importing 3MF beam lattices</a></li>
+                
+                <li><a class="nav-link" href="../imports/mesh-selection.html">Selecting triangle-mesh patches</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Metamaterials</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../metamaterials/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/concepts.html">Concepts and representation</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/catalog.html">TPMS and lattice catalog</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/custom-unit-cells.html">Custom unit cells</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/stochastic-lattices.html">Stochastic lattices</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/geometry-grading.html">Functionally graded geometry</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/attribute-modeling.html">Attribute modeling</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/cylindrical-spherical-cell-maps.html">Cylindrical and spherical cell maps</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/conformal-cad.html">Conformal mapping CAD surfaces</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/conformal-meshes.html">Conformal mapping triangle meshes</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/properties.html">Geometric characterization</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Analysis</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../analysis/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../analysis/analysing-designs.html">Analysing designs</a></li>
+                
+                <li><a class="nav-link" href="../analysis/support-analyzer.html">Inkjet support volumes</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Compilers and export</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../compilers/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../compilers/material-inkjet.html">Material Inkjet</a></li>
+                
+                <li><a class="nav-link" href="../compilers/multi-material-vat.html">Multi-material VAT</a></li>
+                
+                <li><a class="nav-link" href="../compilers/color-inkjet.html">Color Inkjet</a></li>
+                
+                <li><a class="nav-link" href="../compilers/vat-photo.html">VAT Photo</a></li>
+                
+                <li><a class="nav-link" href="../compilers/slicer-project.html">Slicer Project</a></li>
+                
+                <li><a class="nav-link" href="../compilers/simulation-compiler.html">Simulation Compiler</a></li>
+                
+                <li><a class="nav-link" href="../compilers/attribute-resolver.html">Attribute modifier and resolver</a></li>
+                
+                <li><a class="nav-link" href="../compilers/meshing-and-export.html">Meshing and export</a></li>
+                
+                <li><a class="nav-link" href="../compilers/custom-python-compiler.html">Creating a compiler in Python</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+        </ul>
+      </details>
+    </li>
+    <li class="nav-item"><a class="nav-link" href="../../gallery.html">Gallery</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../python-api/index.html">Python API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../cpp-api/index.html">C++ API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../papers.html">Papers</a></li>
+  </ul>
+</nav>
+</div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+
+  
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../introduction/index.html">Introduction</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction/theory-and-motivation.html">Theory and Motivation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction/getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction/moving-from-v2-to-v3.html">Moving from Version 2 to 3</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Shape modeling</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="primitives.html">Primitive catalog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="offsets-blends-arrays.html">Offsets, Blends and Arrays</a></li>
+<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">Curves, Profiles and Sweeps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sketching.html">Sketching and Extruding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="deforming-space.html">Deforming Space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="surface-relief.html">Physical surface relief</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../fields/index.html">Field-driven design</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../fields/gradients.html">Functional Grading Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fields/fields.html">Fields: Driving Material and Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fields/math-expressions.html">Math expressions in OpenVCAD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fields/numba-attributes.html">Python Functions for Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fields/attribute-conflicts.html">Attribute Conflict Resolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fields/volumes.html">Working with Volumes in OpenVCAD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../fields/simulation-driven-design.html">Simulation-driven design</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../imports/index.html">Imported geometry</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../imports/cadquery.html">Authoring CAD with CadQuery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../imports/textured-mesh.html">Importing textured solids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../imports/3mf-beam-lattice.html">Importing 3MF beam lattices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../imports/mesh-selection.html">Select triangle-mesh patches</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../metamaterials/index.html">Metamaterials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/concepts.html">Concepts and representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/catalog.html">TPMS and lattice catalog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/custom-unit-cells.html">Custom unit cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/stochastic-lattices.html">Stochastic Voronoi and Delaunay lattices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/geometry-grading.html">Functionally graded metamaterial geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/attribute-modeling.html">Attribute modeling for metamaterials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/cylindrical-spherical-cell-maps.html">Cylindrical and spherical cell maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/conformal-cad.html">Conformal mapping CAD surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/conformal-meshes.html">Map lattices onto triangle meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/properties.html">Geometric characterization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../analysis/index.html">Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../analysis/analysing-designs.html">Analysing Designs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../analysis/support-analyzer.html">Inkjet support volumes</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../compilers/index.html">Compilers and export</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/material-inkjet.html">Material Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/multi-material-vat.html">Multi-material VAT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/color-inkjet.html">Color Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/vat-photo.html">VAT Photo Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/slicer-project.html">Slicer Project Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/simulation-compiler.html">Simulation Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/attribute-resolver.html">Attribute Modifier and Resolver Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/meshing-and-export.html">Meshing and export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/custom-python-compiler.html">Creating a Compiler in Python</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Guides</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Shape modeling</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Curves, Profiles and Sweeps</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="curves-profiles-and-sweeps">
+<h1>Curves, Profiles and Sweeps<a class="headerlink" href="#curves-profiles-and-sweeps" title="Link to this heading">#</a></h1>
+<!--
+Build dependency sentinel for guide sidebar membership.
+Guide pages that render the shared Guides sidebar include this file so
+changes to the guide set force those pages to rebuild on incremental
+Sphinx runs.
+
+Current guide sections:
+- introduction
+- modeling
+- fields
+- imports
+- metamaterials
+- analysis
+- compilers
+-->
+<p>Many parts are easier to describe with curves than with boxes and spheres: a pipe that follows a path, a bracket cut from a flat outline, a cup turned on a lathe. This guide shows you how to build them. You start with <strong>curves</strong>, use them to draw flat <strong>profiles</strong>, and turn both into solids, grading material along the way.</p>
+<section id="what-you-will-learn">
+<h2>What You Will Learn<a class="headerlink" href="#what-you-will-learn" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><strong>Draw curves</strong>: lines, arcs and smooth curves through points you choose.</p></li>
+<li><p><strong>Make profiles</strong>: flat shapes with holes and rounded corners.</p></li>
+<li><p><strong>Build solids</strong>: tubes, extrusions, revolved parts and sweeps.</p></li>
+<li><p><strong>Grade material</strong> along, around or across those solids.</p></li>
+<li><p><strong>Reuse curves you already have</strong>, from a mesh or a part’s outline.</p></li>
+</ul>
+</section>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
+<p>This guide assumes you have completed the <a class="reference internal" href="../introduction/getting-started.html"><span class="std std-doc">Getting Started Guide</span></a>, in particular <strong>Lesson 2</strong> (CSG) and <strong>Lessons 4–6</strong> (attributes), and the <a class="reference internal" href="../fields/gradients.html"><span class="std std-doc">Functional Grading Guide</span></a>. Sizes that change through space, such as a tapering tube radius, are explained as you go; <a class="reference internal" href="offsets-blends-arrays.html"><span class="std std-doc">Offsets, Blends and Arrays</span></a> covers them in more depth.</p>
+</section>
+<section id="running-the-examples">
+<h2>Running the Examples<a class="headerlink" href="#running-the-examples" title="Link to this heading">#</a></h2>
+<p>All scripts for this guide are in <code class="docutils literal notranslate"><span class="pre">examples/curves/</span></code>. Run them from that folder, because Lesson 6 loads a mesh by a path relative to it:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>examples/curves
+python<span class="w"> </span>01_curve_types.py
+</pre></div>
+</div>
+<p>Each script ends with <code class="docutils literal notranslate"><span class="pre">viz.Render(root)</span></code>, which opens the interactive OpenVCAD preview window.</p>
+<blockquote>
+<div><p><strong>Note:</strong> Lessons 3 to 6 attach a <strong>modulus</strong> (stiffness) attribute. To see it in colour, select <code class="docutils literal notranslate"><span class="pre">modulus</span></code> from the <strong>Attribute</strong> list at the top of the render window (also under <strong>Render -&gt; Attribute</strong>).</p>
+</div></blockquote>
+</section>
+<section id="the-three-building-blocks">
+<h2>The Three Building Blocks<a class="headerlink" href="#the-three-building-blocks" title="Link to this heading">#</a></h2>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Building block</p></th>
+<th class="head"><p>What it is</p></th>
+<th class="head"><p>Python</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><strong>Curve</strong></p></td>
+<td><p>A line through space: straight, circular or smooth. A flat curve is one that stays at z = 0.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pv.LineSegment</span></code>, <code class="docutils literal notranslate"><span class="pre">pv.PolylineCurve</span></code>, <code class="docutils literal notranslate"><span class="pre">pv.ArcCurve</span></code>, <code class="docutils literal notranslate"><span class="pre">pv.BezierCurve</span></code>, <code class="docutils literal notranslate"><span class="pre">pv.BSplineCurve</span></code>, <code class="docutils literal notranslate"><span class="pre">pv.CompositeCurve</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p><strong>Profile</strong></p></td>
+<td><p>A flat 2D shape in the XY plane: an outline with any number of holes.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pv.Profile</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p><strong>Solid</strong></p></td>
+<td><p>A part made from curves and profiles.</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pv.Tube</span></code>, <code class="docutils literal notranslate"><span class="pre">pv.Extrude</span></code>, <code class="docutils literal notranslate"><span class="pre">pv.Revolve</span></code>, <code class="docutils literal notranslate"><span class="pre">pv.Sweep</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Curves and profiles never change after you make them, so one curve can feed many parts. Points can be tuples, lists, <code class="docutils literal notranslate"><span class="pre">pv.Vec3</span></code>, <code class="docutils literal notranslate"><span class="pre">pv.Point2</span></code> or NumPy arrays; 2D points get z = 0. Functions that return many points return NumPy arrays.</p>
+</section>
+<section id="lesson-1-curves">
+<h2>Lesson 1: Curves<a class="headerlink" href="#lesson-1-curves" title="Link to this heading">#</a></h2>
+<p>A curve is a line through space. It has no thickness, so it is not a part on its own; later lessons use curves as centre lines, paths and outlines. There are five kinds:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pv.LineSegment(a,</span> <span class="pre">b)</span></code> and <code class="docutils literal notranslate"><span class="pre">pv.PolylineCurve(points,</span> <span class="pre">closed=False)</span></code> are straight: one line, or a chain of lines through a list of points.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pv.ArcCurve(center,</span> <span class="pre">radius,</span> <span class="pre">start_angle,</span> <span class="pre">end_angle,</span> <span class="pre">normal=(0,</span> <span class="pre">0,</span> <span class="pre">1))</span></code> is part of a circle (angles in degrees). <code class="docutils literal notranslate"><span class="pre">pv.ArcCurve.circle(center,</span> <span class="pre">radius)</span></code> is a full circle.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pv.BezierCurve(control_points)</span></code> runs smoothly from the first control point to the last. The points in between pull the curve toward them without lying on it.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pv.BSplineCurve.interpolate(points,</span> <span class="pre">closed=False)</span></code> draws a smooth curve through every point you give it, and is usually the easiest way to draw a smooth path. The result is a <em>B-spline</em>: a smooth curve built from short pieces that join without kinks. <code class="docutils literal notranslate"><span class="pre">pv.BSplineCurve(control_points,</span> <span class="pre">degree=3)</span></code> builds one from control points instead.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pv.CompositeCurve([...])</span></code> joins curves end to start. Corners where they meet are fine.</p></li>
+</ul>
+<p>Each curve is traced by a number <code class="docutils literal notranslate"><span class="pre">t</span></code>, its <em>parameter</em>: as <code class="docutils literal notranslate"><span class="pre">t</span></code> runs across <code class="docutils literal notranslate"><span class="pre">curve.domain</span></code>, <code class="docutils literal notranslate"><span class="pre">curve.point(t)</span></code> moves from start to end. Curves also give you <code class="docutils literal notranslate"><span class="pre">tangent(t)</span></code> (the direction of travel), <code class="docutils literal notranslate"><span class="pre">length()</span></code>, <code class="docutils literal notranslate"><span class="pre">closest_point(p)</span></code>, <code class="docutils literal notranslate"><span class="pre">distance(p)</span></code> and <code class="docutils literal notranslate"><span class="pre">sample(n)</span></code> (<code class="docutils literal notranslate"><span class="pre">n</span></code> points evenly spaced along the curve).</p>
+<p><strong>Frames.</strong> Tubes and sweeps need to know which way is “sideways” along a curve, so each point has a <em>frame</em>: the <em>tangent</em> points along the curve, and the <em>normal</em> and <em>binormal</em> point across it. OpenVCAD uses <em>rotation-minimizing frames</em>, which follow every bend but never spin around the curve, like a bead sliding along a bent wire. So a profile carried along a curve does not twist by accident. <code class="docutils literal notranslate"><span class="pre">curve.frames(n)</span></code> returns <code class="docutils literal notranslate"><span class="pre">n</span></code> evenly spaced frames; <code class="docutils literal notranslate"><span class="pre">pv.CurveFrames(curve)</span></code> gives the frame at any <code class="docutils literal notranslate"><span class="pre">t</span></code>.</p>
+<p>The example draws one curve of each kind as a chain of thin struts. Short ribs on the B-spline point along its frame normals: they turn as the curve bends, but never spin around it.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">strut_chain</span><span class="p">(</span><span class="n">points</span><span class="p">,</span> <span class="n">radius</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">"""Thin struts joining consecutive points: a quick way to look at a curve."""</span>
+    <span class="n">struts</span> <span class="o">=</span> <span class="p">[</span><span class="n">pv</span><span class="o">.</span><span class="n">Strut</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">*</span><span class="n">a</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">*</span><span class="n">b</span><span class="p">),</span> <span class="n">radius</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">points</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">points</span><span class="p">[</span><span class="mi">1</span><span class="p">:])]</span>
+    <span class="k">return</span> <span class="n">pv</span><span class="o">.</span><span class="n">BBoxUnion</span><span class="p">(</span><span class="n">struts</span><span class="p">)</span>
+
+
+<span class="c1"># Five kinds of curve. Points can be tuples, lists, Vec3 or NumPy arrays; 2D points get z = 0.</span>
+<span class="n">curves</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">LineSegment</span><span class="p">((</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">24</span><span class="p">)),</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">ArcCurve</span><span class="p">((</span><span class="mi">16</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="mf">9.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">90.0</span><span class="p">,</span> <span class="mf">180.0</span><span class="p">,</span> <span class="n">normal</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">BezierCurve</span><span class="p">([(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">18</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="p">(</span><span class="mi">46</span><span class="p">,</span> <span class="o">-</span><span class="mi">18</span><span class="p">,</span> <span class="mi">18</span><span class="p">),</span> <span class="p">(</span><span class="mi">46</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">24</span><span class="p">)]),</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">BSplineCurve</span><span class="o">.</span><span class="n">interpolate</span><span class="p">([(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">68</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">12</span><span class="p">),</span> <span class="p">(</span><span class="mi">52</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">18</span><span class="p">),</span> <span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">24</span><span class="p">)]),</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">CompositeCurve</span><span class="p">([</span>
+        <span class="n">pv</span><span class="o">.</span><span class="n">LineSegment</span><span class="p">((</span><span class="mi">76</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">76</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">14</span><span class="p">)),</span>
+        <span class="n">pv</span><span class="o">.</span><span class="n">ArcCurve</span><span class="p">((</span><span class="mi">81</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">14</span><span class="p">),</span> <span class="mf">5.0</span><span class="p">,</span> <span class="mf">180.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="n">normal</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">)),</span>
+        <span class="n">pv</span><span class="o">.</span><span class="n">LineSegment</span><span class="p">((</span><span class="mi">86</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">14</span><span class="p">),</span> <span class="p">(</span><span class="mi">86</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">)),</span>
+    <span class="p">]),</span>
+<span class="p">]</span>
+
+<span class="c1"># Sample each curve evenly in arc length and draw it.</span>
+<span class="n">parts</span> <span class="o">=</span> <span class="p">[</span><span class="n">strut_chain</span><span class="p">(</span><span class="n">curve</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="mi">60</span><span class="p">),</span> <span class="mf">0.6</span><span class="p">)</span> <span class="k">for</span> <span class="n">curve</span> <span class="ow">in</span> <span class="n">curves</span><span class="p">]</span>
+
+<span class="c1"># Rotation-minimizing frames on the B-spline: short ribs along each frame's normal.</span>
+<span class="n">spline</span> <span class="o">=</span> <span class="n">curves</span><span class="p">[</span><span class="mi">3</span><span class="p">]</span>
+<span class="n">frames</span> <span class="o">=</span> <span class="n">spline</span><span class="o">.</span><span class="n">frames</span><span class="p">(</span><span class="mi">14</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">origin</span><span class="p">,</span> <span class="n">normal</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">frames</span><span class="p">[</span><span class="s2">"origins"</span><span class="p">],</span> <span class="n">frames</span><span class="p">[</span><span class="s2">"normals"</span><span class="p">]):</span>
+    <span class="n">parts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Strut</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">*</span><span class="n">origin</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">*</span><span class="p">(</span><span class="n">origin</span> <span class="o">+</span> <span class="mf">3.5</span> <span class="o">*</span> <span class="n">normal</span><span class="p">)),</span> <span class="mf">0.35</span><span class="p">))</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">BBoxUnion</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render</p>
+<img src="../images/curves_01_curve_types.png" alt="A line segment, an arc, a Bezier curve, a B-spline with frame ribs, and a composite curve" width="100%">
+</div>
+</div>
+</section>
+<section id="lesson-2-profiles">
+<h2>Lesson 2: Profiles<a class="headerlink" href="#lesson-2-profiles" title="Link to this heading">#</a></h2>
+<p>A <em>profile</em> is a flat 2D shape in the XY plane: an outline plus any number of holes, like a shape you would sketch on paper. You turn it into a solid by extruding, revolving or sweeping it (Lessons 4 and 5). The quickest start is a ready-made shape:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Shape</p></th>
+<th class="head"><p>Call</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Circle</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pv.Profile.circle(radius,</span> <span class="pre">center=(0,</span> <span class="pre">0))</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Rectangle</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pv.Profile.rectangle(width,</span> <span class="pre">height,</span> <span class="pre">center=(0,</span> <span class="pre">0))</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Rounded rectangle</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pv.Profile.rounded_rectangle(width,</span> <span class="pre">height,</span> <span class="pre">radius,</span> <span class="pre">center=(0,</span> <span class="pre">0))</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Slot</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pv.Profile.slot(length,</span> <span class="pre">width,</span> <span class="pre">center=(0,</span> <span class="pre">0),</span> <span class="pre">angle=0)</span></code></p></td>
+</tr>
+<tr class="row-even"><td><p>Regular polygon</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pv.Profile.regular_polygon(sides,</span> <span class="pre">radius,</span> <span class="pre">center=(0,</span> <span class="pre">0),</span> <span class="pre">rotation=0)</span></code></p></td>
+</tr>
+<tr class="row-odd"><td><p>Polygon</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pv.Profile.polygon(points)</span></code></p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Profiles combine with <code class="docutils literal notranslate"><span class="pre">|</span></code> (union), <code class="docutils literal notranslate"><span class="pre">&amp;</span></code> (intersection) and <code class="docutils literal notranslate"><span class="pre">-</span></code> (difference, which is how you cut holes). <code class="docutils literal notranslate"><span class="pre">profile.offset(distance)</span></code> grows a profile all the way round, or shrinks it for a negative distance. <code class="docutils literal notranslate"><span class="pre">profile.fillet(radius)</span></code> rounds every corner between straight edges and arcs with an exact tangent arc (<a class="reference internal" href="sketching.html"><span class="std std-doc">Sketching and Extruding</span></a> covers choosing corners, chamfers and more).</p>
+<p>You can also build a profile from closed curves with <code class="docutils literal notranslate"><span class="pre">pv.Profile([outline,</span> <span class="pre">hole,</span> <span class="pre">...])</span></code> (OpenVCAD works out which loops are holes), from a <code class="docutils literal notranslate"><span class="pre">pv.Polygon2</span></code>, or by slicing a part at height <code class="docutils literal notranslate"><span class="pre">z</span></code> with <code class="docutils literal notranslate"><span class="pre">pv.Profile.cross_section(node,</span> <span class="pre">z,</span> <span class="pre">cell_size)</span></code>. Loops may touch and nest, but they must not cross themselves or each other; a profile that does raises an error saying where. To combine overlapping shapes, build each one as its own profile and join them with <code class="docutils literal notranslate"><span class="pre">|</span></code>.</p>
+<p>The example makes a bracket plate with bolt holes and a slot, a keyhole with rounded bottom corners, and a hexagonal wall. Each is extruded into a thin slab so you can see it (Lesson 4 explains <code class="docutils literal notranslate"><span class="pre">pv.Extrude</span></code>).</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="c1"># A bracket plate: a rounded rectangle with two bolt holes and a slot cut out.</span>
+<span class="n">plate</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Profile</span><span class="o">.</span><span class="n">rounded_rectangle</span><span class="p">(</span><span class="mf">40.0</span><span class="p">,</span> <span class="mf">24.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">)</span>
+<span class="n">plate</span> <span class="o">=</span> <span class="n">plate</span> <span class="o">-</span> <span class="n">pv</span><span class="o">.</span><span class="n">Profile</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span> <span class="o">-</span> <span class="n">pv</span><span class="o">.</span><span class="n">Profile</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="mf">3.0</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span>
+<span class="n">plate</span> <span class="o">=</span> <span class="n">plate</span> <span class="o">-</span> <span class="n">pv</span><span class="o">.</span><span class="n">Profile</span><span class="o">.</span><span class="n">slot</span><span class="p">(</span><span class="mf">18.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">))</span>
+
+<span class="c1"># Booleans keep the exact curves: a keyhole from a circle and a rectangle. fillet() rounds the</span>
+<span class="c1"># corners between straight edges with exact arcs.</span>
+<span class="n">keyhole</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Profile</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span> <span class="o">|</span> <span class="n">pv</span><span class="o">.</span><span class="n">Profile</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">6</span><span class="p">))</span>
+<span class="n">keyhole</span> <span class="o">=</span> <span class="n">keyhole</span><span class="o">.</span><span class="n">fillet</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span>
+
+<span class="c1"># Offsets and fillets: a hexagon with rounded corners, and a 2 mm wall around it.</span>
+<span class="n">hexagon</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Profile</span><span class="o">.</span><span class="n">regular_polygon</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">)</span><span class="o">.</span><span class="n">fillet</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span>
+<span class="n">wall</span> <span class="o">=</span> <span class="n">hexagon</span><span class="o">.</span><span class="n">offset</span><span class="p">(</span><span class="mf">2.0</span><span class="p">)</span> <span class="o">-</span> <span class="n">hexagon</span>
+
+<span class="c1"># Thin slabs to look at the profiles (Extrude places a profile's plane at z = 0).</span>
+<span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">([</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Translate</span><span class="p">(</span><span class="o">-</span><span class="mi">50</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">Extrude</span><span class="p">(</span><span class="n">plate</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)),</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Extrude</span><span class="p">(</span><span class="n">keyhole</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">),</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Translate</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">Extrude</span><span class="p">(</span><span class="n">wall</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">)),</span>
+<span class="p">])</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render</p>
+<img src="../images/curves_02_profiles.png" alt="A plate with holes and a slot, a filleted keyhole, and a hexagonal wall" width="100%">
+</div>
+</div>
+<p>Profiles keep their true curves: the keyhole’s round top is an exact arc, not a polygon of short sides.</p>
+</section>
+<section id="lesson-3-tubes">
+<h2>Lesson 3: Tubes<a class="headerlink" href="#lesson-3-tubes" title="Link to this heading">#</a></h2>
+<p>A <em>tube</em> is a pipe along a curve: every point within a given radius of it, for wires, channels or ribs. <code class="docutils literal notranslate"><span class="pre">pv.Tube(curve,</span> <span class="pre">radius)</span></code> makes one. Open curves end in rounded caps; pass <code class="docutils literal notranslate"><span class="pre">start_cap=pv.CapMode.Butt</span></code> or <code class="docutils literal notranslate"><span class="pre">end_cap=pv.CapMode.Butt</span></code> for a flat end.</p>
+<p><strong>A radius that changes.</strong> The radius can be a <em>field</em>: a value that differs from point to point, like the attributes in the <a class="reference internal" href="../fields/gradients.html"><span class="std std-doc">Functional Grading Guide</span></a>. The tube reads it at the nearest point of the curve, so any <code class="docutils literal notranslate"><span class="pre">FloatAttribute</span></code> makes the tube fatter where the field is larger.</p>
+<p>For a taper along the curve, start from <code class="docutils literal notranslate"><span class="pre">curve.length_field(normalized=True)</span></code>, which is 0 at the start of the curve and 1 at the end. <code class="docutils literal notranslate"><span class="pre">.map_range(0,</span> <span class="pre">1,</span> <span class="pre">3,</span> <span class="pre">1)</span></code> turns values from 0 to 1 into values from 3 to 1, so the radius tapers from 3 to 1. Wrap a field radius in <code class="docutils literal notranslate"><span class="pre">pv.ScalarParameter(field,</span> <span class="pre">minimum=...,</span> <span class="pre">maximum=...)</span></code>: the tube needs the largest radius to size its bounding box.</p>
+<p><strong>Grading.</strong> Each solid in this guide has <em>coordinate fields</em>, which say where a point sits in the solid’s own terms, such as how far along a tube it is. Get one with <code class="docutils literal notranslate"><span class="pre">coordinate_field(name)</span></code> and turn it into a material property with <code class="docutils literal notranslate"><span class="pre">map_range</span></code>. A tube offers <code class="docutils literal notranslate"><span class="pre">normalized_length</span></code> (0 at the start, 1 at the end), <code class="docutils literal notranslate"><span class="pre">length</span></code>, <code class="docutils literal notranslate"><span class="pre">parameter</span></code>, <code class="docutils literal notranslate"><span class="pre">angle</span></code> (degrees around the curve, measured from its frames) and <code class="docutils literal notranslate"><span class="pre">distance</span></code> (from the centre line).</p>
+<p><strong>Distance to a curve.</strong> <code class="docutils literal notranslate"><span class="pre">curve.distance_field()</span></code> is the distance from any point in space to the curve. Use it to grade any part, for example to make it stiffer near a path.</p>
+<p>The example builds a horn that tapers from 3 mm to 1 mm and stiffens toward its narrow end, a trefoil knot graded around the tube, and a plate that is stiffest along a path across it. Select <code class="docutils literal notranslate"><span class="pre">modulus</span></code> in the viewer.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="c1"># A tube along a spline whose radius tapers from 3 to 1 mm: a law on arc length is a field built from</span>
+<span class="c1"># the curve's own length field. A field radius needs bounds so the tube can size its bounding box.</span>
+<span class="n">path</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">BSplineCurve</span><span class="o">.</span><span class="n">interpolate</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">6</span><span class="p">),</span> <span class="p">(</span><span class="mi">26</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">14</span><span class="p">),</span> <span class="p">(</span><span class="mi">36</span><span class="p">,</span> <span class="mi">16</span><span class="p">,</span> <span class="mi">24</span><span class="p">)])</span>
+<span class="n">taper</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">length_field</span><span class="p">(</span><span class="n">normalized</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">map_range</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">horn</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Tube</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">ScalarParameter</span><span class="p">(</span><span class="n">taper</span><span class="p">,</span> <span class="n">minimum</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">maximum</span><span class="o">=</span><span class="mf">3.0</span><span class="p">),</span> <span class="n">end_cap</span><span class="o">=</span><span class="n">pv</span><span class="o">.</span><span class="n">CapMode</span><span class="o">.</span><span class="n">Butt</span><span class="p">)</span>
+<span class="c1"># The tube's coordinates are fields too: grade the material along its length.</span>
+<span class="n">horn</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span>
+                   <span class="n">horn</span><span class="o">.</span><span class="n">coordinate_field</span><span class="p">(</span><span class="s2">"normalized_length"</span><span class="p">)</span><span class="o">.</span><span class="n">map_range</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">))</span>
+
+<span class="c1"># A closed trefoil knot, graded by the angle around the tube (measured from rotation-minimizing frames).</span>
+<span class="n">knot_points</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">90</span><span class="p">):</span>
+    <span class="n">a</span> <span class="o">=</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">i</span> <span class="o">/</span> <span class="mi">90</span>
+    <span class="n">knot_points</span><span class="o">.</span><span class="n">append</span><span class="p">((</span><span class="mf">6.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">+</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">a</span><span class="p">)),</span>
+                        <span class="mf">6.0</span> <span class="o">*</span> <span class="p">(</span><span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">)</span> <span class="o">-</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="mf">2.0</span> <span class="o">*</span> <span class="n">a</span><span class="p">)),</span>
+                        <span class="o">-</span><span class="mf">6.0</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mf">3.0</span> <span class="o">*</span> <span class="n">a</span><span class="p">)))</span>
+<span class="n">knot_curve</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">BSplineCurve</span><span class="o">.</span><span class="n">interpolate</span><span class="p">(</span><span class="n">knot_points</span><span class="p">,</span> <span class="n">closed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">knot</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Tube</span><span class="p">(</span><span class="n">knot_curve</span><span class="p">,</span> <span class="mf">2.2</span><span class="p">)</span>
+<span class="n">knot</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span>
+                   <span class="n">knot</span><span class="o">.</span><span class="n">coordinate_field</span><span class="p">(</span><span class="s2">"angle"</span><span class="p">)</span><span class="o">.</span><span class="n">map_range</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">360.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">))</span>
+
+<span class="c1"># Distance to a curve as a field: a plate that is stiffer near a path drawn across it.</span>
+<span class="n">rib</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">BSplineCurve</span><span class="o">.</span><span class="n">interpolate</span><span class="p">([(</span><span class="o">-</span><span class="mi">20</span><span class="p">,</span> <span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">5</span><span class="p">,</span> <span class="o">-</span><span class="mi">5</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">20</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">)])</span>
+<span class="n">plate</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mi">34</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+<span class="n">plate</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span>
+                    <span class="n">rib</span><span class="o">.</span><span class="n">distance_field</span><span class="p">()</span><span class="o">.</span><span class="n">map_range</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="n">clamp</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">([</span><span class="n">horn</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">Translate</span><span class="p">(</span><span class="mi">70</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="n">knot</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Translate</span><span class="p">(</span><span class="mi">125</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">plate</span><span class="p">)])</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus)</p>
+<img src="../images/curves_03_tubes.png" alt="A tapered tube graded along its length, a trefoil knot graded around the tube, and a plate graded by distance to a curve" width="100%">
+</div>
+</div>
+<p>For a single straight tube, <code class="docutils literal notranslate"><span class="pre">pv.Strut</span></code> is faster. Keep the radius smaller than the curve’s tightest bend, or the tube’s surface folds over itself.</p>
+</section>
+<section id="lesson-4-extrude-and-revolve">
+<h2>Lesson 4: Extrude and Revolve<a class="headerlink" href="#lesson-4-extrude-and-revolve" title="Link to this heading">#</a></h2>
+<p>An <em>extrusion</em> pushes a profile straight up into a slab or column. A <em>revolve</em> spins a profile around an axis, like a part turned on a lathe.</p>
+<p><code class="docutils literal notranslate"><span class="pre">pv.Extrude(profile,</span> <span class="pre">height)</span></code> runs from the profile’s plane (z = 0) up to <code class="docutils literal notranslate"><span class="pre">height</span></code>. A negative height goes down, and <code class="docutils literal notranslate"><span class="pre">symmetric=True</span></code> centres the solid on the plane. Two options shape the walls:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">draft=</span></code> tilts them, in degrees. A positive draft narrows the shape away from the profile plane; a negative one widens it. A draft that would shrink the section to nothing before the far end raises an error giving the largest height (or draft) that fits.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">twist=</span></code> turns the shape counter-clockwise about +Z as it goes, reaching that many degrees at the far end.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">pv.Revolve(profile,</span> <span class="pre">angle=360)</span></code> spins a profile around the Z axis. Draw the profile as a half cross-section: its x is the distance from the axis (never negative), and its y becomes the height z. A partial revolve starts on the +X side of the XZ plane, turns counter-clockwise seen from above, and is closed by flat end faces. Where the profile touches the axis, the part is solid, with no seam.</p>
+<p>By default an extrusion starts at z = 0 and a revolve turns about the Z axis. Place the result with <code class="docutils literal notranslate"><span class="pre">pv.Translate</span></code>, <code class="docutils literal notranslate"><span class="pre">pv.Rotate</span></code> or <code class="docutils literal notranslate"><span class="pre">pv.Transform</span></code>, or draw the profile on another plane with <code class="docutils literal notranslate"><span class="pre">plane=pv.Plane...</span></code> (see <a class="reference internal" href="sketching.html"><span class="std std-doc">Sketching and Extruding</span></a>, Lesson 4). The coordinate fields are:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">Extrude</span></code>: <code class="docutils literal notranslate"><span class="pre">height</span></code> (above the bottom face), <code class="docutils literal notranslate"><span class="pre">normalized_height</span></code> (0 at the bottom, 1 at the top), <code class="docutils literal notranslate"><span class="pre">u</span></code> and <code class="docutils literal notranslate"><span class="pre">v</span></code> (position across the section, turning with the twist) and <code class="docutils literal notranslate"><span class="pre">profile_distance</span></code> (distance to the section’s edge, negative inside).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">Revolve</span></code>: <code class="docutils literal notranslate"><span class="pre">u</span></code> (distance from the axis), <code class="docutils literal notranslate"><span class="pre">v</span></code> (height), <code class="docutils literal notranslate"><span class="pre">angle</span></code> (degrees from the start), <code class="docutils literal notranslate"><span class="pre">normalized_angle</span></code> (0 to 1) and <code class="docutils literal notranslate"><span class="pre">profile_distance</span></code>.</p></li>
+</ul>
+<p>The example builds a plate graded from soft at the bottom to stiff at the top; a hexagonal column that leans in by 4 degrees and twists 90 degrees, graded across its section so the grading twists with it; and a cup revolved 270 degrees to show its wall, graded around the axis. Select <code class="docutils literal notranslate"><span class="pre">modulus</span></code> in the viewer.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="c1"># Extrude: a plate with holes, graded from soft at the bottom to stiff at the top.</span>
+<span class="n">plate</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Profile</span><span class="o">.</span><span class="n">rounded_rectangle</span><span class="p">(</span><span class="mf">36.0</span><span class="p">,</span> <span class="mf">24.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">)</span>
+<span class="n">plate</span> <span class="o">=</span> <span class="n">plate</span> <span class="o">-</span> <span class="n">pv</span><span class="o">.</span><span class="n">Profile</span><span class="o">.</span><span class="n">circle</span><span class="p">(</span><span class="mf">4.0</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="o">-</span><span class="mi">9</span><span class="p">,</span> <span class="mi">0</span><span class="p">))</span> <span class="o">-</span> <span class="n">pv</span><span class="o">.</span><span class="n">Profile</span><span class="o">.</span><span class="n">slot</span><span class="p">(</span><span class="mf">12.0</span><span class="p">,</span> <span class="mf">5.0</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">angle</span><span class="o">=</span><span class="mf">90.0</span><span class="p">)</span>
+<span class="n">block</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Extrude</span><span class="p">(</span><span class="n">plate</span><span class="p">,</span> <span class="mf">8.0</span><span class="p">)</span>
+<span class="n">block</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span>
+                    <span class="n">block</span><span class="o">.</span><span class="n">coordinate_field</span><span class="p">(</span><span class="s2">"normalized_height"</span><span class="p">)</span><span class="o">.</span><span class="n">map_range</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">))</span>
+
+<span class="c1"># Draft and twist: a hexagonal column that narrows by 4 degrees and turns 90 degrees as it rises,</span>
+<span class="c1"># graded across its section; the section coordinate u turns with the twist.</span>
+<span class="n">hexagon</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Profile</span><span class="o">.</span><span class="n">regular_polygon</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">)</span><span class="o">.</span><span class="n">fillet</span><span class="p">(</span><span class="mf">1.5</span><span class="p">)</span>
+<span class="n">column</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Extrude</span><span class="p">(</span><span class="n">hexagon</span><span class="p">,</span> <span class="mf">36.0</span><span class="p">,</span> <span class="n">draft</span><span class="o">=</span><span class="mf">4.0</span><span class="p">,</span> <span class="n">twist</span><span class="o">=</span><span class="mf">90.0</span><span class="p">)</span>
+<span class="n">column</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span>
+                     <span class="n">column</span><span class="o">.</span><span class="n">coordinate_field</span><span class="p">(</span><span class="s2">"u"</span><span class="p">)</span><span class="o">.</span><span class="n">map_range</span><span class="p">(</span><span class="o">-</span><span class="mf">9.0</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">))</span>
+
+<span class="c1"># Revolve: a cup from a half-section (x is the distance from the axis), swept 270 degrees to show its</span>
+<span class="c1"># wall, graded around the axis.</span>
+<span class="n">cup_profile</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Profile</span><span class="o">.</span><span class="n">polygon</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">15</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="p">(</span><span class="mf">13.5</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="p">(</span><span class="mf">10.5</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">)])</span>
+<span class="n">cup</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Revolve</span><span class="p">(</span><span class="n">cup_profile</span><span class="p">,</span> <span class="mf">270.0</span><span class="p">)</span>
+<span class="n">cup</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span>
+                  <span class="n">cup</span><span class="o">.</span><span class="n">coordinate_field</span><span class="p">(</span><span class="s2">"normalized_angle"</span><span class="p">)</span><span class="o">.</span><span class="n">map_range</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">))</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">([</span><span class="n">pv</span><span class="o">.</span><span class="n">Translate</span><span class="p">(</span><span class="o">-</span><span class="mi">45</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">block</span><span class="p">),</span> <span class="n">column</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">Translate</span><span class="p">(</span><span class="mi">45</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">cup</span><span class="p">)])</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus)</p>
+<img src="../images/curves_04_extrude_revolve.png" alt="An extruded plate graded by height, a drafted and twisted column, and a cup revolved 270 degrees" width="100%">
+</div>
+</div>
+</section>
+<section id="lesson-5-sweeps">
+<h2>Lesson 5: Sweeps<a class="headerlink" href="#lesson-5-sweeps" title="Link to this heading">#</a></h2>
+<p>A <em>sweep</em> carries a profile along a path, like icing piped from a bag: the nozzle’s shape is the profile, and the path of your hand is the curve. A tube is like a sweep of a circle; <code class="docutils literal notranslate"><span class="pre">pv.Sweep(profile,</span> <span class="pre">path)</span></code> takes any profile, and lets it grow and twist as it travels.</p>
+<p>You draw the profile in its own plane, with coordinates u and v. It rides in the path’s rotation-minimizing frames (Lesson 1), u along the normal and v along the binormal, so it never twists on its own. For a flat path, v points out of the path’s plane; <code class="docutils literal notranslate"><span class="pre">up=(x,</span> <span class="pre">y,</span> <span class="pre">z)</span></code> chooses which way v starts out.</p>
+<p><code class="docutils literal notranslate"><span class="pre">scale=</span></code> grows the profile (<code class="docutils literal notranslate"><span class="pre">2.0</span></code> is twice the size), and <code class="docutils literal notranslate"><span class="pre">twist=</span></code> turns it counter-clockwise about the path, in degrees. Unlike an extrusion’s twist, which is the total turn at the top, a sweep’s twist is the angle at each point: a constant <code class="docutils literal notranslate"><span class="pre">twist=30</span></code> turns the whole section by 30 degrees, and <code class="docutils literal notranslate"><span class="pre">twist=along</span> <span class="pre">*</span> <span class="pre">180</span></code> turns it half a turn from one end to the other. Each can be a number, or a field read at the nearest path point, so a change along the path starts from the path’s <code class="docutils literal notranslate"><span class="pre">length_field</span></code>, as for the tube radius. A field scale needs <code class="docutils literal notranslate"><span class="pre">pv.ScalarParameter</span></code> bounds with a minimum above zero.</p>
+<p>An open path ends in flat faces. A closed path joins up with itself, and its frames meet at the seam.</p>
+<p>Where the path bends, the profile must stay inside the bend’s radius on the inner side; otherwise the section would fold over itself, and <code class="docutils literal notranslate"><span class="pre">pv.Sweep</span></code> raises an error naming the bend. Sharp corners of a polyline path are fine. For a round section along a tight curve, use <code class="docutils literal notranslate"><span class="pre">pv.Tube</span></code>, which handles any bend.</p>
+<p>A sweep’s coordinate fields are <code class="docutils literal notranslate"><span class="pre">parameter</span></code>, <code class="docutils literal notranslate"><span class="pre">length</span></code>, <code class="docutils literal notranslate"><span class="pre">normalized_length</span></code>, <code class="docutils literal notranslate"><span class="pre">u</span></code> and <code class="docutils literal notranslate"><span class="pre">v</span></code> (position across the profile, before scale and twist) and <code class="docutils literal notranslate"><span class="pre">profile_distance</span></code>.</p>
+<p>The example sweeps a rounded rectangle along a spline, growing to 1.8 times its size and twisting half a turn, graded along its length. It also sweeps a T-shape around a closed, wavy loop, graded from the foot of the T (soft) to its flange (stiff); <code class="docutils literal notranslate"><span class="pre">up=(0,</span> <span class="pre">0,</span> <span class="pre">1)</span></code> points v up so the flange stays on top. Select <code class="docutils literal notranslate"><span class="pre">modulus</span></code> in the viewer.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">math</span>
+
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="c1"># A profile swept along a 3D path. The profile rides in the path's rotation-minimizing frames, so it</span>
+<span class="c1"># does not twist on its own; scale and twist laws along the path are fields built from the path's</span>
+<span class="c1"># own coordinates.</span>
+<span class="n">path</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">BSplineCurve</span><span class="o">.</span><span class="n">interpolate</span><span class="p">([(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="p">(</span><span class="mi">14</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="p">(</span><span class="mi">30</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">18</span><span class="p">),</span> <span class="p">(</span><span class="mi">44</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="mi">28</span><span class="p">)])</span>
+<span class="n">along</span> <span class="o">=</span> <span class="n">path</span><span class="o">.</span><span class="n">length_field</span><span class="p">(</span><span class="n">normalized</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">horn</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sweep</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Profile</span><span class="o">.</span><span class="n">rounded_rectangle</span><span class="p">(</span><span class="mf">8.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">),</span> <span class="n">path</span><span class="p">,</span>
+                <span class="n">scale</span><span class="o">=</span><span class="n">pv</span><span class="o">.</span><span class="n">ScalarParameter</span><span class="p">(</span><span class="n">along</span><span class="o">.</span><span class="n">map_range</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.8</span><span class="p">),</span> <span class="n">minimum</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">maximum</span><span class="o">=</span><span class="mf">1.8</span><span class="p">),</span>
+                <span class="n">twist</span><span class="o">=</span><span class="n">along</span> <span class="o">*</span> <span class="mf">180.0</span><span class="p">)</span>
+<span class="n">horn</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span> <span class="n">horn</span><span class="o">.</span><span class="n">coordinate_field</span><span class="p">(</span><span class="s2">"normalized_length"</span><span class="p">)</span><span class="o">.</span><span class="n">map_range</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">))</span>
+
+<span class="c1"># A closed path: a wavy elliptical loop swept with a T-shaped section, flange up, graded across</span>
+<span class="c1"># the section. The frames meet at the seam.</span>
+<span class="n">loop</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">BSplineCurve</span><span class="o">.</span><span class="n">interpolate</span><span class="p">([(</span><span class="mi">14</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="mi">9</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">a</span><span class="p">),</span> <span class="mi">3</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">a</span><span class="p">))</span>
+                                    <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">2</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">i</span> <span class="o">/</span> <span class="mi">24</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">24</span><span class="p">))],</span> <span class="n">closed</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">tee</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Profile</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="mf">5.0</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.9</span><span class="p">))</span> <span class="o">|</span> <span class="n">pv</span><span class="o">.</span><span class="n">Profile</span><span class="o">.</span><span class="n">rectangle</span><span class="p">(</span><span class="mf">1.2</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">)</span>
+<span class="n">ring</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sweep</span><span class="p">(</span><span class="n">tee</span><span class="p">,</span> <span class="n">loop</span><span class="p">,</span> <span class="n">up</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+<span class="n">ring</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span> <span class="n">ring</span><span class="o">.</span><span class="n">coordinate_field</span><span class="p">(</span><span class="s2">"v"</span><span class="p">)</span><span class="o">.</span><span class="n">map_range</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">,</span> <span class="mf">100.0</span><span class="p">,</span> <span class="mf">1000.0</span><span class="p">))</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">([</span><span class="n">horn</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">Translate</span><span class="p">(</span><span class="mi">75</span><span class="p">,</span> <span class="mi">8</span><span class="p">,</span> <span class="mi">14</span><span class="p">,</span> <span class="n">ring</span><span class="p">)])</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus)</p>
+<img src="../images/curves_05_sweeps.png" alt="A rounded rectangle swept along a spline while growing and twisting, and a T-section swept around a closed loop" width="100%">
+</div>
+</div>
+<p>As with tubes, keep the profile smaller than the path’s tightest bend. Each point belongs to the slice through its nearest path point, so on a tighter bend the slices overlap.</p>
+</section>
+<section id="lesson-6-curves-from-data-you-already-have">
+<h2>Lesson 6: Curves From Data You Already Have<a class="headerlink" href="#lesson-6-curves-from-data-you-already-have" title="Link to this heading">#</a></h2>
+<p>Sometimes the curve you need is already in your design: a seam across a scanned surface, the border of a region you picked on a mesh, or a part’s outline at some height. OpenVCAD hands you these as curves:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">mesh.shortest_surface_path(a,</span> <span class="pre">b).to_curve()</span></code>: the shortest path along a mesh’s edges between two vertices (see the <a class="reference internal" href="../imports/mesh-selection.html"><span class="std std-doc">Mesh Selection guide</span></a>);</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">mesh.boundary_loops()</span></code> and <code class="docutils literal notranslate"><span class="pre">selection.boundary_loops()</span></code>: the borders of a mesh, or of a selection on it, as closed curves;</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pv.contour_curves(node,</span> <span class="pre">z,</span> <span class="pre">cell_size,</span> <span class="pre">iso=0.0)</span></code>: a part’s outlines on the plane at height z, traced on a grid of squares <code class="docutils literal notranslate"><span class="pre">cell_size</span></code> wide (<em>marching squares</em>). <code class="docutils literal notranslate"><span class="pre">pv.Profile.cross_section</span></code> gives the filled shape instead.</p></li>
+</ul>
+<p>The example puts three thin, stiff tubes on a soft sphere mesh: along a shortest path, around the border of a patch at the top, and around the outline at z = -1.25. Select <code class="docutils literal notranslate"><span class="pre">modulus</span></code> in the viewer to make the tubes stand out.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="c1"># Curves from data that OpenVCAD already has: a path over a mesh, the border of a mesh selection,</span>
+<span class="c1"># and the contour of a node. Each becomes a tube on a sphere of radius 2.5.</span>
+<span class="n">mesh_file</span> <span class="o">=</span> <span class="s2">"../data/3d_models/sphere.stl"</span>
+<span class="n">mesh</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">SurfaceMesh</span><span class="p">(</span><span class="n">mesh_file</span><span class="p">)</span>
+<span class="n">sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Mesh</span><span class="p">(</span><span class="n">mesh_file</span><span class="p">)</span>
+<span class="n">sphere</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="mf">100.0</span><span class="p">))</span>
+
+<span class="c1"># 1. The shortest path along mesh edges between two vertices, as a curve.</span>
+<span class="n">start</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">nearest_vertex</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mf">2.0</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">0.8</span><span class="p">))</span>
+<span class="n">end</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">nearest_vertex</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">1.2</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.6</span><span class="p">,</span> <span class="mf">1.4</span><span class="p">))</span>
+<span class="n">seam</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Tube</span><span class="p">(</span><span class="n">mesh</span><span class="o">.</span><span class="n">shortest_surface_path</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">)</span><span class="o">.</span><span class="n">to_curve</span><span class="p">(),</span> <span class="mf">0.1</span><span class="p">)</span>
+
+<span class="c1"># 2. The border of a selection: every triangle within 1.2 mm of the top vertex, along the surface.</span>
+<span class="n">top</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">nearest_vertex</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.5</span><span class="p">))</span>
+<span class="n">cap</span> <span class="o">=</span> <span class="n">mesh</span><span class="o">.</span><span class="n">select_by_geodesic_radius</span><span class="p">(</span><span class="n">top</span><span class="p">,</span> <span class="mf">1.2</span><span class="p">)</span>
+<span class="n">ring</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Tube</span><span class="p">(</span><span class="n">cap</span><span class="o">.</span><span class="n">boundary_loops</span><span class="p">()[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">0.1</span><span class="p">)</span>
+
+<span class="c1"># 3. The contour of a node: the sphere's outline at z = -1.25, traced with marching squares.</span>
+<span class="n">contour</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Tube</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">contour_curves</span><span class="p">(</span><span class="n">sphere</span><span class="p">,</span> <span class="o">-</span><span class="mf">1.25</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">)[</span><span class="mi">0</span><span class="p">],</span> <span class="mf">0.1</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">tube</span> <span class="ow">in</span> <span class="p">(</span><span class="n">seam</span><span class="p">,</span> <span class="n">ring</span><span class="p">,</span> <span class="n">contour</span><span class="p">):</span>
+    <span class="n">tube</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">MODULUS</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="mf">1000.0</span><span class="p">))</span>
+<span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">([</span><span class="n">sphere</span><span class="p">,</span> <span class="n">seam</span><span class="p">,</span> <span class="n">ring</span><span class="p">,</span> <span class="n">contour</span><span class="p">])</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (modulus)</p>
+<img src="../images/curves_06_curves_from_data.png" alt="A sphere with tubes along a mesh path, a selection border and a contour" width="100%">
+</div>
+</div>
+</section>
+<section id="advanced-notes">
+<h2>Advanced Notes<a class="headerlink" href="#advanced-notes" title="Link to this heading">#</a></h2>
+<p>Every class and argument is in the Python API: <a class="reference internal" href="../../python-api/pyvcad/curves.html"><span class="std std-doc">Curves and Profiles</span></a> and <a class="reference internal" href="../../python-api/pyvcad/leaves.html"><span class="std std-doc">leaf nodes</span></a>.</p>
+<p><strong>More on curves.</strong> <code class="docutils literal notranslate"><span class="pre">length_at(t)</span></code> and <code class="docutils literal notranslate"><span class="pre">parameter_at_length(s)</span></code> convert between <code class="docutils literal notranslate"><span class="pre">t</span></code> and length, <code class="docutils literal notranslate"><span class="pre">tessellate(tolerance)</span></code> returns a polyline within <code class="docutils literal notranslate"><span class="pre">tolerance</span></code> of the curve, and <code class="docutils literal notranslate"><span class="pre">parameter_field()</span></code> and <code class="docutils literal notranslate"><span class="pre">length_field(normalized=False)</span></code> are fields like the ones in Lesson 3. Nearest points are exact for segments, polylines and arcs; for Bezier curves and B-splines they come from a numerical search accurate to about 1e-12 of the curve’s size.</p>
+<p><strong>More on profiles.</strong> A profile’s distance is computed from its curves, so it is exact, and booleans keep exact arcs and edges. Round offsets of profiles made of straight edges and arcs are exact too; other offsets are polygons within a small tolerance (by default 0.001 mm, or 1e-4 of the profile’s size if that is smaller). <code class="docutils literal notranslate"><span class="pre">offset()</span></code> and the method forms of the booleans (<code class="docutils literal notranslate"><span class="pre">union()</span></code>, <code class="docutils literal notranslate"><span class="pre">intersection()</span></code>, <code class="docutils literal notranslate"><span class="pre">difference()</span></code>) take a <code class="docutils literal notranslate"><span class="pre">tolerance=</span></code> argument. <code class="docutils literal notranslate"><span class="pre">cross_section</span></code> and <code class="docutils literal notranslate"><span class="pre">contour_curves</span></code> are accurate to about their cell size.</p>
+<p><strong>Frames on closed curves.</strong> Carried once around a loop, a frame can come back turned. OpenVCAD spreads that leftover turn evenly along the loop so the frames meet at the seam; <code class="docutils literal notranslate"><span class="pre">pv.CurveFrames(curve).holonomy</span></code> reports it in degrees.</p>
+<p><strong>Distance accuracy.</strong> A solid’s surface is always in the right place, but its signed distance away from the surface is not always exact. After <code class="docutils literal notranslate"><span class="pre">prepare()</span></code>, <code class="docutils literal notranslate"><span class="pre">distance_accuracy()</span></code> describes the whole part, every node below it included: <code class="docutils literal notranslate"><span class="pre">exact</span></code> (the true distance), <code class="docutils literal notranslate"><span class="pre">bound</span></code> (within the bandwidth, never more than <code class="docutils literal notranslate"><span class="pre">lipschitz_bound()</span></code> times the true distance, so safe to offset or blend further) or <code class="docutils literal notranslate"><span class="pre">approximate</span></code> (right at the surface, possibly off farther away). The compilers use it to skip voxels that provably hold no material; for an <code class="docutils literal notranslate"><span class="pre">approximate</span></code> part they sample every voxel, so the output is the same either way:</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Node</p></th>
+<th class="head"><p>Accuracy</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Tube</span></code></p></td>
+<td><p>exact for a straight constant-radius tube; a bound for a curved one (its depth is underestimated once the radius passes the curve’s radius of curvature); approximate for a field radius, or for butt caps on a curved open curve</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Extrude</span></code></p></td>
+<td><p>exact; approximate with draft, twist or an offset law (just outside the part its distance drops below the distance to its bounding box)</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Revolve</span></code></p></td>
+<td><p>exact, for full and partial revolves</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">Sweep</span></code></p></td>
+<td><p>exact for a straight path with constant scale and a constant twist; approximate otherwise</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">Loft</span></code></p></td>
+<td><p>approximate (it blends the sections’ distances)</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>It also matters for operations that read distances away from the surface, such as <code class="docutils literal notranslate"><span class="pre">pv.Offset</span></code>, <code class="docutils literal notranslate"><span class="pre">pv.Shell</span></code> and blends (see <a class="reference internal" href="offsets-blends-arrays.html"><span class="std std-doc">Offsets, Blends and Arrays</span></a>).</p>
+<p><strong>PolygonExtrude and PolygonRevolve.</strong> These still work, now as the polygon cases of <code class="docutils literal notranslate"><span class="pre">Extrude</span></code> and <code class="docutils literal notranslate"><span class="pre">Revolve</span></code> (placed in the polygon’s own plane or on the given axis), so they gain the coordinate fields and exact partial revolves. Use them for polygons given as 3D points, and <code class="docutils literal notranslate"><span class="pre">Extrude</span></code> and <code class="docutils literal notranslate"><span class="pre">Revolve</span></code> with a <code class="docutils literal notranslate"><span class="pre">Profile</span></code> for everything else.</p>
+</section>
+<section id="see-also">
+<h2>See Also<a class="headerlink" href="#see-also" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="sketching.html"><span class="std std-doc">Sketching and Extruding</span></a> to draw profiles with a pen-style sketch, construction geometry and fillets, place them on any plane, and loft between them</p></li>
+<li><p>Python API: <a class="reference internal" href="../../python-api/pyvcad/curves.html"><span class="std std-doc">Curves and Profiles</span></a> and <a class="reference internal" href="../../python-api/pyvcad/leaves.html"><span class="std std-doc">leaf nodes</span></a></p></li>
+<li><p><a class="reference internal" href="offsets-blends-arrays.html"><span class="std std-doc">Offsets, Blends and Arrays</span></a> for field-valued parameters and <code class="docutils literal notranslate"><span class="pre">pv.ScalarParameter</span></code></p></li>
+<li><p><a class="reference internal" href="../fields/fields.html"><span class="std std-doc">Fields: Driving Material and Geometry</span></a> for shaping the fields that drive radius, scale and twist</p></li>
+<li><p><a class="reference internal" href="deforming-space.html"><span class="std std-doc">Deforming Space</span></a> to bend, twist or wrap a finished solid instead of sweeping it</p></li>
+<li><p><a class="reference internal" href="../imports/mesh-selection.html"><span class="std std-doc">Mesh Selection</span></a> for picking the mesh paths and regions used in Lesson 6</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="offsets-blends-arrays.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Offsets, Blends and Arrays</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="sketching.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Sketching and Extruding</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-will-learn">What You Will Learn</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-examples">Running the Examples</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#the-three-building-blocks">The Three Building Blocks</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-1-curves">Lesson 1: Curves</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-2-profiles">Lesson 2: Profiles</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-3-tubes">Lesson 3: Tubes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-4-extrude-and-revolve">Lesson 4: Extrude and Revolve</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-5-sweeps">Lesson 5: Sweeps</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-6-curves-from-data-you-already-have">Lesson 6: Curves From Data You Already Have</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-notes">Advanced Notes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#see-also">See Also</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/guides/modeling/curves-profiles-sweeps.md.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Charles Wade and Robert MacCurdy.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.2.0.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

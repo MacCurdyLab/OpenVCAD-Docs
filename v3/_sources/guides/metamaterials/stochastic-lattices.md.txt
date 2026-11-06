@@ -12,8 +12,11 @@ a structure that should not show a repeating pattern.
 This guide builds beam and plate lattices inside boxes, a cylinder, a sphere,
 and a box with an internal cavity. It also shows how to round member junctions
 for a more organic appearance and how to blend a finished lattice into a
-separate frame. It assumes you have completed [Getting Started](../getting-started.md)
-and [Functional Grading](../gradients.md).
+separate frame. The later sections keep clipped foams in one piece, turn a
+random foam gradually into a regular strut lattice, join a foam to a TPMS, and
+fill a conformal liner volume with a graded foam.
+It assumes you have completed [Getting Started](../introduction/getting-started.md)
+and [Functional Grading](../fields/gradients.md).
 
 ## The workflow
 
@@ -398,6 +401,86 @@ of host surface that close the plate solid. `boundary_seams()` returns their
 edge segments. These are useful inspection products; the host remains the
 authoritative boundary of the geometry.
 
+## Voronoi ribs on a surface
+
+So far, the seeds have filled a volume. You can also spread them over the
+surface of a part. Each seed then owns the patch of surface that is closer to
+it than to any other seed. This is called a surface, or restricted, Voronoi
+diagram, because each Voronoi cell is restricted to the surface. The borders
+between the patches become ribs: round struts that lie along the surface, or
+walls that stand across it.
+
+The example below covers a torus with seeds and builds both kinds of rib from
+the same seeds. `pv.SurfaceMesh` first turns the body into a triangle mesh. Any
+triangle mesh works here, including a scan loaded from a file, even an open or
+noisy one.
+
+```python
+body = pv.Torus(18.0, 8.0)
+mesh = pv.SurfaceMesh(body, 0.4)                     # any triangle mesh, also a loaded scan
+seeds = mm.surface_seeds(mesh, pv.FloatAttribute("4.5 + x / 17"), seed=2)
+
+ribs = mm.surface_voronoi_ribs(mesh, seeds, beam_thickness=1.0)
+walls = mm.surface_voronoi_plates(body, seeds, rib_height=3.0,
+                                  wall_thickness=pv.FloatAttribute("0.6 + 0.04 * (z + 8)"))
+```
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_stochastic_surface_ribs.png" data-lightbox="stochastic-surface"><img src="../images/mm_stochastic_surface_ribs.png" alt="Round Voronoi ribs following the surface of a torus"></a><div class="guide-figure-label">Round ribs along the cell boundaries; cells grow from left to right</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_stochastic_surface_plates.png" data-lightbox="stochastic-surface"><img src="../images/mm_stochastic_surface_plates.png" alt="Voronoi walls standing across the surface of a torus"></a><div class="guide-figure-label">Walls across the surface, thicker towards the top</div></div>
+</div>
+
+The example uses three functions:
+
+- `mm.surface_seeds(mesh, spacing)` spreads seeds evenly over the mesh, with
+  neighbouring seeds roughly `spacing` millimetres apart. The spacing can be a
+  field, so the cell size can change across the surface. Here the cells grow
+  from left to right.
+- `mm.surface_voronoi_ribs(mesh, seeds, beam_thickness)` turns the borders into
+  round ribs centred on the surface: half of each rib stands above the surface
+  and half sinks below it. `beam_thickness` is the rib diameter in millimetres,
+  and it can also be a field. The result is a `pv.BeamLattice`, a node made of
+  round struts joined at their ends.
+- `mm.surface_voronoi_plates(body, seeds, rib_height, wall_thickness)` builds
+  walls along the same borders instead. Each wall is `rib_height` tall, half
+  outside and half inside the body. This function takes the body itself rather
+  than its mesh, and the body must be closed. Here `wall_thickness` is a field
+  that makes the walls thicker towards the top.
+
+Seeds measure distance in straight lines, not along the surface. On a part with
+thin walls, keep the spacing smaller than the wall thickness. Otherwise seeds on
+opposite sides of a wall affect each other's cells.
+
+To stiffen a part's skin, union the ribs or walls with the part. For a lighter
+result, union them with a thin `pv.Shell` of the part instead, so they have a
+skin to stand on.
+
+Run
+[`16_voronoi_ribs_on_a_surface.py`](../../../../examples/metamaterials/stochastic_lattices/16_voronoi_ribs_on_a_surface.py)
+to see the ribs and the walls side by side in the interactive preview.
+
+```{note}
+**Optional details.** You do not need these to use the functions above.
+
+- Why not fill a thin shell with seeds and keep the Voronoi plates inside it?
+  Seeds at different depths cut the shell at random angles and leave partial
+  cells. Seeds placed on the surface itself avoid that.
+- `mm.surface_seeds(...)` uses Poisson-disk sampling: it drops random points on
+  the surface and keeps each one only if it is far enough from the seeds already
+  kept. The seeds therefore spread evenly without forming a grid.
+- To inspect the pattern yourself, call `mm.surface_voronoi(mesh, seeds)`. It
+  returns the borders as short straight pieces (`segments`), the two seeds on
+  either side of each piece, and the area each seed owns. It works one triangle
+  at a time, which is why open, non-manifold and noisy scans work.
+- `mm.surface_voronoi_ribs(...)` merges those short pieces into longer struts.
+  `simplify_tolerance` (default 0.05 mm) sets how far a merged strut may stray
+  from the exact border.
+- The walls of `mm.surface_voronoi_plates(...)` are the faces of the seeds' 3D
+  Voronoi cells, kept inside the band `pv.Thicken(rib_height, body)` around the
+  surface. That band is why the body must be closed. For seeds on the surface,
+  those faces cut it exactly along the same borders as the ribs.
+```
+
 ## Blend the finished lattice into a frame
 
 Member blending and Boolean blending solve different joins. First use
@@ -442,6 +525,334 @@ Do not union the lattice with the fully solid host when the host represents the
 part envelope; that would fill the intended pores. Union it with the actual
 printable frame, shell, skin, or rim instead.
 
+## Keep clipped foams in one piece
+
+A host clips every strut that crosses its surface. Two kinds of piece can then
+come loose and would print as separate fragments:
+
+- a strut that runs between two cell corners outside the host but cuts across
+  a corner or a concave part of it, so it never reaches a joint inside, and
+- a corner inside the host that sits so close to the surface that all of its
+  struts leave the host straight away.
+
+Pass `prune_loose=True` to drop both. The struts that stay are unchanged, and
+the host still cuts them cleanly at the surface:
+
+```python
+root = mm.voronoi_graph_lattice(
+    host,
+    points,
+    beam_thickness=0.9,
+    prune_loose=True,
+)
+```
+
+The outermost Voronoi cells of a point cloud are open: they have no neighbours
+outside the host to close them. That is fine for a random foam, but a regular
+lattice (next section) loses the struts that should lie on the surface. Seeds
+in a thin layer outside the host close those cells. Accept them with
+`allow_outside_seeds=True`; the host still confines all geometry. The
+transition helpers below add that layer and prune for you.
+
+### Check that a lattice is one piece
+
+`mm.check_connectivity` samples a design on a voxel grid and counts its
+separate solid pieces. It runs in parallel and prints where any extra pieces
+are:
+
+```python
+report = mm.check_connectivity(root, voxel_size=0.25)
+print(report)
+# connectivity: 1 component at 0.25 mm voxels (connected)
+#   #0: 5387.797 mm^3 near (-34.62, -11.88, -11.88)
+
+if not report.connected:
+    for volume, point in report.islands:
+        print("loose piece of", volume, "mm^3 near", point)
+```
+
+Use a voxel size of at most about half the beam radius. Coarser grids can
+report a thin neck as a break or miss a narrow gap. Where a strut leaves the
+part at a grazing angle, the grid can also catch a one- or two-voxel sliver as
+its own piece; those shrink as the voxels get smaller. By default pieces of
+fewer than eight voxels are listed as ignored specks. Set `min_island_volume`
+(in cubic millimetres) to choose your own limit, or `0` to count everything.
+`mm.require_connected(...)` takes the same arguments and raises an error with
+the same listing, which is handy at the end of a script.
+
+Large parts take longer to check because every voxel is sampled. For strut
+foams, primitives and their booleans, `cull_far_cells=True` decides whole
+blocks of empty space from one sample and gives the same answer three to six
+times faster on the liner examples below. Leave it off when the design
+contains a TPMS: TPMS fields can change faster than true distance, and the
+shortcut could then skip a thin wall.
+
+## Sample large seed sets quickly
+
+`sample_points_in_host` is easy to read and tune, but it compares each new
+point with every accepted one. For thousands of points, use
+`mm.random_seeds`. It follows the same spacing rule and accepts the same
+spacing values and fields, but grows the point set front by front natively:
+
+```python
+points = mm.random_seeds(
+    host,
+    spacing=pv.FloatAttribute("2.0 + 0.02 * (z + 92)"),
+    seed=1,
+)
+```
+
+About 87,000 points fill a 100 mm cube at 1.9 mm spacing in roughly one
+second. The result is a `StochasticPointSet`, so it works with every lattice
+builder in this guide. Its points are deterministic for a given `seed` but
+differ from `sample_points_in_host`.
+
+## From a random foam to a regular lattice
+
+A Voronoi diagram of evenly repeated points is a familiar strut lattice:
+
+| `kind` | Points | Voronoi cells | Matching graph cell |
+| --- | --- | --- | --- |
+| `"sc"` | cube centres | cubes | `mm.voronoi_unit_cell("sc")` (the cubic cell) |
+| `"bcc"` | cube corners and centres | Kelvin cells (truncated octahedra) | `mm.voronoi_unit_cell("bcc")` (the Kelvin cell) |
+| `"fcc"` | cube corners and face centres | rhombic dodecahedra | `mm.voronoi_unit_cell("fcc")` |
+
+So a foam turns into a regular lattice when its seeds move from random
+positions onto such points. OpenVCAD does exactly that. A *regularity* field
+chooses where the foam is random (`0`) and where it is regular (`1`).
+
+### Why this is hard, and how OpenVCAD does it
+
+A random foam and a periodic lattice are two unrelated networks. Their joints
+do not line up, so a sharp cut between them leaves struts ending in mid-air.
+Blending their distance fields, as a general-purpose mix block does, creates a
+shape that is neither: where neither structure dominates, the blend thins out
+and breaks into islands. Many lattice tools therefore offer no Voronoi-to-strut
+transition at all.
+
+OpenVCAD changes the seeds, not the geometry. In the transition band each
+random seed is paired with the nearest regular point and slides towards it by
+the local regularity. Random and regular regions are then one Voronoi
+diagram. Every joint is shared, the cell size stays continuous, and the
+transition cannot pinch apart. The regular points can also follow a
+`CellMap`, so the regular region bends with a curved part.
+
+### Random to Kelvin across a block
+
+[`11_random_to_kelvin_block.py`](../../../../examples/metamaterials/stochastic_lattices/11_random_to_kelvin_block.py)
+makes the left end of a block a random foam and the right end a Kelvin
+lattice:
+
+```python
+host = pv.RectPrism.FromMinAndMax(pv.Vec3(-36.0, -12.0, -12.0), pv.Vec3(36.0, 12.0, 12.0))
+host.prepare(pv.Vec3(0.4, 0.4, 0.4), 1.0)
+
+regularity = mm.ramp(-12.0, 12.0, axis="x")
+root = mm.voronoi_transition(
+    host,
+    regularity,
+    kind="bcc",
+    cell_size=6.0,
+    origin=(-36.0, -12.0, -12.0),
+    beam_thickness=0.9,
+    seed=4,
+)
+print(mm.check_connectivity(root, voxel_size=0.25))
+```
+
+`cell_size` is the edge of the cube that holds two BCC points, so the Kelvin
+cells are 6 mm across their square faces. `origin` lines the cells up with the
+block faces. The random seeds are sampled automatically at a density that
+matches the regular points, so cells keep the same average size through the
+transition.
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_stochastic_transition_seeds.png" data-lightbox="stochastic-transition"><img src="../images/mm_stochastic_transition_seeds.png" alt="Seed points scattered on the left and arranged on a regular body-centred grid on the right"></a><div class="guide-figure-label">Seeds: random on the left, sliding onto BCC points through the middle</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_stochastic_random_to_kelvin_block.png" data-lightbox="stochastic-transition"><img src="../images/mm_stochastic_random_to_kelvin_block.png" alt="Strut lattice that is a random foam on the left and regular Kelvin cells on the right"></a><div class="guide-figure-label">The Voronoi struts of those seeds: one connected piece</div></div>
+</div>
+
+The seeds are available before any geometry is built, which is useful for
+inspection or for reuse:
+
+```python
+seeds = mm.transition_seeds(host, regularity, kind="bcc", cell_size=6.0, seed=4)
+print(len(seeds), seeds.matched_count)
+root = mm.voronoi_transition(host, regularity, seeds=seeds, beam_thickness=0.9)
+```
+
+`transition_seeds` also accepts your own random points through
+`random_points=`, for example a graded `random_seeds` result whose density
+rises towards one side. Pass `method="jitter"` for the classic alternative:
+every regular point is displaced by up to `jitter` times its spacing, scaled
+by `1 - regularity`. That gives a "perturbed lattice" whose irregularity you
+control directly.
+
+### Follow a curved part
+
+With `cell_map=` instead of `cell_size=`, the regular points are placed
+through the map, so the regular region follows the part. In
+[`12_random_to_kelvin_shell.py`](../../../../examples/metamaterials/stochastic_lattices/12_random_to_kelvin_shell.py)
+a conformal map over a domed patch places Kelvin cells along a 12 mm shell.
+The foam is random near the rim and regular at the crown:
+
+```python
+cell_map = mm.cell_map_from_surface(surface, cells=(20, 20, 2), height=12.0)
+regularity = mm.ramp(rim_height + 15.0, rim_height + 30.0, axis="z")
+root = mm.voronoi_transition(
+    host,
+    regularity,
+    kind="bcc",
+    cell_map=cell_map,
+    beam_thickness=0.9,
+    seed=7,
+)
+```
+
+<div class="guide-figure-stack">
+  <a href="../images/mm_stochastic_random_to_kelvin_shell.png" data-lightbox="stochastic-shell"><img src="../images/mm_stochastic_random_to_kelvin_shell.png" alt="Domed shell lattice that is a random foam near the rim and regular Kelvin cells at the crown"></a>
+  <div class="guide-figure-label">Random foam at the rim, Kelvin cells that follow the dome at the crown</div>
+</div>
+
+Keep the map's cells close to cubes. Voronoi cells keep their shape under
+moving, turning and uniform scaling, but not under stretching, so strongly
+stretched map cells produce cells that differ from the Kelvin shape.
+
+### Join a foam to a mapped strut lattice
+
+Sometimes the regular part must be a mapped graph lattice, for example an
+octet truss, or a lattice that already exists in a design. Join the two with
+`mm.overlap`, which keeps both structures in a band around a region surface
+so their struts cross:
+
+```python
+foam_side = pv.RectPrism.FromMinAndMax(pv.Vec3(-40, -40, -40), pv.Vec3(40, 40, 0))
+foam_host = pv.Intersection(host, pv.Offset(OVERLAP + 1.0, foam_side))
+foam_host.prepare(pv.Vec3(0.4, 0.4, 0.4), 1.0)
+foam = mm.voronoi_transition(
+    foam_host, mm.ramp(-18.0, -6.0, axis="z"), kind="bcc", cell_map=cell_map,
+    beam_thickness=0.9, seed=2,
+)
+kelvin = mm.graph_lattice(cell_map, mm.voronoi_unit_cell("bcc"), beam_radius=0.45)
+root = pv.Intersection(mm.overlap(foam, kelvin, foam_side, OVERLAP), host)
+```
+
+Because the foam's regular points come from the same map, its cells approach
+the mapped Kelvin cells near the join. On a rectangular map they match
+exactly, joint for joint, so even a sharp cut would connect them. On a curved
+map they only match approximately: on the dome above, the joints differ by
+about a millimetre, more than a strut radius. The overlap band makes the join
+reliable either way, which is why it is the recommended way to attach a foam
+to a mapped lattice.
+[`13_voronoi_joined_to_mapped_kelvin.py`](../../../../examples/metamaterials/stochastic_lattices/13_voronoi_joined_to_mapped_kelvin.py)
+does this on a tube.
+
+<div class="guide-figure-stack">
+  <a href="../images/mm_stochastic_foam_joined_to_kelvin.png" data-lightbox="stochastic-tube"><img src="../images/mm_stochastic_foam_joined_to_kelvin.png" alt="Tube lattice with a random foam at the bottom joined to a mapped Kelvin lattice at the top"></a>
+  <div class="guide-figure-label">A foam regularizes on the tube's map and overlaps a mapped Kelvin lattice</div>
+</div>
+
+## From a Voronoi foam to a TPMS
+
+A TPMS sheet and a strut foam have nothing to blend: one is a set of curved
+walls, the other a set of beams. `mm.voronoi_tpms_transition` keeps both in a
+band and lets the struts run into the walls:
+
+```python
+cell_map = mm.rectangular_cell_map(
+    (pv.Vec3(-30.0, -12.0, -12.0), pv.Vec3(30.0, 12.0, 12.0)), cell_size=6.0
+)
+across_band = mm.ramp(-2.0, 2.0, axis="x")
+gyroid = mm.gyroid(cell_map, wall_thickness=across_band.map_range(0.0, 1.0, 0.56, 0.8))
+foam_side = pv.RectPrism.FromMinAndMax(pv.Vec3(-50.0, -20.0, -20.0), pv.Vec3(0.0, 20.0, 20.0))
+
+root = mm.voronoi_tpms_transition(
+    host,
+    foam_side,
+    gyroid,
+    2.0,
+    cell_map=cell_map,
+    beam_thickness=across_band.map_range(0.0, 1.0, 0.9, 0.63),
+    seed=3,
+)
+print(mm.check_connectivity(root, voxel_size=0.2))
+```
+
+The foam fills `foam_side`, the gyroid the rest, and both continue through a
+4 mm band (twice the half-width of `2.0`). Passing the gyroid's map makes the
+foam cells the same average size as the gyroid cells. The two ramps thin each
+structure as it crosses the band, so the overlap does not double the material.
+`regularity=` (default `0`, random) can also make the foam regular before it
+meets the walls. See
+[`14_voronoi_to_gyroid.py`](../../../../examples/metamaterials/stochastic_lattices/14_voronoi_to_gyroid.py).
+
+<figure class="openvcad-comparison" data-openvcad-comparison style="--openvcad-comparison-position: 50%; --openvcad-comparison-aspect-ratio: 25 / 18;">
+  <figcaption>Blending distance fields versus overlapping a foam and a gyroid</figcaption>
+  <div class="openvcad-comparison-frame">
+    <img class="openvcad-comparison-image openvcad-comparison-image-after" src="../images/mm_stochastic_voronoi_to_gyroid.png" alt="Random Voronoi foam joined to a gyroid sheet through an overlap band" width="1000" height="720" decoding="async" data-no-lightbox draggable="false">
+    <img class="openvcad-comparison-image openvcad-comparison-image-before" src="../images/mm_stochastic_voronoi_gyroid_field_blend.png" alt="Random Voronoi foam and gyroid blended through their distance fields, breaking apart in the band" width="1000" height="720" decoding="async" data-no-lightbox draggable="false">
+    <span class="openvcad-comparison-label openvcad-comparison-label-before">Field blend: 6 pieces</span>
+    <span class="openvcad-comparison-label openvcad-comparison-label-after">Overlap: 1 piece</span>
+    <input class="openvcad-comparison-control" type="range" min="0" max="100" value="50" autocomplete="off" aria-label="Compare a distance-field blend with an overlap join between a foam and a gyroid">
+    <span class="openvcad-comparison-divider" aria-hidden="true"><span class="openvcad-comparison-handle"></span></span>
+  </div>
+</figure>
+
+### Failure modes and how the check catches them
+
+Two things go wrong at foam-to-TPMS joins, and `check_connectivity` reports
+both:
+
+- **Pinch-off.** Blending the two distance fields (`pv.Mix`) leaves a zone
+  where neither structure dominates. The blend thins there and breaks into
+  islands. In the 6 mm-cell block above, a one-cell-wide blend band split the
+  part into six pieces, although the render looks intact. Wider blend bands make
+  this worse, not better.
+- **Islands at the band edge.** Where the band cuts the foam, a strut can be
+  cut off at both ends. `voronoi_tpms_transition` builds the foam exactly up
+  to the band edge and prunes those pieces, so this does not happen there. If
+  you assemble the join yourself, build the foam with `prune_loose=True` on the
+  same region you later clip it to.
+
+A wider overlap band never pinches, but it costs material. Start with a
+half-width between a quarter and a half of the cell size (1.5–3 mm for 6 mm
+cells), thin both structures through the band as above, and keep the
+connectivity check in the script. `check_voxel_size=0.2` makes
+`voronoi_tpms_transition` raise an error when the result is not one piece.
+
+## Fill a conformal liner volume
+
+`mm.domain(cell_map)` turns the volume of a conformal map into an ordinary
+solid, so it can host a foam (see the conformal meshes guide).
+`mm.voronoi_foam` fills any prepared host in one call. It samples seeds with
+`random_seeds`, closes the cells at the surface with a seed layer just outside
+the host, and prunes loose pieces. A spacing field grades the cells.
+[`15_graded_foam_in_conformal_liner.py`](../../../../examples/metamaterials/stochastic_lattices/15_graded_foam_in_conformal_liner.py)
+builds a 14 mm liner over a domed patch, with small cells against the head and
+large cells at the outer surface:
+
+```python
+cell_map = mm.cell_map_from_surface(surface, cells=(16, 16, 2), height=14.0)
+host = mm.domain(cell_map)
+host.prepare(pv.Vec3(0.5, 0.5, 0.5), 1.0)
+
+head = pv.Sphere(pv.Vec3(0.0, 0.0, 0.0), 80.0)
+from_head = mm.distance_field(head, bandwidth=24.0)
+spacing = mm.ramp(0.0, 14.0, coordinates=from_head).map_range(0.0, 1.0, 3.0, 6.0)
+
+foam = mm.voronoi_foam(host, spacing, seed=11, beam_thickness=0.8)
+root = pv.Union(foam, mm.rim(cell_map, width=1.2))
+```
+
+<div class="guide-figure-grid">
+  <div class="guide-figure-cell"><a href="../images/mm_stochastic_graded_foam_liner.png" data-lightbox="stochastic-liner"><img src="../images/mm_stochastic_graded_foam_liner.png" alt="Domed liner filled with a Voronoi foam and sealed by a rim"></a><div class="guide-figure-label">A Voronoi foam fills the mapped liner volume; a rim seals the edge</div></div>
+  <div class="guide-figure-cell"><a href="../images/mm_stochastic_graded_foam_liner_section.png" data-lightbox="stochastic-liner"><img src="../images/mm_stochastic_graded_foam_liner_section.png" alt="Section through the liner showing small foam cells near the inner surface and larger cells near the outer surface"></a><div class="guide-figure-label">Section: cells grow from 3 mm at the head to 6 mm outside</div></div>
+</div>
+
+The distance field measures how far each point is from the head, in
+millimetres, and is defined everywhere. That matters here because the foam
+also asks for the spacing in its seed layer just outside the liner. A spacing
+built from the map's own `w` coordinate would only exist inside the map.
+
 ## Inspect prepared topology
 
 The lattice nodes expose more than an SDF. After preparation you can inspect:
@@ -477,6 +888,8 @@ cell. This is most common for seeds near the outside of the point cloud.
 6. Use `boundary="open"` unless you need explicit cap or contact products.
 7. Prepare and inspect counts before creating a very dense render.
 8. Check closed plate designs for trapped material and inaccessible cavities.
+9. Use `prune_loose=True` (or the transition helpers) and finish with
+   `mm.check_connectivity` so clipping leaves no loose pieces.
 
 Stochastic preparation does more work than tiling a small repeating cell. For
 interactive exploration, begin with a few dozen points and increase the count

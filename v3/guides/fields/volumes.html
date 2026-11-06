@@ -1,0 +1,1247 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Working with Volumes in OpenVCAD &#8212; OpenVCAD 3.2 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_theme.css?v=8cc8a5a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_branding.css?v=c43e02c9" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="../../_static/documentation_options.js?v=828ea960"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'guides/fields/volumes';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../../_static/openvcad_lightbox.js?v=e11fca97"></script>
+    <script src="../../_static/openvcad_comparison.js?v=0e3a0b21"></script>
+    <script src="../../_static/openvcad_carousel.js?v=954187e7"></script>
+    <link rel="icon" href="../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Simulation-driven design" href="simulation-driven-design.html" />
+    <link rel="prev" title="Attribute Conflict Resolution" href="attribute-conflicts.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="OpenVCAD - Home"/>
+    <img src="../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="OpenVCAD - Home"/>
+  
+  
+    <p class="title logo__title">
+      <span class="logo__title-full">OpenVCAD Documentation</span>
+      <span class="logo__title-compact" aria-hidden="true">Documentation</span>
+      <span class="logo__title-short" aria-hidden="true">Docs</span>
+    </p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+
+
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item dropdown active">
+      <button class="btn dropdown-toggle nav-link active" type="button" id="pst-nav-dd-guides" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Guides
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-guides">
+        <li><a class="dropdown-item" href="../index.html">All guides</a></li>
+        <li><hr class="dropdown-divider"></li>
+        
+        
+        <li><a class="dropdown-item" href="../introduction/index.html">Introduction</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../modeling/index.html">Shape modeling</a></li>
+        
+        
+        <li><a class="dropdown-item active" href="index.html">Field-driven design</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../imports/index.html">Imported geometry</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../metamaterials/index.html">Metamaterials</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../analysis/index.html">Analysis</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../compilers/index.html">Compilers and export</a></li>
+        
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../gallery.html">Gallery</a>
+    </li>
+    <li class="nav-item dropdown">
+      <button class="btn dropdown-toggle nav-link" type="button" id="pst-nav-dd-py" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Python API
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-py">
+        <li><a class="dropdown-item" href="../../python-api/pyvcad/index.html">pyvcad module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_compilers/index.html">pyvcad_compilers module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_rendering/index.html">pyvcad_rendering module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_attribute_resolver/index.html">pyvcad_attribute_resolver module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_metamaterials/index.html">pyvcad_metamaterials module</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../cpp-api/index.html">C++ API</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../papers.html">Papers</a>
+    </li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="openvcad-mobile-nav" aria-label="Site navigation">
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item"><a class="nav-link" href="../../index.html">Home</a></li>
+    <li class="nav-item">
+      <details class="openvcad-mobile-nav__group">
+        <summary>Guides</summary>
+        <ul>
+          <li><a class="nav-link" href="../index.html">All guides</a></li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Introduction</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../introduction/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../install.html">Installation</a></li>
+                
+                <li><a class="nav-link" href="../introduction/theory-and-motivation.html">Theory and Motivation</a></li>
+                
+                <li><a class="nav-link" href="../introduction/getting-started.html">Getting Started with OpenVCAD</a></li>
+                
+                <li><a class="nav-link" href="../introduction/moving-from-v2-to-v3.html">Moving from Version 2 to 3</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Shape modeling</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../modeling/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../modeling/primitives.html">Primitive catalog</a></li>
+                
+                <li><a class="nav-link" href="../modeling/offsets-blends-arrays.html">Offsets, blends and arrays</a></li>
+                
+                <li><a class="nav-link" href="../modeling/curves-profiles-sweeps.html">Curves, profiles and sweeps</a></li>
+                
+                <li><a class="nav-link" href="../modeling/sketching.html">Sketching and extruding</a></li>
+                
+                <li><a class="nav-link" href="../modeling/deforming-space.html">Deforming space</a></li>
+                
+                <li><a class="nav-link" href="../modeling/surface-relief.html">Physical surface relief</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Field-driven design</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="gradients.html">Functional grading</a></li>
+                
+                <li><a class="nav-link" href="fields.html">Fields</a></li>
+                
+                <li><a class="nav-link" href="math-expressions.html">Math expressions</a></li>
+                
+                <li><a class="nav-link" href="numba-attributes.html">Python functions for attributes</a></li>
+                
+                <li><a class="nav-link" href="attribute-conflicts.html">Attribute conflict resolution</a></li>
+                
+                <li><a class="nav-link active" href="#">Working with volumes</a></li>
+                
+                <li><a class="nav-link" href="simulation-driven-design.html">Simulation-driven design</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Imported geometry</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../imports/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../imports/cadquery.html">CAD with CadQuery</a></li>
+                
+                <li><a class="nav-link" href="../imports/textured-mesh.html">Importing textured solids</a></li>
+                
+                <li><a class="nav-link" href="../imports/3mf-beam-lattice.html">Importing 3MF beam lattices</a></li>
+                
+                <li><a class="nav-link" href="../imports/mesh-selection.html">Selecting triangle-mesh patches</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Metamaterials</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../metamaterials/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/concepts.html">Concepts and representation</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/catalog.html">TPMS and lattice catalog</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/custom-unit-cells.html">Custom unit cells</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/stochastic-lattices.html">Stochastic lattices</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/geometry-grading.html">Functionally graded geometry</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/attribute-modeling.html">Attribute modeling</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/cylindrical-spherical-cell-maps.html">Cylindrical and spherical cell maps</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/conformal-cad.html">Conformal mapping CAD surfaces</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/conformal-meshes.html">Conformal mapping triangle meshes</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/properties.html">Geometric characterization</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Analysis</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../analysis/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../analysis/analysing-designs.html">Analysing designs</a></li>
+                
+                <li><a class="nav-link" href="../analysis/support-analyzer.html">Inkjet support volumes</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Compilers and export</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../compilers/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../compilers/material-inkjet.html">Material Inkjet</a></li>
+                
+                <li><a class="nav-link" href="../compilers/multi-material-vat.html">Multi-material VAT</a></li>
+                
+                <li><a class="nav-link" href="../compilers/color-inkjet.html">Color Inkjet</a></li>
+                
+                <li><a class="nav-link" href="../compilers/vat-photo.html">VAT Photo</a></li>
+                
+                <li><a class="nav-link" href="../compilers/slicer-project.html">Slicer Project</a></li>
+                
+                <li><a class="nav-link" href="../compilers/simulation-compiler.html">Simulation Compiler</a></li>
+                
+                <li><a class="nav-link" href="../compilers/attribute-resolver.html">Attribute modifier and resolver</a></li>
+                
+                <li><a class="nav-link" href="../compilers/meshing-and-export.html">Meshing and export</a></li>
+                
+                <li><a class="nav-link" href="../compilers/custom-python-compiler.html">Creating a compiler in Python</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+        </ul>
+      </details>
+    </li>
+    <li class="nav-item"><a class="nav-link" href="../../gallery.html">Gallery</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../python-api/index.html">Python API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../cpp-api/index.html">C++ API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../papers.html">Papers</a></li>
+  </ul>
+</nav>
+</div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+
+  
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../introduction/index.html">Introduction</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction/theory-and-motivation.html">Theory and Motivation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction/getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction/moving-from-v2-to-v3.html">Moving from Version 2 to 3</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../modeling/index.html">Shape modeling</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modeling/primitives.html">Primitive catalog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modeling/offsets-blends-arrays.html">Offsets, Blends and Arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modeling/curves-profiles-sweeps.html">Curves, Profiles and Sweeps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modeling/sketching.html">Sketching and Extruding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modeling/deforming-space.html">Deforming Space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modeling/surface-relief.html">Physical surface relief</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Field-driven design</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="gradients.html">Functional Grading Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="fields.html">Fields: Driving Material and Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math-expressions.html">Math expressions in OpenVCAD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numba-attributes.html">Python Functions for Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="attribute-conflicts.html">Attribute Conflict Resolution</a></li>
+<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">Working with Volumes in OpenVCAD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-driven-design.html">Simulation-driven design</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../imports/index.html">Imported geometry</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../imports/cadquery.html">Authoring CAD with CadQuery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../imports/textured-mesh.html">Importing textured solids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../imports/3mf-beam-lattice.html">Importing 3MF beam lattices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../imports/mesh-selection.html">Select triangle-mesh patches</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../metamaterials/index.html">Metamaterials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/concepts.html">Concepts and representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/catalog.html">TPMS and lattice catalog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/custom-unit-cells.html">Custom unit cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/stochastic-lattices.html">Stochastic Voronoi and Delaunay lattices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/geometry-grading.html">Functionally graded metamaterial geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/attribute-modeling.html">Attribute modeling for metamaterials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/cylindrical-spherical-cell-maps.html">Cylindrical and spherical cell maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/conformal-cad.html">Conformal mapping CAD surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/conformal-meshes.html">Map lattices onto triangle meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/properties.html">Geometric characterization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../analysis/index.html">Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../analysis/analysing-designs.html">Analysing Designs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../analysis/support-analyzer.html">Inkjet support volumes</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../compilers/index.html">Compilers and export</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/material-inkjet.html">Material Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/multi-material-vat.html">Multi-material VAT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/color-inkjet.html">Color Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/vat-photo.html">VAT Photo Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/slicer-project.html">Slicer Project Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/simulation-compiler.html">Simulation Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/attribute-resolver.html">Attribute Modifier and Resolver Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/meshing-and-export.html">Meshing and export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/custom-python-compiler.html">Creating a Compiler in Python</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Guides</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Field-driven design</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Working with Volumes in OpenVCAD</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="working-with-volumes-in-openvcad">
+<span id="guide-volumes"></span><h1>Working with Volumes in OpenVCAD<a class="headerlink" href="#working-with-volumes-in-openvcad" title="Link to this heading">#</a></h1>
+<!--
+Build dependency sentinel for guide sidebar membership.
+Guide pages that render the shared Guides sidebar include this file so
+changes to the guide set force those pages to rebuild on incremental
+Sphinx runs.
+
+Current guide sections:
+- introduction
+- modeling
+- fields
+- imports
+- metamaterials
+- analysis
+- compilers
+-->
+<p>This guide shows how to use sampled volumetric data inside OpenVCAD’s Python workflow. The key idea is simple: a volume is not a separate kind of geometry. Instead, OpenVCAD loads the sampled data as a field, wraps that field in an attribute, and then attaches the attribute to ordinary OpenVCAD geometry.</p>
+<p>If you have not already done so, work through <a class="reference internal" href="../introduction/getting-started.html"><span class="std std-doc">Getting Started</span></a>, <a class="reference internal" href="gradients.html"><span class="std std-doc">Functional grading</span></a>, and the <a class="reference internal" href="../compilers/attribute-resolver.html"><span class="std std-doc">Attribute modifier and resolver guide</span></a> first. This guide assumes you are already comfortable with basic nodes, attributes, attribute translation, and the render preview.</p>
+<p>All scripts for this guide live under <code class="docutils literal notranslate"><span class="pre">examples/volumes/</span></code>. In the snippets below, assume the VDB file or <code class="docutils literal notranslate"><span class="pre">dicom/</span></code> folder sits next to the script, and run each script from that example directory.</p>
+<section id="mental-model">
+<h2>Mental Model<a class="headerlink" href="#mental-model" title="Link to this heading">#</a></h2>
+<p>At the Python level, the workflow looks like this:</p>
+<ol class="arabic simple">
+<li><p>Load a sampled dataset from disk (usually a VDB file, PNG images or a DICOM stack), or build one from a NumPy array.</p></li>
+<li><p>Wrap that dataset in an attribute such as <code class="docutils literal notranslate"><span class="pre">pv.FloatAttribute(...)</span></code>.</p></li>
+<li><p>Attach the attribute to normal OpenVCAD geometry.</p></li>
+<li><p>Visualize the sampled field directly in the renderer, or translate it into another attribute such as <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code> for a downstream compiler.</p></li>
+</ol>
+<p>That is the pattern you will see in all five lessons.</p>
+</section>
+<section id="lesson-1-load-a-density-volume-and-render-it">
+<h2>Lesson 1: Load a Density Volume and Render It<a class="headerlink" href="#lesson-1-load-a-density-volume-and-render-it" title="Link to this heading">#</a></h2>
+<p>This first lesson keeps the workflow as small as possible. We load a single <code class="docutils literal notranslate"><span class="pre">density</span></code> grid from a VDB file, wrap it as a <code class="docutils literal notranslate"><span class="pre">FloatAttribute</span></code>, attach it to a cube, and render the <code class="docutils literal notranslate"><span class="pre">DENSITY</span></code> field directly.</p>
+<p>OpenVDB is an open-source format and library for sparse volumetric data. Instead of storing a dense 3D array everywhere, it stores only the active parts of the volume efficiently, which makes it a good fit for fields such as smoke, fire, fog, signed distance fields, and medical data. A single <code class="docutils literal notranslate"><span class="pre">.vdb</span></code> file can also hold multiple named grids, which is why later lessons can load both <code class="docutils literal notranslate"><span class="pre">density</span></code> and <code class="docutils literal notranslate"><span class="pre">temperature</span></code> from the same file.</p>
+<p>The example lives in <code class="docutils literal notranslate"><span class="pre">examples/volumes/vdb/basic_density/</span></code>. Run it from that directory so <code class="docutils literal notranslate"><span class="pre">basic_density.vdb</span></code> is resolved locally.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+
+<span class="n">density_volume</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">vdb_loader</span><span class="o">.</span><span class="n">load_float_volume</span><span class="p">(</span><span class="s2">"basic_density.vdb"</span><span class="p">,</span> <span class="s2">"density"</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">density_attribute</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">density_volume</span><span class="p">)</span>
+
+<span class="n">volume_bbox_min</span><span class="p">,</span> <span class="n">volume_bbox_max</span> <span class="o">=</span> <span class="n">density_volume</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">()</span>
+<span class="n">cube</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="o">.</span><span class="n">FromMinAndMax</span><span class="p">(</span><span class="n">volume_bbox_min</span><span class="p">,</span> <span class="n">volume_bbox_max</span><span class="p">)</span>
+<span class="n">cube</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">DENSITY</span><span class="p">,</span> <span class="n">density_attribute</span><span class="p">)</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">cube</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>There are only three volume-specific steps here:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">pv.vdb_loader.load_float_volume(...)</span></code> loads the <code class="docutils literal notranslate"><span class="pre">density</span></code> grid from disk.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">pv.FloatAttribute(density_volume)</span></code> turns the sampled data into an OpenVCAD attribute.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">cube.set_attribute(...)</span></code> attaches that field to a normal piece of geometry.</p></li>
+</ul>
+<p>When you run the script from <code class="docutils literal notranslate"><span class="pre">examples/volumes/vdb/basic_density/</span></code>, select the <code class="docutils literal notranslate"><span class="pre">DENSITY</span></code> attribute in the renderer to inspect the sampled field inside the cube.</p>
+<p>The tree diagram below makes the carrier pattern explicit: the <code class="docutils literal notranslate"><span class="pre">RectPrism</span></code> is still the geometry root, while the sampled <code class="docutils literal notranslate"><span class="pre">density</span></code> grid sits below it as a volume-backed <code class="docutils literal notranslate"><span class="pre">DENSITY</span></code> attribute.</p>
+<p class="guide-figure-label">Tree / DAG Structure</p>
+<img alt="Tree / DAG diagram for the basic density volume lesson" class="align-center" src="../../_images/volumes_basic_density_tree_structure.svg" style="width: 40%;" />
+<p class="guide-figure-label">Legend</p>
+<img alt="Legend for the basic density volume tree diagram" class="align-center" src="../../_images/volumes_basic_density_tree_legend.svg" style="width: 60%;" />
+<p>The figure below is the direct <code class="docutils literal notranslate"><span class="pre">DENSITY</span></code> preview of that setup. This small OpenVDB file was generated as a smooth radial-falloff density field normalized to the range <code class="docutils literal notranslate"><span class="pre">0</span></code> to <code class="docutils literal notranslate"><span class="pre">1</span></code>, then saved as a single <code class="docutils literal notranslate"><span class="pre">density</span></code> grid. The script simply loads that grid and attaches it to the cube as <code class="docutils literal notranslate"><span class="pre">DENSITY</span></code>. If you want more sample VDB datasets to experiment with, OpenVDB provides additional example files on its <a class="reference external" href="https://www.openvdb.org/download/">download page</a>.</p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">DENSITY field</p>
+<img src="../images/volumes_basic_density_density.png" alt="Basic density VDB rendered as the density field on a cube" width="100%">
+</div>
+</div>
+</section>
+<section id="lesson-2-png-images-to-color-volumes">
+<h2>Lesson 2: PNG Images to Color Volumes<a class="headerlink" href="#lesson-2-png-images-to-color-volumes" title="Link to this heading">#</a></h2>
+<p>PNG data follows the same adapter pattern as VDB and DICOM: load sampled data, wrap it as an attribute, attach it to geometry. The difference is that PNG sources are already color fields, so you can attach <code class="docutils literal notranslate"><span class="pre">COLOR_RGB</span></code> or <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code> directly.</p>
+<p>OpenVCAD supports two PNG import modes:</p>
+<ul class="simple">
+<li><p><strong>Single image with depth</strong>: load one PNG and repeat it along z until a requested <code class="docutils literal notranslate"><span class="pre">depth_mm</span></code> is reached.</p></li>
+<li><p><strong>Image stack</strong>: load an ordered directory of PNG slices as a true 3D color volume.</p></li>
+</ul>
+<p>In both cases, physical scale comes from the user-specified <code class="docutils literal notranslate"><span class="pre">voxel_size</span></code> (<code class="docutils literal notranslate"><span class="pre">x</span></code>, <code class="docutils literal notranslate"><span class="pre">y</span></code>, <code class="docutils literal notranslate"><span class="pre">z</span></code> in mm).</p>
+<section id="color-mode-behavior-color-rgb-vs-color-rgba">
+<h3>Color mode behavior (<code class="docutils literal notranslate"><span class="pre">COLOR_RGB</span></code> vs <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code>)<a class="headerlink" href="#color-mode-behavior-color-rgb-vs-color-rgba" title="Link to this heading">#</a></h3>
+<p>When importing PNG data, choose a target mode:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">COLOR_RGB</span></code>: if source PNG has alpha, alpha is dropped.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code>: if source PNG has no alpha channel, alpha is synthesized as fully opaque (<code class="docutils literal notranslate"><span class="pre">1.0</span></code>).</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code>: if source PNG has alpha, the alpha values are preserved.</p></li>
+</ul>
+</section>
+<section id="single-image-example-logo-repeated-through-depth">
+<h3>Single-image example (logo repeated through depth)<a class="headerlink" href="#single-image-example-logo-repeated-through-depth" title="Link to this heading">#</a></h3>
+<p>The example script lives in <code class="docutils literal notranslate"><span class="pre">examples/volumes/png/single_image/maclab_logo_color_rgba.py</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">script_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+<span class="n">image_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">script_dir</span><span class="p">,</span> <span class="s2">"maclab_logo.png"</span><span class="p">)</span>
+
+<span class="n">png_loader</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">PNGLoader</span><span class="o">.</span><span class="n">FromImage</span><span class="p">(</span>
+    <span class="n">image_path</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">,</span> <span class="mf">0.25</span><span class="p">),</span>
+    <span class="mf">10.0</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">PNGColorMode</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span>
+    <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">color_volume</span> <span class="o">=</span> <span class="n">png_loader</span><span class="o">.</span><span class="n">as_rgba_volume</span><span class="p">()</span>
+
+<span class="n">bbox_min</span><span class="p">,</span> <span class="n">bbox_max</span> <span class="o">=</span> <span class="n">color_volume</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">()</span>
+<span class="n">carrier</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="o">.</span><span class="n">FromMinAndMax</span><span class="p">(</span><span class="n">bbox_min</span><span class="p">,</span> <span class="n">bbox_max</span><span class="p">)</span>
+<span class="n">carrier</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec4Attribute</span><span class="p">(</span><span class="n">color_volume</span><span class="p">))</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">carrier</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="stack-example-smooth-color-transparency-pyramid">
+<h3>Stack example (smooth color + transparency pyramid)<a class="headerlink" href="#stack-example-smooth-color-transparency-pyramid" title="Link to this heading">#</a></h3>
+<p>The stack example lives in <code class="docutils literal notranslate"><span class="pre">examples/volumes/png/image_stack/pyramid_color_rgba.py</span></code>, using committed deterministic slice data under <code class="docutils literal notranslate"><span class="pre">examples/volumes/png/image_stack/pyramid_stack/</span></code>.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">script_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="vm">__file__</span><span class="p">))</span>
+<span class="n">stack_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">script_dir</span><span class="p">,</span> <span class="s2">"pyramid_stack"</span><span class="p">)</span>
+
+<span class="n">png_loader</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">PNGLoader</span><span class="o">.</span><span class="n">FromStack</span><span class="p">(</span>
+    <span class="n">stack_dir</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mf">0.35</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">,</span> <span class="mf">0.35</span><span class="p">),</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">PNGColorMode</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span>
+    <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">color_volume</span> <span class="o">=</span> <span class="n">png_loader</span><span class="o">.</span><span class="n">as_rgba_volume</span><span class="p">()</span>
+
+<span class="n">bbox_min</span><span class="p">,</span> <span class="n">bbox_max</span> <span class="o">=</span> <span class="n">color_volume</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">()</span>
+<span class="n">carrier</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="o">.</span><span class="n">FromMinAndMax</span><span class="p">(</span><span class="n">bbox_min</span><span class="p">,</span> <span class="n">bbox_max</span><span class="p">)</span>
+<span class="n">carrier</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec4Attribute</span><span class="p">(</span><span class="n">color_volume</span><span class="p">))</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">carrier</span>
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The figures below show these two workflows in volumetric rendering mode.</p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Single-image depth repeat (`COLOR_RGBA`)</p>
+<img src="../images/volumes_png_logo_color_rgba.png" alt="Single PNG imported as a repeated-depth COLOR_RGBA volume" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Image stack (`COLOR_RGBA`)</p>
+<img src="../images/volumes_png_pyramid_color_rgba.webp" alt="PNG image stack imported as a COLOR_RGBA volume" width="100%">
+</div>
+</div>
+</section>
+</section>
+<section id="lesson-3-fire-volumes-to-printable-rgba">
+<h2>Lesson 3: Fire Volumes to Printable RGBA<a class="headerlink" href="#lesson-3-fire-volumes-to-printable-rgba" title="Link to this heading">#</a></h2>
+<p>The fire example shows the full volume workflow that matters for fabrication: multiple sampled fields are loaded, attached to geometry, then translated into <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code> for a compiler.</p>
+<p>The full example lives in <code class="docutils literal notranslate"><span class="pre">examples/volumes/vdb/fire/</span></code>. Run <code class="docutils literal notranslate"><span class="pre">fire.py</span></code> from that directory so the local <code class="docutils literal notranslate"><span class="pre">fire.vdb</span></code> file is picked up directly.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">fire.vdb</span></code> file used here is an example dataset from the <a class="reference external" href="https://www.openvdb.org/download/">OpenVDB download page</a>. It works well for this lesson because it already contains the two named sparse grids we want to discuss: <code class="docutils literal notranslate"><span class="pre">temperature</span></code> and <code class="docutils literal notranslate"><span class="pre">density</span></code>.</p>
+<section id="what-is-stored-in-fire-vdb">
+<h3>What is stored in <code class="docutils literal notranslate"><span class="pre">fire.vdb</span></code><a class="headerlink" href="#what-is-stored-in-fire-vdb" title="Link to this heading">#</a></h3>
+<p>This file carries two scalar grids:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">temperature</span></code>: how hot the simulated fire is at each point</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">density</span></code>: how much smoke or flame material is present at each point</p></li>
+</ul>
+<p>Together, those two fields describe both the structure of the plume and how it should look. <code class="docutils literal notranslate"><span class="pre">density</span></code> tells us where the fire and smoke exist and how thick they are, while <code class="docutils literal notranslate"><span class="pre">temperature</span></code> gives us the second signal we need to drive color. In this example, one field tells us where the material is and the other tells us how to color it.</p>
+<p>Both grids are loaded the same way:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">density_volume</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">vdb_loader</span><span class="o">.</span><span class="n">load_float_volume</span><span class="p">(</span><span class="s2">"fire.vdb"</span><span class="p">,</span> <span class="s2">"density"</span><span class="p">)</span>
+<span class="n">density_attribute</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">density_volume</span><span class="p">)</span>
+
+<span class="n">temperature_volume</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">vdb_loader</span><span class="o">.</span><span class="n">load_float_volume</span><span class="p">(</span><span class="s2">"fire.vdb"</span><span class="p">,</span> <span class="s2">"temperature"</span><span class="p">)</span>
+<span class="n">temperature_attribute</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">temperature_volume</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The example then builds a simple carrier object from the volume bounds and attaches both attributes to it:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">volume_bbox_min</span><span class="p">,</span> <span class="n">volume_bbox_max</span> <span class="o">=</span> <span class="n">temperature_volume</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">()</span>
+<span class="nb">object</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="o">.</span><span class="n">FromMinAndMax</span><span class="p">(</span><span class="n">volume_bbox_min</span><span class="p">,</span> <span class="n">volume_bbox_max</span><span class="p">)</span>
+
+<span class="nb">object</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">DENSITY</span><span class="p">,</span> <span class="n">density_attribute</span><span class="p">)</span>
+<span class="nb">object</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">TEMPERATURE</span><span class="p">,</span> <span class="n">temperature_attribute</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>That pattern is the same one from Lesson 1. The only difference is that we now have two sampled scalar fields on the same object instead of one.</p>
+</section>
+<section id="translating-the-fields-into-color-rgba">
+<h3>Translating the fields into <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code><a class="headerlink" href="#translating-the-fields-into-color-rgba" title="Link to this heading">#</a></h3>
+<p>The downstream color pipeline does not use <code class="docutils literal notranslate"><span class="pre">temperature</span></code> and <code class="docutils literal notranslate"><span class="pre">density</span></code> directly. Instead, the example translates them into a printable <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code> field with an <code class="docutils literal notranslate"><span class="pre">AttributeModifier</span></code>.</p>
+<p>If that wrapper is new to you, start with the opening lesson of the <a class="reference internal" href="../compilers/attribute-resolver.html"><span class="std std-doc">Attribute Modifier and Resolver Guide</span></a>. The fire example uses the same mechanism, but with sampled volume-backed attributes instead of analytic expressions.</p>
+<p>The important part is the converter setup:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">entries</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">LookupTableEntry</span><span class="p">(</span>
+        <span class="p">[(</span><span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="mi">0</span><span class="p">][</span><span class="mi">1</span><span class="p">]),</span> <span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">0</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="mi">2</span><span class="p">][</span><span class="mi">1</span><span class="p">])],</span>
+        <span class="p">[</span><span class="n">row</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">row</span><span class="p">[</span><span class="mi">3</span><span class="p">]]</span>
+    <span class="p">)</span>
+    <span class="k">for</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">new_map</span>
+<span class="p">]</span>
+
+<span class="n">mod</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">LookupTableConverter</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">TEMPERATURE</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">DENSITY</span><span class="p">],</span>
+    <span class="p">[</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">],</span>
+    <span class="n">entries</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">InterpolationMode</span><span class="o">.</span><span class="n">STEP</span>
+<span class="p">)</span>
+
+<span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">AttributeModifier</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="nb">object</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The tree diagram below shows the full teaching workflow: two sampled scalar fields attach to one carrier object, and an <code class="docutils literal notranslate"><span class="pre">AttributeModifier</span></code> turns them into the derived <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code> field used for rendering and printing.</p>
+<p class="guide-figure-label">Tree / DAG Structure</p>
+<img alt="Tree / DAG diagram for the fire volume workflow" class="align-center" src="../../_images/volumes_fire_tree_structure.svg" style="width: 100%;" />
+<p class="guide-figure-label">Legend</p>
+<img alt="Legend for the fire volume tree diagram" class="align-center" src="../../_images/volumes_fire_tree_legend.svg" style="width: 100%;" />
+<p>Conceptually, this lookup table is meant to mimic how fire changes visually:</p>
+<ul class="simple">
+<li><p>low temperature and low density stay close to transparent smoke</p></li>
+<li><p>hotter regions shift through red and orange into yellow-white</p></li>
+<li><p>higher density increases opacity so the core of the flame reads as fuller and brighter</p></li>
+</ul>
+<p>The result is a <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code> field that can be previewed directly in OpenVCAD and then sent to the <a class="reference internal" href="../compilers/color-inkjet.html"><span class="std std-doc">Color Inkjet Compiler</span></a> through <code class="docutils literal notranslate"><span class="pre">pyvcad_compilers.ColorInkjetCompiler</span></code>.</p>
+<p>The two sweep animations below show the raw source fields before that conversion. The temperature sweep makes it easy to see where the hottest parts of the plume sit, while the density sweep shows where the smoke and flame mass are concentrated along the length of the fire volume.</p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Temperature sweep</p>
+<img src="../images/volumes_fire_temperature_sweep.webp" alt="Sweep animation through the fire temperature field" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Density sweep</p>
+<img src="../images/volumes_fire_density_sweep.webp" alt="Sweep animation through the fire density field" width="100%">
+</div>
+</div>
+<p>The turntable below shows the final <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code> result after the lookup-table mapping. This is the stage that matters for fabrication: by this point the volume is no longer just a set of scalar fields, but a printable color-and-opacity field.</p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Final COLOR_RGBA field</p>
+<img src="../images/volumes_fire_color_rgba.webp" alt="Turntable animation of the fire rendered with the final color_rgba field" width="100%">
+</div>
+</div>
+<p>For both the fire and tumor workflows in this guide, the final <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code> field was compiled with the Color Inkjet Compiler and printed on a Stratasys J750 PolyJet printer using Vero Cyan Vivid, Vero Yellow Vivid, Vero Magenta Vivid, Vero Black Plus, Vero Pure White, and Vero Clear materials.</p>
+<p>The photo below shows the physical fire print from that pipeline. It lets you compare the rendered <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code> result above with the final printed object.</p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell" style="max-width: 160px; margin: 0 auto;">
+<p class="guide-figure-label">Printed result</p>
+<img src="../images/volumes_fire_print.png" alt="Photograph of the printed fire object" style="width: 100%; height: auto; display: block; margin: 0 auto;">
+</div>
+</div>
+</section>
+</section>
+<section id="lesson-4-ct-head-scan-to-color-rgba">
+<h2>Lesson 4: CT Head Scan to <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code><a class="headerlink" href="#lesson-4-ct-head-scan-to-color-rgba" title="Link to this heading">#</a></h2>
+<p>The tumor example uses the same overall workflow, but now the source data is a DICOM stack instead of a VDB file.</p>
+<p>The full example lives in <code class="docutils literal notranslate"><span class="pre">examples/volumes/imaging/medical/mr_brain_tumor/</span></code>. For the guide snippets, assume the <code class="docutils literal notranslate"><span class="pre">dicom/</span></code> stack folder is next to <code class="docutils literal notranslate"><span class="pre">tumor.py</span></code> and run the script from that directory. This example also differs from Lessons 1 and 2 because it imports a mesh to act as the bounding volume. In the VDB examples, we used simple boxes built from the volume bounds. Here, the outer boundary is an anatomical surface mesh created with segmentation operations in <a class="reference external" href="https://www.slicer.org/">3D Slicer</a> and exported as <code class="docutils literal notranslate"><span class="pre">MRTumor.stl</span></code>.</p>
+<section id="what-the-dicom-stack-represents">
+<h3>What the DICOM stack represents<a class="headerlink" href="#what-the-dicom-stack-represents" title="Link to this heading">#</a></h3>
+<p>DICOM is the standard file format used for medical imaging. In a CT workflow like this one, the stack is a sequence of 2D slices taken through the body. OpenVCAD reads those slices, reconstructs the 3D volume, and exposes the sampled values as a continuous field. The CT scan and segmentation-derived mesh used in this example are sample data from the 3D Slicer ecosystem.</p>
+<p>For CT data, those sampled values are <strong>Hounsfield units (HU)</strong>. HU is a radiodensity scale:</p>
+<ul class="simple">
+<li><p>lower values correspond to air-like regions</p></li>
+<li><p>mid-range values capture soft tissue</p></li>
+<li><p>higher values correspond to denser structures such as bone</p></li>
+</ul>
+<p>The example begins by loading the stack and converting it to a sampled float attribute:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dicom_loader</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">DICOMLoader</span><span class="p">(</span><span class="s2">"dicom"</span><span class="p">)</span>
+<span class="n">dicom_volume</span> <span class="o">=</span> <span class="n">dicom_loader</span><span class="o">.</span><span class="n">as_volume</span><span class="p">()</span>
+<span class="n">dicom_attribute</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">dicom_volume</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>That attribute is then attached to the head geometry as <code class="docutils literal notranslate"><span class="pre">HU</span></code>.</p>
+<p>Slice files are stacked in <strong>Instance Number</strong> (0020,0013) order whenever every file in the directory
+carries a unique one, and otherwise in natural, digit-aware filename order — so <code class="docutils literal notranslate"><span class="pre">1/2/10</span></code>,
+<code class="docutils literal notranslate"><span class="pre">001/002/010</span></code>, <code class="docutils literal notranslate"><span class="pre">slice_0098</span></code> and <code class="docutils literal notranslate"><span class="pre">IMG_0000_0001</span></code> style exports all reconstruct correctly without any
+extra arguments. If an export needs help, pass <code class="docutils literal notranslate"><span class="pre">slice_order</span></code> to force a strategy
+(<code class="docutils literal notranslate"><span class="pre">pv.DICOMSliceOrder.INSTANCE_NUMBER</span></code>, <code class="docutils literal notranslate"><span class="pre">SLICE_POSITION</span></code> or <code class="docutils literal notranslate"><span class="pre">FILENAME</span></code>) and <code class="docutils literal notranslate"><span class="pre">filename_prefix</span></code> to
+ignore a leading part of the filename whose digits should not take part in the ordering:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dicom_loader</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">DICOMLoader</span><span class="p">(</span>
+    <span class="s2">"dicom"</span><span class="p">,</span>
+    <span class="n">slice_order</span><span class="o">=</span><span class="n">pv</span><span class="o">.</span><span class="n">DICOMSliceOrder</span><span class="o">.</span><span class="n">FILENAME</span><span class="p">,</span>
+    <span class="n">filename_prefix</span><span class="o">=</span><span class="s2">"scan2024_"</span><span class="p">,</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>The head geometry itself is important here. Instead of attaching the attribute to a simple rectangular carrier, the example uses the segmented mesh as the object that receives the volume-backed <code class="docutils literal notranslate"><span class="pre">HU</span></code> field. That gives the volume data a more meaningful anatomical boundary.</p>
+</section>
+<section id="mapping-hu-to-color-rgba">
+<h3>Mapping HU to <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code><a class="headerlink" href="#mapping-hu-to-color-rgba" title="Link to this heading">#</a></h3>
+<p>The medical helper builds a color-and-opacity map across the HU range we want to emphasize:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">opacity_function</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">t</span><span class="p">:</span> <span class="mf">0.6</span> <span class="o">*</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">t</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.15</span> <span class="o">*</span> <span class="n">t</span>
+<span class="n">hu_color_map</span> <span class="o">=</span> <span class="n">med</span><span class="o">.</span><span class="n">color_maps</span><span class="o">.</span><span class="n">create_linear_gradient_hu_map</span><span class="p">(</span>
+    <span class="mi">75</span><span class="p">,</span>
+    <span class="mi">190</span><span class="p">,</span>
+    <span class="n">palette</span><span class="o">=</span><span class="n">med</span><span class="o">.</span><span class="n">color_maps</span><span class="o">.</span><span class="n">get_color_palette</span><span class="p">(</span><span class="n">color_palette</span><span class="p">),</span>
+    <span class="n">steps</span><span class="o">=</span><span class="mi">30</span><span class="p">,</span>
+    <span class="n">opacity_function</span><span class="o">=</span><span class="n">opacity_function</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+<p>That map is then applied with the same <code class="docutils literal notranslate"><span class="pre">LookupTableConverter</span></code> + <code class="docutils literal notranslate"><span class="pre">AttributeModifier</span></code> pattern from Lesson 2:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mod</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">LookupTableConverter</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">HU</span><span class="p">],</span>
+    <span class="p">[</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">],</span>
+    <span class="n">hu_color_map</span><span class="p">,</span>
+    <span class="n">pv</span><span class="o">.</span><span class="n">InterpolationMode</span><span class="o">.</span><span class="n">STEP</span>
+<span class="p">)</span>
+<span class="n">attr_mod</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">AttributeModifier</span><span class="p">(</span><span class="n">mod</span><span class="p">,</span> <span class="n">head_union</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>The example clips the final model to the right half of the head so the interior structures remain readable in a volumetric render. Below, the turntable keeps that clipped view, while the Z sweep shows the full head volume.</p>
+<p>The turntable is the easiest way to read the final mapped result as an object: it shows how the HU-to-<code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code> mapping separates outer structure from the denser internal regions. The sweep complements that view by moving through the full head volume slice by slice so you can see how the mapped field changes through the scan depth.</p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Right-half turntable</p>
+<img src="../images/volumes_tumor_right_half_color_rgba.webp" alt="Turntable animation of the right half of the CT head tumor example rendered in color_rgba" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Whole-head Z sweep</p>
+<img src="../images/volumes_tumor_whole_color_rgba_sweep_z.webp" alt="Z-axis sweep animation of the full CT head tumor example rendered in color_rgba" width="100%">
+</div>
+</div>
+<p>Like the fire example, physical prints of this tumor workflow were produced from the <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code> field with the Color Inkjet Compiler on a Stratasys J750 PolyJet printer using Vero Cyan Vivid, Vero Yellow Vivid, Vero Magenta Vivid, Vero Black Plus, Vero Pure White, and Vero Clear materials. The renders above are previews of that same printable field.</p>
+</section>
+</section>
+<section id="lesson-5-volumes-from-numpy-arrays">
+<h2>Lesson 5: Volumes from NumPy Arrays<a class="headerlink" href="#lesson-5-volumes-from-numpy-arrays" title="Link to this heading">#</a></h2>
+<p>The loaders in Lessons 1–4 each read one file format. <code class="docutils literal notranslate"><span class="pre">pv.FloatVolume.from_array(...)</span></code> and <code class="docutils literal notranslate"><span class="pre">pv.Vec3sVolume.from_array(...)</span></code> take a NumPy array instead, so anything you can get into NumPy becomes an OpenVCAD volume: NetCDF or HDF5 simulation output, cryo-EM maps, raw binary bricks, or a field you compute yourself. Preprocessing such as cropping, smoothing, normalizing or combining fields also happens in NumPy, before the data reaches OpenVCAD.</p>
+<p>This lesson builds three synthetic fields on one grid and attaches each as a different kind of attribute:</p>
+<ul class="simple">
+<li><p>a <strong>scalar</strong> field (<code class="docutils literal notranslate"><span class="pre">TEMPERATURE</span></code>) loaded with <code class="docutils literal notranslate"><span class="pre">FloatVolume.from_array</span></code> and wrapped in <code class="docutils literal notranslate"><span class="pre">pv.FloatAttribute</span></code></p></li>
+<li><p>a <strong>vector</strong> field (<code class="docutils literal notranslate"><span class="pre">velocity</span></code>) loaded with <code class="docutils literal notranslate"><span class="pre">Vec3sVolume.from_array</span></code> and wrapped in <code class="docutils literal notranslate"><span class="pre">pv.Vec3Attribute</span></code></p></li>
+<li><p>a <strong>volume-fraction</strong> field (<code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code>) built from one scalar volume per material</p></li>
+</ul>
+<p>The example lives in <code class="docutils literal notranslate"><span class="pre">examples/volumes/array/from_array_basics.py</span></code>. It only needs NumPy, and it doesn’t read any files.</p>
+<section id="how-an-array-maps-into-space">
+<h3>How an array maps into space<a class="headerlink" href="#how-an-array-maps-into-space" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">from_array</span></code> places every array element at a voxel centre:</p>
+<ul class="simple">
+<li><p><strong>Index order.</strong> <code class="docutils literal notranslate"><span class="pre">array[i,</span> <span class="pre">j,</span> <span class="pre">k]</span></code> sits at x, y, z, so build coordinate grids with <code class="docutils literal notranslate"><span class="pre">np.meshgrid(...,</span> <span class="pre">indexing=&quot;ij&quot;)</span></code>. The default <code class="docutils literal notranslate"><span class="pre">&quot;xy&quot;</span></code> indexing swaps the first two axes.</p></li>
+<li><p><strong>Spacing.</strong> <code class="docutils literal notranslate"><span class="pre">voxel_size</span></code> is the distance between samples in mm. Pass one number for cubic voxels, or a <code class="docutils literal notranslate"><span class="pre">pv.Vec3</span></code> for different spacing per axis (for example, a scan with thicker slices).</p></li>
+<li><p><strong>Placement.</strong> <code class="docutils literal notranslate"><span class="pre">origin</span></code> is the world position of element <code class="docutils literal notranslate"><span class="pre">[0,</span> <span class="pre">0,</span> <span class="pre">0]</span></code>. With <code class="docutils literal notranslate"><span class="pre">center=True</span></code> the whole array is centred on the origin instead. Centring uses the array’s full extent, so several fields cut from the same grid stay aligned even when each one is empty in different places.</p></li>
+<li><p><strong>Sparsity.</strong> Values whose magnitude is at or below <code class="docutils literal notranslate"><span class="pre">tolerance</span></code> (default <code class="docutils literal notranslate"><span class="pre">0.0</span></code>) aren’t stored, which keeps mostly-empty data small. They read back as <code class="docutils literal notranslate"><span class="pre">0</span></code>.</p></li>
+<li><p><strong>Vectors.</strong> <code class="docutils literal notranslate"><span class="pre">Vec3sVolume.from_array</span></code> expects shape <code class="docutils literal notranslate"><span class="pre">(nx,</span> <span class="pre">ny,</span> <span class="pre">nz,</span> <span class="pre">3)</span></code>, with the components in the last axis.</p></li>
+</ul>
+<p>Any numeric dtype is accepted and converted to 32-bit floats. Between voxel centres, values are interpolated linearly.</p>
+</section>
+<section id="the-example">
+<h3>The example<a class="headerlink" href="#the-example" title="Link to this heading">#</a></h3>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+
+<span class="c1"># One regular grid shared by every field: 96 samples across a 40 mm cube.</span>
+<span class="c1"># Arrays are indexed array[i, j, k] -&gt; (x, y, z), so build the axes with indexing="ij".</span>
+<span class="n">resolution</span> <span class="o">=</span> <span class="mi">96</span>
+<span class="n">size</span> <span class="o">=</span> <span class="mf">40.0</span>
+<span class="n">spacing</span> <span class="o">=</span> <span class="n">size</span> <span class="o">/</span> <span class="p">(</span><span class="n">resolution</span> <span class="o">-</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">axis</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="o">-</span><span class="n">size</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">size</span> <span class="o">/</span> <span class="mf">2.0</span><span class="p">,</span> <span class="n">resolution</span><span class="p">)</span>
+<span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">z</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">axis</span><span class="p">,</span> <span class="n">indexing</span><span class="o">=</span><span class="s2">"ij"</span><span class="p">)</span>
+<span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">x</span> <span class="o">*</span> <span class="n">x</span> <span class="o">+</span> <span class="n">y</span> <span class="o">*</span> <span class="n">y</span> <span class="o">+</span> <span class="n">z</span> <span class="o">*</span> <span class="n">z</span><span class="p">)</span>
+
+<span class="c1"># 1. Scalar field: a hot core cooling outward, in degrees C</span>
+<span class="n">temperature</span> <span class="o">=</span> <span class="mf">20.0</span> <span class="o">+</span> <span class="mf">80.0</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">r</span> <span class="o">/</span> <span class="mf">9.0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">temperature_volume</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatVolume</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">temperature</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># 2. Vector field: a swirl about Z with an updraft through the core, in mm/s.</span>
+<span class="c1"># Vector arrays carry their components in a trailing axis of length 3.</span>
+<span class="n">envelope</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="p">(</span><span class="n">r</span> <span class="o">/</span> <span class="mf">12.0</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">velocity</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">stack</span><span class="p">([</span><span class="o">-</span><span class="n">y</span> <span class="o">*</span> <span class="n">envelope</span><span class="p">,</span> <span class="n">x</span> <span class="o">*</span> <span class="n">envelope</span><span class="p">,</span> <span class="mf">6.0</span> <span class="o">*</span> <span class="n">envelope</span><span class="p">],</span> <span class="n">axis</span><span class="o">=-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">velocity_volume</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3sVolume</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">velocity</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># 3. Volume fractions: one array per material, summing to 1 everywhere.</span>
+<span class="c1"># Red fills the core and blends smoothly into blue between r = 8 mm and r = 16 mm.</span>
+<span class="n">t</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">clip</span><span class="p">((</span><span class="n">r</span> <span class="o">-</span> <span class="mf">8.0</span><span class="p">)</span> <span class="o">/</span> <span class="mf">8.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)</span>
+<span class="n">red_fraction</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">t</span> <span class="o">*</span> <span class="n">t</span> <span class="o">*</span> <span class="p">(</span><span class="mf">3.0</span> <span class="o">-</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="n">t</span><span class="p">)</span>
+<span class="n">blue_fraction</span> <span class="o">=</span> <span class="mf">1.0</span> <span class="o">-</span> <span class="n">red_fraction</span>
+<span class="n">red_volume</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatVolume</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">red_fraction</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">blue_volume</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatVolume</span><span class="o">.</span><span class="n">from_array</span><span class="p">(</span><span class="n">blue_fraction</span><span class="p">,</span> <span class="n">spacing</span><span class="p">,</span> <span class="n">center</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># center=True centres the whole array on the origin, so every volume shares the</span>
+<span class="c1"># same placement and one cube covers them all.</span>
+<span class="n">bbox_min</span><span class="p">,</span> <span class="n">bbox_max</span> <span class="o">=</span> <span class="n">temperature_volume</span><span class="o">.</span><span class="n">bounding_box</span><span class="p">()</span>
+<span class="n">cube</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="o">.</span><span class="n">FromMinAndMax</span><span class="p">(</span><span class="n">bbox_min</span><span class="p">,</span> <span class="n">bbox_max</span><span class="p">)</span>
+
+<span class="n">cube</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">TEMPERATURE</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">temperature_volume</span><span class="p">))</span>
+<span class="n">cube</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">"velocity"</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3Attribute</span><span class="p">(</span><span class="n">velocity_volume</span><span class="p">))</span>
+<span class="n">cube</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">"red_fraction"</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">red_volume</span><span class="p">))</span>
+<span class="n">cube</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="s2">"blue_fraction"</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="n">blue_volume</span><span class="p">))</span>
+
+<span class="c1"># Volume fractions are a per-material map rather than a single number, so the</span>
+<span class="c1"># two sampled scalars are combined into VOLUME_FRACTIONS with a converter.</span>
+<span class="n">fractions</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsExpressionConverter</span><span class="p">(</span>
+    <span class="p">[</span><span class="s2">"red_fraction"</span><span class="p">,</span> <span class="s2">"blue_fraction"</span><span class="p">],</span>
+    <span class="p">[</span><span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">"red"</span><span class="p">),</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">"blue"</span><span class="p">)],</span>
+    <span class="p">[</span><span class="s2">"red_fraction"</span><span class="p">,</span> <span class="s2">"blue_fraction"</span><span class="p">],</span>
+<span class="p">)</span>
+<span class="n">root</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">AttributeModifier</span><span class="p">(</span><span class="n">fractions</span><span class="p">,</span> <span class="n">cube</span><span class="p">)</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">root</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="what-each-field-shows">
+<h3>What each field shows<a class="headerlink" href="#what-each-field-shows" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p><strong>Scalar.</strong> <code class="docutils literal notranslate"><span class="pre">temperature</span></code> is an ordinary float array, so it loads exactly like the VDB <code class="docutils literal notranslate"><span class="pre">density</span></code> grid in Lesson 1: a <code class="docutils literal notranslate"><span class="pre">FloatVolume</span></code> wrapped in a <code class="docutils literal notranslate"><span class="pre">FloatAttribute</span></code>.</p></li>
+<li><p><strong>Vector.</strong> <code class="docutils literal notranslate"><span class="pre">velocity</span></code> is an <code class="docutils literal notranslate"><span class="pre">(nx,</span> <span class="pre">ny,</span> <span class="pre">nz,</span> <span class="pre">3)</span></code> array of a swirl about Z with an updraft through the core. It loads with <code class="docutils literal notranslate"><span class="pre">Vec3sVolume.from_array</span></code> and attaches as a <code class="docutils literal notranslate"><span class="pre">Vec3Attribute</span></code> under a name of your choosing. In the renderer, a vector attribute can be shown as its magnitude or as any single component, each with a selectable palette.</p></li>
+<li><p><strong>Volume fractions.</strong> A volume-fraction attribute stores one fraction per material at every point, so there isn’t a single array to load. Instead, each material’s fraction is loaded as its own scalar volume (<code class="docutils literal notranslate"><span class="pre">red_fraction</span></code>, <code class="docutils literal notranslate"><span class="pre">blue_fraction</span></code>). <code class="docutils literal notranslate"><span class="pre">pv.VolumeFractionsExpressionConverter</span></code> then combines them into <code class="docutils literal notranslate"><span class="pre">VOLUME_FRACTIONS</span></code>, using the <code class="docutils literal notranslate"><span class="pre">AttributeModifier</span></code> pattern from Lesson 3. Fractions that sum to 1 give a fully dense part. A per-material fraction field from a simulation or segmentation loads the same way.</p></li>
+</ul>
+<p>The figures below cut the cube at <code class="docutils literal notranslate"><span class="pre">z</span> <span class="pre">=</span> <span class="pre">0</span></code> and look down on the cut face. The hot core and the red core both sit at the centre, and the velocity magnitude shows the swirl as a fast ring around a slower core.</p>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Scalar: TEMPERATURE</p>
+<img src="../images/volumes_from_array_temperature.png" alt="Temperature field from a NumPy array, cut at z = 0, hot at the centre" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Vector: velocity magnitude</p>
+<img src="../images/volumes_from_array_velocity.png" alt="Magnitude of a swirling velocity field from a NumPy array, cut at z = 0" width="100%">
+</div>
+<div class="guide-figure-cell">
+<p class="guide-figure-label">VOLUME_FRACTIONS: red core, blue shell</p>
+<img src="../images/volumes_from_array_volume_fractions.png" alt="Red-to-blue volume fraction blend from NumPy arrays, cut at z = 0" width="100%">
+</div>
+</div>
+</section>
+<section id="caching-expensive-arrays">
+<h3>Caching expensive arrays<a class="headerlink" href="#caching-expensive-arrays" title="Link to this heading">#</a></h3>
+<p>If building an array is slow (a large download, heavy preprocessing, a procedural generator), save the finished volume once and load it like any other VDB file:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">pv</span><span class="o">.</span><span class="n">vdb_loader</span><span class="o">.</span><span class="n">save_float_volume</span><span class="p">(</span><span class="n">temperature_volume</span><span class="p">,</span> <span class="s2">"temperature.vdb"</span><span class="p">,</span> <span class="s2">"temperature"</span><span class="p">)</span>
+<span class="n">cached</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">vdb_loader</span><span class="o">.</span><span class="n">load_float_volume</span><span class="p">(</span><span class="s2">"temperature.vdb"</span><span class="p">,</span> <span class="s2">"temperature"</span><span class="p">)</span>
+</pre></div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">pv.vdb_loader.save_vec3s_volume(...)</span></code> does the same for vector volumes. Each call writes a single named grid, and the saved volume keeps its spacing and placement.</p>
+<p>For larger worked examples, see <code class="docutils literal notranslate"><span class="pre">examples/volumes/array/hydrogen_orbital.py</span></code> (an electron orbital coloured by phase) and <code class="docutils literal notranslate"><span class="pre">examples/volumes/array/logo_cloud/</span></code> (a procedural cloud with baked lighting).</p>
+</section>
+</section>
+<section id="where-to-go-next">
+<h2>Where to Go Next<a class="headerlink" href="#where-to-go-next" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Use the patterns in this guide when you want sampled data to participate in normal OpenVCAD attribute workflows.</p></li>
+<li><p>Use <code class="docutils literal notranslate"><span class="pre">from_array</span></code> from Lesson 5 for any dataset that does not come as VDB, PNG or DICOM.</p></li>
+<li><p>Use the <a class="reference internal" href="../compilers/attribute-resolver.html"><span class="std std-doc">Attribute Modifier and Resolver Guide</span></a> when you need to translate one field into another.</p></li>
+<li><p>Use the <a class="reference internal" href="../compilers/color-inkjet.html"><span class="std std-doc">Color Inkjet Compiler</span></a> when your final field is <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code> and you want printable PNG slice stacks.</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="attribute-conflicts.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Attribute Conflict Resolution</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="simulation-driven-design.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Simulation-driven design</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mental-model">Mental Model</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-1-load-a-density-volume-and-render-it">Lesson 1: Load a Density Volume and Render It</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-2-png-images-to-color-volumes">Lesson 2: PNG Images to Color Volumes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#color-mode-behavior-color-rgb-vs-color-rgba">Color mode behavior (<code class="docutils literal notranslate"><span class="pre">COLOR_RGB</span></code> vs <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code>)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#single-image-example-logo-repeated-through-depth">Single-image example (logo repeated through depth)</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#stack-example-smooth-color-transparency-pyramid">Stack example (smooth color + transparency pyramid)</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-3-fire-volumes-to-printable-rgba">Lesson 3: Fire Volumes to Printable RGBA</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-is-stored-in-fire-vdb">What is stored in <code class="docutils literal notranslate"><span class="pre">fire.vdb</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#translating-the-fields-into-color-rgba">Translating the fields into <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-4-ct-head-scan-to-color-rgba">Lesson 4: CT Head Scan to <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code></a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-the-dicom-stack-represents">What the DICOM stack represents</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#mapping-hu-to-color-rgba">Mapping HU to <code class="docutils literal notranslate"><span class="pre">COLOR_RGBA</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-5-volumes-from-numpy-arrays">Lesson 5: Volumes from NumPy Arrays</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#how-an-array-maps-into-space">How an array maps into space</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#the-example">The example</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#what-each-field-shows">What each field shows</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#caching-expensive-arrays">Caching expensive arrays</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-to-go-next">Where to Go Next</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/guides/fields/volumes.md.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Charles Wade and Robert MacCurdy.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.2.0.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

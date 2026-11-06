@@ -1,0 +1,1290 @@
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="../../" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>Fields: Driving Material and Geometry &#8212; OpenVCAD 3.2 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!--
+    this give us a css class that will be invisible only if js is disabled
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=75c7c72ae941e8b558d8" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=8f2a1f02" />
+    <link rel="stylesheet" type="text/css" href="../../_static/graphviz.css?v=4ae1632d" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_theme.css?v=8cc8a5a9" />
+    <link rel="stylesheet" type="text/css" href="../../_static/openvcad_branding.css?v=c43e02c9" />
+  
+  <!-- So that users can add custom icons -->
+  <script defer src="../../_static/scripts/fontawesome.js?digest=75c7c72ae941e8b558d8"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8" />
+
+    <script src="../../_static/documentation_options.js?v=828ea960"></script>
+    <script src="../../_static/doctools.js?v=fd6eb6e6"></script>
+    <script src="../../_static/sphinx_highlight.js?v=6ffebe34"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'guides/fields/fields';</script>
+    <script>DOCUMENTATION_OPTIONS.search_as_you_type = false;</script>
+    <script src="../../_static/openvcad_lightbox.js?v=e11fca97"></script>
+    <script src="../../_static/openvcad_comparison.js?v=0e3a0b21"></script>
+    <script src="../../_static/openvcad_carousel.js?v=954187e7"></script>
+    <link rel="icon" href="../../_static/favicon.png"/>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Math expressions in OpenVCAD" href="math-expressions.html" />
+    <link rel="prev" title="Functional Grading Guide" href="gradients.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="color-scheme" content="light dark"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  
+    
+    <script src="../../_static/searchtools.js"></script>
+    <script src="../../_static/language_data.js"></script>
+    <script src="../../searchindex.js"></script>
+  
+  </head>
+  <body data-default-mode="">
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+  
+  
+  
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search the docs ..."
+         aria-label="Search the docs ..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header id="pst-header" class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+<div class="bd-header__inner bd-page-width">
+  <button type="button" class="pst-navbar-icon sidebar-toggle primary-toggle" aria-label="Site navigation" aria-expanded="false" aria-controls="pst-primary-sidebar-modal">
+    <span class="fa-solid fa-bars"></span>
+  </button>
+  
+  
+  <div class="col-lg-3 navbar-header-items__start">
+    
+      <div class="navbar-item">
+
+  
+    
+  
+
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="OpenVCAD - Home"/>
+    <img src="../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="OpenVCAD - Home"/>
+  
+  
+    <p class="title logo__title">
+      <span class="logo__title-full">OpenVCAD Documentation</span>
+      <span class="logo__title-compact" aria-hidden="true">Documentation</span>
+      <span class="logo__title-short" aria-hidden="true">Docs</span>
+    </p>
+  
+</a></div>
+    
+  </div>
+  
+  <div class="col-lg-9 navbar-header-items">
+    
+    <div class="me-auto navbar-header-items__center">
+      
+        <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+
+
+<nav>
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item dropdown active">
+      <button class="btn dropdown-toggle nav-link active" type="button" id="pst-nav-dd-guides" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Guides
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-guides">
+        <li><a class="dropdown-item" href="../index.html">All guides</a></li>
+        <li><hr class="dropdown-divider"></li>
+        
+        
+        <li><a class="dropdown-item" href="../introduction/index.html">Introduction</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../modeling/index.html">Shape modeling</a></li>
+        
+        
+        <li><a class="dropdown-item active" href="index.html">Field-driven design</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../imports/index.html">Imported geometry</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../metamaterials/index.html">Metamaterials</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../analysis/index.html">Analysis</a></li>
+        
+        
+        <li><a class="dropdown-item" href="../compilers/index.html">Compilers and export</a></li>
+        
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../gallery.html">Gallery</a>
+    </li>
+    <li class="nav-item dropdown">
+      <button class="btn dropdown-toggle nav-link" type="button" id="pst-nav-dd-py" data-bs-toggle="dropdown" aria-expanded="false" data-bs-auto-close="outside">
+        Python API
+      </button>
+      <ul class="dropdown-menu" aria-labelledby="pst-nav-dd-py">
+        <li><a class="dropdown-item" href="../../python-api/pyvcad/index.html">pyvcad module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_compilers/index.html">pyvcad_compilers module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_rendering/index.html">pyvcad_rendering module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_attribute_resolver/index.html">pyvcad_attribute_resolver module</a></li>
+        <li><a class="dropdown-item" href="../../python-api/pyvcad_metamaterials/index.html">pyvcad_metamaterials module</a></li>
+      </ul>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../cpp-api/index.html">C++ API</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link nav-internal" href="../../papers.html">Papers</a>
+    </li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+    
+    
+    <div class="navbar-header-items__end">
+      
+        <div class="navbar-item navbar-persistent--container">
+          
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+        </div>
+      
+      
+        <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+      
+    </div>
+    
+  </div>
+  
+  
+    <div class="navbar-persistent--mobile">
+
+<button type="button" class="btn search-button-field search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+ <i class="fa-solid fa-magnifying-glass"></i>
+ <span class="search-button__default-text">Search</span>
+ <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd class="kbd-shortcut__modifier">K</kbd></span>
+</button>
+    </div>
+  
+
+  
+    <button type="button" class="pst-navbar-icon sidebar-toggle secondary-toggle" aria-label="On this page" aria-expanded="false" aria-controls="pst-secondary-sidebar-modal">
+      <span class="fa-solid fa-outdent"></span>
+    </button>
+  
+</div>
+
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+      <dialog id="pst-primary-sidebar-modal" tabindex="-1"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+      <div class="sidebar-header-items__center">
+        
+          
+          
+            <div class="navbar-item">
+
+
+
+
+
+
+
+
+
+
+
+
+
+<nav class="openvcad-mobile-nav" aria-label="Site navigation">
+  <ul class="bd-navbar-elements navbar-nav">
+    <li class="nav-item"><a class="nav-link" href="../../index.html">Home</a></li>
+    <li class="nav-item">
+      <details class="openvcad-mobile-nav__group">
+        <summary>Guides</summary>
+        <ul>
+          <li><a class="nav-link" href="../index.html">All guides</a></li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Introduction</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../introduction/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../../install.html">Installation</a></li>
+                
+                <li><a class="nav-link" href="../introduction/theory-and-motivation.html">Theory and Motivation</a></li>
+                
+                <li><a class="nav-link" href="../introduction/getting-started.html">Getting Started with OpenVCAD</a></li>
+                
+                <li><a class="nav-link" href="../introduction/moving-from-v2-to-v3.html">Moving from Version 2 to 3</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Shape modeling</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../modeling/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../modeling/primitives.html">Primitive catalog</a></li>
+                
+                <li><a class="nav-link" href="../modeling/offsets-blends-arrays.html">Offsets, blends and arrays</a></li>
+                
+                <li><a class="nav-link" href="../modeling/curves-profiles-sweeps.html">Curves, profiles and sweeps</a></li>
+                
+                <li><a class="nav-link" href="../modeling/sketching.html">Sketching and extruding</a></li>
+                
+                <li><a class="nav-link" href="../modeling/deforming-space.html">Deforming space</a></li>
+                
+                <li><a class="nav-link" href="../modeling/surface-relief.html">Physical surface relief</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Field-driven design</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="gradients.html">Functional grading</a></li>
+                
+                <li><a class="nav-link active" href="#">Fields</a></li>
+                
+                <li><a class="nav-link" href="math-expressions.html">Math expressions</a></li>
+                
+                <li><a class="nav-link" href="numba-attributes.html">Python functions for attributes</a></li>
+                
+                <li><a class="nav-link" href="attribute-conflicts.html">Attribute conflict resolution</a></li>
+                
+                <li><a class="nav-link" href="volumes.html">Working with volumes</a></li>
+                
+                <li><a class="nav-link" href="simulation-driven-design.html">Simulation-driven design</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Imported geometry</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../imports/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../imports/cadquery.html">CAD with CadQuery</a></li>
+                
+                <li><a class="nav-link" href="../imports/textured-mesh.html">Importing textured solids</a></li>
+                
+                <li><a class="nav-link" href="../imports/3mf-beam-lattice.html">Importing 3MF beam lattices</a></li>
+                
+                <li><a class="nav-link" href="../imports/mesh-selection.html">Selecting triangle-mesh patches</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Metamaterials</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../metamaterials/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/concepts.html">Concepts and representation</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/catalog.html">TPMS and lattice catalog</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/custom-unit-cells.html">Custom unit cells</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/stochastic-lattices.html">Stochastic lattices</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/geometry-grading.html">Functionally graded geometry</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/attribute-modeling.html">Attribute modeling</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/cylindrical-spherical-cell-maps.html">Cylindrical and spherical cell maps</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/conformal-cad.html">Conformal mapping CAD surfaces</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/conformal-meshes.html">Conformal mapping triangle meshes</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
+                
+                <li><a class="nav-link" href="../metamaterials/properties.html">Geometric characterization</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Analysis</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../analysis/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../analysis/analysing-designs.html">Analysing designs</a></li>
+                
+                <li><a class="nav-link" href="../analysis/support-analyzer.html">Inkjet support volumes</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+          <li>
+            <details class="openvcad-mobile-nav__group">
+              <summary>Compilers and export</summary>
+              <ul>
+                
+                <li><a class="nav-link" href="../compilers/index.html">Overview</a></li>
+                
+                <li><a class="nav-link" href="../compilers/material-inkjet.html">Material Inkjet</a></li>
+                
+                <li><a class="nav-link" href="../compilers/multi-material-vat.html">Multi-material VAT</a></li>
+                
+                <li><a class="nav-link" href="../compilers/color-inkjet.html">Color Inkjet</a></li>
+                
+                <li><a class="nav-link" href="../compilers/vat-photo.html">VAT Photo</a></li>
+                
+                <li><a class="nav-link" href="../compilers/slicer-project.html">Slicer Project</a></li>
+                
+                <li><a class="nav-link" href="../compilers/simulation-compiler.html">Simulation Compiler</a></li>
+                
+                <li><a class="nav-link" href="../compilers/attribute-resolver.html">Attribute modifier and resolver</a></li>
+                
+                <li><a class="nav-link" href="../compilers/meshing-and-export.html">Meshing and export</a></li>
+                
+                <li><a class="nav-link" href="../compilers/custom-python-compiler.html">Creating a compiler in Python</a></li>
+                
+              </ul>
+            </details>
+          </li>
+          
+        </ul>
+      </details>
+    </li>
+    <li class="nav-item"><a class="nav-link" href="../../gallery.html">Gallery</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../python-api/index.html">Python API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../cpp-api/index.html">C++ API</a></li>
+    <li class="nav-item"><a class="nav-link" href="../../papers.html">Papers</a></li>
+  </ul>
+</nav>
+</div>
+          
+        
+      </div>
+    
+    
+    
+      <div class="sidebar-header-items__end">
+        
+          <div class="navbar-item">
+
+<div class="theme-switch-container dropdown pst-js-only" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Color mode">
+  <button type="button" class="btn btn-sm nav-link pst-navbar-icon theme-switch-button dropdown-toggle" aria-label="Color mode" data-bs-toggle="dropdown">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light" title="Light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark" title="Dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto" title="System Settings"></i>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end">
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg me-1"></i>System Settings</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="light"><i class="fa-solid fa-sun fa-lg me-1"></i>Light</button></li>
+    <li><button type="button" class="dropdown-item d-flex align-items-center theme-change-button" data-mode="dark"><i class="fa-solid fa-moon fa-lg me-1"></i>Dark</button></li>
+  </ul>
+</div></div>
+        
+      </div>
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item pst-sidebar-collapse"><button type="button" id="pst-collapse-sidebar-button" aria-expanded="true" aria-controls="pst-primary-sidebar">
+  <svg class="pst-icon" role="img" aria-hidden="true" focusable="false" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg">
+    <path fill="currentColor" d="M3 15.5C2.36232 15.5 1.74874 15.2564 1.28478 14.8189C0.820828 14.3815 0.541576 13.7832 0.504167 13.1467L0.5 13L0.5 3C0.499965 2.36232 0.743605 1.74874 1.18107 1.28478C1.61854 0.820828 2.21676 0.541576 2.85333 0.504167L3 0.5L13 0.5C13.6377 0.499965 14.2513 0.743605 14.7152 1.18107C15.1792 1.61854 15.4584 2.21676 15.4958 2.85333L15.5 3L15.5 13C15.5 13.6377 15.2564 14.2513 14.8189 14.7152C14.3815 15.1792 13.7832 15.4584 13.1467 15.4958L13 15.5L3 15.5ZM3 13.8333L10.5 13.8333L10.5 2.16667L3 2.16667C2.79589 2.16669 2.59889 2.24163 2.44636 2.37726C2.29383 2.5129 2.19638 2.69979 2.1725 2.9025L2.16667 3L2.16667 13C2.16669 13.2041 2.24163 13.4011 2.37726 13.5536C2.5129 13.7062 2.69979 13.8036 2.9025 13.8275L3 13.8333ZM6.65583 10.325L6.5775 10.2558L4.91083 8.58917C4.76735 8.44567 4.68116 8.25476 4.66843 8.05223C4.65569 7.84971 4.71729 7.6495 4.84167 7.48917L4.91083 7.41083L6.5775 5.74417C6.72747 5.59471 6.9287 5.50794 7.14032 5.50148C7.35194 5.49502 7.55809 5.56935 7.7169 5.70937C7.8757 5.8494 7.97525 6.04463 7.99533 6.25539C8.01541 6.46616 7.95451 6.67667 7.825 6.84417L7.75583 6.9225L6.67917 8L7.75583 9.0775C7.89931 9.22099 7.98551 9.41191 7.99824 9.61443C8.01097 9.81695 7.94938 10.0172 7.825 10.1775L7.75583 10.2558C7.61234 10.3993 7.42142 10.4855 7.2189 10.4982C7.01638 10.511 6.81617 10.4494 6.65583 10.325Z"/>
+  </svg>
+  <span class="pst-collapse-sidebar-label">Collapse Sidebar</span>
+  <span class="pst-expand-sidebar-label">Expand Sidebar</span>
+</button></div>
+        <div class="sidebar-primary-item">
+
+
+  
+
+<nav class="bd-docs-nav bd-links"
+     aria-label="Section Navigation">
+  <p class="bd-links__title" role="heading" aria-level="1">Section Navigation</p>
+  <div class="bd-toc-item navbar-nav"><ul class="current nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../introduction/index.html">Introduction</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../../install.html">Installation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction/theory-and-motivation.html">Theory and Motivation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction/getting-started.html">Getting Started with OpenVCAD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../introduction/moving-from-v2-to-v3.html">Moving from Version 2 to 3</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../modeling/index.html">Shape modeling</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../modeling/primitives.html">Primitive catalog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modeling/offsets-blends-arrays.html">Offsets, Blends and Arrays</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modeling/curves-profiles-sweeps.html">Curves, Profiles and Sweeps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modeling/sketching.html">Sketching and Extruding</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modeling/deforming-space.html">Deforming Space</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../modeling/surface-relief.html">Physical surface relief</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="index.html">Field-driven design</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="gradients.html">Functional Grading Guide</a></li>
+<li class="toctree-l2 current active"><a aria-current="page" class="current reference internal" href="#">Fields: Driving Material and Geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="math-expressions.html">Math expressions in OpenVCAD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="numba-attributes.html">Python Functions for Attributes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="attribute-conflicts.html">Attribute Conflict Resolution</a></li>
+<li class="toctree-l2"><a class="reference internal" href="volumes.html">Working with Volumes in OpenVCAD</a></li>
+<li class="toctree-l2"><a class="reference internal" href="simulation-driven-design.html">Simulation-driven design</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../imports/index.html">Imported geometry</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../imports/cadquery.html">Authoring CAD with CadQuery</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../imports/textured-mesh.html">Importing textured solids</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../imports/3mf-beam-lattice.html">Importing 3MF beam lattices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../imports/mesh-selection.html">Select triangle-mesh patches</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../metamaterials/index.html">Metamaterials</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/concepts.html">Concepts and representation</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/catalog.html">TPMS and lattice catalog</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/custom-unit-cells.html">Custom unit cells</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/stochastic-lattices.html">Stochastic Voronoi and Delaunay lattices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/geometry-grading.html">Functionally graded metamaterial geometry</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/attribute-modeling.html">Attribute modeling for metamaterials</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/cylindrical-spherical-cell-maps.html">Cylindrical and spherical cell maps</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/conformal-cad.html">Conformal mapping CAD surfaces</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/conformal-meshes.html">Map lattices onto triangle meshes</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/heterogeneous-lattices.html">Heterogeneous conformal lattices</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../metamaterials/properties.html">Geometric characterization</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../analysis/index.html">Analysis</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../analysis/analysing-designs.html">Analysing Designs</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../analysis/support-analyzer.html">Inkjet support volumes</a></li>
+</ul>
+</details></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../compilers/index.html">Compilers and export</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/material-inkjet.html">Material Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/multi-material-vat.html">Multi-material VAT</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/color-inkjet.html">Color Inkjet Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/vat-photo.html">VAT Photo Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/slicer-project.html">Slicer Project Compilers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/simulation-compiler.html">Simulation Compiler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/attribute-resolver.html">Attribute Modifier and Resolver Guide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/meshing-and-export.html">Meshing and export</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../compilers/custom-python-compiler.html">Creating a Compiler in Python</a></li>
+</ul>
+</details></li>
+</ul>
+</div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+      <div class="sidebar-primary-item">
+<div id="ethical-ad-placement"
+      class="flat"
+      data-ea-publisher="readthedocs"
+      data-ea-type="readthedocs-sidebar"
+      data-ea-manual="true">
+</div></div>
+  </div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item">
+
+<nav aria-label="Breadcrumb" class="d-print-none">
+  <ul class="bd-breadcrumbs">
+    
+    <li class="breadcrumb-item breadcrumb-home">
+      <a href="../../index.html" class="nav-link" aria-label="Home">
+        <i class="fa-solid fa-house"></i>
+      </a>
+    </li>
+    
+    <li class="breadcrumb-item"><a href="../index.html" class="nav-link">Guides</a></li>
+    
+    
+    <li class="breadcrumb-item"><a href="index.html" class="nav-link">Field-driven design</a></li>
+    
+    <li class="breadcrumb-item active" aria-current="page"><span class="ellipsis">Fields: Driving Material and Geometry</span></li>
+  </ul>
+</nav>
+</div>
+      
+    </div>
+  
+  
+</div>
+</div>
+              
+              
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="fields-driving-material-and-geometry">
+<h1>Fields: Driving Material and Geometry<a class="headerlink" href="#fields-driving-material-and-geometry" title="Link to this heading">#</a></h1>
+<!--
+Build dependency sentinel for guide sidebar membership.
+Guide pages that render the shared Guides sidebar include this file so
+changes to the guide set force those pages to rebuild on incremental
+Sphinx runs.
+
+Current guide sections:
+- introduction
+- modeling
+- fields
+- imports
+- metamaterials
+- analysis
+- compilers
+-->
+<p>A <strong>field</strong> is a value that changes from point to point: a temperature, a stiffness, a wall thickness. In OpenVCAD a field is an <strong>attribute</strong>, the same kind of object you met in Getting Started. That means one field can do two jobs. Set it on a part and it grades the part’s material. Pass it to a tool that takes a size, such as an offset or a shell, and it shapes the geometry. This guide shows the new kinds of fields and how to use each one for both.</p>
+<section id="what-you-will-learn">
+<h2>What You Will Learn<a class="headerlink" href="#what-you-will-learn" title="Link to this heading">#</a></h2>
+<p>In this guide you will learn how to:</p>
+<ul class="simple">
+<li><p><strong>Shape</strong> a field with easing curves and transfer curves.</p></li>
+<li><p>Add organic variation with <strong>noise</strong>.</p></li>
+<li><p>Grade by <strong>how a surface faces</strong> a direction, for example the build direction.</p></li>
+<li><p>Grade <strong>between two bodies</strong>, whatever their shapes.</p></li>
+<li><p>Turn <strong>scattered measurements</strong> into a field.</p></li>
+<li><p>Use the same fields to drive an <strong>offset</strong>, a <strong>shell thickness</strong>, a <strong>blend radius</strong> and a <strong>twist</strong>.</p></li>
+</ul>
+</section>
+<section id="prerequisites">
+<h2>Prerequisites<a class="headerlink" href="#prerequisites" title="Link to this heading">#</a></h2>
+<p>This guide assumes you have completed the <a class="reference internal" href="../introduction/getting-started.html"><span class="std std-doc">Getting Started Guide</span></a>, in particular <strong>Lessons 4–6</strong> (attributes and volume fractions), and the <a class="reference internal" href="gradients.html"><span class="std std-doc">Functional Grading Guide</span></a>. For fields written as Python functions, see <a class="reference internal" href="numba-attributes.html"><span class="std std-doc">Numba Attributes</span></a>.</p>
+<p>Lessons 3 and 7–9 pass fields to tools that change geometry. Those tools are introduced in <a class="reference internal" href="../modeling/offsets-blends-arrays.html"><span class="std std-doc">Offsets, Blends and Arrays</span></a> and <a class="reference internal" href="../modeling/deforming-space.html"><span class="std std-doc">Deforming Space</span></a>; you only need to know that they accept a field wherever they take a size.</p>
+</section>
+<section id="running-the-examples">
+<h2>Running the Examples<a class="headerlink" href="#running-the-examples" title="Link to this heading">#</a></h2>
+<p>The scripts are in <code class="docutils literal notranslate"><span class="pre">examples/fields/</span></code>. Run any script directly:</p>
+<div class="highlight-bash notranslate"><div class="highlight"><pre><span></span><span class="nb">cd</span><span class="w"> </span>examples/fields
+python<span class="w"> </span>01_shaping.py
+</pre></div>
+</div>
+<p>Each script ends with <code class="docutils literal notranslate"><span class="pre">viz.Render(root)</span></code> or <code class="docutils literal notranslate"><span class="pre">viz.Render(root,</span> <span class="pre">materials)</span></code>, which opens the interactive OpenVCAD preview window. Close the window to end the script.</p>
+<blockquote>
+<div><p><strong>Note:</strong> To see an attribute such as volume fractions in colour, pick it from the <strong>Attribute</strong> list at the top of the render window (also under <strong>Render -&gt; Attribute</strong>). Each lesson says which one to pick.</p>
+</div></blockquote>
+</section>
+<section id="fields-at-a-glance">
+<h2>Fields at a glance<a class="headerlink" href="#fields-at-a-glance" title="Link to this heading">#</a></h2>
+<p>Every field in this guide is a <code class="docutils literal notranslate"><span class="pre">pv.FloatAttribute</span></code> (one number per point) or a <code class="docutils literal notranslate"><span class="pre">pv.Vec3Attribute</span></code> (three numbers per point), the same attributes you used in Getting Started. Working with fields always takes three steps: <strong>make</strong> a field, <strong>change</strong> it until it has the shape you want, then <strong>use</strong> it.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Step</p></th>
+<th class="head"><p>Python</p></th>
+<th class="head"><p>Lesson</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Make: from an expression or a function</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pv.FloatAttribute(&quot;0.1</span> <span class="pre">*</span> <span class="pre">z&quot;)</span></code>, a numba function</p></td>
+<td><p>Gradients guide</p></td>
+</tr>
+<tr class="row-odd"><td><p>Make: noise</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pv.FloatAttribute.noise(...)</span></code>, <code class="docutils literal notranslate"><span class="pre">pv.Vec3Attribute.noise(...)</span></code></p></td>
+<td><p>2, 3</p></td>
+</tr>
+<tr class="row-even"><td><p>Make: from other parts</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pv.FloatAttribute.distance_to(body)</span></code>, <code class="docutils literal notranslate"><span class="pre">.surface_angle(body)</span></code>, <code class="docutils literal notranslate"><span class="pre">.between(a,</span> <span class="pre">b)</span></code></p></td>
+<td><p>4, 5</p></td>
+</tr>
+<tr class="row-odd"><td><p>Make: from measurements</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pv.FloatAttribute.from_points(points,</span> <span class="pre">values)</span></code></p></td>
+<td><p>6</p></td>
+</tr>
+<tr class="row-even"><td><p>Change</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">+</span> <span class="pre">-</span> <span class="pre">*</span> <span class="pre">/</span></code>, <code class="docutils literal notranslate"><span class="pre">.clamp()</span></code>, <code class="docutils literal notranslate"><span class="pre">.normalize()</span></code>, <code class="docutils literal notranslate"><span class="pre">.map_range()</span></code>, <code class="docutils literal notranslate"><span class="pre">.ease()</span></code>, <code class="docutils literal notranslate"><span class="pre">.transfer()</span></code></p></td>
+<td><p>1</p></td>
+</tr>
+<tr class="row-odd"><td><p>Use for material</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">node.set_attribute(name,</span> <span class="pre">field)</span></code>, <code class="docutils literal notranslate"><span class="pre">pv.VolumeFractionsAttribute([(field,</span> <span class="pre">id),</span> <span class="pre">...])</span></code></p></td>
+<td><p>all</p></td>
+</tr>
+<tr class="row-even"><td><p>Use for geometry</p></td>
+<td><p><code class="docutils literal notranslate"><span class="pre">pv.Offset(field,</span> <span class="pre">part)</span></code>, <code class="docutils literal notranslate"><span class="pre">pv.Shell(field,</span> <span class="pre">part)</span></code>, <code class="docutils literal notranslate"><span class="pre">blend_radius=field</span></code>, <code class="docutils literal notranslate"><span class="pre">pv.Warp.twist(field,</span> <span class="pre">part)</span></code></p></td>
+<td><p>3, 7–9</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>Each change gives you a new field and leaves the original as it was, so you can shape one field several ways (Lesson 1 does). <code class="docutils literal notranslate"><span class="pre">pv.VolumeFractionsAttribute</span></code> takes a field anywhere it takes an expression string, so <code class="docutils literal notranslate"><span class="pre">[(weight,</span> <span class="pre">red),</span> <span class="pre">(1.0</span> <span class="pre">-</span> <span class="pre">weight,</span> <span class="pre">blue)]</span></code> grades from blue to red as <code class="docutils literal notranslate"><span class="pre">weight</span></code> runs from 0 to 1.</p>
+<blockquote>
+<div><p><strong>Note:</strong> You may also meet <em>converters</em> (<code class="docutils literal notranslate"><span class="pre">pv.AttributeModifier</span></code>, see the <a class="reference internal" href="../compilers/attribute-resolver.html"><span class="std std-doc">Attribute Resolver guide</span></a>). They are a separate, later step: they turn the finished values of a whole design into what a printer needs, for example stiffness into material mixes. Shape your fields with the tools in this guide, and use converters only for that last step.</p>
+</div></blockquote>
+</section>
+<section id="lesson-1-shaping-a-field">
+<h2>Lesson 1: Shaping a field<a class="headerlink" href="#lesson-1-shaping-a-field" title="Link to this heading">#</a></h2>
+<p>Most fields start as a straight ramp. In the example, <code class="docutils literal notranslate"><span class="pre">pv.FloatAttribute(&quot;x&quot;).normalize(-30.0,</span> <span class="pre">30.0)</span></code> is a ramp that is 0 at x = −30 and rises evenly to 1 at x = +30 (<code class="docutils literal notranslate"><span class="pre">normalize</span></code> rescales a field so the two numbers you give become 0 and 1). Two methods bend that ramp into the profile you want:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">field.ease(curve)</span></code> clamps the field to the range 0 to 1 and passes it through an <strong>easing curve</strong>. <code class="docutils literal notranslate"><span class="pre">&quot;smoothstep&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;smootherstep&quot;</span></code> start and end gently; <code class="docutils literal notranslate"><span class="pre">&quot;power&quot;</span></code> with an exponent above 1 starts slowly; <code class="docutils literal notranslate"><span class="pre">&quot;sine&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;exponential&quot;</span></code> give other profiles. The result always stays between 0 and 1.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">field.transfer(points)</span></code> maps the field through a <strong>transfer curve</strong> that you draw with control points <code class="docutils literal notranslate"><span class="pre">(input,</span> <span class="pre">output)</span></code>. Between points the curve is straight, or smooth with <code class="docutils literal notranslate"><span class="pre">interpolation=&quot;smooth&quot;</span></code>. A smooth curve never overshoots: between two points it stays between their values. Past the last point it holds the last value.</p></li>
+</ul>
+<p>The example shades four bars with the same ramp, shaped four ways.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+<span class="n">red</span> <span class="o">=</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">"red"</span><span class="p">)</span>
+<span class="n">blue</span> <span class="o">=</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">"blue"</span><span class="p">)</span>
+
+<span class="c1"># One ramp along x: 0 at x = -30 and 1 at x = +30.</span>
+<span class="n">ramp</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">"x"</span><span class="p">)</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="o">-</span><span class="mf">30.0</span><span class="p">,</span> <span class="mf">30.0</span><span class="p">)</span>
+
+<span class="c1"># Four shapes of the same ramp, one per bar (front to back):</span>
+<span class="c1"># linear, smootherstep (flat at both ends), power 3 (starts slowly),</span>
+<span class="c1"># and a smooth transfer curve that rises quickly and then holds a plateau.</span>
+<span class="n">weights</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">ramp</span><span class="o">.</span><span class="n">ease</span><span class="p">(</span><span class="s2">"linear"</span><span class="p">),</span>
+    <span class="n">ramp</span><span class="o">.</span><span class="n">ease</span><span class="p">(</span><span class="s2">"smootherstep"</span><span class="p">),</span>
+    <span class="n">ramp</span><span class="o">.</span><span class="n">ease</span><span class="p">(</span><span class="s2">"power"</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">),</span>
+    <span class="n">ramp</span><span class="o">.</span><span class="n">transfer</span><span class="p">([(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="p">(</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.8</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">)],</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">"smooth"</span><span class="p">),</span>
+<span class="p">]</span>
+
+<span class="n">bars</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">()</span>
+<span class="k">for</span> <span class="n">row</span><span class="p">,</span> <span class="n">weight</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">weights</span><span class="p">):</span>
+    <span class="n">bar</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">14</span> <span class="o">*</span> <span class="n">row</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">60</span><span class="p">,</span> <span class="mi">10</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+    <span class="c1"># The shaped field is the red fraction; the rest of the bar is blue.</span>
+    <span class="n">bar</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span>
+                      <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([(</span><span class="n">weight</span><span class="p">,</span> <span class="n">red</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">weight</span><span class="p">,</span> <span class="n">blue</span><span class="p">)]))</span>
+    <span class="n">bars</span><span class="o">.</span><span class="n">add_child</span><span class="p">(</span><span class="n">bar</span><span class="p">)</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">bars</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (volume_fractions)</p>
+<img src="../images/fields_01_shaping.png" alt="Four bars graded from blue on the left to red on the right with four different profiles" width="100%">
+</div>
+</div>
+<p>Pick <strong>volume_fractions</strong> in the viewer. Each bar runs from blue at the left (x = −30) to red at the right (x = +30). From front to back: the linear ramp changes evenly; smootherstep stays blue and red longer at the ends; power 3 stays blue for most of the bar and turns red late; the transfer curve rises quickly to a mostly-red plateau and only finishes at the very end.</p>
+<p>Use <code class="docutils literal notranslate"><span class="pre">transfer</span></code> for any material law that isn’t a straight line, for example density to stiffness: <code class="docutils literal notranslate"><span class="pre">density.transfer([(0.0,</span> <span class="pre">1.0),</span> <span class="pre">(0.5,</span> <span class="pre">2.0),</span> <span class="pre">(1.0,</span> <span class="pre">9.0)],</span> <span class="pre">interpolation=&quot;smooth&quot;)</span></code>.</p>
+</section>
+<section id="lesson-2-noise">
+<h2>Lesson 2: Noise<a class="headerlink" href="#lesson-2-noise" title="Link to this heading">#</a></h2>
+<p><strong>Noise</strong> adds variation that looks natural instead of regular: mottled colour, bumpy skin, random cells. <code class="docutils literal notranslate"><span class="pre">pv.FloatAttribute.noise(type,</span> <span class="pre">seed,</span> <span class="pre">frequency,</span> <span class="pre">octaves)</span></code> gives two kinds:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;simplex&quot;</span></code>: smooth blobs. Its values run from −1 to 1.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;cellular_f1&quot;</span></code>, <code class="docutils literal notranslate"><span class="pre">&quot;cellular_f2&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;cellular_f2_minus_f1&quot;</span></code>: random cells. <code class="docutils literal notranslate"><span class="pre">cellular_f2_minus_f1</span></code> is 0 on the walls between cells, so a low threshold traces a web of walls.</p></li>
+</ul>
+<p><code class="docutils literal notranslate"><span class="pre">frequency</span></code> sets the feature size: 0.1 gives features about 10 mm across. <code class="docutils literal notranslate"><span class="pre">octaves</span></code> adds finer layers of detail on top, each at twice the frequency and half the weight. <code class="docutils literal notranslate"><span class="pre">seed</span></code> picks one random pattern; the same seed always gives the same pattern, on every computer.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+<span class="n">red</span> <span class="o">=</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">"red"</span><span class="p">)</span>
+<span class="n">blue</span> <span class="o">=</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">"blue"</span><span class="p">)</span>
+
+<span class="c1"># Simplex noise with three octaves: smooth blobs with finer detail on top, in [-1, 1].</span>
+<span class="n">blobs</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="o">.</span><span class="n">noise</span><span class="p">(</span><span class="s2">"simplex"</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mf">0.06</span><span class="p">,</span> <span class="n">octaves</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+
+<span class="c1"># Cellular F2 - F1 noise: 0 on the walls between random cells, so a low threshold traces a web.</span>
+<span class="n">cells</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="o">.</span><span class="n">noise</span><span class="p">(</span><span class="s2">"cellular_f2_minus_f1"</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mf">0.12</span><span class="p">)</span>
+
+<span class="c1"># Left plate: the blobs mapped to a red fraction between 0 and 1.</span>
+<span class="n">left</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mi">27</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">blob_red</span> <span class="o">=</span> <span class="n">blobs</span><span class="o">.</span><span class="n">map_range</span><span class="p">(</span><span class="o">-</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">clamp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">left</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span>
+                   <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([(</span><span class="n">blob_red</span><span class="p">,</span> <span class="n">red</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">blob_red</span><span class="p">,</span> <span class="n">blue</span><span class="p">)]))</span>
+
+<span class="c1"># Right plate: red walls where F2 - F1 is small, blue cell interiors, eased for a soft edge.</span>
+<span class="n">right</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">27</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">50</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">wall_blue</span> <span class="o">=</span> <span class="n">cells</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">)</span><span class="o">.</span><span class="n">ease</span><span class="p">(</span><span class="s2">"smoothstep"</span><span class="p">)</span>
+<span class="n">right</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span>
+                    <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">wall_blue</span><span class="p">,</span> <span class="n">red</span><span class="p">),</span> <span class="p">(</span><span class="n">wall_blue</span><span class="p">,</span> <span class="n">blue</span><span class="p">)]))</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">(</span><span class="n">left</span><span class="p">,</span> <span class="n">right</span><span class="p">),</span> <span class="n">materials</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (volume_fractions)</p>
+<img src="../images/fields_02_noise.png" alt="Left plate mottled red and blue by simplex noise; right plate blue cells separated by red walls" width="100%">
+</div>
+</div>
+<p>The left plate is mottled by simplex noise with three octaves. The right plate shows cellular noise: blue cells with red walls. The cells are 3D, so where a wall runs nearly parallel to the top face it shows as a wide red patch.</p>
+<p>Noise values seldom reach the ends of their range, so map the middle of the range and clamp, as <code class="docutils literal notranslate"><span class="pre">map_range(-0.4,</span> <span class="pre">0.4,</span> <span class="pre">0.0,</span> <span class="pre">1.0,</span> <span class="pre">clamp=True)</span></code> does here, for strong contrast.</p>
+</section>
+<section id="lesson-3-a-field-that-shapes-geometry">
+<h2>Lesson 3: A field that shapes geometry<a class="headerlink" href="#lesson-3-a-field-that-shapes-geometry" title="Link to this heading">#</a></h2>
+<p>A tool that takes a size, such as <code class="docutils literal notranslate"><span class="pre">pv.Offset(distance,</span> <span class="pre">part)</span></code>, also takes a field. Here simplex noise like Lesson 2’s grows a sphere by 0 to 3 mm, so its surface becomes bumpy, and the same field colours the sphere.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+<span class="n">red</span> <span class="o">=</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">"red"</span><span class="p">)</span>
+<span class="n">blue</span> <span class="o">=</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">"blue"</span><span class="p">)</span>
+
+<span class="c1"># One field, used twice: fractal simplex noise mapped to [0, 1]. Noise seldom reaches -1 or 1,</span>
+<span class="c1"># so map the middle of its range and clamp for strong contrast.</span>
+<span class="n">noise</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="o">.</span><span class="n">noise</span><span class="p">(</span><span class="s2">"simplex"</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mf">0.08</span><span class="p">,</span> <span class="n">octaves</span><span class="o">=</span><span class="mi">4</span><span class="p">)</span>
+<span class="n">bumps</span> <span class="o">=</span> <span class="n">noise</span><span class="o">.</span><span class="n">map_range</span><span class="p">(</span><span class="o">-</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">clamp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># The field grades the material of a sphere...</span>
+<span class="n">sphere</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">20.0</span><span class="p">)</span>
+<span class="n">sphere</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span>
+                     <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([(</span><span class="n">bumps</span><span class="p">,</span> <span class="n">red</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">bumps</span><span class="p">,</span> <span class="n">blue</span><span class="p">)]))</span>
+
+<span class="c1"># ...and drives its geometry: an offset of 0 to 3 mm. The noise knows its range and slope, so the</span>
+<span class="c1"># offset needs no ScalarParameter hints, and GrowthPolicy.extend carries the colour outward.</span>
+<span class="n">rough</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Offset</span><span class="p">(</span><span class="n">bumps</span> <span class="o">*</span> <span class="mf">3.0</span><span class="p">,</span> <span class="n">sphere</span><span class="p">,</span> <span class="n">growth</span><span class="o">=</span><span class="n">pv</span><span class="o">.</span><span class="n">GrowthPolicy</span><span class="o">.</span><span class="n">extend</span><span class="p">)</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">rough</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (volume_fractions)</p>
+<img src="../images/fields_03_noise_offset.png" alt="A bumpy sphere whose bumps are red and hollows are blue" width="100%">
+</div>
+</div>
+<p>The bumps are red and the hollows blue, because one field sets both. <code class="docutils literal notranslate"><span class="pre">GrowthPolicy.extend</span></code> gives the grown material the colour of the sphere’s surface just beneath it (see Lesson 1 of <a class="reference internal" href="../modeling/offsets-blends-arrays.html"><span class="std std-doc">Offsets, Blends and Arrays</span></a>).</p>
+<p><strong>Fields that know their range.</strong> Before it can grow a part, an offset needs to know the most it might grow. Most fields in this guide already know their smallest and largest values: noise stays between −1 and 1, <code class="docutils literal notranslate"><span class="pre">clamp</span></code> and <code class="docutils literal notranslate"><span class="pre">ease</span></code> keep their results in range, and arithmetic on such fields keeps track. So <code class="docutils literal notranslate"><span class="pre">bumps</span> <span class="pre">*</span> <span class="pre">3.0</span></code> knows it runs from 0 to 3, and you can pass it straight to <code class="docutils literal notranslate"><span class="pre">pv.Offset</span></code>. A field written as an expression string can’t know its range; for those, give it with <code class="docutils literal notranslate"><span class="pre">pv.ScalarParameter(field,</span> <span class="pre">minimum=...,</span> <span class="pre">maximum=...)</span></code>, as in <a class="reference internal" href="../modeling/offsets-blends-arrays.html"><span class="std std-doc">Offsets, Blends and Arrays</span></a>. To see what a field knows, call <code class="docutils literal notranslate"><span class="pre">field.value_bounds()</span></code>.</p>
+</section>
+<section id="lesson-4-grading-by-surface-direction">
+<h2>Lesson 4: Grading by surface direction<a class="headerlink" href="#lesson-4-grading-by-surface-direction" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">pv.FloatAttribute.surface_angle(part,</span> <span class="pre">direction)</span></code> measures the angle between the part’s surface and a direction: 0 where the surface faces the direction, 90 where it runs alongside it, 180 where it faces away. With the build direction <code class="docutils literal notranslate"><span class="pre">(0,</span> <span class="pre">0,</span> <span class="pre">1)</span></code>, skin facing up reads 0 and overhangs facing the build plate read near 180. Inside the part, each point takes the angle of the nearest surface.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+<span class="n">red</span> <span class="o">=</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">"red"</span><span class="p">)</span>
+<span class="n">blue</span> <span class="o">=</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">"blue"</span><span class="p">)</span>
+
+<span class="n">part</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">20.0</span><span class="p">)</span>
+
+<span class="c1"># The angle between the surface normal and the build direction (+Z): 0 on skin facing up,</span>
+<span class="c1"># 90 on vertical walls, 180 on overhangs facing the build plate. Inside the part each point</span>
+<span class="c1"># takes the angle of its closest surface point.</span>
+<span class="n">angle</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="o">.</span><span class="n">surface_angle</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
+
+<span class="c1"># Overhangs steeper than 45 degrees from vertical (angle above 135) get the red material,</span>
+<span class="c1"># with a smooth band between 110 and 150 degrees.</span>
+<span class="n">overhang</span> <span class="o">=</span> <span class="n">angle</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="mf">110.0</span><span class="p">,</span> <span class="mf">150.0</span><span class="p">)</span><span class="o">.</span><span class="n">ease</span><span class="p">(</span><span class="s2">"smoothstep"</span><span class="p">)</span>
+<span class="n">part</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span>
+                   <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([(</span><span class="n">overhang</span><span class="p">,</span> <span class="n">red</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">overhang</span><span class="p">,</span> <span class="n">blue</span><span class="p">)]))</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">part</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (volume_fractions)</p>
+<img src="../images/fields_04_surface_angle.png" alt="A sphere seen from below, blue above and red on its underside" width="100%">
+</div>
+</div>
+<p>The figure looks at the sphere from slightly below. The underside, which overhangs the build plate, is red; the rest is blue, with a smooth band between 110 and 150 degrees. You might use this to give overhangs a different material, or (Lesson 7) a thicker wall.</p>
+<p>The angle comes from <code class="docutils literal notranslate"><span class="pre">pv.Vec3Attribute.surface_normal(part)</span></code>: the direction the surface faces, as a vector field (each point takes the direction of the nearest surface). Use it yourself to measure against other directions: <code class="docutils literal notranslate"><span class="pre">pv.Vec3Attribute.surface_normal(part).angle((1,</span> <span class="pre">0,</span> <span class="pre">0))</span></code> measures against +X.</p>
+</section>
+<section id="lesson-5-grading-between-two-bodies">
+<h2>Lesson 5: Grading between two bodies<a class="headerlink" href="#lesson-5-grading-between-two-bodies" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">pv.FloatAttribute.between(first,</span> <span class="pre">second)</span></code> is 0 on and inside the first body, 1 on and inside the second, and grades smoothly between them by the distance to each. The contours bend around each body’s shape, which a straight ramp can’t do. The bodies can be any parts: primitives, meshes, CAD.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+<span class="n">red</span> <span class="o">=</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">"red"</span><span class="p">)</span>
+<span class="n">blue</span> <span class="o">=</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">"blue"</span><span class="p">)</span>
+
+<span class="c1"># Two reference bodies: a sphere on the left and a block on the right. They are not part of</span>
+<span class="c1"># the design; they only define where the material grade starts and ends.</span>
+<span class="n">start</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="o">-</span><span class="mi">30</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">6.0</span><span class="p">)</span>
+<span class="n">end</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">32</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">24</span><span class="p">,</span> <span class="mi">24</span><span class="p">))</span>
+
+<span class="c1"># 0 on and inside the sphere, 1 on and inside the block, graded by the distances to both,</span>
+<span class="c1"># so the contours bend around each body's shape. The bandwidth covers the gap between them.</span>
+<span class="n">blend</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="o">.</span><span class="n">between</span><span class="p">(</span><span class="n">start</span><span class="p">,</span> <span class="n">end</span><span class="p">,</span> <span class="n">bandwidth</span><span class="o">=</span><span class="mf">60.0</span><span class="p">)</span>
+
+<span class="n">plate</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plate</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span>
+                    <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">blend</span><span class="p">,</span> <span class="n">red</span><span class="p">),</span> <span class="p">(</span><span class="n">blend</span><span class="p">,</span> <span class="n">blue</span><span class="p">)]))</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">plate</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (volume_fractions)</p>
+<img src="../images/fields_05_between_bodies.png" alt="A plate seen from above, red around a point on the left and blue toward the right edge" width="100%">
+</div>
+</div>
+<p>The plate is red around the sphere on the left and turns blue toward the block on the right. Near the sphere the colour changes in rings around it; near the block, in straight bands along its face.</p>
+<p><code class="docutils literal notranslate"><span class="pre">bandwidth</span></code> is how far (in mm) from each body OpenVCAD measures its distance exactly. Choose one at least as large as the gap between the bodies, as the example does with 60 mm. <code class="docutils literal notranslate"><span class="pre">exponent=2</span></code> holds the end colours longer and switches more sharply in the middle. <code class="docutils literal notranslate"><span class="pre">mm.ramp(first,</span> <span class="pre">second)</span></code> in the metamaterials toolkit builds the same field and eases it.</p>
+</section>
+<section id="lesson-6-fields-from-scattered-points">
+<h2>Lesson 6: Fields from scattered points<a class="headerlink" href="#lesson-6-fields-from-scattered-points" title="Link to this heading">#</a></h2>
+<p>Measurements usually come as values at a few points: sensor readings, test results, a simulation exported as points. <code class="docutils literal notranslate"><span class="pre">pv.FloatAttribute.from_points(points,</span> <span class="pre">values,</span> <span class="pre">method=...)</span></code> turns NumPy arrays of positions and values into a field defined everywhere.</p>
+<div class="pst-scrollable-table-container"><table class="table">
+<thead>
+<tr class="row-odd"><th class="head"><p>Method</p></th>
+<th class="head"><p>What it does</p></th>
+<th class="head"><p>Use it when</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&quot;nearest&quot;</span></code></p></td>
+<td><p>each point takes the value of the nearest reading</p></td>
+<td><p>readings label regions</p></td>
+</tr>
+<tr class="row-odd"><td><p><code class="docutils literal notranslate"><span class="pre">&quot;idw&quot;</span></code> (default)</p></td>
+<td><p>a weighted average of the nearest readings, closer ones weighing more</p></td>
+<td><p>you want a field that never goes beyond the readings</p></td>
+</tr>
+<tr class="row-even"><td><p><code class="docutils literal notranslate"><span class="pre">&quot;rbf&quot;</span></code></p></td>
+<td><p>a smooth surface through every reading</p></td>
+<td><p>you want the smoothest field</p></td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+<span class="n">red</span> <span class="o">=</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">"red"</span><span class="p">)</span>
+<span class="n">blue</span> <span class="o">=</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">"blue"</span><span class="p">)</span>
+
+<span class="c1"># Twenty "sensor readings" scattered over a plate, as NumPy arrays: positions in mm and one value</span>
+<span class="c1"># each. In practice these come from measurements or a simulation exported as points.</span>
+<span class="n">rng</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">default_rng</span><span class="p">(</span><span class="mi">7</span><span class="p">)</span>
+<span class="n">sensors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">column_stack</span><span class="p">([</span><span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">40</span><span class="p">,</span> <span class="mi">40</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="n">rng</span><span class="o">.</span><span class="n">uniform</span><span class="p">(</span><span class="o">-</span><span class="mi">25</span><span class="p">,</span> <span class="mi">25</span><span class="p">,</span> <span class="mi">20</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros</span><span class="p">(</span><span class="mi">20</span><span class="p">)])</span>
+<span class="n">readings</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sin</span><span class="p">(</span><span class="n">sensors</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">]</span> <span class="o">/</span> <span class="mf">15.0</span><span class="p">)</span> <span class="o">+</span> <span class="mf">0.5</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">sensors</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span> <span class="o">/</span> <span class="mf">10.0</span><span class="p">)</span>
+
+<span class="c1"># A smooth field through every reading. "rbf" fits a thin-plate spline; "idw" averages the nearest</span>
+<span class="c1"># readings and "nearest" copies the closest one. The field is defined everywhere, not just on the plate.</span>
+<span class="n">field</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="o">.</span><span class="n">from_points</span><span class="p">(</span><span class="n">sensors</span><span class="p">,</span> <span class="n">readings</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">"rbf"</span><span class="p">)</span>
+
+<span class="c1"># Map the readings' range onto a red fraction for display.</span>
+<span class="n">red_fraction</span> <span class="o">=</span> <span class="n">field</span><span class="o">.</span><span class="n">map_range</span><span class="p">(</span><span class="n">readings</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">readings</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">,</span> <span class="n">clamp</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plate</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">90</span><span class="p">,</span> <span class="mi">60</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plate</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span>
+                    <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([(</span><span class="n">red_fraction</span><span class="p">,</span> <span class="n">red</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">red_fraction</span><span class="p">,</span> <span class="n">blue</span><span class="p">)]))</span>
+
+<span class="c1"># Gray beads resting on the plate mark where the readings were taken.</span>
+<span class="n">beads</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="p">[</span><span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="mf">3.5</span><span class="p">),</span> <span class="mf">1.5</span><span class="p">)</span> <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">sensors</span><span class="p">])</span>
+<span class="n">beads</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([(</span><span class="s2">"1.0"</span><span class="p">,</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">"gray"</span><span class="p">))]))</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">(</span><span class="n">plate</span><span class="p">,</span> <span class="n">beads</span><span class="p">),</span> <span class="n">materials</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (volume_fractions)</p>
+<img src="../images/fields_06_scattered_points.png" alt="A plate graded smoothly from blue to red with twenty gray beads marking the readings" width="100%">
+</div>
+</div>
+<p>The gray beads sit where the readings were taken; the colour between them is the smooth field through all twenty. <code class="docutils literal notranslate"><span class="pre">pv.Vec3Attribute.from_points(points,</span> <span class="pre">vectors)</span></code> does the same for vectors, for example measured displacements to use with <code class="docutils literal notranslate"><span class="pre">pv.Warp.displace</span></code>.</p>
+<p><code class="docutils literal notranslate"><span class="pre">&quot;idw&quot;</span></code> stays within the range of the readings, so it knows its range and can drive geometry directly, like the noise in Lesson 3. <code class="docutils literal notranslate"><span class="pre">&quot;rbf&quot;</span></code> may overshoot slightly between readings. It fits up to 2,500 points with its default kernel; for more, pass <code class="docutils literal notranslate"><span class="pre">kernel=&quot;wendland&quot;</span></code>, which only looks at nearby readings.</p>
+</section>
+<section id="lesson-7-a-wall-thickness-from-a-field">
+<h2>Lesson 7: A wall thickness from a field<a class="headerlink" href="#lesson-7-a-wall-thickness-from-a-field" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">pv.Shell(thickness,</span> <span class="pre">part)</span></code> hollows a part, leaving a wall of the given thickness. Here the thickness comes from the surface angle of Lesson 4: 1 mm on top, thickening to 4 mm under the overhang, and the same field colours the wall.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+<span class="n">red</span> <span class="o">=</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">"red"</span><span class="p">)</span>
+<span class="n">blue</span> <span class="o">=</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">"blue"</span><span class="p">)</span>
+
+<span class="n">dome</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">20.0</span><span class="p">)</span>
+
+<span class="c1"># One field drives both the wall thickness and the material: how far the surface faces down.</span>
+<span class="c1"># 0 on skin facing up, 1 on overhangs facing the build plate.</span>
+<span class="n">overhang</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="o">.</span><span class="n">surface_angle</span><span class="p">(</span><span class="n">dome</span><span class="p">,</span> <span class="n">direction</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="mf">60.0</span><span class="p">,</span> <span class="mf">180.0</span><span class="p">)</span><span class="o">.</span><span class="n">ease</span><span class="p">(</span><span class="s2">"smoothstep"</span><span class="p">)</span>
+
+<span class="c1"># An inward shell 1 mm thick on top, thickening to 4 mm under the overhang. The field knows its</span>
+<span class="c1"># range (1 to 4 mm), so the shell needs no extra hints.</span>
+<span class="n">wall</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Shell</span><span class="p">(</span><span class="mf">1.0</span> <span class="o">+</span> <span class="mf">3.0</span> <span class="o">*</span> <span class="n">overhang</span><span class="p">,</span> <span class="n">dome</span><span class="p">)</span>
+<span class="n">wall</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span>
+                   <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([(</span><span class="n">overhang</span><span class="p">,</span> <span class="n">red</span><span class="p">),</span> <span class="p">(</span><span class="mf">1.0</span> <span class="o">-</span> <span class="n">overhang</span><span class="p">,</span> <span class="n">blue</span><span class="p">)]))</span>
+
+<span class="c1"># Cut away the front half to show the wall.</span>
+<span class="n">section</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Difference</span><span class="p">(</span><span class="n">wall</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">50</span><span class="p">,</span> <span class="mi">30</span><span class="p">,</span> <span class="mi">50</span><span class="p">)))</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">section</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (volume_fractions)</p>
+<img src="../images/fields_07_field_shell.png" alt="A hollow sphere cut in half, with a thin blue wall on top and a thick red wall underneath" width="100%">
+</div>
+</div>
+<p>The front half is cut away to show the wall: thin and blue at the top, thick and red at the bottom. <code class="docutils literal notranslate"><span class="pre">1.0</span> <span class="pre">+</span> <span class="pre">3.0</span> <span class="pre">*</span> <span class="pre">overhang</span></code> knows it runs from 1 to 4 mm, so the shell needs no hints.</p>
+</section>
+<section id="lesson-8-a-blend-radius-from-a-field">
+<h2>Lesson 8: A blend radius from a field<a class="headerlink" href="#lesson-8-a-blend-radius-from-a-field" title="Link to this heading">#</a></h2>
+<p>Booleans can round the seams where parts meet, with <code class="docutils literal notranslate"><span class="pre">blend_radius=...</span></code>. A field radius rounds some seams more than others.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="c1"># A red plate with a row of blue posts.</span>
+<span class="n">plate</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">80</span><span class="p">,</span> <span class="mi">20</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">plate</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec4Attribute</span><span class="p">(</span><span class="mf">0.85</span><span class="p">,</span> <span class="mf">0.15</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+<span class="n">posts</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="o">-</span><span class="mi">30</span><span class="p">,</span> <span class="o">-</span><span class="mi">15</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">15</span><span class="p">,</span> <span class="mi">30</span><span class="p">):</span>
+    <span class="n">post</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Cylinder</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">8</span><span class="p">),</span> <span class="mf">3.0</span><span class="p">,</span> <span class="mf">12.0</span><span class="p">)</span>
+    <span class="n">post</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">COLOR_RGBA</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec4Attribute</span><span class="p">(</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">))</span>
+    <span class="n">posts</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">post</span><span class="p">)</span>
+
+<span class="c1"># The blend radius eases from 0 (sharp) at the left end to 2 mm at the right. ease() keeps the</span>
+<span class="c1"># field in [0, 1], so the radius knows its range [0, 2] and needs no ScalarParameter.</span>
+<span class="n">radius</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">"x"</span><span class="p">)</span><span class="o">.</span><span class="n">normalize</span><span class="p">(</span><span class="o">-</span><span class="mf">35.0</span><span class="p">,</span> <span class="mf">35.0</span><span class="p">)</span><span class="o">.</span><span class="n">ease</span><span class="p">(</span><span class="s2">"smoothstep"</span><span class="p">)</span> <span class="o">*</span> <span class="mf">2.0</span>
+<span class="n">joint</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Union</span><span class="p">([</span><span class="n">plate</span><span class="p">]</span> <span class="o">+</span> <span class="n">posts</span><span class="p">,</span> <span class="n">blend_radius</span><span class="o">=</span><span class="n">radius</span><span class="p">)</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">joint</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (color_rgba)</p>
+<img src="../images/fields_08_field_blend.png" alt="Five blue posts on a red plate, sharp at the left and with growing fillets toward the right" width="100%">
+</div>
+</div>
+<p>Pick <strong>color_rgba</strong>. The left post meets the plate with a sharp edge; each post to the right has a larger fillet, shading from blue to red.</p>
+</section>
+<section id="lesson-9-a-twist-rate-from-a-field">
+<h2>Lesson 9: A twist rate from a field<a class="headerlink" href="#lesson-9-a-twist-rate-from-a-field" title="Link to this heading">#</a></h2>
+<p><code class="docutils literal notranslate"><span class="pre">pv.Warp.twist(rate,</span> <span class="pre">part)</span></code> twists a part about an axis by <code class="docutils literal notranslate"><span class="pre">rate</span></code> degrees per millimetre. A field rate twists some heights more than others; here a transfer curve leaves the bottom third straight and eases into a steady twist.</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad_rendering</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">viz</span>
+
+<span class="n">materials</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">default_materials</span>
+<span class="n">red</span> <span class="o">=</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">"red"</span><span class="p">)</span>
+<span class="n">blue</span> <span class="o">=</span> <span class="n">materials</span><span class="o">.</span><span class="n">id</span><span class="p">(</span><span class="s2">"blue"</span><span class="p">)</span>
+
+<span class="c1"># A square bar standing on the plane z = 0, graded red to blue up its height.</span>
+<span class="n">bar</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">RectPrism</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">30</span><span class="p">),</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">12</span><span class="p">,</span> <span class="mi">12</span><span class="p">,</span> <span class="mi">60</span><span class="p">))</span>
+<span class="n">bar</span><span class="o">.</span><span class="n">set_attribute</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">DefaultAttributes</span><span class="o">.</span><span class="n">VOLUME_FRACTIONS</span><span class="p">,</span> <span class="n">pv</span><span class="o">.</span><span class="n">VolumeFractionsAttribute</span><span class="p">([</span>
+    <span class="p">(</span><span class="s2">"z / 60"</span><span class="p">,</span> <span class="n">red</span><span class="p">),</span>
+    <span class="p">(</span><span class="s2">"1 - z / 60"</span><span class="p">,</span> <span class="n">blue</span><span class="p">),</span>
+<span class="p">]))</span>
+
+<span class="c1"># The twist rate, in degrees per mm, follows a smooth transfer curve of height: no twist in the</span>
+<span class="c1"># bottom third, a smooth rise, then a steady 9 degrees per mm in the top third.</span>
+<span class="n">rate</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">FloatAttribute</span><span class="p">(</span><span class="s2">"z"</span><span class="p">)</span><span class="o">.</span><span class="n">transfer</span><span class="p">([(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">20.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">40.0</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">),</span> <span class="p">(</span><span class="mf">60.0</span><span class="p">,</span> <span class="mf">9.0</span><span class="p">)],</span> <span class="n">interpolation</span><span class="o">=</span><span class="s2">"smooth"</span><span class="p">)</span>
+<span class="n">twisted</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Warp</span><span class="o">.</span><span class="n">twist</span><span class="p">(</span><span class="n">rate</span><span class="p">,</span> <span class="n">bar</span><span class="p">)</span>
+
+<span class="n">viz</span><span class="o">.</span><span class="n">Render</span><span class="p">(</span><span class="n">twisted</span><span class="p">,</span> <span class="n">materials</span><span class="p">)</span>
+</pre></div>
+</div>
+<div class="guide-figure-grid">
+<div class="guide-figure-cell">
+<p class="guide-figure-label">Render (volume_fractions)</p>
+<img src="../images/fields_09_field_twist.png" alt="A square bar, straight at the bottom and twisting more and more toward the top" width="100%">
+</div>
+</div>
+<p>The bar stays straight up to 20 mm, starts to twist, and twists steadily at 9 degrees per millimetre above 40 mm. Its red-to-blue gradient twists with it. The twist rate is read along the axis, so every point at the same height turns by the same angle (see Lesson 3 of <a class="reference internal" href="../modeling/deforming-space.html"><span class="std std-doc">Deforming Space</span></a>).</p>
+</section>
+<section id="advanced-notes">
+<h2>Advanced Notes<a class="headerlink" href="#advanced-notes" title="Link to this heading">#</a></h2>
+<section id="known-range-and-slope">
+<h3>Known range and slope<a class="headerlink" href="#known-range-and-slope" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">field.value_bounds()</span></code> returns the range a field is known to stay in, or <code class="docutils literal notranslate"><span class="pre">None</span></code>, and <code class="docutils literal notranslate"><span class="pre">field.lipschitz_bound()</span></code> the most it can change per millimetre, or <code class="docutils literal notranslate"><span class="pre">None</span></code>. They come from how the field was built, never from sampling: constants, noise, <code class="docutils literal notranslate"><span class="pre">clamp</span></code>, <code class="docutils literal notranslate"><span class="pre">ease</span></code>, <code class="docutils literal notranslate"><span class="pre">transfer</span></code>, the angle and two-body fields, <code class="docutils literal notranslate"><span class="pre">&quot;nearest&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;idw&quot;</span></code> scattered fields, and arithmetic on any of these. Tools that take a field use them automatically: the range sizes the bounding box, and the slope keeps an offset or a shell a safe distance to offset or blend again (see <em>Advanced Notes</em> in <a class="reference internal" href="../modeling/offsets-blends-arrays.html"><span class="std std-doc">Offsets, Blends and Arrays</span></a>). A <code class="docutils literal notranslate"><span class="pre">pv.ScalarParameter</span></code> with your own <code class="docutils literal notranslate"><span class="pre">minimum</span></code>, <code class="docutils literal notranslate"><span class="pre">maximum</span></code> or <code class="docutils literal notranslate"><span class="pre">lipschitz</span></code> overrides them.</p>
+</section>
+<section id="vector-noise">
+<h3>Vector noise<a class="headerlink" href="#vector-noise" title="Link to this heading">#</a></h3>
+<p><code class="docutils literal notranslate"><span class="pre">pv.Vec3Attribute.noise(...)</span></code> gives three unrelated noise fields, one per component, each from −1 to 1. Scale it and pass it to <code class="docutils literal notranslate"><span class="pre">pv.Warp.displace</span></code> to roughen a part by moving its material rather than growing it:</p>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">pyvcad</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">pv</span>
+
+<span class="n">part</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Sphere</span><span class="p">(</span><span class="n">pv</span><span class="o">.</span><span class="n">Vec3</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mf">20.0</span><span class="p">)</span>
+<span class="n">wobble</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Vec3Attribute</span><span class="o">.</span><span class="n">noise</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">frequency</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">octaves</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="mf">1.5</span>
+<span class="n">rough</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">Warp</span><span class="o">.</span><span class="n">displace</span><span class="p">(</span><span class="n">wobble</span><span class="p">,</span> <span class="n">part</span><span class="p">)</span>
+</pre></div>
+</div>
+</section>
+<section id="cost">
+<h3>Cost<a class="headerlink" href="#cost" title="Link to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Noise costs a little more for each octave; cellular noise costs more than simplex.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">&quot;nearest&quot;</span></code> and <code class="docutils literal notranslate"><span class="pre">&quot;idw&quot;</span></code> scattered fields stay fast for millions of points. <code class="docutils literal notranslate"><span class="pre">&quot;rbf&quot;</span></code> with the default kernel solves one large system when you build the field (about a second for 2,000 points) and visits every reading at every point; <code class="docutils literal notranslate"><span class="pre">kernel=&quot;wendland&quot;</span></code> scales to many more readings.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">surface_angle</span></code>, <code class="docutils literal notranslate"><span class="pre">between</span></code> and <code class="docutils literal notranslate"><span class="pre">distance_to</span></code> measure distances to whole bodies, so they cost about as much as evaluating those bodies.</p></li>
+</ul>
+</section>
+</section>
+<section id="where-to-go-next">
+<h2>Where to go next<a class="headerlink" href="#where-to-go-next" title="Link to this heading">#</a></h2>
+<ul class="simple">
+<li><p>The Python API page for <a class="reference internal" href="../../python-api/pyvcad/attributes.html"><span class="std std-doc">attributes</span></a> lists every field type and method.</p></li>
+<li><p><a class="reference internal" href="../modeling/offsets-blends-arrays.html"><span class="std std-doc">Offsets, Blends and Arrays</span></a> and <a class="reference internal" href="../modeling/deforming-space.html"><span class="std std-doc">Deforming Space</span></a> cover the tools in Lessons 3 and 7–9.</p></li>
+<li><p><a class="reference internal" href="../analysis/analysing-designs.html"><span class="std std-doc">Analysing Designs</span></a> measures wall thickness, pore size and curvature; the results are fields too.</p></li>
+<li><p><a class="reference internal" href="../modeling/curves-profiles-sweeps.html"><span class="std std-doc">Curves, Profiles and Sweeps</span></a> adds distance and position along a curve as fields.</p></li>
+<li><p>The <a class="reference internal" href="../metamaterials/index.html"><span class="std std-doc">metamaterials guides</span></a> use the same fields to grade lattices; <code class="docutils literal notranslate"><span class="pre">mm.ramp</span></code> accepts the easing curves of Lesson 1.</p></li>
+</ul>
+</section>
+</section>
+
+
+                </article>
+              
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="gradients.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Functional Grading Guide</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="math-expressions.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Math expressions in OpenVCAD</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+                <dialog id="pst-secondary-sidebar-modal" tabindex="-1"></dialog>
+                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+
+  <div class="sidebar-secondary-item">
+<div
+    id="pst-page-navigation-heading-2"
+    class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> On this page
+  </div>
+  <nav id="pst-page-toc-nav" class="page-toc" aria-labelledby="pst-page-navigation-heading-2">
+    <ul class="pst-show_toc_level nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#what-you-will-learn">What You Will Learn</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#prerequisites">Prerequisites</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#running-the-examples">Running the Examples</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#fields-at-a-glance">Fields at a glance</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-1-shaping-a-field">Lesson 1: Shaping a field</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-2-noise">Lesson 2: Noise</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-3-a-field-that-shapes-geometry">Lesson 3: A field that shapes geometry</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-4-grading-by-surface-direction">Lesson 4: Grading by surface direction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-5-grading-between-two-bodies">Lesson 5: Grading between two bodies</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-6-fields-from-scattered-points">Lesson 6: Fields from scattered points</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-7-a-wall-thickness-from-a-field">Lesson 7: A wall thickness from a field</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-8-a-blend-radius-from-a-field">Lesson 8: A blend radius from a field</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#lesson-9-a-twist-rate-from-a-field">Lesson 9: A twist rate from a field</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#advanced-notes">Advanced Notes</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#known-range-and-slope">Known range and slope</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#vector-noise">Vector noise</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#cost">Cost</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#where-to-go-next">Where to go next</a></li>
+</ul>
+  </nav></div>
+
+  <div class="sidebar-secondary-item">
+
+  <div class="tocsection sourcelink">
+    <a href="../../_sources/guides/fields/fields.md.txt">
+      <i class="fa-solid fa-file-lines"></i> Show Source
+    </a>
+  </div>
+</div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+          </footer>
+        
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../../_static/scripts/bootstrap.js?digest=75c7c72ae941e8b558d8"></script>
+<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=75c7c72ae941e8b558d8"></script>
+
+  <footer class="bd-footer">
+<div class="bd-footer__inner bd-page-width">
+  
+    <div class="footer-items__start">
+      
+        <div class="footer-item">
+
+  <p class="copyright">
+    
+      © Copyright 2025, Charles Wade and Robert MacCurdy.
+      <br/>
+    
+  </p>
+</div>
+      
+        <div class="footer-item">
+
+  <p class="sphinx-version">
+    Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 9.2.0.
+  </p>
+</div>
+      
+    </div>
+  
+  
+  
+    <div class="footer-items__end">
+      
+        <div class="footer-item">
+<p class="theme-version">
+  <!-- # L10n: Setting the PST URL as an argument as this does not need to be localized -->
+  Built with the <a href="https://pydata-sphinx-theme.readthedocs.io/en/stable/index.html">PyData Sphinx Theme</a> 0.24.0.
+</p></div>
+      
+    </div>
+  
+</div>
+
+  </footer>
+  </body>
+</html>

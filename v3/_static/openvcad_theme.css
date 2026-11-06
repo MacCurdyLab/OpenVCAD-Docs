@@ -411,3 +411,104 @@
         display: inline;
     }
 }
+
+/* Catalog: a grid of cards, each with an image carousel, a name and a short note */
+.openvcad-catalog {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 1.25rem;
+    margin: 1.25rem 0 2rem 0;
+}
+
+.openvcad-catalog-card {
+    min-width: 0;
+    padding: 0.6rem 0.6rem 0.2rem 0.6rem;
+    border: 1px solid var(--pst-color-border);
+    border-radius: 6px;
+    background: var(--pst-color-surface);
+}
+
+.openvcad-catalog-card p {
+    margin: 0.45rem 0 0.4rem 0;
+    font-size: 0.9rem;
+    line-height: 1.35;
+}
+
+.openvcad-catalog-card p:first-of-type {
+    font-size: 1rem;
+    font-weight: 650;
+}
+
+.openvcad-catalog-card .openvcad-carousel + p {
+    margin-top: 0.6rem;
+}
+
+/* Carousel: one image visible at a time, controls added by openvcad_carousel.js */
+.openvcad-carousel {
+    position: relative;
+    aspect-ratio: 4 / 3;
+    overflow: hidden;
+    border-radius: 4px;
+    background: #fff;
+}
+
+.openvcad-carousel > img {
+    display: none;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    cursor: zoom-in;
+}
+
+.openvcad-carousel > img.is-active,
+.openvcad-carousel:not([data-openvcad-carousel-bound]) > img:first-child {
+    display: block;
+}
+
+.openvcad-carousel[data-openvcad-carousel-bound] > img:not(.is-active) {
+    display: none;
+}
+
+.openvcad-carousel-prev,
+.openvcad-carousel-next {
+    position: absolute;
+    top: 50%;
+    width: 2rem;
+    height: 2rem;
+    padding: 0;
+    transform: translateY(-50%);
+    border: none;
+    border-radius: 50%;
+    background: rgba(22, 28, 32, 0.6);
+    color: #fff;
+    font-size: 1.4rem;
+    line-height: 1;
+    cursor: pointer;
+}
+
+.openvcad-carousel-prev {
+    left: 0.4rem;
+}
+
+.openvcad-carousel-next {
+    right: 0.4rem;
+}
+
+.openvcad-carousel-prev:hover,
+.openvcad-carousel-next:hover,
+.openvcad-carousel-prev:focus-visible,
+.openvcad-carousel-next:focus-visible {
+    background: rgba(22, 28, 32, 0.85);
+}
+
+.openvcad-carousel-counter {
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0.4rem;
+    padding: 0.1rem 0.45rem;
+    border-radius: 4px;
+    background: rgba(22, 28, 32, 0.6);
+    color: #fff;
+    font-size: 0.75rem;
+    pointer-events: none;
+}

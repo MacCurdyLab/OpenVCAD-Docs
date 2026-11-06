@@ -1,7 +1,7 @@
 Tree — composition nodes
 ==========================
 
-**Composition nodes** are non-:class:`Leaf` nodes that each **own** one or more child subtrees. They describe how pieces are placed and combined in space: rigid transforms and tilings, constructive solid geometry (union, intersection, difference and bbox variants), offsets and shells.
+**Composition nodes** are non-:class:`Leaf` nodes that each **own** one or more child subtrees. They describe how pieces are placed and combined in space: rigid transforms, mirrors, warps and tilings, sums and mixes of fields, constructive solid geometry (union, intersection, difference and bbox variants), offsets and shells.
 
 Use them to assemble and modify designs built from :doc:`leaves` without duplicating underlying primitives.
 
@@ -27,7 +27,32 @@ Use them to assemble and modify designs built from :doc:`leaves` without duplica
    :undoc-members:
    :special-members: __init__
 
+.. autoclass:: Transform
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: Mirror
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: MappedNode
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: Warp
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
 .. autoclass:: Sum
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: Mix
    :members:
    :undoc-members:
    :special-members: __init__
@@ -36,6 +61,27 @@ Use them to assemble and modify designs built from :doc:`leaves` without duplica
    :members:
    :undoc-members:
    :special-members: __init__
+
+.. autoclass:: PolarArray
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+Booleans can be blended where their children meet. ``Union``, ``Intersection`` and
+``Difference`` take a ``blend_radius`` (a number, or a field with bounds, where 0 means a sharp
+edge) and a ``profile``:
+
+.. code-block:: python
+
+   import pyvcad as pv
+
+   plate = pv.RectPrism(pv.Vec3(0, 0, 0), pv.Vec3(14, 14, 3))
+   post = pv.Cylinder(pv.Vec3(0, 0, 6.5), 3.0, 10.0)
+   joint = pv.Union([plate, post], blend_radius=2.0, profile=pv.BlendProfile.circular)
+
+.. autoclass:: BlendProfile
+   :members:
+   :undoc-members:
 
 .. autoclass:: Difference
    :members:
@@ -62,12 +108,38 @@ Use them to assemble and modify designs built from :doc:`leaves` without duplica
    :undoc-members:
    :special-members: __init__
 
+A :class:`MappedStructureCollection` is a :class:`Union` of mapped lattices that keeps each
+member's attachment scopes, so one call can set an attribute on the same component of every map.
+The scope objects below are returned by its ``struts``, ``joints``, ``plates`` and ``shell`` properties.
+
+.. autoclass:: MappedStructureCollection
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: MappedCollectionGraphComponents
+   :members:
+   :undoc-members:
+
+.. autoclass:: MappedCollectionFaceComponents
+   :members:
+   :undoc-members:
+
+.. autoclass:: MappedCollectionShell
+   :members:
+   :undoc-members:
+
 .. autoclass:: Offset
    :members:
    :undoc-members:
    :special-members: __init__
 
 .. autoclass:: Shell
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: Thicken
    :members:
    :undoc-members:
    :special-members: __init__

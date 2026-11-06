@@ -1,21 +1,35 @@
 Overview
 ========
 
-In OpenVCAD, a **compiler** is a class you run on a prepared implicit ``Node``
-tree that **turns the design into a concrete artifact**—files or data meant for
+In OpenVCAD, a **compiler** is a class you run on an implicit ``Node`` tree
+that **turns the design into a concrete artifact**—files or data meant for
 another program, not another implicit model. The implicit field and attributes
-stay on the core side; the compiler samples what it needs and writes the output
-format.
+stay on the core side; the compiler prepares the tree at its own voxel size,
+samples what it needs and writes the output format. You do not need to call
+``prepare()`` on the root first.
 
-Typical roles include:
+The bundled compiler families are:
 
-- **3D printing** – e.g. voxel image stacks for inkjet-style material or color
-  workflows, or a slicer-oriented project built from scalar fields and regions.
-- **Downstream tools** – any path that must **translate** the OpenVCAD design
-  into a format a printer, slicer, or **simulation** toolchain expects.
+- **Inkjet and PolyJet slices** – :class:`MaterialInkjetCompiler` (material
+  volume fractions) and :class:`ColorInkjetCompiler` (RGBA color) write PNG
+  stacks; :class:`GCVFCompiler` writes a Stratasys GCVF archive;
+  :class:`MyersonCompiler` writes per-material 1-bit BMP stacks.
+- **Vat photopolymerization** – :class:`VatCompiler` writes grayscale BMP
+  slices from an ``intensity`` field; :class:`MultiMaterialVatCompiler` writes
+  synchronized grayscale PNG stacks from volume fractions for dual- or quad-vat
+  printers.
+- **Extrusion (FFF) slicer projects** – :class:`PrusaSlicerProjectCompiler`
+  writes a PrusaSlicer project with per-region print settings;
+  :class:`FullSpectrumSlicerProjectCompiler` writes an Orca FullSpectrum project
+  that mixes filaments from ``color_rgb`` or volume fractions.
+- **Volumetric data** – :class:`VdbCompiler` writes the surface level set and,
+  optionally, occupancy and attribute grids to an OpenVDB file.
+- **Simulation** – :class:`SimulationCompiler` meshes the design and exports it
+  with material assignments for a finite element solver.
 
-The bundled compiler classes are documented under :doc:`compilers`; shared
-helpers live under :doc:`utilities`.
+All of them derive from :class:`CompilerBase`. The compiler classes are
+documented under :doc:`compilers`; shared helpers such as the color pipeline
+live under :doc:`utilities`.
 
 .. currentmodule:: pyvcad_compilers
 

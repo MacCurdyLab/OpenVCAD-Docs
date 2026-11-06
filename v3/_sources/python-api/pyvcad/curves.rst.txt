@@ -1,0 +1,119 @@
+Curves and Profiles
+===================
+
+Parametric curves in 3D, with planar curves as a special case, and the frames that carry a profile
+along them. Points can be passed as tuples, lists, ``Vec3``, ``Vec2``, ``Point2`` or NumPy arrays;
+batched results come back as NumPy arrays. Curves never change after construction, so one curve can
+be shared by many nodes.
+
+.. currentmodule:: pyvcad
+
+Curves
+------
+
+.. autoclass:: Curve
+   :members:
+   :undoc-members:
+
+.. autoclass:: CurveHit
+   :members:
+   :undoc-members:
+
+.. autoclass:: LineSegment
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: PolylineCurve
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: ArcCurve
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: BezierCurve
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: BSplineCurve
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: CompositeCurve
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: TrimmedCurve
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+Frames
+------
+
+.. autoclass:: CurveFrames
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: CurveFrame
+   :members:
+   :undoc-members:
+
+Profiles
+--------
+
+.. autoclass:: Profile
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: ProfileHit
+   :members:
+   :undoc-members:
+
+Sketches
+--------
+
+Draw profiles and paths step by step with a pen, place them on any plane, and build them from
+construction geometry. The guide :doc:`../../guides/modeling/sketching` walks through all of these.
+
+.. autoclass:: Sketch
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+.. autoclass:: Plane
+   :members:
+   :undoc-members:
+   :special-members: __init__
+
+Construction geometry
+---------------------
+
+Closed-form intersections, tangents and corner treatments. Lines are infinite lines through two
+points and circles are a centre and a radius; every function returns all of its solutions, in a
+stated order, as NumPy arrays.
+
+.. autofunction:: intersect_lines
+.. autofunction:: intersect_line_circle
+.. autofunction:: intersect_circles
+.. autofunction:: tangent_points
+.. autofunction:: tangent_lines
+.. autofunction:: fillet_curves
+.. autofunction:: chamfer_curves
+
+Curves from data
+----------------
+
+Mesh paths (``MeshPath.to_curve()``), mesh and selection borders (``SurfaceMesh.boundary_loops()``,
+``MeshSelection.boundary_loops()``) and node contours all return ordinary curves.
+``Profile.cross_section()`` gives the region of a slice instead of its outlines.
+
+.. autofunction:: contour_curves

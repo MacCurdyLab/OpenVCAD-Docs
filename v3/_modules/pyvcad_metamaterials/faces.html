@@ -590,6 +590,11 @@
     <span class="s2">"triangular_honeycomb"</span><span class="p">,</span>
     <span class="s2">"rotated_triangular_honeycomb"</span><span class="p">,</span>
 <span class="p">)</span>
+<span class="c1"># Licensed builds can leave out the folded (buckling) plate cell, pv.PlateUnitCell.  # [pilot-only]</span>
+<span class="n">_HAS_PLATE_UNIT_CELL</span> <span class="o">=</span> <span class="nb">hasattr</span><span class="p">(</span><span class="n">pv</span><span class="p">,</span> <span class="s2">"PlateUnitCell"</span><span class="p">)</span>  <span class="c1"># [pilot-only]</span>
+<span class="n">_NO_PLATE_MESSAGE</span> <span class="o">=</span> <span class="s2">"The folded plate lattice (plate_lattice) is not included in this build of OpenVCAD."</span>  <span class="c1"># [pilot-only]</span>
+<span class="k">if</span> <span class="ow">not</span> <span class="n">_HAS_PLATE_UNIT_CELL</span><span class="p">:</span>  <span class="c1"># [pilot-only]</span>
+    <span class="n">FACE_LATTICE_NAMES</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">name</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">FACE_LATTICE_NAMES</span> <span class="k">if</span> <span class="n">name</span> <span class="o">!=</span> <span class="s2">"plate"</span><span class="p">)</span>  <span class="c1"># [pilot-only]</span>
 
 <span class="n">_CUBE_VERTICES</span> <span class="o">=</span> <span class="p">(</span>
     <span class="p">(</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">),</span>
@@ -909,6 +914,8 @@
 <span class="sd">    Raises:</span>
 <span class="sd">        ValueError: If the name is unknown.</span>
 <span class="sd">    """</span>
+    <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"plate"</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">_HAS_PLATE_UNIT_CELL</span><span class="p">:</span>  <span class="c1"># [pilot-only]</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">_NO_PLATE_MESSAGE</span><span class="p">)</span>  <span class="c1"># [pilot-only]</span>
     <span class="k">if</span> <span class="n">name</span> <span class="o">==</span> <span class="s2">"plate"</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">pv</span><span class="o">.</span><span class="n">PlateUnitCell</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">FACE_UNIT_CELLS</span><span class="p">:</span>
@@ -1003,6 +1010,8 @@
 <span class="sd">    Example:</span>
 <span class="sd">        &gt;&gt;&gt; node = mm.plate_lattice(cell_map, wall_thickness=0.6, eccentricity=1.5)</span>
 <span class="sd">    """</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">_HAS_PLATE_UNIT_CELL</span><span class="p">:</span>  <span class="c1"># [pilot-only]</span>
+        <span class="k">raise</span> <span class="ne">NotImplementedError</span><span class="p">(</span><span class="n">_NO_PLATE_MESSAGE</span><span class="p">)</span>  <span class="c1"># [pilot-only]</span>
     <span class="n">unit_cell</span> <span class="o">=</span> <span class="n">pv</span><span class="o">.</span><span class="n">PlateUnitCell</span><span class="p">(</span><span class="n">_coerce_attribute</span><span class="p">(</span><span class="n">eccentricity</span><span class="p">))</span>
     <span class="k">return</span> <span class="n">face_lattice</span><span class="p">(</span>
         <span class="n">cell_map</span><span class="p">,</span>
